@@ -1,20 +1,20 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import classNames from 'classnames';
+import PropTypes from "prop-types";
+import React from "react";
+import classNames from "classnames";
 
-import Box from '../box/box.jsx';
-import DOMElementRenderer from '../../containers/dom-element-renderer.jsx';
-import Loupe from '../loupe/loupe.jsx';
-import MonitorList from '../../containers/monitor-list.jsx';
-import TargetHighlight from '../../containers/target-highlight.jsx';
-import GreenFlagOverlay from '../../containers/green-flag-overlay.jsx';
-import Question from '../../containers/question.jsx';
-import MicIndicator from '../mic-indicator/mic-indicator.jsx';
-import {STAGE_DISPLAY_SIZES} from '../../lib/layout-constants.js';
-import {getStageDimensions} from '../../lib/screen-utils.js';
-import styles from './stage.css';
+import Box from "../box/box.jsx";
+import DOMElementRenderer from "../../containers/dom-element-renderer.jsx";
+import Loupe from "../loupe/loupe.jsx";
+import MonitorList from "../../containers/monitor-list.jsx";
+import TargetHighlight from "../../containers/target-highlight.jsx";
+import GreenFlagOverlay from "../../containers/green-flag-overlay.jsx";
+import Question from "../../containers/question.jsx";
+import MicIndicator from "../mic-indicator/mic-indicator.jsx";
+import { STAGE_DISPLAY_SIZES } from "../../lib/layout-constants.js";
+import { getStageDimensions } from "../../lib/screen-utils.js";
+import styles from "./stage.css";
 
-const StageComponent = props => {
+const StageComponent = (props) => {
     const {
         canvas,
         dragRef,
@@ -37,26 +37,25 @@ const StageComponent = props => {
     return (
         <React.Fragment>
             <Box
-                className={classNames(
-                    styles.stageWrapper,
-                    {[styles.withColorPicker]: !isFullScreen && isColorPicking})}
+                className={classNames(styles.stageWrapper, {
+                    [styles.withColorPicker]: !isFullScreen && isColorPicking,
+                })}
                 onDoubleClick={onDoubleClick}
             >
                 <Box
-                    className={classNames(
-                        styles.stage,
-                        {[styles.fullScreen]: isFullScreen}
-                    )}
+                    className={classNames(styles.stage, {
+                        [styles.fullScreen]: isFullScreen,
+                    })}
                     style={{
                         height: stageDimensions.height,
-                        width: stageDimensions.width
+                        width: stageDimensions.width,
                     }}
                 >
                     <DOMElementRenderer
                         domElement={canvas}
                         style={{
                             height: stageDimensions.height,
-                            width: stageDimensions.width
+                            width: stageDimensions.width,
                         }}
                         {...boxProps}
                     />
@@ -80,16 +79,15 @@ const StageComponent = props => {
 
                 {/* `stageOverlays` is for items that should *not* have their overflow contained within the stage */}
                 <Box
-                    className={classNames(
-                        styles.stageOverlays,
-                        {[styles.fullScreen]: isFullScreen}
-                    )}
+                    className={classNames(styles.stageOverlays, {
+                        [styles.fullScreen]: isFullScreen,
+                    })}
                 >
                     <div
                         className={styles.stageBottomWrapper}
                         style={{
                             width: stageDimensions.width,
-                            height: stageDimensions.height
+                            height: stageDimensions.height,
                         }}
                     >
                         {micIndicator ? (
@@ -101,7 +99,7 @@ const StageComponent = props => {
                         {question === null ? null : (
                             <div
                                 className={styles.questionWrapper}
-                                style={{width: stageDimensions.width}}
+                                style={{ width: stageDimensions.width }}
                             >
                                 <Question
                                     question={question}
@@ -146,9 +144,9 @@ StageComponent.propTypes = {
     onQuestionAnswered: PropTypes.func,
     question: PropTypes.string,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
-    useEditorDragStyle: PropTypes.bool
+    useEditorDragStyle: PropTypes.bool,
 };
 StageComponent.defaultProps = {
-    dragRef: () => {}
+    dragRef: () => {},
 };
 export default StageComponent;

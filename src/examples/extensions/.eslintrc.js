@@ -1,15 +1,18 @@
 module.exports = {
-    extends: ['scratch'], // no ES6
+    extends: ["scratch"], // no ES6
     env: {
-        worker: true
+        worker: true,
     },
     globals: {
-        Scratch: true
+        Scratch: true,
     },
     rules: {
-        'no-warning-comments': [0, {
-            terms: ['todo'],
-            location: 'start'
-        }]
-    }
+        "no-warning-comments": [
+            0,
+            {
+                terms: ["todo"],
+                location: "start",
+            },
+        ],
+    },
 };

@@ -1,42 +1,38 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import GUI from '../containers/gui.jsx';
-import HashParserHOC from '../lib/hash-parser-hoc.jsx';
-import AppStateHOC from '../lib/app-state-hoc.jsx';
+import GUI from "../containers/gui.jsx";
+import HashParserHOC from "../lib/hash-parser-hoc.jsx";
+import AppStateHOC from "../lib/app-state-hoc.jsx";
 const WrappedGui = AppStateHOC(HashParserHOC(GUI));
 
-
-const DEFAULT_PROJECT_ID = '10015059';
+const DEFAULT_PROJECT_ID = "10015059";
 
 class Player extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.updateProject = this.updateProject.bind(this);
 
         this.state = {
-            projectId: window.location.hash.substring(1) || DEFAULT_PROJECT_ID
+            projectId: window.location.hash.substring(1) || DEFAULT_PROJECT_ID,
         };
     }
-    componentDidMount () {
-        window.addEventListener('hashchange', this.updateProject);
+    componentDidMount() {
+        window.addEventListener("hashchange", this.updateProject);
         if (!window.location.hash.substring(1)) {
             window.location.hash = DEFAULT_PROJECT_ID;
         }
     }
-    componentWillUnmount () {
-        window.addEventListener('hashchange', this.updateProject);
+    componentWillUnmount() {
+        window.addEventListener("hashchange", this.updateProject);
     }
-    updateProject () {
-        this.setState({projectId: window.location.hash.substring(1)});
+    updateProject() {
+        this.setState({ projectId: window.location.hash.substring(1) });
     }
-    render () {
+    render() {
         return (
-            <div style={{display: 'flex'}}>
-                <WrappedGui
-                    isPlayerOnly
-                    isFullScreen={false}
-                />
+            <div style={{ display: "flex" }}>
+                <WrappedGui isPlayerOnly isFullScreen={false} />
                 <iframe
                     allowFullScreen
                     allowTransparency
@@ -50,7 +46,7 @@ class Player extends React.Component {
     }
 }
 
-const appTarget = document.createElement('div');
+const appTarget = document.createElement("div");
 document.body.appendChild(appTarget);
 
 ReactDOM.render(<Player />, appTarget);

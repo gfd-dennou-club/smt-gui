@@ -14,10 +14,11 @@
 }
 
 .input-group-column span {
-    margin-bottom: .25rem;
+    margin-bottom: 0.25rem;
 }
 
-.input-label, .input-label-secondary {
+.input-label,
+.input-label-secondary {
     font-size: 0.625rem;
     user-select: none;
     cursor: default;
@@ -25,12 +26,14 @@
     white-space: nowrap;
 }
 
-[dir="ltr"] .input-label, [dir="ltr"] .input-label-secondary {
-    margin-right: .5rem;
+[dir="ltr"] .input-label,
+[dir="ltr"] .input-label-secondary {
+    margin-right: 0.5rem;
 }
 
-[dir="rtl"] .input-label, [dir="rtl"] .input-label-secondary {
-    margin-left: .5rem;
+[dir="rtl"] .input-label,
+[dir="rtl"] .input-label-secondary {
+    margin-left: 0.5rem;
 }
 
 .input-label {

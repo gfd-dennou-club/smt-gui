@@ -1,46 +1,40 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {injectIntl, intlShape, defineMessages} from 'react-intl';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import { injectIntl, intlShape, defineMessages } from "react-intl";
 
-import decksLibraryContent from '../lib/libraries/decks/index.jsx';
-import tutorialTags from '../lib/libraries/tutorial-tags';
+import decksLibraryContent from "../lib/libraries/decks/index.jsx";
+import tutorialTags from "../lib/libraries/tutorial-tags";
 
-import analytics from '../lib/analytics';
-import {notScratchDesktop} from '../lib/isScratchDesktop';
+import analytics from "../lib/analytics";
+import { notScratchDesktop } from "../lib/isScratchDesktop";
 
-import LibraryComponent from '../components/library/library.jsx';
+import LibraryComponent from "../components/library/library.jsx";
 
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
 
-import {
-    closeTipsLibrary
-} from '../reducers/modals';
+import { closeTipsLibrary } from "../reducers/modals";
 
-import {
-    activateDeck
-} from '../reducers/cards';
+import { activateDeck } from "../reducers/cards";
 
 const messages = defineMessages({
     tipsLibraryTitle: {
-        defaultMessage: 'Choose a Tutorial',
-        description: 'Heading for the help/tutorials library',
-        id: 'gui.tipsLibrary.tutorials'
-    }
+        defaultMessage: "Choose a Tutorial",
+        description: "Heading for the help/tutorials library",
+        id: "gui.tipsLibrary.tutorials",
+    },
 });
 
 class TipsLibrary extends React.PureComponent {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'handleItemSelect'
-        ]);
+        bindAll(this, ["handleItemSelect"]);
     }
-    handleItemSelect (item) {
+    handleItemSelect(item) {
         analytics.event({
-            category: 'library',
-            action: 'Select How-to',
-            label: item.id
+            category: "library",
+            action: "Select How-to",
+            label: item.id,
         });
 
         /*
@@ -53,26 +47,30 @@ class TipsLibrary extends React.PureComponent {
             UPDATE well now Paul is wrapped into this as well. Sigh...
                 eventually we will find a solution that doesn't involve loading a whole project
         */
-        if (item.requiredProjectId && (item.requiredProjectId !== this.props.projectId)) {
+        if (
+            item.requiredProjectId &&
+            item.requiredProjectId !== this.props.projectId
+        ) {
             const urlParams = `/projects/${item.requiredProjectId}/editor?tutorial=${item.urlId}`;
-            return window.open(window.location.origin + urlParams, '_blank');
+            return window.open(window.location.origin + urlParams, "_blank");
         }
 
         this.props.onActivateDeck(item.id);
     }
-    render () {
+    render() {
         const decksLibraryThumbnailData = Object.keys(decksLibraryContent)
-            .filter(id => {
+            .filter((id) => {
                 if (notScratchDesktop()) return true; // Do not filter anything in online editor
                 const deck = decksLibraryContent[id];
                 // Scratch Desktop doesn't want tutorials with `requiredProjectId`
-                if (deck.hasOwnProperty('requiredProjectId')) return false;
+                if (deck.hasOwnProperty("requiredProjectId")) return false;
                 // Scratch Desktop should not load tutorials that are _only_ videos
-                if (deck.steps.filter(s => s.title).length === 0) return false;
+                if (deck.steps.filter((s) => s.title).length === 0)
+                    return false;
                 // Allow any other tutorials
                 return true;
             })
-            .map(id => ({
+            .map((id) => ({
                 rawURL: decksLibraryContent[id].img,
                 id: id,
                 name: decksLibraryContent[id].name,
@@ -80,7 +78,7 @@ class TipsLibrary extends React.PureComponent {
                 tags: decksLibraryContent[id].tags,
                 urlId: decksLibraryContent[id].urlId,
                 requiredProjectId: decksLibraryContent[id].requiredProjectId,
-                hidden: decksLibraryContent[id].hidden || false
+                hidden: decksLibraryContent[id].hidden || false,
             }));
 
         if (!this.props.visible) return null;
@@ -104,20 +102,19 @@ TipsLibrary.propTypes = {
     onActivateDeck: PropTypes.func.isRequired,
     onRequestClose: PropTypes.func,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    visible: PropTypes.bool
+    visible: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     visible: state.scratchGui.modals.tipsLibrary,
-    projectId: state.scratchGui.projectState.projectId
+    projectId: state.scratchGui.projectState.projectId,
 });
 
-const mapDispatchToProps = dispatch => ({
-    onActivateDeck: id => dispatch(activateDeck(id)),
-    onRequestClose: () => dispatch(closeTipsLibrary())
+const mapDispatchToProps = (dispatch) => ({
+    onActivateDeck: (id) => dispatch(activateDeck(id)),
+    onRequestClose: () => dispatch(closeTipsLibrary()),
 });
 
-export default injectIntl(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TipsLibrary));
+export default injectIntl(
+    connect(mapStateToProps, mapDispatchToProps)(TipsLibrary)
+);

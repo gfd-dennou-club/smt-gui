@@ -1,21 +1,15 @@
-import classNames from 'classnames';
-import {FormattedMessage} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
-import Button from '../button/button.jsx';
+import classNames from "classnames";
+import { FormattedMessage } from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
+import Button from "../button/button.jsx";
 
-import communityIcon from './icon--see-community.svg';
-import styles from './community-button.css';
+import communityIcon from "./icon--see-community.svg";
+import styles from "./community-button.css";
 
-const CommunityButton = ({
-    className,
-    onClick
-}) => (
+const CommunityButton = ({ className, onClick }) => (
     <Button
-        className={classNames(
-            className,
-            styles.communityButton
-        )}
+        className={classNames(className, styles.communityButton)}
         iconClassName={styles.communityButtonIcon}
         iconSrc={communityIcon}
         onClick={onClick}
@@ -30,11 +24,11 @@ const CommunityButton = ({
 
 CommunityButton.propTypes = {
     className: PropTypes.string,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
 };
 
 CommunityButton.defaultProps = {
-    onClick: () => {}
+    onClick: () => {},
 };
 
 export default CommunityButton;

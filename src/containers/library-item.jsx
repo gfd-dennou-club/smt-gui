@@ -1,113 +1,124 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {injectIntl} from 'react-intl';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import { injectIntl } from "react-intl";
 
-import LibraryItemComponent from '../components/library-item/library-item.jsx';
+import LibraryItemComponent from "../components/library-item/library-item.jsx";
 
 class LibraryItem extends React.PureComponent {
-    constructor (props) {
+    constructor(props) {
         super(props);
         bindAll(this, [
-            'handleBlur',
-            'handleClick',
-            'handleFocus',
-            'handleKeyPress',
-            'handleMouseEnter',
-            'handleMouseLeave',
-            'handlePlay',
-            'handleStop',
-            'rotateIcon',
-            'startRotatingIcons',
-            'stopRotatingIcons'
+            "handleBlur",
+            "handleClick",
+            "handleFocus",
+            "handleKeyPress",
+            "handleMouseEnter",
+            "handleMouseLeave",
+            "handlePlay",
+            "handleStop",
+            "rotateIcon",
+            "startRotatingIcons",
+            "stopRotatingIcons",
         ]);
         this.state = {
             iconIndex: 0,
-            isRotatingIcon: false
+            isRotatingIcon: false,
         };
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
         clearInterval(this.intervalId);
     }
-    handleBlur (id) {
+    handleBlur(id) {
         this.handleMouseLeave(id);
     }
-    handleClick (e) {
+    handleClick(e) {
         if (!this.props.disabled) {
             this.props.onSelect(this.props.id);
         }
         e.preventDefault();
     }
-    handleFocus (id) {
+    handleFocus(id) {
         if (!this.props.showPlayButton) {
             this.handleMouseEnter(id);
         }
     }
-    handleKeyPress (e) {
-        if (e.key === ' ' || e.key === 'Enter') {
+    handleKeyPress(e) {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault();
             this.props.onSelect(this.props.id);
         }
     }
-    handleMouseEnter () {
+    handleMouseEnter() {
         // only show hover effects on the item if not showing a play button
         if (!this.props.showPlayButton) {
             this.props.onMouseEnter(this.props.id);
             if (this.props.icons && this.props.icons.length) {
                 this.stopRotatingIcons();
-                this.setState({
-                    isRotatingIcon: true
-                }, this.startRotatingIcons);
+                this.setState(
+                    {
+                        isRotatingIcon: true,
+                    },
+                    this.startRotatingIcons
+                );
             }
         }
     }
-    handleMouseLeave () {
+    handleMouseLeave() {
         // only show hover effects on the item if not showing a play button
         if (!this.props.showPlayButton) {
             this.props.onMouseLeave(this.props.id);
             if (this.props.icons && this.props.icons.length) {
-                this.setState({
-                    isRotatingIcon: false
-                }, this.stopRotatingIcons);
+                this.setState(
+                    {
+                        isRotatingIcon: false,
+                    },
+                    this.stopRotatingIcons
+                );
             }
         }
     }
-    handlePlay () {
+    handlePlay() {
         this.props.onMouseEnter(this.props.id);
     }
-    handleStop () {
+    handleStop() {
         this.props.onMouseLeave(this.props.id);
     }
-    startRotatingIcons () {
+    startRotatingIcons() {
         this.rotateIcon();
         this.intervalId = setInterval(this.rotateIcon, 300);
     }
-    stopRotatingIcons () {
+    stopRotatingIcons() {
         if (this.intervalId) {
             this.intervalId = clearInterval(this.intervalId);
         }
     }
-    rotateIcon () {
-        const nextIconIndex = (this.state.iconIndex + 1) % this.props.icons.length;
-        this.setState({iconIndex: nextIconIndex});
+    rotateIcon() {
+        const nextIconIndex =
+            (this.state.iconIndex + 1) % this.props.icons.length;
+        this.setState({ iconIndex: nextIconIndex });
     }
-    curIconMd5 () {
+    curIconMd5() {
         const iconMd5Prop = this.props.iconMd5;
-        if (this.props.icons &&
+        if (
+            this.props.icons &&
             this.state.isRotatingIcon &&
-            this.state.iconIndex < this.props.icons.length) {
+            this.state.iconIndex < this.props.icons.length
+        ) {
             const icon = this.props.icons[this.state.iconIndex] || {};
-            return icon.md5ext || // 3.0 library format
+            return (
+                icon.md5ext || // 3.0 library format
                 icon.baseLayerMD5 || // 2.0 library format, TODO GH-5084
-                iconMd5Prop;
+                iconMd5Prop
+            );
         }
         return iconMd5Prop;
     }
-    render () {
+    render() {
         const iconMd5 = this.curIconMd5();
-        const iconURL = iconMd5 ?
-            `https://cdn.assets.scratch.mit.edu/internalapi/asset/${iconMd5}/get/` :
-            this.props.iconRawURL;
+        const iconURL = iconMd5
+            ? `https://cdn.assets.scratch.mit.edu/internalapi/asset/${iconMd5}/get/`
+            : this.props.iconRawURL;
         return (
             <LibraryItemComponent
                 bluetoothRequired={this.props.bluetoothRequired}
@@ -121,7 +132,9 @@ class LibraryItem extends React.PureComponent {
                 icons={this.props.icons}
                 id={this.props.id}
                 insetIconURL={this.props.insetIconURL}
-                internetConnectionRequired={this.props.internetConnectionRequired}
+                internetConnectionRequired={
+                    this.props.internetConnectionRequired
+                }
                 isPlaying={this.props.isPlaying}
                 name={this.props.name}
                 showPlayButton={this.props.showPlayButton}
@@ -141,10 +154,7 @@ class LibraryItem extends React.PureComponent {
 LibraryItem.propTypes = {
     bluetoothRequired: PropTypes.bool,
     collaborator: PropTypes.string,
-    description: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.node
-    ]),
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     disabled: PropTypes.bool,
     extensionId: PropTypes.string,
     featured: PropTypes.bool,
@@ -154,21 +164,18 @@ LibraryItem.propTypes = {
     icons: PropTypes.arrayOf(
         PropTypes.shape({
             baseLayerMD5: PropTypes.string, // 2.0 library format, TODO GH-5084
-            md5ext: PropTypes.string // 3.0 library format
+            md5ext: PropTypes.string, // 3.0 library format
         })
     ),
     id: PropTypes.number.isRequired,
     insetIconURL: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
     isPlaying: PropTypes.bool,
-    name: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.node
-    ]),
+    name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
-    showPlayButton: PropTypes.bool
+    showPlayButton: PropTypes.bool,
 };
 
 export default injectIntl(LibraryItem);

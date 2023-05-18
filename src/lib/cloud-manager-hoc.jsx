@@ -1,18 +1,14 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import {connect} from 'react-redux';
-import bindAll from 'lodash.bindall';
+import PropTypes from "prop-types";
+import React from "react";
+import { connect } from "react-redux";
+import bindAll from "lodash.bindall";
 
-import VM from 'scratch-vm';
-import CloudProvider from '../lib/cloud-provider';
+import VM from "scratch-vm";
+import CloudProvider from "../lib/cloud-provider";
 
-import {
-    getIsShowingWithId
-} from '../reducers/project-state';
+import { getIsShowingWithId } from "../reducers/project-state";
 
-import {
-    showAlertWithTimeout
-} from '../reducers/alerts';
+import { showAlertWithTimeout } from "../reducers/alerts";
 
 /*
  * Higher Order Component to manage the connection to the cloud server.
@@ -21,28 +17,31 @@ import {
  */
 const cloudManagerHOC = function (WrappedComponent) {
     class CloudManager extends React.Component {
-        constructor (props) {
+        constructor(props) {
             super(props);
             this.cloudProvider = null;
-            bindAll(this, [
-                'handleCloudDataUpdate',
-                'handleExtensionAdded'
-            ]);
+            bindAll(this, ["handleCloudDataUpdate", "handleExtensionAdded"]);
 
-            this.props.vm.on('HAS_CLOUD_DATA_UPDATE', this.handleCloudDataUpdate);
-            this.props.vm.on('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.on(
+                "HAS_CLOUD_DATA_UPDATE",
+                this.handleCloudDataUpdate
+            );
+            this.props.vm.on("EXTENSION_ADDED", this.handleExtensionAdded);
         }
-        componentDidMount () {
+        componentDidMount() {
             if (this.shouldConnect(this.props)) {
                 this.connectToCloud();
             }
         }
-        componentDidUpdate (prevProps) {
+        componentDidUpdate(prevProps) {
             // TODO need to add cloud provider disconnection logic and cloud data clearing logic
             // when loading a new project e.g. via file upload
             // (and eventually move it out of the vm.clear function)
 
-            if (this.shouldConnect(this.props) && !this.shouldConnect(prevProps)) {
+            if (
+                this.shouldConnect(this.props) &&
+                !this.shouldConnect(prevProps)
+            ) {
                 this.connectToCloud();
             }
 
@@ -50,47 +49,58 @@ const cloudManagerHOC = function (WrappedComponent) {
                 this.disconnectFromCloud();
             }
         }
-        componentWillUnmount () {
+        componentWillUnmount() {
             this.disconnectFromCloud();
         }
-        canUseCloud (props) {
-            return !!(props.cloudHost && props.username && props.vm && props.projectId && props.hasCloudPermission);
+        canUseCloud(props) {
+            return !!(
+                props.cloudHost &&
+                props.username &&
+                props.vm &&
+                props.projectId &&
+                props.hasCloudPermission
+            );
         }
-        shouldConnect (props) {
-            return !this.isConnected() && this.canUseCloud(props) &&
-                props.isShowingWithId && props.vm.runtime.hasCloudData() &&
-                props.canModifyCloudData;
+        shouldConnect(props) {
+            return (
+                !this.isConnected() &&
+                this.canUseCloud(props) &&
+                props.isShowingWithId &&
+                props.vm.runtime.hasCloudData() &&
+                props.canModifyCloudData
+            );
         }
-        shouldDisconnect (props, prevProps) {
-            return this.isConnected() &&
-                ( // Can no longer use cloud or cloud provider info is now stale
-                    !this.canUseCloud(props) ||
+        shouldDisconnect(props, prevProps) {
+            return (
+                this.isConnected() && // Can no longer use cloud or cloud provider info is now stale
+                (!this.canUseCloud(props) ||
                     !props.vm.runtime.hasCloudData() ||
-                    (props.projectId !== prevProps.projectId) ||
-                    (props.username !== prevProps.username) ||
+                    props.projectId !== prevProps.projectId ||
+                    props.username !== prevProps.username ||
                     // Editing someone else's project
-                    !props.canModifyCloudData
-                );
+                    !props.canModifyCloudData)
+            );
         }
-        isConnected () {
+        isConnected() {
             return this.cloudProvider && !!this.cloudProvider.connection;
         }
-        connectToCloud () {
+        connectToCloud() {
             this.cloudProvider = new CloudProvider(
                 this.props.cloudHost,
                 this.props.vm,
                 this.props.username,
-                this.props.projectId);
+                this.props.projectId
+            );
             this.props.vm.setCloudProvider(this.cloudProvider);
         }
-        disconnectFromCloud () {
+        disconnectFromCloud() {
             if (this.cloudProvider) {
                 this.cloudProvider.requestCloseConnection();
                 this.cloudProvider = null;
                 this.props.vm.setCloudProvider(null);
             }
         }
-        handleCloudDataUpdate (projectHasCloudData) {
+        handleCloudDataUpdate(projectHasCloudData) {
             if (this.isConnected() && !projectHasCloudData) {
                 this.disconnectFromCloud();
             } else if (this.shouldConnect(this.props)) {
@@ -98,14 +108,14 @@ const cloudManagerHOC = function (WrappedComponent) {
                 this.connectToCloud();
             }
         }
-        handleExtensionAdded (categoryInfo) {
+        handleExtensionAdded(categoryInfo) {
             // Note that props.vm.extensionManager.isExtensionLoaded('videoSensing') is still false
             // at the point of this callback, so it is difficult to reuse the canModifyCloudData logic.
-            if (categoryInfo.id === 'videoSensing' && this.isConnected()) {
+            if (categoryInfo.id === "videoSensing" && this.isConnected()) {
                 this.disconnectFromCloud();
             }
         }
-        render () {
+        render() {
             const {
                 /* eslint-disable no-unused-vars */
                 canModifyCloudData,
@@ -137,14 +147,14 @@ const cloudManagerHOC = function (WrappedComponent) {
         onShowCloudInfo: PropTypes.func,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         username: PropTypes.string,
-        vm: PropTypes.instanceOf(VM).isRequired
+        vm: PropTypes.instanceOf(VM).isRequired,
     };
 
     CloudManager.defaultProps = {
         cloudHost: null,
         hasCloudPermission: false,
         onShowCloudInfo: () => {},
-        username: null
+        username: null,
     };
 
     const mapStateToProps = (state, ownProps) => {
@@ -153,20 +163,21 @@ const cloudManagerHOC = function (WrappedComponent) {
             isShowingWithId: getIsShowingWithId(loadingState),
             projectId: state.scratchGui.projectState.projectId,
             // if you're editing someone else's project, you can't modify cloud data
-            canModifyCloudData: (!state.scratchGui.mode.hasEverEnteredEditor || ownProps.canSave) &&
+            canModifyCloudData:
+                (!state.scratchGui.mode.hasEverEnteredEditor ||
+                    ownProps.canSave) &&
                 // possible security concern if the program attempts to encode webcam data over cloud variables
-                !ownProps.vm.extensionManager.isExtensionLoaded('videoSensing')
+                !ownProps.vm.extensionManager.isExtensionLoaded("videoSensing"),
         };
     };
 
-    const mapDispatchToProps = dispatch => ({
-        onShowCloudInfo: () => showAlertWithTimeout(dispatch, 'cloudInfo')
+    const mapDispatchToProps = (dispatch) => ({
+        onShowCloudInfo: () => showAlertWithTimeout(dispatch, "cloudInfo"),
     });
 
     // Allow incoming props to override redux-provided props. Used to mock in tests.
-    const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(
-        {}, stateProps, dispatchProps, ownProps
-    );
+    const mergeProps = (stateProps, dispatchProps, ownProps) =>
+        Object.assign({}, stateProps, dispatchProps, ownProps);
 
     return connect(
         mapStateToProps,

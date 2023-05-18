@@ -1,41 +1,42 @@
-import React from 'react';
-import {ContextMenu, MenuItem} from 'react-contextmenu';
-import classNames from 'classnames';
+import React from "react";
+import { ContextMenu, MenuItem } from "react-contextmenu";
+import classNames from "classnames";
 
-import styles from './context-menu.css';
+import styles from "./context-menu.css";
 
-const StyledContextMenu = props => (
-    <ContextMenu
-        {...props}
-        className={styles.contextMenu}
-    />
+const StyledContextMenu = (props) => (
+    <ContextMenu {...props} className={styles.contextMenu} />
 );
 
-const StyledMenuItem = props => (
+const StyledMenuItem = (props) => (
+    <MenuItem {...props} attributes={{ className: styles.menuItem }} />
+);
+
+const BorderedMenuItem = (props) => (
     <MenuItem
         {...props}
-        attributes={{className: styles.menuItem}}
+        attributes={{
+            className: classNames(styles.menuItem, styles.menuItemBordered),
+        }}
     />
 );
 
-const BorderedMenuItem = props => (
+const DangerousMenuItem = (props) => (
     <MenuItem
         {...props}
-        attributes={{className: classNames(styles.menuItem, styles.menuItemBordered)}}
+        attributes={{
+            className: classNames(
+                styles.menuItem,
+                styles.menuItemBordered,
+                styles.menuItemDanger
+            ),
+        }}
     />
 );
-
-const DangerousMenuItem = props => (
-    <MenuItem
-        {...props}
-        attributes={{className: classNames(styles.menuItem, styles.menuItemBordered, styles.menuItemDanger)}}
-    />
-);
-
 
 export {
     BorderedMenuItem,
     DangerousMenuItem,
     StyledContextMenu as ContextMenu,
-    StyledMenuItem as MenuItem
+    StyledMenuItem as MenuItem,
 };

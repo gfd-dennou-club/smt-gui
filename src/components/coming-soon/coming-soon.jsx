@@ -1,57 +1,64 @@
-import bindAll from 'lodash.bindall';
-import classNames from 'classnames';
-import {defineMessages, injectIntl, intlShape, FormattedMessage} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
-import ReactTooltip from 'react-tooltip';
+import bindAll from "lodash.bindall";
+import classNames from "classnames";
+import {
+    defineMessages,
+    injectIntl,
+    intlShape,
+    FormattedMessage,
+} from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
+import ReactTooltip from "react-tooltip";
 
-import styles from './coming-soon.css';
+import styles from "./coming-soon.css";
 
-import hattiIcon from './icon-hatti.png';
-import hatti2Icon from './icon2-hatti.png';
+import hattiIcon from "./icon-hatti.png";
+import hatti2Icon from "./icon2-hatti.png";
 
 const messages = defineMessages({
     message1: {
-        defaultMessage: 'Don\'t worry, we\'re on it {emoji}',
-        description: 'One of the "coming soon" random messages for yet-to-be-done features',
-        id: 'gui.comingSoon.message1'
+        defaultMessage: "Don't worry, we're on it {emoji}",
+        description:
+            'One of the "coming soon" random messages for yet-to-be-done features',
+        id: "gui.comingSoon.message1",
     },
     message2: {
-        defaultMessage: 'Coming Soon...',
-        description: 'One of the "coming soon" random messages for yet-to-be-done features',
-        id: 'gui.comingSoon.message2'
+        defaultMessage: "Coming Soon...",
+        description:
+            'One of the "coming soon" random messages for yet-to-be-done features',
+        id: "gui.comingSoon.message2",
     },
     message3: {
-        defaultMessage: 'We\'re working on it {emoji}',
-        description: 'One of the "coming soon" random messages for yet-to-be-done features',
-        id: 'gui.comingSoon.message3'
-    }
+        defaultMessage: "We're working on it {emoji}",
+        description:
+            'One of the "coming soon" random messages for yet-to-be-done features',
+        id: "gui.comingSoon.message3",
+    },
 });
 
 class ComingSoonContent extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'setHide',
-            'setShow',
-            'getRandomMessage'
-        ]);
+        bindAll(this, ["setHide", "setShow", "getRandomMessage"]);
         this.state = {
-            isShowing: false
+            isShowing: false,
         };
     }
-    setShow () {
+    setShow() {
         // needed to set the opacity to 1, since the default is .9 on show
-        this.setState({isShowing: true});
+        this.setState({ isShowing: true });
     }
-    setHide () {
-        this.setState({isShowing: false});
+    setHide() {
+        this.setState({ isShowing: false });
     }
-    getRandomMessage () {
+    getRandomMessage() {
         // randomly chooses a messages from `messages` to display in the tooltip.
         const images = [hattiIcon, hatti2Icon];
-        const messageNumber = Math.floor(Math.random() * Object.keys(messages).length) + 1;
-        const imageNumber = Math.floor(Math.random() * Object.keys(images).length);
+        const messageNumber =
+            Math.floor(Math.random() * Object.keys(messages).length) + 1;
+        const imageNumber = Math.floor(
+            Math.random() * Object.keys(images).length
+        );
         return (
             <FormattedMessage
                 {...messages[`message${messageNumber}`]}
@@ -61,27 +68,23 @@ class ComingSoonContent extends React.Component {
                             className={styles.comingSoonImage}
                             src={images[imageNumber]}
                         />
-                    )
+                    ),
                 }}
             />
         );
     }
-    render () {
+    render() {
         return (
             <ReactTooltip
                 afterHide={this.setHide}
                 afterShow={this.setShow}
-                className={classNames(
-                    styles.comingSoon,
-                    this.props.className,
-                    {
-                        [styles.show]: (this.state.isShowing),
-                        [styles.left]: (this.props.place === 'left'),
-                        [styles.right]: (this.props.place === 'right'),
-                        [styles.top]: (this.props.place === 'top'),
-                        [styles.bottom]: (this.props.place === 'bottom')
-                    }
-                )}
+                className={classNames(styles.comingSoon, this.props.className, {
+                    [styles.show]: this.state.isShowing,
+                    [styles.left]: this.props.place === "left",
+                    [styles.right]: this.props.place === "right",
+                    [styles.top]: this.props.place === "top",
+                    [styles.bottom]: this.props.place === "bottom",
+                })}
                 getContent={this.getRandomMessage}
                 id={this.props.tooltipId}
             />
@@ -92,17 +95,17 @@ class ComingSoonContent extends React.Component {
 ComingSoonContent.propTypes = {
     className: PropTypes.string,
     intl: intlShape,
-    place: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
-    tooltipId: PropTypes.string.isRequired
+    place: PropTypes.oneOf(["top", "right", "bottom", "left"]),
+    tooltipId: PropTypes.string.isRequired,
 };
 
 ComingSoonContent.defaultProps = {
-    place: 'bottom'
+    place: "bottom",
 };
 
 const ComingSoon = injectIntl(ComingSoonContent);
 
-const ComingSoonTooltip = props => (
+const ComingSoonTooltip = (props) => (
     <div className={props.className}>
         <div
             data-delay-hide={props.delayHide}
@@ -127,17 +130,14 @@ ComingSoonTooltip.propTypes = {
     className: PropTypes.string,
     delayHide: PropTypes.number,
     delayShow: PropTypes.number,
-    place: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
+    place: PropTypes.oneOf(["top", "right", "bottom", "left"]),
     tooltipClassName: PropTypes.string,
-    tooltipId: PropTypes.string.isRequired
+    tooltipId: PropTypes.string.isRequired,
 };
 
 ComingSoonTooltip.defaultProps = {
     delayHide: 0,
-    delayShow: 0
+    delayShow: 0,
 };
 
-export {
-    ComingSoon as ComingSoonComponent,
-    ComingSoonTooltip
-};
+export { ComingSoon as ComingSoonComponent, ComingSoonTooltip };

@@ -1,27 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
 
-import Spinner from '../spinner/spinner.jsx';
-import {AlertLevels} from '../../lib/alerts/index.jsx';
+import Spinner from "../spinner/spinner.jsx";
+import { AlertLevels } from "../../lib/alerts/index.jsx";
 
-import styles from './inline-message.css';
+import styles from "./inline-message.css";
 
-const InlineMessageComponent = ({
-    content,
-    iconSpinner,
-    level
-}) => (
-    <div
-        className={classNames(styles.inlineMessage, styles[level])}
-    >
+const InlineMessageComponent = ({ content, iconSpinner, level }) => (
+    <div className={classNames(styles.inlineMessage, styles[level])}>
         {/* TODO: implement Rtl handling */}
         {iconSpinner && (
-            <Spinner
-                small
-                className={styles.spinner}
-                level={'info'}
-            />
+            <Spinner small className={styles.spinner} level={"info"} />
         )}
         {content}
     </div>
@@ -30,11 +20,11 @@ const InlineMessageComponent = ({
 InlineMessageComponent.propTypes = {
     content: PropTypes.element,
     iconSpinner: PropTypes.bool,
-    level: PropTypes.string
+    level: PropTypes.string,
 };
 
 InlineMessageComponent.defaultProps = {
-    level: AlertLevels.INFO
+    level: AlertLevels.INFO,
 };
 
 export default InlineMessageComponent;

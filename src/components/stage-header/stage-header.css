@@ -27,9 +27,9 @@
 }
 
 .embed-smalruby-logo img {
-    height:  1.6rem;
+    height: 1.6rem;
     vertical-align: middle;
-    opacity: .6;
+    opacity: 0.6;
 }
 
 .stage-size-row {
@@ -41,11 +41,11 @@
 }
 
 [dir="ltr"] .stage-size-toggle-group {
-    margin-right: .2rem;
+    margin-right: 0.2rem;
 }
 
 [dir="rtl"] .stage-size-toggle-group {
-    margin-left: .2rem;
+    margin-left: 0.2rem;
 }
 
 .stage-button {

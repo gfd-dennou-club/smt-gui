@@ -9,8 +9,8 @@
     overflow: hidden;
     justify-content: flex-start;
     border-radius: $space;
-    padding-top: .875rem;
-    padding-bottom: .875rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
     padding-left: 1rem;
     padding-right: 1rem;
     margin-bottom: 7px;
@@ -19,8 +19,8 @@
 }
 
 .alert.warn {
-    background: #FFF0DF;
-    border: 1px solid #FF8C1A;
+    background: #fff0df;
+    border: 1px solid #ff8c1a;
     box-shadow: 0px 0px 0px 2px rgba(255, 140, 26, 0.25);
 }
 
@@ -48,11 +48,11 @@
 .alert-message {
     color: #555;
     font-weight: bold;
-    font-size: .8125rem;
-    line-height: .875rem;
+    font-size: 0.8125rem;
+    line-height: 0.875rem;
     display: flex;
     align-items: center;
-    padding-right: .5rem;
+    padding-right: 0.5rem;
 }
 
 .alert-buttons {
@@ -61,7 +61,7 @@
 }
 
 .alert-close-button {
-    outline-style:none;
+    outline-style: none;
 }
 
 .alert-close-button-container {
@@ -76,7 +76,7 @@
     width: 6.5rem;
     padding: 0.55rem 0.9rem;
     border-radius: 0.35rem;
-    background: #FF8C1A;
+    background: #ff8c1a;
     color: white;
     font-weight: 700;
     font-size: 0.77rem;
@@ -86,7 +86,7 @@
     justify-content: center;
     align-items: center;
     align-self: stretch;
-    outline-style:none;
+    outline-style: none;
 }
 
 [dir="ltr"] .alert-connection-button {

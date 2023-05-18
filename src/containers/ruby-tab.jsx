@@ -1,49 +1,59 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {injectIntl, intlShape} from 'react-intl';
-import {connect} from 'react-redux';
-import AceEditor from 'react-ace';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import { injectIntl, intlShape } from "react-intl";
+import { connect } from "react-redux";
+import AceEditor from "react-ace";
 import {
     rubyCodeShape,
     updateRubyCode,
-    updateRubyCodeTarget
-} from '../reducers/ruby-code';
-import VM from 'scratch-vm';
-import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
+    updateRubyCodeTarget,
+} from "../reducers/ruby-code";
+import VM from "scratch-vm";
+import { BLOCKS_TAB_INDEX } from "../reducers/editor-tab";
 
-import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
+import RubyToBlocksConverterHOC from "../lib/ruby-to-blocks-converter-hoc.jsx";
 
-import 'ace-builds/src-noconflict/mode-ruby';
-import 'ace-builds/src-noconflict/theme-clouds';
-import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/src-noconflict/ext-language_tools';
+import "ace-builds/src-noconflict/mode-ruby";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/ext-searchbox";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 class RubyTab extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'setAceEditorRef'
-        ]);
+        bindAll(this, ["setAceEditorRef"]);
     }
 
-    componentDidUpdate (prevProps) {
+    componentDidUpdate(prevProps) {
         let modified = this.props.rubyCode.modified;
         if (modified) {
-            const targetId = this.props.rubyCode.target ? this.props.rubyCode.target.id : null;
+            const targetId = this.props.rubyCode.target
+                ? this.props.rubyCode.target.id
+                : null;
             const changedTarget =
-                  this.props.vm.editingTarget && this.props.rubyCode.target &&
-                  this.props.vm.editingTarget.id !== targetId;
+                this.props.vm.editingTarget &&
+                this.props.rubyCode.target &&
+                this.props.vm.editingTarget.id !== targetId;
             if (changedTarget || this.props.blocksTabVisible) {
-                const converter = this.props.targetCodeToBlocks(this.props.intl);
+                const converter = this.props.targetCodeToBlocks(
+                    this.props.intl
+                );
                 if (converter.result) {
                     converter.apply().then(() => {
                         modified = false;
 
                         if (!modified) {
-                            if ((this.props.isVisible && !prevProps.isVisible) ||
-                                (this.props.editingTarget && this.props.editingTarget !== prevProps.editingTarget)) {
-                                this.props.updateRubyCodeTargetState(this.props.vm.editingTarget);
+                            if (
+                                (this.props.isVisible &&
+                                    !prevProps.isVisible) ||
+                                (this.props.editingTarget &&
+                                    this.props.editingTarget !==
+                                        prevProps.editingTarget)
+                            ) {
+                                this.props.updateRubyCodeTargetState(
+                                    this.props.vm.editingTarget
+                                );
                             }
                         }
 
@@ -61,9 +71,14 @@ class RubyTab extends React.Component {
         }
 
         if (!modified) {
-            if ((this.props.isVisible && !prevProps.isVisible) ||
-                (this.props.editingTarget && this.props.editingTarget !== prevProps.editingTarget)) {
-                this.props.updateRubyCodeTargetState(this.props.vm.editingTarget);
+            if (
+                (this.props.isVisible && !prevProps.isVisible) ||
+                (this.props.editingTarget &&
+                    this.props.editingTarget !== prevProps.editingTarget)
+            ) {
+                this.props.updateRubyCodeTargetState(
+                    this.props.vm.editingTarget
+                );
             }
         }
 
@@ -73,24 +88,17 @@ class RubyTab extends React.Component {
         }
     }
 
-    setAceEditorRef (ref) {
+    setAceEditorRef(ref) {
         this.aceEditorRef = ref;
     }
 
-    render () {
-        const {
-            onChange,
-            rubyCode
-        } = this.props;
-        const {
-            code,
-            errors,
-            markers
-        } = rubyCode;
+    render() {
+        const { onChange, rubyCode } = this.props;
+        const { code, errors, markers } = rubyCode;
         return (
             <AceEditor
                 annotations={errors}
-                editorProps={{$blockScrolling: true}}
+                editorProps={{ $blockScrolling: true }}
                 fontSize={16}
                 height="inherit"
                 markers={markers}
@@ -100,13 +108,19 @@ class RubyTab extends React.Component {
                 setOptions={{
                     tabSize: 2,
                     useSoftTabs: true,
-                    showInvisibles: true
+                    showInvisibles: true,
                 }}
                 style={{
-                    border: '1px solid hsla(0, 0%, 0%, 0.15)',
-                    borderBottomRightRadius: '0.5rem',
-                    borderTopRightRadius: '0.5rem',
-                    fontFamily: ['Monaco', 'Menlo', 'Consolas', 'source-code-pro', 'monospace']
+                    border: "1px solid hsla(0, 0%, 0%, 0.15)",
+                    borderBottomRightRadius: "0.5rem",
+                    borderTopRightRadius: "0.5rem",
+                    fontFamily: [
+                        "Monaco",
+                        "Menlo",
+                        "Consolas",
+                        "source-code-pro",
+                        "monospace",
+                    ],
                 }}
                 theme="clouds"
                 value={code}
@@ -126,21 +140,22 @@ RubyTab.propTypes = {
     rubyCode: rubyCodeShape,
     targetCodeToBlocks: PropTypes.func,
     updateRubyCodeTargetState: PropTypes.func,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
 };
 
-const mapStateToProps = state => ({
-    blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
+const mapStateToProps = (state) => ({
+    blocksTabVisible:
+        state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
     editingTarget: state.scratchGui.targets.editingTarget,
-    rubyCode: state.scratchGui.rubyCode
+    rubyCode: state.scratchGui.rubyCode,
 });
 
-const mapDispatchToProps = dispatch => ({
-    onChange: code => dispatch(updateRubyCode(code)),
-    updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target))
+const mapDispatchToProps = (dispatch) => ({
+    onChange: (code) => dispatch(updateRubyCode(code)),
+    updateRubyCodeTargetState: (target) =>
+        dispatch(updateRubyCodeTarget(target)),
 });
 
-export default RubyToBlocksConverterHOC(injectIntl(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(RubyTab)));
+export default RubyToBlocksConverterHOC(
+    injectIntl(connect(mapStateToProps, mapDispatchToProps)(RubyTab))
+);

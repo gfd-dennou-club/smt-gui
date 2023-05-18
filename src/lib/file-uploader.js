@@ -1,7 +1,7 @@
-import {BitmapAdapter, sanitizeSvg} from 'scratch-svg-renderer';
-import randomizeSpritePosition from './randomize-sprite-position.js';
-import bmpConverter from './bmp-converter';
-import gifDecoder from './gif-decoder';
+import { BitmapAdapter, sanitizeSvg } from "scratch-svg-renderer";
+import randomizeSpritePosition from "./randomize-sprite-position.js";
+import bmpConverter from "./bmp-converter";
+import gifDecoder from "./gif-decoder";
 
 /**
  * Extract the file name given a string of the form fileName + ext
@@ -11,7 +11,7 @@ import gifDecoder from './gif-decoder';
  */
 const extractFileName = function (nameExt) {
     // There could be multiple dots, but get the stuff before the first .
-    const nameParts = nameExt.split('.', 1); // we only care about the first .
+    const nameParts = nameExt.split(".", 1); // we only care about the first .
     return nameParts[0];
 };
 
@@ -82,7 +82,7 @@ const createVMAsset = function (storage, assetType, dataFormat, data) {
         dataFormat: dataFormat,
         asset: asset,
         md5: `${asset.assetId}.${dataFormat}`,
-        assetId: asset.assetId
+        assetId: asset.assetId,
     };
 };
 
@@ -97,51 +97,63 @@ const createVMAsset = function (storage, assetType, dataFormat, data) {
  * adding the costume to the VM and handling other UI flow that should come after adding the costume
  * @param {Function} handleError The function to execute if there is an error parsing the costume
  */
-const costumeUpload = function (fileData, fileType, storage, handleCostume, handleError = () => {}) {
+const costumeUpload = function (
+    fileData,
+    fileType,
+    storage,
+    handleCostume,
+    handleError = () => {}
+) {
     let costumeFormat = null;
     let assetType = null;
     switch (fileType) {
-    case 'image/svg+xml': {
-        // run svg bytes through scratch-svg-renderer's sanitization code
-        fileData = sanitizeSvg.sanitizeByteStream(fileData);
+        case "image/svg+xml": {
+            // run svg bytes through scratch-svg-renderer's sanitization code
+            fileData = sanitizeSvg.sanitizeByteStream(fileData);
 
-        costumeFormat = storage.DataFormat.SVG;
-        assetType = storage.AssetType.ImageVector;
-        break;
-    }
-    case 'image/jpeg': {
-        costumeFormat = storage.DataFormat.JPG;
-        assetType = storage.AssetType.ImageBitmap;
-        break;
-    }
-    case 'image/bmp': {
-        // Convert .bmp files to .png to compress them. .bmps are completely uncompressed,
-        // and would otherwise take up a lot of storage space and take much longer to upload and download.
-        bmpConverter(fileData).then(dataUrl => {
-            costumeUpload(dataUrl, 'image/png', storage, handleCostume);
-        });
-        return; // Return early because we're triggering another proper costumeUpload
-    }
-    case 'image/png': {
-        costumeFormat = storage.DataFormat.PNG;
-        assetType = storage.AssetType.ImageBitmap;
-        break;
-    }
-    case 'image/gif': {
-        let costumes = [];
-        gifDecoder(fileData, (frameNumber, dataUrl, numFrames) => {
-            costumeUpload(dataUrl, 'image/png', storage, costumes_ => {
-                costumes = costumes.concat(costumes_);
-                if (frameNumber === numFrames - 1) {
-                    handleCostume(costumes);
-                }
-            }, handleError);
-        });
-        return; // Abandon this load, do not try to load gif itself
-    }
-    default:
-        handleError(`Encountered unexpected file type: ${fileType}`);
-        return;
+            costumeFormat = storage.DataFormat.SVG;
+            assetType = storage.AssetType.ImageVector;
+            break;
+        }
+        case "image/jpeg": {
+            costumeFormat = storage.DataFormat.JPG;
+            assetType = storage.AssetType.ImageBitmap;
+            break;
+        }
+        case "image/bmp": {
+            // Convert .bmp files to .png to compress them. .bmps are completely uncompressed,
+            // and would otherwise take up a lot of storage space and take much longer to upload and download.
+            bmpConverter(fileData).then((dataUrl) => {
+                costumeUpload(dataUrl, "image/png", storage, handleCostume);
+            });
+            return; // Return early because we're triggering another proper costumeUpload
+        }
+        case "image/png": {
+            costumeFormat = storage.DataFormat.PNG;
+            assetType = storage.AssetType.ImageBitmap;
+            break;
+        }
+        case "image/gif": {
+            let costumes = [];
+            gifDecoder(fileData, (frameNumber, dataUrl, numFrames) => {
+                costumeUpload(
+                    dataUrl,
+                    "image/png",
+                    storage,
+                    (costumes_) => {
+                        costumes = costumes.concat(costumes_);
+                        if (frameNumber === numFrames - 1) {
+                            handleCostume(costumes);
+                        }
+                    },
+                    handleError
+                );
+            });
+            return; // Abandon this load, do not try to load gif itself
+        }
+        default:
+            handleError(`Encountered unexpected file type: ${fileType}`);
+            return;
     }
 
     const bitmapAdapter = new BitmapAdapter();
@@ -163,7 +175,9 @@ const costumeUpload = function (fileData, fileType, storage, handleCostume, hand
         addCostumeFromBuffer(new Uint8Array(fileData));
     } else {
         // otherwise it's a bitmap
-        bitmapAdapter.importBitmap(fileData, fileType).then(addCostumeFromBuffer)
+        bitmapAdapter
+            .importBitmap(fileData, fileType)
+            .then(addCostumeFromBuffer)
             .catch(handleError);
     }
 };
@@ -179,84 +193,100 @@ const costumeUpload = function (fileData, fileType, storage, handleCostume, hand
  * as well as handling other UI flow that should come after adding the sound
  * @param {Function} handleError The function to execute if there is an error parsing the sound
  */
-const soundUpload = function (fileData, fileType, storage, handleSound, handleError) {
+const soundUpload = function (
+    fileData,
+    fileType,
+    storage,
+    handleSound,
+    handleError
+) {
     let soundFormat;
     switch (fileType) {
-    case 'audio/mp3':
-    case 'audio/mpeg': {
-        soundFormat = storage.DataFormat.MP3;
-        break;
-    }
-    case 'audio/wav':
-    case 'audio/wave':
-    case 'audio/x-wav':
-    case 'audio/x-pn-wav': {
-        soundFormat = storage.DataFormat.WAV;
-        break;
-    }
-    default:
-        handleError(`Encountered unexpected file type: ${fileType}`);
-        return;
+        case "audio/mp3":
+        case "audio/mpeg": {
+            soundFormat = storage.DataFormat.MP3;
+            break;
+        }
+        case "audio/wav":
+        case "audio/wave":
+        case "audio/x-wav":
+        case "audio/x-pn-wav": {
+            soundFormat = storage.DataFormat.WAV;
+            break;
+        }
+        default:
+            handleError(`Encountered unexpected file type: ${fileType}`);
+            return;
     }
 
     const vmSound = createVMAsset(
         storage,
         storage.AssetType.Sound,
         soundFormat,
-        new Uint8Array(fileData));
+        new Uint8Array(fileData)
+    );
 
     handleSound(vmSound);
 };
 
-const spriteUpload = function (fileData, fileType, spriteName, storage, handleSprite, handleError = () => {}) {
+const spriteUpload = function (
+    fileData,
+    fileType,
+    spriteName,
+    storage,
+    handleSprite,
+    handleError = () => {}
+) {
     switch (fileType) {
-    case '':
-    case 'application/zip': { // We think this is a .sprite2 or .sprite3 file
-        handleSprite(new Uint8Array(fileData));
-        return;
-    }
-    case 'image/svg+xml':
-    case 'image/png':
-    case 'image/bmp':
-    case 'image/jpeg':
-    case 'image/gif': {
-        // Make a sprite from an image by making it a costume first
-        costumeUpload(fileData, fileType, storage, vmCostumes => {
-            vmCostumes.forEach((costume, i) => {
-                costume.name = `${spriteName}${i ? i + 1 : ''}`;
-            });
-            const newSprite = {
-                name: spriteName,
-                isStage: false,
-                x: 0, // x/y will be randomized below
-                y: 0,
-                visible: true,
-                size: 100,
-                rotationStyle: 'all around',
-                direction: 90,
-                draggable: false,
-                currentCostume: 0,
-                blocks: {},
-                variables: {},
-                costumes: vmCostumes,
-                sounds: [] // TODO are all of these necessary?
-            };
-            randomizeSpritePosition(newSprite);
-            // TODO probably just want sprite upload to handle this object directly
-            handleSprite(JSON.stringify(newSprite));
-        }, handleError);
-        return;
-    }
-    default: {
-        handleError(`Encountered unexpected file type: ${fileType}`);
-        return;
-    }
+        case "":
+        case "application/zip": {
+            // We think this is a .sprite2 or .sprite3 file
+            handleSprite(new Uint8Array(fileData));
+            return;
+        }
+        case "image/svg+xml":
+        case "image/png":
+        case "image/bmp":
+        case "image/jpeg":
+        case "image/gif": {
+            // Make a sprite from an image by making it a costume first
+            costumeUpload(
+                fileData,
+                fileType,
+                storage,
+                (vmCostumes) => {
+                    vmCostumes.forEach((costume, i) => {
+                        costume.name = `${spriteName}${i ? i + 1 : ""}`;
+                    });
+                    const newSprite = {
+                        name: spriteName,
+                        isStage: false,
+                        x: 0, // x/y will be randomized below
+                        y: 0,
+                        visible: true,
+                        size: 100,
+                        rotationStyle: "all around",
+                        direction: 90,
+                        draggable: false,
+                        currentCostume: 0,
+                        blocks: {},
+                        variables: {},
+                        costumes: vmCostumes,
+                        sounds: [], // TODO are all of these necessary?
+                    };
+                    randomizeSpritePosition(newSprite);
+                    // TODO probably just want sprite upload to handle this object directly
+                    handleSprite(JSON.stringify(newSprite));
+                },
+                handleError
+            );
+            return;
+        }
+        default: {
+            handleError(`Encountered unexpected file type: ${fileType}`);
+            return;
+        }
     }
 };
 
-export {
-    handleFileUpload,
-    costumeUpload,
-    soundUpload,
-    spriteUpload
-};
+export { handleFileUpload, costumeUpload, soundUpload, spriteUpload };

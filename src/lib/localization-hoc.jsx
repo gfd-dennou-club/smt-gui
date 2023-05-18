@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import ConnectedIntlProvider from './connected-intl-provider.jsx';
+import ConnectedIntlProvider from "./connected-intl-provider.jsx";
 
 /*
  * Higher Order Component to provide localiztion state. Creates a nested IntlProvider
@@ -13,12 +13,12 @@ import ConnectedIntlProvider from './connected-intl-provider.jsx';
  */
 const LocalizationHOC = function (WrappedComponent) {
     class LocalizationWrapper extends React.Component {
-        componentDidUpdate (prevProps) {
+        componentDidUpdate(prevProps) {
             if (prevProps.locale !== this.props.locale) {
                 this.props.onSetLanguage(this.props.locale);
             }
         }
-        render () {
+        render() {
             const {
                 locale, // eslint-disable-line no-unused-vars
                 onSetLanguage, // eslint-disable-line no-unused-vars
@@ -33,23 +33,20 @@ const LocalizationHOC = function (WrappedComponent) {
     }
     LocalizationWrapper.propTypes = {
         locale: PropTypes.string,
-        onSetLanguage: PropTypes.func
+        onSetLanguage: PropTypes.func,
     };
 
     LocalizationWrapper.defaultProps = {
-        onSetLanguage: () => {}
+        onSetLanguage: () => {},
     };
 
-    const mapStateToProps = state => ({
-        locale: state.locales.locale
+    const mapStateToProps = (state) => ({
+        locale: state.locales.locale,
     });
 
     const mapDispatchToProps = () => ({});
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(LocalizationWrapper);
+    return connect(mapStateToProps, mapDispatchToProps)(LocalizationWrapper);
 };
 
 export default LocalizationHOC;

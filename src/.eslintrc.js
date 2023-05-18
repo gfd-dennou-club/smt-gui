@@ -1,35 +1,46 @@
-const path = require('path');
+const path = require("path");
 module.exports = {
     root: true,
-    extends: ['scratch', 'scratch/es6', 'scratch/react', 'plugin:import/errors'],
+    extends: [
+        "scratch",
+        "scratch/es6",
+        "scratch/react",
+        "plugin:import/errors",
+    ],
     env: {
-        browser: true
+        browser: true,
     },
     globals: {
-        process: true
+        process: true,
     },
     rules: {
-        'import/no-mutable-exports': 'error',
-        'import/no-commonjs': 'error',
-        'import/no-amd': 'error',
-        'import/no-nodejs-modules': 'error',
-        'react/jsx-no-literals': 'error',
-        'no-confusing-arrow': ['error', {
-            'allowParens': true
-        }],
-        'no-warning-comments': [0, {
-            terms: ['todo'],
-            location: 'start'
-        }]
+        "import/no-mutable-exports": "error",
+        "import/no-commonjs": "error",
+        "import/no-amd": "error",
+        "import/no-nodejs-modules": "error",
+        "react/jsx-no-literals": "error",
+        "no-confusing-arrow": [
+            "error",
+            {
+                allowParens: true,
+            },
+        ],
+        "no-warning-comments": [
+            0,
+            {
+                terms: ["todo"],
+                location: "start",
+            },
+        ],
     },
     settings: {
         react: {
-            version: '16.2' // Prevent 16.3 lifecycle method errors
+            version: "16.2", // Prevent 16.3 lifecycle method errors
         },
-        'import/resolver': {
+        "import/resolver": {
             webpack: {
-                config: path.resolve(__dirname, '../webpack.config.js')
-            }
-        }
-    }
+                config: path.resolve(__dirname, "../webpack.config.js"),
+            },
+        },
+    },
 };

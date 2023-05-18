@@ -1,22 +1,20 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {connect} from 'react-redux';
-import {projectTitleInitialState} from '../reducers/project-title';
-import RubyGenerator from '../lib/ruby-generator';
-import VM from 'scratch-vm';
-import {rubyCodeShape} from '../reducers/ruby-code';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import { connect } from "react-redux";
+import { projectTitleInitialState } from "../reducers/project-title";
+import RubyGenerator from "../lib/ruby-generator";
+import VM from "scratch-vm";
+import { rubyCodeShape } from "../reducers/ruby-code";
 
 class RubyDownloader extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'downloadProject'
-        ]);
+        bindAll(this, ["downloadProject"]);
     }
-    saveRuby () {
+    saveRuby() {
         const idToTarget = {};
-        this.props.vm.runtime.targets.forEach(target => {
+        this.props.vm.runtime.targets.forEach((target) => {
             idToTarget[target.id] = target;
         });
         const targets = [idToTarget[this.props.stage.id]];
@@ -25,22 +23,22 @@ class RubyDownloader extends React.Component {
             targets[sprite.order + 1] = idToTarget[id];
         }
         const options = {
-            requires: ['smalruby3'],
-            withSpriteNew: true
+            requires: ["smalruby3"],
+            withSpriteNew: true,
         };
         if (this.props.rubyCode.modified) {
             options.targetsCode = {
-                [this.props.rubyCode.target.id]: this.props.rubyCode.code
+                [this.props.rubyCode.target.id]: this.props.rubyCode.code,
             };
         }
         const code = RubyGenerator.targetsToCode(targets, options);
 
         return new Blob([code], {
-            type: 'text/x-ruby-script'
+            type: "text/x-ruby-script",
         });
     }
-    downloadProject () {
-        const downloadLink = document.createElement('a');
+    downloadProject() {
+        const downloadLink = document.createElement("a");
         document.body.appendChild(downloadLink);
 
         const content = this.saveRuby();
@@ -60,14 +58,9 @@ class RubyDownloader extends React.Component {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(downloadLink);
     }
-    render () {
-        const {
-            children
-        } = this.props;
-        return children(
-            this.props.className,
-            this.downloadProject
-        );
+    render() {
+        const { children } = this.props;
+        return children(this.props.className, this.downloadProject);
     }
 }
 
@@ -85,25 +78,30 @@ RubyDownloader.propTypes = {
     onSaveFinished: PropTypes.func,
     projectFilename: PropTypes.string,
     rubyCode: rubyCodeShape,
-    sprites: PropTypes.objectOf(PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        order: PropTypes.number.isRequired
-    })),
+    sprites: PropTypes.objectOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            order: PropTypes.number.isRequired,
+        })
+    ),
     stage: PropTypes.shape({
-        id: PropTypes.string
+        id: PropTypes.string,
     }),
-    vm: PropTypes.instanceOf(VM)
+    vm: PropTypes.instanceOf(VM),
 };
 RubyDownloader.defaultProps = {
-    className: ''
+    className: "",
 };
 
-const mapStateToProps = state => ({
-    projectFilename: getProjectFilename(state.scratchGui.projectTitle, projectTitleInitialState),
+const mapStateToProps = (state) => ({
+    projectFilename: getProjectFilename(
+        state.scratchGui.projectTitle,
+        projectTitleInitialState
+    ),
     sprites: state.scratchGui.targets.sprites,
     stage: state.scratchGui.targets.stage,
     vm: state.scratchGui.vm,
-    rubyCode: state.scratchGui.rubyCode
+    rubyCode: state.scratchGui.rubyCode,
 });
 
 export default connect(

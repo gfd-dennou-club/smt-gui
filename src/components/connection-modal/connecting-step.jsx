@@ -1,17 +1,17 @@
-import {FormattedMessage} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
-import classNames from 'classnames';
+import { FormattedMessage } from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
+import classNames from "classnames";
 
-import Box from '../box/box.jsx';
-import Dots from './dots.jsx';
+import Box from "../box/box.jsx";
+import Dots from "./dots.jsx";
 
-import bluetoothIcon from './icons/bluetooth-white.svg';
-import closeIcon from '../close-button/icon--close.svg';
+import bluetoothIcon from "./icons/bluetooth-white.svg";
+import closeIcon from "../close-button/icon--close.svg";
 
-import styles from './connection-modal.css';
+import styles from "./connection-modal.css";
 
-const ConnectingStep = props => (
+const ConnectingStep = (props) => (
     <Box className={styles.body}>
         <Box className={styles.activityArea}>
             <Box className={styles.centeredRow}>
@@ -20,7 +20,7 @@ const ConnectingStep = props => (
                         className={styles.peripheralActivityIcon}
                         src={props.connectionIconURL}
                     />
-                    {props.extensionId !== 'mesh' && (
+                    {props.extensionId !== "mesh" && (
                         <img
                             className={styles.bluetoothConnectingIcon}
                             src={bluetoothIcon}
@@ -30,19 +30,22 @@ const ConnectingStep = props => (
             </Box>
         </Box>
         <Box className={styles.bottomArea}>
-            <Box className={classNames(styles.bottomAreaItem, styles.instructions)}>
+            <Box
+                className={classNames(
+                    styles.bottomAreaItem,
+                    styles.instructions
+                )}
+            >
                 {props.connectingMessage}
             </Box>
-            <Dots
-                className={styles.bottomAreaItem}
-                counter={1}
-                total={3}
-            />
-            <div className={classNames(styles.bottomAreaItem, styles.segmentedButton)}>
-                <button
-                    disabled
-                    className={styles.connectionButton}
-                >
+            <Dots className={styles.bottomAreaItem} counter={1} total={3} />
+            <div
+                className={classNames(
+                    styles.bottomAreaItem,
+                    styles.segmentedButton
+                )}
+            >
+                <button disabled className={styles.connectionButton}>
                     <FormattedMessage
                         defaultMessage="Connecting..."
                         description="Label indicating that connection is in progress"
@@ -67,7 +70,7 @@ ConnectingStep.propTypes = {
     connectingMessage: PropTypes.node.isRequired,
     connectionIconURL: PropTypes.string.isRequired,
     extensionId: PropTypes.string.isRequired,
-    onDisconnect: PropTypes.func
+    onDisconnect: PropTypes.func,
 };
 
 export default ConnectingStep;

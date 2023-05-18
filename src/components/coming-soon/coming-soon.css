@@ -12,8 +12,8 @@
     background-color: $data-primary !important;
     border: 1px solid $ui-black-transparent !important;
     border-radius: $form-radius !important;
-    box-shadow: 0 0 .5rem $ui-black-transparent !important;
-    padding: .75rem 1rem !important;
+    box-shadow: 0 0 0.5rem $ui-black-transparent !important;
+    padding: 0.75rem 1rem !important;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 1rem !important;
     line-height: 1.25rem !important;
@@ -39,26 +39,26 @@
 }
 
 .left:after {
-    margin-top: -.5rem !important;
-    right: -.5rem !important;
+    margin-top: -0.5rem !important;
+    right: -0.5rem !important;
     transform: rotate(45deg) !important;
 }
 
 .right:after {
-    margin-top: -.5rem !important;
-    left: -.5rem !important;
+    margin-top: -0.5rem !important;
+    left: -0.5rem !important;
     transform: rotate(-135deg) !important;
 }
 
 .top:after {
-    margin-right: -.5rem !important;
-    bottom: -.5rem !important;
+    margin-right: -0.5rem !important;
+    bottom: -0.5rem !important;
     transform: rotate(135deg) !important;
 }
 
 .bottom:after {
-    margin-left: -.5rem !important;
-    top: -.5rem !important;
+    margin-left: -0.5rem !important;
+    top: -0.5rem !important;
     transform: rotate(-45deg) !important;
 }
 
@@ -69,9 +69,9 @@
 }
 
 [dir="ltr"] .coming-soon-image {
-    margin-left: .125rem;
+    margin-left: 0.125rem;
 }
 
 [dir="rtl"] .coming-soon-image {
-    margin-right: .125rem;
+    margin-right: 0.125rem;
 }

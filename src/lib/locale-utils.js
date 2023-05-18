@@ -4,17 +4,17 @@
  */
 
 const wideLocales = [
-    'ab',
-    'ca',
-    'de',
-    'el',
-    'it',
-    'ja',
-    'ja-Hira',
-    'ko',
-    'hu',
-    'ru',
-    'vi'
+    "ab",
+    "ca",
+    "de",
+    "el",
+    "it",
+    "ja",
+    "ja-Hira",
+    "ko",
+    "hu",
+    "ru",
+    "vi",
 ];
 
 /**
@@ -23,11 +23,6 @@ const wideLocales = [
  * @return {bool} true if translations in this language are too long
  */
 
-const isWideLocale = locale => (
-    wideLocales.indexOf(locale) !== -1
-);
+const isWideLocale = (locale) => wideLocales.indexOf(locale) !== -1;
 
-export {
-    wideLocales,
-    isWideLocale
-};
+export { wideLocales, isWideLocale };

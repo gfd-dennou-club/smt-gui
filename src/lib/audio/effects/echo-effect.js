@@ -1,11 +1,11 @@
 class EchoEffect {
-    static get DELAY_TIME () {
+    static get DELAY_TIME() {
         return 0.25;
     }
-    static get TAIL_SECONDS () {
+    static get TAIL_SECONDS() {
         return 0.75;
     }
-    constructor (audioContext, startTime, endTime) {
+    constructor(audioContext, startTime, endTime) {
         this.audioContext = audioContext;
         this.input = this.audioContext.createGain();
         this.output = this.audioContext.createGain();

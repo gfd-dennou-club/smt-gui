@@ -1,32 +1,36 @@
-import {defineMessages, FormattedMessage, intlShape, injectIntl} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
+import {
+    defineMessages,
+    FormattedMessage,
+    intlShape,
+    injectIntl,
+} from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
 
-import Box from '../box/box.jsx';
-import Modal from '../../containers/modal.jsx';
+import Box from "../box/box.jsx";
+import Modal from "../../containers/modal.jsx";
 
-import styles from './slider-prompt.css';
-
+import styles from "./slider-prompt.css";
 
 const messages = defineMessages({
     minValue: {
-        defaultMessage: 'Minimum value',
-        description: 'Label of slider modal',
-        id: 'gui.sliderModal.min'
+        defaultMessage: "Minimum value",
+        description: "Label of slider modal",
+        id: "gui.sliderModal.min",
     },
     maxValue: {
-        defaultMessage: 'Maximum value',
-        description: 'Label of slider modal',
-        id: 'gui.sliderModal.max'
+        defaultMessage: "Maximum value",
+        description: "Label of slider modal",
+        id: "gui.sliderModal.max",
     },
     title: {
-        defaultMessage: 'Change slider range',
-        description: 'Title of slider modal',
-        id: 'gui.sliderModal.title'
-    }
+        defaultMessage: "Change slider range",
+        description: "Title of slider modal",
+        id: "gui.sliderModal.title",
+    },
 });
 
-const SliderPromptComponent = props => (
+const SliderPromptComponent = (props) => (
     <Modal
         className={styles.modalContent}
         contentLabel={props.intl.formatMessage(messages.title)}
@@ -73,10 +77,7 @@ const SliderPromptComponent = props => (
                         id="gui.sliderPrompt.cancel"
                     />
                 </button>
-                <button
-                    className={styles.okButton}
-                    onClick={props.onOk}
-                >
+                <button className={styles.okButton} onClick={props.onOk}>
                     <FormattedMessage
                         defaultMessage="OK"
                         description="Button in prompt for confirming the dialog"
@@ -96,7 +97,7 @@ SliderPromptComponent.propTypes = {
     onChangeMax: PropTypes.func.isRequired,
     onChangeMin: PropTypes.func.isRequired,
     onKeyPress: PropTypes.func.isRequired,
-    onOk: PropTypes.func.isRequired
+    onOk: PropTypes.func.isRequired,
 };
 
 export default injectIntl(SliderPromptComponent);

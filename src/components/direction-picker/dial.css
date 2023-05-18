@@ -12,7 +12,9 @@
     position: relative;
 }
 
-.dial-face, .dial-handle, .gauge {
+.dial-face,
+.dial-handle,
+.gauge {
     position: absolute;
     top: 0;
     left: 0;

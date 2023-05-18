@@ -1,21 +1,21 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import Box from '../box/box.jsx';
-import {defineMessages, injectIntl, intlShape} from 'react-intl';
-import RecordingStep from '../../containers/recording-step.jsx';
-import PlaybackStep from '../../containers/playback-step.jsx';
-import Modal from '../../containers/modal.jsx';
-import styles from './record-modal.css';
+import PropTypes from "prop-types";
+import React from "react";
+import Box from "../box/box.jsx";
+import { defineMessages, injectIntl, intlShape } from "react-intl";
+import RecordingStep from "../../containers/recording-step.jsx";
+import PlaybackStep from "../../containers/playback-step.jsx";
+import Modal from "../../containers/modal.jsx";
+import styles from "./record-modal.css";
 
 const messages = defineMessages({
     title: {
-        defaultMessage: 'Record Sound',
-        description: 'Recording modal title',
-        id: 'gui.recordModal.title'
-    }
+        defaultMessage: "Record Sound",
+        description: "Recording modal title",
+        id: "gui.recordModal.title",
+    },
 });
 
-const RecordModal = props => (
+const RecordModal = (props) => (
     <Modal
         className={styles.modalContent}
         contentLabel={props.intl.formatMessage(messages.title)}
@@ -71,7 +71,7 @@ RecordModal.propTypes = {
     sampleRate: PropTypes.number,
     samples: PropTypes.instanceOf(Float32Array),
     trimEnd: PropTypes.number.isRequired,
-    trimStart: PropTypes.number.isRequired
+    trimStart: PropTypes.number.isRequired,
 };
 
 export default injectIntl(RecordModal);

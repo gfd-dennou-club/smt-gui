@@ -1,39 +1,40 @@
-import bindAll from 'lodash.bindall';
-import React from 'react';
-import PropTypes from 'prop-types';
+import bindAll from "lodash.bindall";
+import React from "react";
+import PropTypes from "prop-types";
 
-import {connect} from 'react-redux';
-import VM from 'scratch-vm';
+import { connect } from "react-redux";
+import VM from "scratch-vm";
 
 class TargetHighlight extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'getPageCoords'
-        ]);
+        bindAll(this, ["getPageCoords"]);
     }
 
     // Transform scratch coordinates into page coordinates
-    getPageCoords (x, y) {
-        const {stageWidth, stageHeight, vm} = this.props;
+    getPageCoords(x, y) {
+        const { stageWidth, stageHeight, vm } = this.props;
         // The renderers "nativeSize" is the [width, height] of the stage in scratch-units
         const nativeSize = vm.renderer.getNativeSize();
         return [
-            ((stageWidth / nativeSize[0]) * x) + (stageWidth / 2),
-            -((stageHeight / nativeSize[1]) * y) + (stageHeight / 2)
+            (stageWidth / nativeSize[0]) * x + stageWidth / 2,
+            -((stageHeight / nativeSize[1]) * y) + stageHeight / 2,
         ];
     }
 
-    render () {
-        const {
-            className,
-            highlightedTargetId,
-            highlightedTargetTime,
-            vm
-        } = this.props;
+    render() {
+        const { className, highlightedTargetId, highlightedTargetTime, vm } =
+            this.props;
 
-        if (!(highlightedTargetId && vm && vm.renderer &&
-            vm.runtime.getTargetById(highlightedTargetId))) return null;
+        if (
+            !(
+                highlightedTargetId &&
+                vm &&
+                vm.renderer &&
+                vm.runtime.getTargetById(highlightedTargetId)
+            )
+        )
+            return null;
 
         const target = vm.runtime.getTargetById(highlightedTargetId);
         const bounds = vm.renderer.getBounds(target.drawableID);
@@ -48,11 +49,11 @@ class TargetHighlight extends React.Component {
                 // Ensure new DOM element each update to restart animation
                 key={highlightedTargetTime}
                 style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: `${top - pad}px`,
                     left: `${left - pad}px`,
-                    width: `${(right - left) + (2 * pad)}px`,
-                    height: `${(bottom - top) + (2 * pad)}px`
+                    width: `${right - left + 2 * pad}px`,
+                    height: `${bottom - top + 2 * pad}px`,
                 }}
             />
         );
@@ -65,18 +66,15 @@ TargetHighlight.propTypes = {
     highlightedTargetTime: PropTypes.number,
     stageHeight: PropTypes.number,
     stageWidth: PropTypes.number,
-    vm: PropTypes.instanceOf(VM)
+    vm: PropTypes.instanceOf(VM),
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     highlightedTargetTime: state.scratchGui.targets.highlightedTargetTime,
     highlightedTargetId: state.scratchGui.targets.highlightedTargetId,
-    vm: state.scratchGui.vm
+    vm: state.scratchGui.vm,
 });
 
 const mapDispatchToProps = () => ({});
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TargetHighlight);
+export default connect(mapStateToProps, mapDispatchToProps)(TargetHighlight);

@@ -7,7 +7,7 @@
 }
 
 .drag-over:after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -18,7 +18,7 @@
     transition: all 0.25s ease;
 }
 
-.blocks :global(.injectionDiv){
+.blocks :global(.injectionDiv) {
     position: absolute;
     top: 0;
     right: 0;
@@ -73,7 +73,6 @@
     border-right: none;
     border-left: 1px solid $ui-black-transparent;
 }
-
 
 .blocks :global(.blocklyBlockDragSurface) {
     /*

@@ -1,4 +1,4 @@
-import WavEncoder from 'wav-encoder';
+import WavEncoder from "wav-encoder";
 
 const SOUND_BYTE_LIMIT = 10 * 1000 * 1000; // 10mb
 
@@ -25,16 +25,22 @@ const computeChunkedRMS = function (samples, chunkSize = 1024) {
     return chunkLevels;
 };
 
-const encodeAndAddSoundToVM = function (vm, samples, sampleRate, name, callback) {
+const encodeAndAddSoundToVM = function (
+    vm,
+    samples,
+    sampleRate,
+    name,
+    callback
+) {
     WavEncoder.encode({
         sampleRate: sampleRate,
-        channelData: [samples]
-    }).then(wavBuffer => {
+        channelData: [samples],
+    }).then((wavBuffer) => {
         const vmSound = {
-            format: '',
-            dataFormat: 'wav',
+            format: "",
+            dataFormat: "wav",
             rate: sampleRate,
-            sampleCount: samples.length
+            sampleCount: samples.length,
         };
 
         // Create an asset from the encoded .wav and get resulting md5
@@ -73,20 +79,22 @@ const encodeAndAddSoundToVM = function (vm, samples, sampleRate, name, callback)
  * @returns {SoundBuffer} Downsampled buffer with half the sample rate
  */
 const downsampleIfNeeded = (buffer, resampler) => {
-    const {samples, sampleRate} = buffer;
+    const { samples, sampleRate } = buffer;
     const duration = samples.length / sampleRate;
     const encodedByteLength = samples.length * 2; /* bitDepth 16 bit */
     // Resolve immediately if already within byte limit
     if (encodedByteLength < SOUND_BYTE_LIMIT) {
-        return Promise.resolve({samples, sampleRate});
+        return Promise.resolve({ samples, sampleRate });
     }
     // If encodeable at 22khz, resample and call submitNewSamples again
     if (duration * 22050 * 2 < SOUND_BYTE_LIMIT) {
-        return resampler({samples, sampleRate}, 22050);
+        return resampler({ samples, sampleRate }, 22050);
     }
     // Cannot save this sound at 22khz, refuse to edit
     // In the future we could introduce further compression here
-    return Promise.reject(new Error('Sound too large to save, refusing to edit'));
+    return Promise.reject(
+        new Error("Sound too large to save, refusing to edit")
+    );
 };
 
 /**
@@ -94,7 +102,7 @@ const downsampleIfNeeded = (buffer, resampler) => {
  * @param {SoundBuffer} buffer - Buffer to resample
  * @returns {SoundBuffer} Downsampled buffer with half the sample rate
  */
-const dropEveryOtherSample = buffer => {
+const dropEveryOtherSample = (buffer) => {
     const newLength = Math.floor(buffer.samples.length / 2);
     const newSamples = new Float32Array(newLength);
     for (let i = 0; i < newLength; i++) {
@@ -102,7 +110,7 @@ const dropEveryOtherSample = buffer => {
     }
     return {
         samples: newSamples,
-        sampleRate: buffer.sampleRate / 2
+        sampleRate: buffer.sampleRate / 2,
     };
 };
 
@@ -111,5 +119,5 @@ export {
     computeChunkedRMS,
     encodeAndAddSoundToVM,
     downsampleIfNeeded,
-    dropEveryOtherSample
+    dropEveryOtherSample,
 };

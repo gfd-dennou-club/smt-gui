@@ -1,16 +1,13 @@
-import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import React from "react";
+import { FormattedMessage } from "react-intl";
 
-import turboIcon from './icon--turbo.svg';
+import turboIcon from "./icon--turbo.svg";
 
-import styles from './turbo-mode.css';
+import styles from "./turbo-mode.css";
 
 const TurboMode = () => (
     <div className={styles.turboContainer}>
-        <img
-            className={styles.turboIcon}
-            src={turboIcon}
-        />
+        <img className={styles.turboIcon} src={turboIcon} />
         <div className={styles.turboLabel}>
             <FormattedMessage
                 defaultMessage="Turbo Mode"

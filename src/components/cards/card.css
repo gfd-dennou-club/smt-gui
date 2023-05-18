@@ -9,40 +9,42 @@
 }
 
 .card-container {
-    position:absolute;
+    position: absolute;
     pointer-events: auto;
     z-index: $z-index-card;
     margin: 0.5rem 2rem;
     min-width: 468px;
 }
 
-.left-card, .right-card {
+.left-card,
+.right-card {
     height: 90%;
     position: absolute;
     top: 5%;
     background: $ui-white;
     border: 1px solid $ui-tertiary;
-    width: .75rem;
+    width: 0.75rem;
     z-index: 10;
     opacity: 0.9;
     overflow: hidden;
 }
 
 .left-card {
-    left: -.75rem;
+    left: -0.75rem;
     border-right: 0;
     border-top-left-radius: 0.75rem;
     border-bottom-left-radius: 0.75rem;
 }
 
 .right-card {
-    right: -.75rem;
+    right: -0.75rem;
     border-left: 0;
     border-top-right-radius: 0.75rem;
     border-bottom-right-radius: 0.75rem;
 }
 
-.left-card::after, .right-card::after {
+.left-card::after,
+.right-card::after {
     content: "";
     position: absolute;
     top: 0;
@@ -52,7 +54,8 @@
     background: $extensions-primary;
 }
 
-.left-button, .right-button {
+.left-button,
+.right-button {
     position: absolute;
     top: 50%;
     margin-top: -15px;
@@ -70,12 +73,14 @@
     transition: all 0.25s ease;
 }
 
-.left-button:hover, .right-button:hover {
+.left-button:hover,
+.right-button:hover {
     box-shadow: 0 0 0 6px $extensions-transparent;
     transform: scale(1.125);
 }
 
-.left-button img, .right-button img{
+.left-button img,
+.right-button img {
     width: 1.75rem;
 }
 
@@ -135,11 +140,13 @@
     padding: 0.75rem;
 }
 
-.shrink-expand-button:hover, .all-button:hover {
+.shrink-expand-button:hover,
+.all-button:hover {
     background-color: $ui-black-transparent;
 }
 
-.remove-button, .all-button {
+.remove-button,
+.all-button {
     cursor: pointer;
     color: white;
     display: flex;
@@ -149,7 +156,8 @@
     padding: 0.75rem;
 }
 
-.remove-button:hover, .all-button:hover {
+.remove-button:hover,
+.all-button:hover {
     background-color: $ui-black-transparent;
 }
 
@@ -183,7 +191,7 @@
     max-width: 450px;
     max-height: 200px;
     object-fit: contain;
-    background: #F9F9F9;
+    background: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -217,7 +225,7 @@
     color: $motion-primary;
     font-weight: bold;
     font-size: 0.85rem;
-    margin: .625rem 0px;
+    margin: 0.625rem 0px;
     text-align: center;
     font-weight: bold;
     text-align: center;
@@ -230,7 +238,7 @@
 
 .close-icon {
     height: 1.25rem;
-    margin: .125rem 0; /* To offset the .25rem difference in icon size */
+    margin: 0.125rem 0; /* To offset the .25rem difference in icon size */
 }
 
 [dir="ltr"] .help-icon {
@@ -267,7 +275,7 @@
     display: flex;
     align-items: center;
     color: $ui-white;
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: bold;
     line-height: 1rem;
     text-align: center;
@@ -288,7 +296,8 @@
     align-items: center;
 }
 
-.active-step-pip, .inactiveStepPip {
+.active-step-pip,
+.inactiveStepPip {
     width: 0.5rem;
     height: 0.5rem;
     margin: 0 0.25rem;

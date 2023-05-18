@@ -105,13 +105,21 @@
 .signal-bar {
     width: 4px;
     border-radius: 4px;
-    background-color: #DBDBDB;
+    background-color: #dbdbdb;
 }
 
-.signal-bar:nth-of-type(1) { height: 25%; }
-.signal-bar:nth-of-type(2) { height: 50%; }
-.signal-bar:nth-of-type(3) { height: 75%; }
-.signal-bar:nth-of-type(4) { height: 100%; }
+.signal-bar:nth-of-type(1) {
+    height: 25%;
+}
+.signal-bar:nth-of-type(2) {
+    height: 50%;
+}
+.signal-bar:nth-of-type(3) {
+    height: 75%;
+}
+.signal-bar:nth-of-type(4) {
+    height: 100%;
+}
 
 .green-bar {
     background-color: $pen-primary;
@@ -140,11 +148,11 @@
 }
 
 [dir="ltr"] .radar {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
 }
 
 [dir="rtl"] .radar {
-    margin-left: .5rem;
+    margin-left: 0.5rem;
 }
 
 @keyframes spin {
@@ -177,7 +185,6 @@
     box-shadow: 0px 0px 0px 4px $motion-transparent;
     /* animation: pulse-blue-ring 1s infinite ease-in-out alternate; */
     animation: wiggle 0.5s infinite ease-in-out alternate;
-
 }
 
 @keyframes pulse-blue-ring {
@@ -198,11 +205,21 @@
 }
 
 @keyframes wiggle {
-    0% {transform: rotate(3deg) scale(1.05);}
-    25% {transform: rotate(-3deg) scale(1.05);}
-    50% {transform: rotate(5deg) scale(1.05);}
-    75% {transform: rotate(-2deg) scale(1.05);}
-    100% {transform: rotate(0deg) scale(1.05);}
+    0% {
+        transform: rotate(3deg) scale(1.05);
+    }
+    25% {
+        transform: rotate(-3deg) scale(1.05);
+    }
+    50% {
+        transform: rotate(5deg) scale(1.05);
+    }
+    75% {
+        transform: rotate(-2deg) scale(1.05);
+    }
+    100% {
+        transform: rotate(0deg) scale(1.05);
+    }
 }
 
 .bluetooth-centered-icon {
@@ -224,7 +241,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: .5rem;
+    padding: 0.5rem;
 }
 
 .scratch-link-help {
@@ -232,8 +249,8 @@
     flex-direction: column;
     justify-content: space-around;
     height: 100%;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .scratch-link-help-step {
@@ -366,12 +383,12 @@
     flex-direction: column;
     align-items: center;
     padding-top: 1rem;
-    padding-bottom: .75rem;
-    padding-left: .75rem;
-    padding-right: .75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
 }
 
-.bottom-area .bottom-area-item+.bottom-area-item {
+.bottom-area .bottom-area-item + .bottom-area-item {
     margin-top: 1rem;
 }
 

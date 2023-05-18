@@ -15,7 +15,8 @@
     justify-content: space-around;
 }
 
-.meter-container, .waveform-container {
+.meter-container,
+.waveform-container {
     background: $ui-primary;
     border: 1px solid $ui-black-transparent;
     border-radius: 5px;
@@ -71,7 +72,8 @@
     opacity: 0.25;
 }
 
-.main-button-row button:active, .main-button-row button:focus {
+.main-button-row button:active,
+.main-button-row button:focus {
     outline: none;
 }
 

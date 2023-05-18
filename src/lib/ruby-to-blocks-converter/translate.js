@@ -1,5 +1,5 @@
 /* global Opal */
-import _ from 'lodash';
+import _ from "lodash";
 
 /**
  * Translate converter
@@ -10,24 +10,38 @@ const TranslateConverter = {
         let block;
         if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
             switch (name) {
-            case 'translate':
-                if (args.length === 2 && this._isNumberOrStringOrBlock(args[0]) && this._isStringOrBlock(args[1])) {
-                    block = this._createBlock('translate_getTranslate', 'value');
-                    this._addTextInput(block, 'WORDS', args[0]);
-                    this._addInput(
-                        block,
-                        'LANGUAGE',
-                        this._createFieldBlock('translate_menu_languages', 'languages', args[1])
+                case "translate":
+                    if (
+                        args.length === 2 &&
+                        this._isNumberOrStringOrBlock(args[0]) &&
+                        this._isStringOrBlock(args[1])
+                    ) {
+                        block = this._createBlock(
+                            "translate_getTranslate",
+                            "value"
+                        );
+                        this._addTextInput(block, "WORDS", args[0]);
+                        this._addInput(
+                            block,
+                            "LANGUAGE",
+                            this._createFieldBlock(
+                                "translate_menu_languages",
+                                "languages",
+                                args[1]
+                            )
+                        );
+                    }
+                    break;
+                case "language":
+                    block = this._createBlock(
+                        "translate_getViewerLanguage",
+                        "value"
                     );
-                }
-                break;
-            case 'language':
-                block = this._createBlock('translate_getViewerLanguage', 'value');
-                break;
+                    break;
             }
         }
         return block;
-    }
+    },
 };
 
 export default TranslateConverter;

@@ -1,10 +1,10 @@
-import bowser from 'bowser';
+import bowser from "bowser";
 
 const minVersions = {
-    chrome: '63',
-    msedge: '15',
-    firefox: '57',
-    safari: '11'
+    chrome: "63",
+    msedge: "15",
+    firefox: "57",
+    safari: "11",
 };
 
 /**
@@ -28,9 +28,6 @@ const supportedBrowser = () => {
 
 const recommendedBrowser = () =>
     !bowser.isUnsupportedBrowser(minVersions, true) ||
-    window.navigator.userAgent.toLowerCase().indexOf('googlebot') !== -1;
+    window.navigator.userAgent.toLowerCase().indexOf("googlebot") !== -1;
 
-export {
-    supportedBrowser as default,
-    recommendedBrowser
-};
+export { supportedBrowser as default, recommendedBrowser };

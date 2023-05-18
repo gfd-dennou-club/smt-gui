@@ -1,19 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import {
-    closeAlert,
-    filterPopupAlerts
-} from '../reducers/alerts';
+import { closeAlert, filterPopupAlerts } from "../reducers/alerts";
 
-import AlertsComponent from '../components/alerts/alerts.jsx';
+import AlertsComponent from "../components/alerts/alerts.jsx";
 
-const Alerts = ({
-    alertsList,
-    className,
-    onCloseAlert
-}) => (
+const Alerts = ({ alertsList, className, onCloseAlert }) => (
     <AlertsComponent
         // only display standard and extension alerts here
         alertsList={filterPopupAlerts(alertsList)}
@@ -25,18 +18,15 @@ const Alerts = ({
 Alerts.propTypes = {
     alertsList: PropTypes.arrayOf(PropTypes.object),
     className: PropTypes.string,
-    onCloseAlert: PropTypes.func
+    onCloseAlert: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
-    alertsList: state.scratchGui.alerts.alertsList
+const mapStateToProps = (state) => ({
+    alertsList: state.scratchGui.alerts.alertsList,
 });
 
-const mapDispatchToProps = dispatch => ({
-    onCloseAlert: index => dispatch(closeAlert(index))
+const mapDispatchToProps = (dispatch) => ({
+    onCloseAlert: (index) => dispatch(closeAlert(index)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Alerts);
+export default connect(mapStateToProps, mapDispatchToProps)(Alerts);

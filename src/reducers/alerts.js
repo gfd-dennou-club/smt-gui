@@ -1,11 +1,11 @@
-import alertsData, {AlertTypes, AlertLevels} from '../lib/alerts/index.jsx';
-import extensionData from '../lib/libraries/extensions/index.jsx';
+import alertsData, { AlertTypes, AlertLevels } from "../lib/alerts/index.jsx";
+import extensionData from "../lib/libraries/extensions/index.jsx";
 
-const SHOW_ALERT = 'scratch-gui/alerts/SHOW_ALERT';
-const SHOW_EXTENSION_ALERT = 'scratch-gui/alerts/SHOW_EXTENSION_ALERT';
-const CLOSE_ALERT = 'scratch-gui/alerts/CLOSE_ALERT';
-const CLOSE_ALERTS_WITH_ID = 'scratch-gui/alerts/CLOSE_ALERTS_WITH_ID';
-const CLOSE_ALERT_WITH_ID = 'scratch-gui/alerts/CLOSE_ALERT_WITH_ID';
+const SHOW_ALERT = "scratch-gui/alerts/SHOW_ALERT";
+const SHOW_EXTENSION_ALERT = "scratch-gui/alerts/SHOW_EXTENSION_ALERT";
+const CLOSE_ALERT = "scratch-gui/alerts/CLOSE_ALERT";
+const CLOSE_ALERTS_WITH_ID = "scratch-gui/alerts/CLOSE_ALERTS_WITH_ID";
+const CLOSE_ALERT_WITH_ID = "scratch-gui/alerts/CLOSE_ALERT_WITH_ID";
 
 /**
  * Initial state of alerts reducer
@@ -23,103 +23,110 @@ const CLOSE_ALERT_WITH_ID = 'scratch-gui/alerts/CLOSE_ALERT_WITH_ID';
  */
 const initialState = {
     visible: true,
-    alertsList: []
+    alertsList: [],
 };
 
-const filterPopupAlerts = alertsList => (
-    alertsList.filter(curAlert => (
-        curAlert.alertType === AlertTypes.STANDARD ||
-        curAlert.alertType === AlertTypes.EXTENSION
-    ))
-);
+const filterPopupAlerts = (alertsList) =>
+    alertsList.filter(
+        (curAlert) =>
+            curAlert.alertType === AlertTypes.STANDARD ||
+            curAlert.alertType === AlertTypes.EXTENSION
+    );
 
-const filterInlineAlerts = alertsList => (
-    alertsList.filter(curAlert => (
-        curAlert.alertType === AlertTypes.INLINE
-    ))
-);
+const filterInlineAlerts = (alertsList) =>
+    alertsList.filter((curAlert) => curAlert.alertType === AlertTypes.INLINE);
 
 const reducer = function (state, action) {
-    if (typeof state === 'undefined') state = initialState;
+    if (typeof state === "undefined") state = initialState;
     switch (action.type) {
-    case SHOW_ALERT: { // intended to show standard and inline alerts, but not extensions
-        const alertId = action.alertId;
-        if (alertId) {
-            const newAlert = {
-                alertId: alertId,
-                level: AlertLevels.WARN // default level
-            };
-            const alertData = alertsData.find(thisAlertData => thisAlertData.alertId === alertId);
-            if (alertData) {
-                const newList = state.alertsList.filter(curAlert => (
-                    !alertData.clearList || alertData.clearList.indexOf(curAlert.alertId) === -1
-                ));
-                if (action.data && action.data.message) {
-                    newAlert.message = action.data.message;
-                }
-
-                newAlert.alertType = alertData.alertType || AlertTypes.STANDARD;
-                newAlert.closeButton = alertData.closeButton;
-                newAlert.content = alertData.content;
-                newAlert.iconURL = alertData.iconURL;
-                newAlert.iconSpinner = alertData.iconSpinner;
-                newAlert.level = alertData.level;
-                newAlert.showDownload = alertData.showDownload;
-                newAlert.showSaveNow = alertData.showSaveNow;
-
-                newList.push(newAlert);
-                return Object.assign({}, state, {
-                    alertsList: newList
-                });
-            }
-        }
-        return state; // if alert not found, show nothing
-    }
-    case SHOW_EXTENSION_ALERT: {
-        const extensionId = action.data.extensionId;
-        if (extensionId) {
-            const extension = extensionData.find(ext => ext.extensionId === extensionId);
-            if (extension) {
-                const newList = state.alertsList.slice();
+        case SHOW_ALERT: {
+            // intended to show standard and inline alerts, but not extensions
+            const alertId = action.alertId;
+            if (alertId) {
                 const newAlert = {
-                    alertType: AlertTypes.EXTENSION,
-                    closeButton: true,
-                    extensionId: extensionId,
-                    extensionName: extension.name,
-                    iconURL: extension.connectionSmallIconURL,
-                    level: AlertLevels.WARN,
-                    showReconnect: true
+                    alertId: alertId,
+                    level: AlertLevels.WARN, // default level
                 };
-                newList.push(newAlert);
+                const alertData = alertsData.find(
+                    (thisAlertData) => thisAlertData.alertId === alertId
+                );
+                if (alertData) {
+                    const newList = state.alertsList.filter(
+                        (curAlert) =>
+                            !alertData.clearList ||
+                            alertData.clearList.indexOf(curAlert.alertId) === -1
+                    );
+                    if (action.data && action.data.message) {
+                        newAlert.message = action.data.message;
+                    }
 
-                return Object.assign({}, state, {
-                    alertsList: newList
-                });
+                    newAlert.alertType =
+                        alertData.alertType || AlertTypes.STANDARD;
+                    newAlert.closeButton = alertData.closeButton;
+                    newAlert.content = alertData.content;
+                    newAlert.iconURL = alertData.iconURL;
+                    newAlert.iconSpinner = alertData.iconSpinner;
+                    newAlert.level = alertData.level;
+                    newAlert.showDownload = alertData.showDownload;
+                    newAlert.showSaveNow = alertData.showSaveNow;
+
+                    newList.push(newAlert);
+                    return Object.assign({}, state, {
+                        alertsList: newList,
+                    });
+                }
             }
+            return state; // if alert not found, show nothing
         }
-        return state; // if alert not found, show nothing
-    }
-    case CLOSE_ALERT_WITH_ID:
-    case CLOSE_ALERT: {
-        if (action.alertId) {
-            action.index = state.alertsList.findIndex(a => a.alertId === action.alertId);
-            if (action.index === -1) return state;
+        case SHOW_EXTENSION_ALERT: {
+            const extensionId = action.data.extensionId;
+            if (extensionId) {
+                const extension = extensionData.find(
+                    (ext) => ext.extensionId === extensionId
+                );
+                if (extension) {
+                    const newList = state.alertsList.slice();
+                    const newAlert = {
+                        alertType: AlertTypes.EXTENSION,
+                        closeButton: true,
+                        extensionId: extensionId,
+                        extensionName: extension.name,
+                        iconURL: extension.connectionSmallIconURL,
+                        level: AlertLevels.WARN,
+                        showReconnect: true,
+                    };
+                    newList.push(newAlert);
+
+                    return Object.assign({}, state, {
+                        alertsList: newList,
+                    });
+                }
+            }
+            return state; // if alert not found, show nothing
         }
-        const newList = state.alertsList.slice();
-        newList.splice(action.index, 1);
-        return Object.assign({}, state, {
-            alertsList: newList
-        });
-    }
-    case CLOSE_ALERTS_WITH_ID: {
-        return Object.assign({}, state, {
-            alertsList: state.alertsList.filter(curAlert => (
-                curAlert.alertId !== action.alertId
-            ))
-        });
-    }
-    default:
-        return state;
+        case CLOSE_ALERT_WITH_ID:
+        case CLOSE_ALERT: {
+            if (action.alertId) {
+                action.index = state.alertsList.findIndex(
+                    (a) => a.alertId === action.alertId
+                );
+                if (action.index === -1) return state;
+            }
+            const newList = state.alertsList.slice();
+            newList.splice(action.index, 1);
+            return Object.assign({}, state, {
+                alertsList: newList,
+            });
+        }
+        case CLOSE_ALERTS_WITH_ID: {
+            return Object.assign({}, state, {
+                alertsList: state.alertsList.filter(
+                    (curAlert) => curAlert.alertId !== action.alertId
+                ),
+            });
+        }
+        default:
+            return state;
     }
 };
 
@@ -132,7 +139,7 @@ const reducer = function (state, action) {
 const closeAlert = function (index) {
     return {
         type: CLOSE_ALERT,
-        index
+        index,
     };
 };
 
@@ -145,7 +152,7 @@ const closeAlert = function (index) {
 const closeAlertsWithId = function (alertId) {
     return {
         type: CLOSE_ALERTS_WITH_ID,
-        alertId
+        alertId,
     };
 };
 
@@ -158,7 +165,7 @@ const closeAlertsWithId = function (alertId) {
 const closeAlertWithId = function (alertId) {
     return {
         type: CLOSE_ALERT_WITH_ID,
-        alertId
+        alertId,
     };
 };
 
@@ -171,7 +178,7 @@ const closeAlertWithId = function (alertId) {
 const showStandardAlert = function (alertId) {
     return {
         type: SHOW_ALERT,
-        alertId
+        alertId,
     };
 };
 
@@ -186,7 +193,7 @@ const showStandardAlert = function (alertId) {
 const showExtensionAlert = function (data) {
     return {
         type: SHOW_EXTENSION_ALERT,
-        data
+        data,
     };
 };
 
@@ -198,7 +205,9 @@ const showExtensionAlert = function (data) {
  * @param {string} alertId - the ID of the alert
  */
 const showAlertWithTimeout = function (dispatch, alertId) {
-    const alertData = alertsData.find(thisAlertData => thisAlertData.alertId === alertId);
+    const alertData = alertsData.find(
+        (thisAlertData) => thisAlertData.alertId === alertId
+    );
     if (alertData) {
         dispatch(showStandardAlert(alertId));
         if (alertData.maxDisplaySecs) {
@@ -218,5 +227,5 @@ export {
     filterPopupAlerts,
     showAlertWithTimeout,
     showExtensionAlert,
-    showStandardAlert
+    showStandardAlert,
 };

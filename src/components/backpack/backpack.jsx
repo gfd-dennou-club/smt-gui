@@ -1,43 +1,49 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import {FormattedMessage, defineMessages, injectIntl, intlShape} from 'react-intl';
-import DragConstants from '../../lib/drag-constants';
-import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
-import SpriteSelectorItem from '../../containers/sprite-selector-item.jsx';
-import styles from './backpack.css';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import {
+    FormattedMessage,
+    defineMessages,
+    injectIntl,
+    intlShape,
+} from "react-intl";
+import DragConstants from "../../lib/drag-constants";
+import { ComingSoonTooltip } from "../coming-soon/coming-soon.jsx";
+import SpriteSelectorItem from "../../containers/sprite-selector-item.jsx";
+import styles from "./backpack.css";
 
 // TODO make sprite selector item not require onClick
 const noop = () => {};
 
-const dragTypeMap = { // Keys correspond with the backpack-server item types
+const dragTypeMap = {
+    // Keys correspond with the backpack-server item types
     costume: DragConstants.BACKPACK_COSTUME,
     sound: DragConstants.BACKPACK_SOUND,
     script: DragConstants.BACKPACK_CODE,
-    sprite: DragConstants.BACKPACK_SPRITE
+    sprite: DragConstants.BACKPACK_SPRITE,
 };
 
 const labelMap = defineMessages({
     costume: {
-        id: 'gui.backpack.costumeLabel',
-        defaultMessage: 'costume',
-        description: 'Label for costume backpack item'
+        id: "gui.backpack.costumeLabel",
+        defaultMessage: "costume",
+        description: "Label for costume backpack item",
     },
     sound: {
-        id: 'gui.backpack.soundLabel',
-        defaultMessage: 'sound',
-        description: 'Label for sound backpack item'
+        id: "gui.backpack.soundLabel",
+        defaultMessage: "sound",
+        description: "Label for sound backpack item",
     },
     script: {
-        id: 'gui.backpack.scriptLabel',
-        defaultMessage: 'script',
-        description: 'Label for script backpack item'
+        id: "gui.backpack.scriptLabel",
+        defaultMessage: "script",
+        description: "Label for script backpack item",
     },
     sprite: {
-        id: 'gui.backpack.spriteLabel',
-        defaultMessage: 'sprite',
-        description: 'Label for sprite backpack item'
-    }
+        id: "gui.backpack.spriteLabel",
+        defaultMessage: "sprite",
+        description: "Label for sprite backpack item",
+    },
 });
 
 const Backpack = ({
@@ -54,13 +60,10 @@ const Backpack = ({
     onDelete,
     onMouseEnter,
     onMouseLeave,
-    onMore
+    onMore,
 }) => (
     <div className={styles.backpackContainer}>
-        <div
-            className={styles.backpackHeader}
-            onClick={onToggle}
-        >
+        <div className={styles.backpackHeader} onClick={onToggle}>
             {onToggle ? (
                 <FormattedMessage
                     defaultMessage="Backpack"
@@ -68,10 +71,7 @@ const Backpack = ({
                     id="gui.backpack.header"
                 />
             ) : (
-                <ComingSoonTooltip
-                    place="top"
-                    tooltipId="backpack-tooltip"
-                >
+                <ComingSoonTooltip place="top" tooltipId="backpack-tooltip">
                     <FormattedMessage
                         defaultMessage="Backpack"
                         description="Button to open the backpack"
@@ -83,7 +83,7 @@ const Backpack = ({
         {expanded ? (
             <div
                 className={classNames(styles.backpackList, {
-                    [styles.dragOver]: dragOver || blockDragOver
+                    [styles.dragOver]: dragOver || blockDragOver,
                 })}
                 ref={containerRef}
                 onMouseEnter={onMouseEnter}
@@ -97,56 +97,49 @@ const Backpack = ({
                             id="gui.backpack.errorBackpack"
                         />
                     </div>
-                ) : (
-                    loading ? (
-                        <div className={styles.statusMessage}>
-                            <FormattedMessage
-                                defaultMessage="Loading..."
-                                description="Loading backpack message"
-                                id="gui.backpack.loadingBackpack"
+                ) : loading ? (
+                    <div className={styles.statusMessage}>
+                        <FormattedMessage
+                            defaultMessage="Loading..."
+                            description="Loading backpack message"
+                            id="gui.backpack.loadingBackpack"
+                        />
+                    </div>
+                ) : contents.length > 0 ? (
+                    <div className={styles.backpackListInner}>
+                        {contents.map((item) => (
+                            <SpriteSelectorItem
+                                className={styles.backpackItem}
+                                costumeURL={item.thumbnailUrl}
+                                details={item.name}
+                                dragPayload={item}
+                                dragType={dragTypeMap[item.type]}
+                                id={item.id}
+                                key={item.id}
+                                name={intl.formatMessage(labelMap[item.type])}
+                                selected={false}
+                                onClick={noop}
+                                onDeleteButtonClick={onDelete}
                             />
-                        </div>
-                    ) : (
-                        contents.length > 0 ? (
-                            <div className={styles.backpackListInner}>
-                                {contents.map(item => (
-                                    <SpriteSelectorItem
-                                        className={styles.backpackItem}
-                                        costumeURL={item.thumbnailUrl}
-                                        details={item.name}
-                                        dragPayload={item}
-                                        dragType={dragTypeMap[item.type]}
-                                        id={item.id}
-                                        key={item.id}
-                                        name={intl.formatMessage(labelMap[item.type])}
-                                        selected={false}
-                                        onClick={noop}
-                                        onDeleteButtonClick={onDelete}
-                                    />
-                                ))}
-                                {showMore && (
-                                    <button
-                                        className={styles.more}
-                                        onClick={onMore}
-                                    >
-                                        <FormattedMessage
-                                            defaultMessage="More"
-                                            description="Load more from backpack"
-                                            id="gui.backpack.more"
-                                        />
-                                    </button>
-                                )}
-                            </div>
-                        ) : (
-                            <div className={styles.statusMessage}>
+                        ))}
+                        {showMore && (
+                            <button className={styles.more} onClick={onMore}>
                                 <FormattedMessage
-                                    defaultMessage="Backpack is empty"
-                                    description="Empty backpack message"
-                                    id="gui.backpack.emptyBackpack"
+                                    defaultMessage="More"
+                                    description="Load more from backpack"
+                                    id="gui.backpack.more"
                                 />
-                            </div>
-                        )
-                    )
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <div className={styles.statusMessage}>
+                        <FormattedMessage
+                            defaultMessage="Backpack is empty"
+                            description="Empty backpack message"
+                            id="gui.backpack.emptyBackpack"
+                        />
+                    </div>
                 )}
             </div>
         ) : null}
@@ -156,12 +149,14 @@ const Backpack = ({
 Backpack.propTypes = {
     blockDragOver: PropTypes.bool,
     containerRef: PropTypes.func,
-    contents: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        thumbnailUrl: PropTypes.string,
-        type: PropTypes.string,
-        name: PropTypes.string
-    })),
+    contents: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            thumbnailUrl: PropTypes.string,
+            type: PropTypes.string,
+            name: PropTypes.string,
+        })
+    ),
     dragOver: PropTypes.bool,
     error: PropTypes.bool,
     expanded: PropTypes.bool,
@@ -172,7 +167,7 @@ Backpack.propTypes = {
     onMouseEnter: PropTypes.func,
     onMouseLeave: PropTypes.func,
     onToggle: PropTypes.func,
-    showMore: PropTypes.bool
+    showMore: PropTypes.bool,
 };
 
 Backpack.defaultProps = {
@@ -183,7 +178,7 @@ Backpack.defaultProps = {
     loading: false,
     showMore: false,
     onMore: null,
-    onToggle: null
+    onToggle: null,
 };
 
 export default injectIntl(Backpack);

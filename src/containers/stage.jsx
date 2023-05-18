@@ -1,46 +1,46 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import Renderer from 'scratch-render';
-import VM from 'scratch-vm';
-import {connect} from 'react-redux';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import Renderer from "scratch-render";
+import VM from "scratch-vm";
+import { connect } from "react-redux";
 
-import {STAGE_DISPLAY_SIZES} from '../lib/layout-constants';
-import {getEventXY} from '../lib/touch-utils';
-import VideoProvider from '../lib/video/video-provider';
-import {BitmapAdapter as V2BitmapAdapter} from 'scratch-svg-renderer';
+import { STAGE_DISPLAY_SIZES } from "../lib/layout-constants";
+import { getEventXY } from "../lib/touch-utils";
+import VideoProvider from "../lib/video/video-provider";
+import { BitmapAdapter as V2BitmapAdapter } from "scratch-svg-renderer";
 
-import StageComponent from '../components/stage/stage.jsx';
+import StageComponent from "../components/stage/stage.jsx";
 
 import {
     activateColorPicker,
-    deactivateColorPicker
-} from '../reducers/color-picker';
+    deactivateColorPicker,
+} from "../reducers/color-picker";
 
 const colorPickerRadius = 20;
 const dragThreshold = 3; // Same as the block drag threshold
 
 class Stage extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         bindAll(this, [
-            'attachMouseEvents',
-            'cancelMouseDownTimeout',
-            'detachMouseEvents',
-            'handleDoubleClick',
-            'handleQuestionAnswered',
-            'onMouseUp',
-            'onMouseMove',
-            'onMouseDown',
-            'onStartDrag',
-            'onStopDrag',
-            'onWheel',
-            'updateRect',
-            'questionListener',
-            'setDragCanvas',
-            'clearDragCanvas',
-            'drawDragCanvas',
-            'positionDragCanvas'
+            "attachMouseEvents",
+            "cancelMouseDownTimeout",
+            "detachMouseEvents",
+            "handleDoubleClick",
+            "handleQuestionAnswered",
+            "onMouseUp",
+            "onMouseMove",
+            "onMouseDown",
+            "onStartDrag",
+            "onStopDrag",
+            "onWheel",
+            "updateRect",
+            "questionListener",
+            "setDragCanvas",
+            "clearDragCanvas",
+            "drawDragCanvas",
+            "positionDragCanvas",
         ]);
         this.state = {
             mouseDownTimeoutId: null,
@@ -49,13 +49,13 @@ class Stage extends React.Component {
             dragOffset: null,
             dragId: null,
             colorInfo: null,
-            question: null
+            question: null,
         };
         if (this.props.vm.renderer) {
             this.renderer = this.props.vm.renderer;
             this.canvas = this.renderer.canvas;
         } else {
-            this.canvas = document.createElement('canvas');
+            this.canvas = document.createElement("canvas");
             this.renderer = new Renderer(this.canvas);
             this.props.vm.attachRenderer(this.renderer);
 
@@ -70,22 +70,24 @@ class Stage extends React.Component {
         }
         this.props.vm.attachV2BitmapAdapter(new V2BitmapAdapter());
     }
-    componentDidMount () {
+    componentDidMount() {
         this.attachRectEvents();
         this.attachMouseEvents(this.canvas);
         this.updateRect();
-        this.props.vm.runtime.addListener('QUESTION', this.questionListener);
+        this.props.vm.runtime.addListener("QUESTION", this.questionListener);
     }
-    shouldComponentUpdate (nextProps, nextState) {
-        return this.props.stageSize !== nextProps.stageSize ||
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            this.props.stageSize !== nextProps.stageSize ||
             this.props.isColorPicking !== nextProps.isColorPicking ||
             this.state.colorInfo !== nextState.colorInfo ||
             this.props.isFullScreen !== nextProps.isFullScreen ||
             this.state.question !== nextState.question ||
             this.props.micIndicator !== nextProps.micIndicator ||
-            this.props.isStarted !== nextProps.isStarted;
+            this.props.isStarted !== nextProps.isStarted
+        );
     }
-    componentDidUpdate (prevProps) {
+    componentDidUpdate(prevProps) {
         if (this.props.isColorPicking && !prevProps.isColorPicking) {
             this.startColorPickingLoop();
         } else if (!this.props.isColorPicking && prevProps.isColorPicking) {
@@ -94,85 +96,90 @@ class Stage extends React.Component {
         this.updateRect();
         this.renderer.resize(this.rect.width, this.rect.height);
     }
-    componentWillUnmount () {
+    componentWillUnmount() {
         this.detachMouseEvents(this.canvas);
         this.detachRectEvents();
         this.stopColorPickingLoop();
-        this.props.vm.runtime.removeListener('QUESTION', this.questionListener);
+        this.props.vm.runtime.removeListener("QUESTION", this.questionListener);
     }
-    questionListener (question) {
-        this.setState({question: question});
+    questionListener(question) {
+        this.setState({ question: question });
     }
-    handleQuestionAnswered (answer) {
-        this.setState({question: null}, () => {
-            this.props.vm.runtime.emit('ANSWER', answer);
+    handleQuestionAnswered(answer) {
+        this.setState({ question: null }, () => {
+            this.props.vm.runtime.emit("ANSWER", answer);
         });
     }
-    startColorPickingLoop () {
+    startColorPickingLoop() {
         this.intervalId = setInterval(() => {
-            if (typeof this.pickX === 'number') {
-                this.setState({colorInfo: this.getColorInfo(this.pickX, this.pickY)});
+            if (typeof this.pickX === "number") {
+                this.setState({
+                    colorInfo: this.getColorInfo(this.pickX, this.pickY),
+                });
             }
         }, 30);
     }
-    stopColorPickingLoop () {
+    stopColorPickingLoop() {
         clearInterval(this.intervalId);
     }
-    attachMouseEvents (canvas) {
-        document.addEventListener('mousemove', this.onMouseMove);
-        document.addEventListener('mouseup', this.onMouseUp);
-        document.addEventListener('touchmove', this.onMouseMove);
-        document.addEventListener('touchend', this.onMouseUp);
-        canvas.addEventListener('mousedown', this.onMouseDown);
-        canvas.addEventListener('touchstart', this.onMouseDown);
-        canvas.addEventListener('wheel', this.onWheel);
+    attachMouseEvents(canvas) {
+        document.addEventListener("mousemove", this.onMouseMove);
+        document.addEventListener("mouseup", this.onMouseUp);
+        document.addEventListener("touchmove", this.onMouseMove);
+        document.addEventListener("touchend", this.onMouseUp);
+        canvas.addEventListener("mousedown", this.onMouseDown);
+        canvas.addEventListener("touchstart", this.onMouseDown);
+        canvas.addEventListener("wheel", this.onWheel);
     }
-    detachMouseEvents (canvas) {
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseup', this.onMouseUp);
-        document.removeEventListener('touchmove', this.onMouseMove);
-        document.removeEventListener('touchend', this.onMouseUp);
-        canvas.removeEventListener('mousedown', this.onMouseDown);
-        canvas.removeEventListener('touchstart', this.onMouseDown);
-        canvas.removeEventListener('wheel', this.onWheel);
+    detachMouseEvents(canvas) {
+        document.removeEventListener("mousemove", this.onMouseMove);
+        document.removeEventListener("mouseup", this.onMouseUp);
+        document.removeEventListener("touchmove", this.onMouseMove);
+        document.removeEventListener("touchend", this.onMouseUp);
+        canvas.removeEventListener("mousedown", this.onMouseDown);
+        canvas.removeEventListener("touchstart", this.onMouseDown);
+        canvas.removeEventListener("wheel", this.onWheel);
     }
-    attachRectEvents () {
-        window.addEventListener('resize', this.updateRect);
-        window.addEventListener('scroll', this.updateRect);
+    attachRectEvents() {
+        window.addEventListener("resize", this.updateRect);
+        window.addEventListener("scroll", this.updateRect);
     }
-    detachRectEvents () {
-        window.removeEventListener('resize', this.updateRect);
-        window.removeEventListener('scroll', this.updateRect);
+    detachRectEvents() {
+        window.removeEventListener("resize", this.updateRect);
+        window.removeEventListener("scroll", this.updateRect);
     }
-    updateRect () {
+    updateRect() {
         this.rect = this.canvas.getBoundingClientRect();
     }
-    getScratchCoords (x, y) {
+    getScratchCoords(x, y) {
         const nativeSize = this.renderer.getNativeSize();
         return [
-            (nativeSize[0] / this.rect.width) * (x - (this.rect.width / 2)),
-            (nativeSize[1] / this.rect.height) * (y - (this.rect.height / 2))
+            (nativeSize[0] / this.rect.width) * (x - this.rect.width / 2),
+            (nativeSize[1] / this.rect.height) * (y - this.rect.height / 2),
         ];
     }
-    getColorInfo (x, y) {
+    getColorInfo(x, y) {
         return {
             x: x,
             y: y,
-            ...this.renderer.extractColor(x, y, colorPickerRadius)
+            ...this.renderer.extractColor(x, y, colorPickerRadius),
         };
     }
-    handleDoubleClick (e) {
-        const {x, y} = getEventXY(e);
+    handleDoubleClick(e) {
+        const { x, y } = getEventXY(e);
         // Set editing target from cursor position, if clicking on a sprite.
         const mousePosition = [x - this.rect.left, y - this.rect.top];
-        const drawableId = this.renderer.pick(mousePosition[0], mousePosition[1]);
+        const drawableId = this.renderer.pick(
+            mousePosition[0],
+            mousePosition[1]
+        );
         if (drawableId === null) return;
         const targetId = this.props.vm.getTargetIdForDrawableId(drawableId);
         if (targetId === null) return;
         this.props.vm.setEditingTarget(targetId);
     }
-    onMouseMove (e) {
-        const {x, y} = getEventXY(e);
+    onMouseMove(e) {
+        const { x, y } = getEventXY(e);
         const mousePosition = [x - this.rect.left, y - this.rect.top];
 
         if (this.props.isColorPicking) {
@@ -183,8 +190,14 @@ class Stage extends React.Component {
 
         if (this.state.mouseDown && !this.state.isDragging) {
             const distanceFromMouseDown = Math.sqrt(
-                Math.pow(mousePosition[0] - this.state.mouseDownPosition[0], 2) +
-                Math.pow(mousePosition[1] - this.state.mouseDownPosition[1], 2)
+                Math.pow(
+                    mousePosition[0] - this.state.mouseDownPosition[0],
+                    2
+                ) +
+                    Math.pow(
+                        mousePosition[1] - this.state.mouseDownPosition[1],
+                        2
+                    )
             );
             if (distanceFromMouseDown > dragThreshold) {
                 this.cancelMouseDownTimeout();
@@ -197,11 +210,14 @@ class Stage extends React.Component {
             if (this.props.useEditorDragStyle) {
                 this.positionDragCanvas(mousePosition[0], mousePosition[1]);
             } else {
-                const spritePosition = this.getScratchCoords(mousePosition[0], mousePosition[1]);
+                const spritePosition = this.getScratchCoords(
+                    mousePosition[0],
+                    mousePosition[1]
+                );
                 this.props.vm.postSpriteInfo({
                     x: spritePosition[0] + this.state.dragOffset[0],
                     y: -(spritePosition[1] + this.state.dragOffset[1]),
-                    force: true
+                    force: true,
                 });
             }
         }
@@ -209,17 +225,17 @@ class Stage extends React.Component {
             x: mousePosition[0],
             y: mousePosition[1],
             canvasWidth: this.rect.width,
-            canvasHeight: this.rect.height
+            canvasHeight: this.rect.height,
         };
-        this.props.vm.postIOData('mouse', coordinates);
+        this.props.vm.postIOData("mouse", coordinates);
     }
-    onMouseUp (e) {
-        const {x, y} = getEventXY(e);
+    onMouseUp(e) {
+        const { x, y } = getEventXY(e);
         const mousePosition = [x - this.rect.left, y - this.rect.top];
         this.cancelMouseDownTimeout();
         this.setState({
             mouseDown: false,
-            mouseDownPosition: null
+            mouseDownPosition: null,
         });
         const data = {
             isDown: false,
@@ -227,48 +243,62 @@ class Stage extends React.Component {
             y: y - this.rect.top,
             canvasWidth: this.rect.width,
             canvasHeight: this.rect.height,
-            wasDragged: this.state.isDragging
+            wasDragged: this.state.isDragging,
         };
         if (this.state.isDragging) {
             this.onStopDrag(mousePosition[0], mousePosition[1]);
         }
-        this.props.vm.postIOData('mouse', data);
+        this.props.vm.postIOData("mouse", data);
 
-        if (this.props.isColorPicking &&
-            mousePosition[0] > 0 && mousePosition[0] < this.rect.width &&
-            mousePosition[1] > 0 && mousePosition[1] < this.rect.height
+        if (
+            this.props.isColorPicking &&
+            mousePosition[0] > 0 &&
+            mousePosition[0] < this.rect.width &&
+            mousePosition[1] > 0 &&
+            mousePosition[1] < this.rect.height
         ) {
-            const {r, g, b} = this.state.colorInfo.color;
-            const componentToString = c => {
+            const { r, g, b } = this.state.colorInfo.color;
+            const componentToString = (c) => {
                 const hex = c.toString(16);
                 return hex.length === 1 ? `0${hex}` : hex;
             };
-            const colorString = `#${componentToString(r)}${componentToString(g)}${componentToString(b)}`;
+            const colorString = `#${componentToString(r)}${componentToString(
+                g
+            )}${componentToString(b)}`;
             this.props.onDeactivateColorPicker(colorString);
-            this.setState({colorInfo: null});
+            this.setState({ colorInfo: null });
             this.pickX = null;
             this.pickY = null;
         }
     }
-    onMouseDown (e) {
+    onMouseDown(e) {
         this.updateRect();
-        const {x, y} = getEventXY(e);
+        const { x, y } = getEventXY(e);
         const mousePosition = [x - this.rect.left, y - this.rect.top];
         if (this.props.isColorPicking) {
             // Set the pickX/Y for the color picker loop to pick up
             this.pickX = mousePosition[0];
             this.pickY = mousePosition[1];
             // Immediately update the color picker info
-            this.setState({colorInfo: this.getColorInfo(this.pickX, this.pickY)});
+            this.setState({
+                colorInfo: this.getColorInfo(this.pickX, this.pickY),
+            });
         } else {
-            if (e.button === 0 || (window.TouchEvent && e instanceof TouchEvent)) {
+            if (
+                e.button === 0 ||
+                (window.TouchEvent && e instanceof TouchEvent)
+            ) {
                 this.setState({
                     mouseDown: true,
                     mouseDownPosition: mousePosition,
                     mouseDownTimeoutId: setTimeout(
-                        this.onStartDrag.bind(this, mousePosition[0], mousePosition[1]),
+                        this.onStartDrag.bind(
+                            this,
+                            mousePosition[0],
+                            mousePosition[1]
+                        ),
                         400
-                    )
+                    ),
                 });
             }
             const data = {
@@ -276,9 +306,9 @@ class Stage extends React.Component {
                 x: mousePosition[0],
                 y: mousePosition[1],
                 canvasWidth: this.rect.width,
-                canvasHeight: this.rect.height
+                canvasHeight: this.rect.height,
             };
-            this.props.vm.postIOData('mouse', data);
+            this.props.vm.postIOData("mouse", data);
             if (e.preventDefault) {
                 // Prevent default to prevent touch from dragging page
                 e.preventDefault();
@@ -289,18 +319,18 @@ class Stage extends React.Component {
             }
         }
     }
-    onWheel (e) {
+    onWheel(e) {
         const data = {
             deltaX: e.deltaX,
-            deltaY: e.deltaY
+            deltaY: e.deltaY,
         };
-        this.props.vm.postIOData('mouseWheel', data);
+        this.props.vm.postIOData("mouseWheel", data);
     }
-    cancelMouseDownTimeout () {
+    cancelMouseDownTimeout() {
         if (this.state.mouseDownTimeoutId !== null) {
             clearTimeout(this.state.mouseDownTimeoutId);
         }
-        this.setState({mouseDownTimeoutId: null});
+        this.setState({ mouseDownTimeoutId: null });
     }
     /**
      * Initialize the position of the "dragged sprite" canvas
@@ -308,13 +338,13 @@ class Stage extends React.Component {
      * @param {number} x The x position of the initial drag event
      * @param {number} y The y position of the initial drag event
      */
-    drawDragCanvas (drawableData, x, y) {
+    drawDragCanvas(drawableData, x, y) {
         const {
             imageData,
             x: boundsX,
             y: boundsY,
             width: boundsWidth,
-            height: boundsHeight
+            height: boundsHeight,
         } = drawableData;
         this.dragCanvas.width = imageData.width;
         this.dragCanvas.height = imageData.height;
@@ -322,23 +352,23 @@ class Stage extends React.Component {
         this.dragCanvas.style.width = `${boundsWidth}px`;
         this.dragCanvas.style.height = `${boundsHeight}px`;
 
-        this.dragCanvas.getContext('2d').putImageData(imageData, 0, 0);
+        this.dragCanvas.getContext("2d").putImageData(imageData, 0, 0);
         // Position so that pick location is at (0, 0) so that  positionDragCanvas()
         // can use translation to move to mouse position smoothly.
         this.dragCanvas.style.left = `${boundsX - x}px`;
         this.dragCanvas.style.top = `${boundsY - y}px`;
-        this.dragCanvas.style.display = 'block';
+        this.dragCanvas.style.display = "block";
     }
-    clearDragCanvas () {
+    clearDragCanvas() {
         this.dragCanvas.width = this.dragCanvas.height = 0;
-        this.dragCanvas.style.display = 'none';
+        this.dragCanvas.style.display = "none";
     }
-    positionDragCanvas (mouseX, mouseY) {
+    positionDragCanvas(mouseX, mouseY) {
         // mouseX/Y are relative to stage top/left, and dragCanvas is already
         // positioned so that the pick location is at (0,0).
         this.dragCanvas.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
     }
-    onStartDrag (x, y) {
+    onStartDrag(x, y) {
         if (this.state.dragId) return;
         const drawableId = this.renderer.pick(x, y);
         if (drawableId === null) return;
@@ -361,33 +391,38 @@ class Stage extends React.Component {
         this.setState({
             isDragging: true,
             dragId: targetId,
-            dragOffset: [offsetX, offsetY]
+            dragOffset: [offsetX, offsetY],
         });
         if (this.props.useEditorDragStyle) {
             // Extract the drawable art
-            const drawableData = this.renderer.extractDrawableScreenSpace(drawableId);
+            const drawableData =
+                this.renderer.extractDrawableScreenSpace(drawableId);
             this.drawDragCanvas(drawableData, x, y);
             this.positionDragCanvas(x, y);
-            this.props.vm.postSpriteInfo({visible: false});
+            this.props.vm.postSpriteInfo({ visible: false });
             this.props.vm.renderer.draw();
         }
     }
-    onStopDrag (mouseX, mouseY) {
+    onStopDrag(mouseX, mouseY) {
         const dragId = this.state.dragId;
         const commonStopDragActions = () => {
             this.props.vm.stopDrag(dragId);
             this.setState({
                 isDragging: false,
                 dragOffset: null,
-                dragId: null
+                dragId: null,
             });
         };
         if (this.props.useEditorDragStyle) {
             // Need to sequence these actions to prevent flickering.
-            const spriteInfo = {visible: true};
+            const spriteInfo = { visible: true };
             // First update the sprite position if dropped in the stage.
-            if (mouseX > 0 && mouseX < this.rect.width &&
-                mouseY > 0 && mouseY < this.rect.height) {
+            if (
+                mouseX > 0 &&
+                mouseX < this.rect.width &&
+                mouseY > 0 &&
+                mouseY < this.rect.height
+            ) {
                 const spritePosition = this.getScratchCoords(mouseX, mouseY);
                 spriteInfo.x = spritePosition[0] + this.state.dragOffset[0];
                 spriteInfo.y = -(spritePosition[1] + this.state.dragOffset[1]);
@@ -402,10 +437,10 @@ class Stage extends React.Component {
             commonStopDragActions();
         }
     }
-    setDragCanvas (canvas) {
+    setDragCanvas(canvas) {
         this.dragCanvas = canvas;
     }
-    render () {
+    render() {
         const {
             vm, // eslint-disable-line no-unused-vars
             onActivateColorPicker, // eslint-disable-line no-unused-vars
@@ -434,28 +469,27 @@ Stage.propTypes = {
     onDeactivateColorPicker: PropTypes.func,
     stageSize: PropTypes.oneOf(Object.keys(STAGE_DISPLAY_SIZES)).isRequired,
     useEditorDragStyle: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
 };
 
 Stage.defaultProps = {
-    useEditorDragStyle: true
+    useEditorDragStyle: true,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isColorPicking: state.scratchGui.colorPicker.active,
     isFullScreen: state.scratchGui.mode.isFullScreen,
     isStarted: state.scratchGui.vmStatus.started,
     micIndicator: state.scratchGui.micIndicator,
     // Do not use editor drag style in fullscreen or player mode.
-    useEditorDragStyle: !(state.scratchGui.mode.isFullScreen || state.scratchGui.mode.isPlayerOnly)
+    useEditorDragStyle: !(
+        state.scratchGui.mode.isFullScreen || state.scratchGui.mode.isPlayerOnly
+    ),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     onActivateColorPicker: () => dispatch(activateColorPicker()),
-    onDeactivateColorPicker: color => dispatch(deactivateColorPicker(color))
+    onDeactivateColorPicker: (color) => dispatch(deactivateColorPicker(color)),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Stage);
+export default connect(mapStateToProps, mapDispatchToProps)(Stage);

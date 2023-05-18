@@ -1,15 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import classNames from 'classnames';
-import styles from './icon-button.css';
+import PropTypes from "prop-types";
+import React from "react";
+import classNames from "classnames";
+import styles from "./icon-button.css";
 
-const IconButton = ({
-    img,
-    disabled,
-    className,
-    title,
-    onClick
-}) => (
+const IconButton = ({ img, disabled, className, title, onClick }) => (
     <div
         className={classNames(
             styles.container,
@@ -19,14 +13,8 @@ const IconButton = ({
         role="button"
         onClick={disabled ? null : onClick}
     >
-        <img
-            className={styles.icon}
-            draggable={false}
-            src={img}
-        />
-        <div className={styles.title}>
-            {title}
-        </div>
+        <img className={styles.icon} draggable={false} src={img} />
+        <div className={styles.title}>{title}</div>
     </div>
 );
 
@@ -35,7 +23,7 @@ IconButton.propTypes = {
     disabled: PropTypes.bool,
     img: PropTypes.string,
     onClick: PropTypes.func.isRequired,
-    title: PropTypes.node.isRequired
+    title: PropTypes.node.isRequired,
 };
 
 export default IconButton;

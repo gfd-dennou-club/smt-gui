@@ -1,5 +1,5 @@
-import storage from './storage';
-import {inlineSvgFonts} from 'scratch-svg-renderer';
+import storage from "./storage";
+import { inlineSvgFonts } from "scratch-svg-renderer";
 
 // Contains 'font-family', but doesn't only contain 'font-family="none"'
 const HAS_FONT_REGEXP = 'font-family(?!="none")';
@@ -9,7 +9,6 @@ const getCostumeUrl = (function () {
     let cachedUrl;
 
     return function (asset) {
-
         if (cachedAssetId === asset.assetId) {
             return cachedUrl;
         }
@@ -22,7 +21,9 @@ const getCostumeUrl = (function () {
             const svgString = asset.decodeText();
             if (svgString.match(HAS_FONT_REGEXP)) {
                 const svgText = inlineSvgFonts(svgString);
-                cachedUrl = `data:image/svg+xml;utf8,${encodeURIComponent(svgText)}`;
+                cachedUrl = `data:image/svg+xml;utf8,${encodeURIComponent(
+                    svgText
+                )}`;
             } else {
                 cachedUrl = asset.encodeDataURI();
             }
@@ -32,9 +33,6 @@ const getCostumeUrl = (function () {
 
         return cachedUrl;
     };
-}());
+})();
 
-export {
-    getCostumeUrl as default,
-    HAS_FONT_REGEXP
-};
+export { getCostumeUrl as default, HAS_FONT_REGEXP };

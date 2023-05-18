@@ -1,25 +1,25 @@
-import {FormattedMessage} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
+import { FormattedMessage } from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
 
-import Box from '../box/box.jsx';
-import PlayButton from '../../containers/play-button.jsx';
-import styles from './library-item.css';
-import classNames from 'classnames';
+import Box from "../box/box.jsx";
+import PlayButton from "../../containers/play-button.jsx";
+import styles from "./library-item.css";
+import classNames from "classnames";
 
-import bluetoothIconURL from './bluetooth.svg';
-import internetConnectionIconURL from './internet-connection.svg';
+import bluetoothIconURL from "./bluetooth.svg";
+import internetConnectionIconURL from "./internet-connection.svg";
 
 /* eslint-disable react/prefer-stateless-function */
 class LibraryItemComponent extends React.PureComponent {
-    render () {
+    render() {
         return this.props.featured ? (
             <div
                 className={classNames(
                     styles.libraryItem,
                     styles.featuredItem,
                     {
-                        [styles.disabled]: this.props.disabled
+                        [styles.disabled]: this.props.disabled,
                     },
                     this.props.extensionId ? styles.libraryItemExtension : null,
                     this.props.hidden ? styles.hidden : null
@@ -50,18 +50,30 @@ class LibraryItemComponent extends React.PureComponent {
                     </div>
                 ) : null}
                 <div
-                    className={this.props.extensionId ?
-                        classNames(styles.featuredExtensionText, styles.featuredText) : styles.featuredText
+                    className={
+                        this.props.extensionId
+                            ? classNames(
+                                  styles.featuredExtensionText,
+                                  styles.featuredText
+                              )
+                            : styles.featuredText
                     }
                 >
-                    <span className={styles.libraryItemName}>{this.props.name}</span>
+                    <span className={styles.libraryItemName}>
+                        {this.props.name}
+                    </span>
                     <br />
-                    <span className={styles.featuredDescription}>{this.props.description}</span>
+                    <span className={styles.featuredDescription}>
+                        {this.props.description}
+                    </span>
                 </div>
-                {this.props.bluetoothRequired || this.props.internetConnectionRequired || this.props.collaborator ? (
+                {this.props.bluetoothRequired ||
+                this.props.internetConnectionRequired ||
+                this.props.collaborator ? (
                     <div className={styles.featuredExtensionMetadata}>
                         <div className={styles.featuredExtensionRequirement}>
-                            {this.props.bluetoothRequired || this.props.internetConnectionRequired ? (
+                            {this.props.bluetoothRequired ||
+                            this.props.internetConnectionRequired ? (
                                 <div>
                                     <div>
                                         <FormattedMessage
@@ -71,13 +83,18 @@ class LibraryItemComponent extends React.PureComponent {
                                         />
                                     </div>
                                     <div
-                                        className={styles.featuredExtensionMetadataDetail}
+                                        className={
+                                            styles.featuredExtensionMetadataDetail
+                                        }
                                     >
                                         {this.props.bluetoothRequired ? (
                                             <img src={bluetoothIconURL} />
                                         ) : null}
-                                        {this.props.internetConnectionRequired ? (
-                                            <img src={internetConnectionIconURL} />
+                                        {this.props
+                                            .internetConnectionRequired ? (
+                                            <img
+                                                src={internetConnectionIconURL}
+                                            />
                                         ) : null}
                                     </div>
                                 </div>
@@ -94,7 +111,9 @@ class LibraryItemComponent extends React.PureComponent {
                                         />
                                     </div>
                                     <div
-                                        className={styles.featuredExtensionMetadataDetail}
+                                        className={
+                                            styles.featuredExtensionMetadataDetail
+                                        }
                                     >
                                         {this.props.collaborator}
                                     </div>
@@ -106,26 +125,36 @@ class LibraryItemComponent extends React.PureComponent {
             </div>
         ) : (
             <Box
-                className={classNames(
-                    styles.libraryItem, {
-                        [styles.hidden]: this.props.hidden
-                    }
-                )}
+                className={classNames(styles.libraryItem, {
+                    [styles.hidden]: this.props.hidden,
+                })}
                 role="button"
                 tabIndex="0"
                 onBlur={this.props.onBlur}
                 onClick={this.props.onClick}
                 onFocus={this.props.onFocus}
                 onKeyPress={this.props.onKeyPress}
-                onMouseEnter={this.props.showPlayButton ? null : this.props.onMouseEnter}
-                onMouseLeave={this.props.showPlayButton ? null : this.props.onMouseLeave}
+                onMouseEnter={
+                    this.props.showPlayButton ? null : this.props.onMouseEnter
+                }
+                onMouseLeave={
+                    this.props.showPlayButton ? null : this.props.onMouseLeave
+                }
             >
                 {/* Layers of wrapping is to prevent layout thrashing on animation */}
                 <Box className={styles.libraryItemImageContainerWrapper}>
                     <Box
                         className={styles.libraryItemImageContainer}
-                        onMouseEnter={this.props.showPlayButton ? this.props.onMouseEnter : null}
-                        onMouseLeave={this.props.showPlayButton ? this.props.onMouseLeave : null}
+                        onMouseEnter={
+                            this.props.showPlayButton
+                                ? this.props.onMouseEnter
+                                : null
+                        }
+                        onMouseLeave={
+                            this.props.showPlayButton
+                                ? this.props.onMouseLeave
+                                : null
+                        }
                     >
                         <img
                             className={styles.libraryItemImage}
@@ -133,7 +162,9 @@ class LibraryItemComponent extends React.PureComponent {
                         />
                     </Box>
                 </Box>
-                <span className={styles.libraryItemName}>{this.props.name}</span>
+                <span className={styles.libraryItemName}>
+                    {this.props.name}
+                </span>
                 {this.props.showPlayButton ? (
                     <PlayButton
                         isPlaying={this.props.isPlaying}
@@ -147,14 +178,10 @@ class LibraryItemComponent extends React.PureComponent {
 }
 /* eslint-enable react/prefer-stateless-function */
 
-
 LibraryItemComponent.propTypes = {
     bluetoothRequired: PropTypes.bool,
     collaborator: PropTypes.string,
-    description: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.node
-    ]),
+    description: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     disabled: PropTypes.bool,
     extensionId: PropTypes.string,
     featured: PropTypes.bool,
@@ -163,10 +190,7 @@ LibraryItemComponent.propTypes = {
     insetIconURL: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
     isPlaying: PropTypes.bool,
-    name: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.node
-    ]),
+    name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     onBlur: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,
@@ -175,12 +199,12 @@ LibraryItemComponent.propTypes = {
     onMouseLeave: PropTypes.func.isRequired,
     onPlay: PropTypes.func.isRequired,
     onStop: PropTypes.func.isRequired,
-    showPlayButton: PropTypes.bool
+    showPlayButton: PropTypes.bool,
 };
 
 LibraryItemComponent.defaultProps = {
     disabled: false,
-    showPlayButton: false
+    showPlayButton: false,
 };
 
 export default LibraryItemComponent;

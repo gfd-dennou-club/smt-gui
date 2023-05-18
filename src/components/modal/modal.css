@@ -37,7 +37,7 @@
     width: 100%;
 
     overflow-y: auto;
-    -webkit-overflow-scrolling: 'touch';
+    -webkit-overflow-scrolling: "touch";
     user-select: none;
 
     background-color: $ui-secondary;
@@ -47,7 +47,6 @@
     border: none;
     border-radius: 0;
 }
-
 
 /*
     Modal header has 3 items:

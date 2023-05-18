@@ -30,7 +30,7 @@
         @todo: make room for the scrollbar
     */
     box-sizing: border-box;
-    width: calc((100% / $sprites-per-row ) - $space);
+    width: calc((100% / $sprites-per-row) - $space);
     max-width: 6rem;
     min-width: 4rem;
     min-height: 4rem; /* @todo: calc height same as width */
@@ -40,7 +40,6 @@
 .sprite {
     height: 100%;
 }
-
 
 .scroll-wrapper {
     /*
@@ -104,11 +103,21 @@
 }
 
 @keyframes wiggle {
-    0% {transform: rotate(3deg) scale(1.05);}
-    25% {transform: rotate(-3deg) scale(1.05);}
-    50% {transform: rotate(5deg) scale(1.05);}
-    75% {transform: rotate(-2deg) scale(1.05);}
-    100% {transform: rotate(0deg) scale(1.05);}
+    0% {
+        transform: rotate(3deg) scale(1.05);
+    }
+    25% {
+        transform: rotate(-3deg) scale(1.05);
+    }
+    50% {
+        transform: rotate(5deg) scale(1.05);
+    }
+    75% {
+        transform: rotate(-2deg) scale(1.05);
+    }
+    100% {
+        transform: rotate(0deg) scale(1.05);
+    }
 }
 
 .receivedBlocks {
@@ -116,9 +125,15 @@
 }
 
 @keyframes glowing {
-    10% { box-shadow: 0 0 10px #7fff1e; }
-    90% { box-shadow: 0 0 10px #7fff1e; }
-    100% { box-shadow: none; }
+    10% {
+        box-shadow: 0 0 10px #7fff1e;
+    }
+    90% {
+        box-shadow: 0 0 10px #7fff1e;
+    }
+    100% {
+        box-shadow: none;
+    }
 }
 
 .placeholder > .sprite {

@@ -1,6 +1,5 @@
-import log from './log.js';
-import throttle from 'lodash.throttle';
-
+import log from "./log.js";
+import throttle from "lodash.throttle";
 
 class CloudProvider {
     /**
@@ -13,7 +12,7 @@ class CloudProvider {
      * @param {string} projectId The id associated with the project containing
      * cloud data.
      */
-    constructor (cloudHost, vm, username, projectId) {
+    constructor(cloudHost, vm, username, projectId) {
         this.vm = vm;
         this.username = username;
         this.projectId = projectId;
@@ -36,13 +35,16 @@ class CloudProvider {
      * Open a new websocket connection to the clouddata server.
      * @param {string} cloudHost The cloud data server to connect to.
      */
-    openConnection () {
+    openConnection() {
         this.connectionAttempts += 1;
 
         try {
-            this.connection = new WebSocket((location.protocol === 'http:' ? 'ws://' : 'wss://') + this.cloudHost);
+            this.connection = new WebSocket(
+                (location.protocol === "http:" ? "ws://" : "wss://") +
+                    this.cloudHost
+            );
         } catch (e) {
-            log.warn('Websocket support is not available in this browser', e);
+            log.warn("Websocket support is not available in this browser", e);
             this.connection = null;
             return;
         }
@@ -53,67 +55,74 @@ class CloudProvider {
         this.connection.onclose = this.onClose.bind(this);
     }
 
-    onError (event) {
+    onError(event) {
         log.error(`Websocket connection error: ${JSON.stringify(event)}`);
         // Error is always followed by close, which handles reconnect logic.
     }
 
-    onMessage (event) {
+    onMessage(event) {
         const messageString = event.data;
         // Multiple commands can be received, newline separated
-        messageString.split('\n').forEach(message => {
-            if (message) { // .split can also contain '' in the array it returns
+        messageString.split("\n").forEach((message) => {
+            if (message) {
+                // .split can also contain '' in the array it returns
                 const parsedData = this.parseMessage(JSON.parse(message));
-                this.vm.postIOData('cloud', parsedData);
+                this.vm.postIOData("cloud", parsedData);
             }
         });
     }
 
-    onOpen () {
+    onOpen() {
         // Reset connection attempts to 1 to make sure any subsequent reconnects
         // use connectionAttempts=1 to calculate timeout
         this.connectionAttempts = 1;
-        this.writeToServer('handshake');
+        this.writeToServer("handshake");
         log.info(`Successfully connected to clouddata server.`);
 
         // Go through the queued data and send off messages that we weren't
         // ready to send before
-        this.queuedData.forEach(data => {
+        this.queuedData.forEach((data) => {
             this.sendCloudData(data);
         });
         // Reset the queue
         this.queuedData = [];
     }
 
-    onClose () {
+    onClose() {
         log.info(`Closed connection to websocket`);
-        const randomizedTimeout = this.randomizeDuration(this.exponentialTimeout());
+        const randomizedTimeout = this.randomizeDuration(
+            this.exponentialTimeout()
+        );
         this.setTimeout(this.openConnection.bind(this), randomizedTimeout);
     }
 
-    exponentialTimeout () {
+    exponentialTimeout() {
         return (Math.pow(2, Math.min(this.connectionAttempts, 5)) - 1) * 1000;
     }
 
-    randomizeDuration (t) {
+    randomizeDuration(t) {
         return Math.random() * t;
     }
 
-    setTimeout (fn, time) {
-        log.info(`Reconnecting in ${(time / 1000).toFixed(1)}s, attempt ${this.connectionAttempts}`);
+    setTimeout(fn, time) {
+        log.info(
+            `Reconnecting in ${(time / 1000).toFixed(1)}s, attempt ${
+                this.connectionAttempts
+            }`
+        );
         this._connectionTimeout = window.setTimeout(fn, time);
     }
 
-    parseMessage (message) {
+    parseMessage(message) {
         const varData = {};
         switch (message.method) {
-        case 'set': {
-            varData.varUpdate = {
-                name: message.name,
-                value: message.value
-            };
-            break;
-        }
+            case "set": {
+                varData.varUpdate = {
+                    name: message.name,
+                    value: message.value,
+                };
+                break;
+            }
         }
         return varData;
     }
@@ -125,7 +134,7 @@ class CloudProvider {
      * @param {string | number} dataValue The value to set the cloud variable to
      * @param {string} dataNewName The new name for the cloud variable (if renaming)
      */
-    writeToServer (methodName, dataName, dataValue, dataNewName) {
+    writeToServer(methodName, dataName, dataValue, dataNewName) {
         const msg = {};
         msg.method = methodName;
         msg.user = this.username;
@@ -136,24 +145,28 @@ class CloudProvider {
         if (dataNewName) msg.new_name = dataNewName;
 
         // Optional number params need different undefined check
-        if (typeof dataValue !== 'undefined' && dataValue !== null) msg.value = dataValue;
+        if (typeof dataValue !== "undefined" && dataValue !== null)
+            msg.value = dataValue;
 
         const dataToWrite = JSON.stringify(msg);
         if (this.connection && this.connection.readyState === WebSocket.OPEN) {
             this.sendCloudData(dataToWrite);
-        } else if (msg.method === 'create' || msg.method === 'delete' || msg.method === 'rename') {
+        } else if (
+            msg.method === "create" ||
+            msg.method === "delete" ||
+            msg.method === "rename"
+        ) {
             // Save data for sending when connection is open, iff the data
             // is a create, rename, or  delete
             this.queuedData.push(dataToWrite);
         }
-
     }
 
     /**
      * Send a formatted message to the cloud data server.
      * @param {string} data The formatted message to send.
      */
-    _sendCloudData (data) {
+    _sendCloudData(data) {
         this.connection.send(`${data}\n`);
     }
 
@@ -163,8 +176,8 @@ class CloudProvider {
      * @param {string} name The name of the variable to create
      * @param {string | number} value The value of the new cloud variable.
      */
-    createVariable (name, value) {
-        this.writeToServer('create', name, value);
+    createVariable(name, value) {
+        this.writeToServer("create", name, value);
     }
 
     /**
@@ -173,8 +186,8 @@ class CloudProvider {
      * @param {string} name The name of the variable to update
      * @param {string | number} value The new value for the variable
      */
-    updateVariable (name, value) {
-        this.writeToServer('set', name, value);
+    updateVariable(name, value) {
+        this.writeToServer("set", name, value);
     }
 
     /**
@@ -183,8 +196,8 @@ class CloudProvider {
      * @param {string} oldName The old name of the variable to rename
      * @param {string} newName The new name for the cloud variable.
      */
-    renameVariable (oldName, newName) {
-        this.writeToServer('rename', oldName, null, newName);
+    renameVariable(oldName, newName) {
+        this.writeToServer("rename", oldName, null, newName);
     }
 
     /**
@@ -192,19 +205,21 @@ class CloudProvider {
      * a cloud variable on the server.
      * @param {string} name The name of the variable to delete
      */
-    deleteVariable (name) {
-        this.writeToServer('delete', name);
+    deleteVariable(name) {
+        this.writeToServer("delete", name);
     }
 
     /**
      * Closes the connection to the web socket and clears the cloud
      * provider of references related to the cloud data project.
      */
-    requestCloseConnection () {
-        if (this.connection &&
+    requestCloseConnection() {
+        if (
+            this.connection &&
             this.connection.readyState !== WebSocket.CLOSING &&
-            this.connection.readyState !== WebSocket.CLOSED) {
-            log.info('Request close cloud connection without reconnecting');
+            this.connection.readyState !== WebSocket.CLOSED
+        ) {
+            log.info("Request close cloud connection without reconnecting");
             // Remove listeners, after this point we do not want to react to connection updates
             this.connection.onclose = () => {};
             this.connection.onerror = () => {};
@@ -217,7 +232,7 @@ class CloudProvider {
      * Clear this provider of references related to the project
      * and current state.
      */
-    clear () {
+    clear() {
         this.connection = null;
         this.vm = null;
         this.username = null;
@@ -228,7 +243,6 @@ class CloudProvider {
         }
         this.connectionAttempts = 0;
     }
-
 }
 
 export default CloudProvider;

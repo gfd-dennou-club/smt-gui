@@ -1,18 +1,12 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import styles from './question.css';
-import Input from '../forms/input.jsx';
-import enterIcon from './icon--enter.svg';
+import PropTypes from "prop-types";
+import React from "react";
+import styles from "./question.css";
+import Input from "../forms/input.jsx";
+import enterIcon from "./icon--enter.svg";
 
-const QuestionComponent = props => {
-    const {
-        answer,
-        className,
-        question,
-        onChange,
-        onClick,
-        onKeyPress
-    } = props;
+const QuestionComponent = (props) => {
+    const { answer, className, question, onChange, onClick, onKeyPress } =
+        props;
     return (
         <div className={className}>
             <div className={styles.questionContainer}>
@@ -48,7 +42,7 @@ QuestionComponent.propTypes = {
     onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
     onKeyPress: PropTypes.func.isRequired,
-    question: PropTypes.string
+    question: PropTypes.string,
 };
 
 export default QuestionComponent;

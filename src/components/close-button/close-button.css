@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: center;
 
-    overflow: hidden;  /* Mask the icon animation */
+    overflow: hidden; /* Mask the icon animation */
     background-color: $ui-black-transparent;
     border-radius: 50%;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -38,7 +38,7 @@
     box-shadow: 0 0 0 2px $ui-black-transparent;
 }
 
- .large.orange {
+.large.orange {
     background-color: hsla(29, 100%, 54%, 0.2);
     box-shadow: 0px 0px 0px 2px hsla(29, 100%, 54%, 0.2);
 }
@@ -66,9 +66,9 @@
 }
 
 .back-icon {
-  position: relative;
-  margin: 0.25rem;
-  user-select: none;
+    position: relative;
+    margin: 0.25rem;
+    user-select: none;
 }
 
 .small .back-icon {

@@ -1,25 +1,21 @@
-import bindAll from 'lodash.bindall';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import VM from 'scratch-vm';
+import bindAll from "lodash.bindall";
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import VM from "scratch-vm";
 import {
     NullRubyToBlocksConverter,
-    targetCodeToBlocks
-} from '../lib/ruby-to-blocks-converter';
+    targetCodeToBlocks,
+} from "../lib/ruby-to-blocks-converter";
 
-import {
-    activateTab,
-    RUBY_TAB_INDEX
-} from '../reducers/editor-tab';
-import {showAlertWithTimeout} from '../reducers/alerts';
-import {highlightTarget} from '../reducers/targets';
+import { activateTab, RUBY_TAB_INDEX } from "../reducers/editor-tab";
+import { showAlertWithTimeout } from "../reducers/alerts";
+import { highlightTarget } from "../reducers/targets";
 import {
     rubyCodeShape,
     updateRubyCodeErrors,
-    convertedRubyCode
-} from '../reducers/ruby-code';
-
+    convertedRubyCode,
+} from "../reducers/ruby-code";
 
 /**
  * Higher Order Component to provide behavior for converting Ruby to Code.
@@ -32,14 +28,12 @@ import {
  */
 const RubyToBlocksConverterHOC = function (WrappedComponent) {
     class RubyToBlocksConverterComponent extends React.Component {
-        constructor (props) {
+        constructor(props) {
             super(props);
-            bindAll(this, [
-                'targetCodeToBlocks'
-            ]);
+            bindAll(this, ["targetCodeToBlocks"]);
         }
 
-        targetCodeToBlocks (intl) {
+        targetCodeToBlocks(intl) {
             if (this.props.rubyCode.modified) {
                 const converter = targetCodeToBlocks(
                     this.props.vm,
@@ -48,9 +42,13 @@ const RubyToBlocksConverterHOC = function (WrappedComponent) {
                     intl
                 );
                 if (!converter.result) {
-                    this.props.vm.setEditingTarget(this.props.rubyCode.target.id);
+                    this.props.vm.setEditingTarget(
+                        this.props.rubyCode.target.id
+                    );
                     if (!this.props.rubyCode.target.isStage) {
-                        this.props.onHighlightTarget(this.props.rubyCode.target.id);
+                        this.props.onHighlightTarget(
+                            this.props.rubyCode.target.id
+                        );
                     }
                     this.props.onActivateRubyTab();
                     this.props.onShowConvertRubyToBlocksErrorAlert();
@@ -64,7 +62,7 @@ const RubyToBlocksConverterHOC = function (WrappedComponent) {
             return NullRubyToBlocksConverter;
         }
 
-        render () {
+        render() {
             const {
                 /* eslint-disable no-unused-vars */
                 editingTarget,
@@ -94,27 +92,28 @@ const RubyToBlocksConverterHOC = function (WrappedComponent) {
         onShowConvertRubyToBlocksErrorAlert: PropTypes.func,
         rubyCode: rubyCodeShape,
         updateRubyCodeErrorsState: PropTypes.func,
-        vm: PropTypes.instanceOf(VM)
+        vm: PropTypes.instanceOf(VM),
     };
 
-    const mapStateToProps = state => ({
+    const mapStateToProps = (state) => ({
         editingTarget: state.scratchGui.targets.editingTarget,
         rubyCode: state.scratchGui.rubyCode,
-        vm: state.scratchGui.vm
+        vm: state.scratchGui.vm,
     });
 
-    const mapDispatchToProps = dispatch => ({
+    const mapDispatchToProps = (dispatch) => ({
         convertedRubyCodeState: () => dispatch(convertedRubyCode()),
         onActivateRubyTab: () => dispatch(activateTab(RUBY_TAB_INDEX)),
-        onHighlightTarget: id => dispatch(highlightTarget(id)),
-        onShowConvertRubyToBlocksErrorAlert: () => showAlertWithTimeout(dispatch, 'convertRubyToBlocksError'),
-        updateRubyCodeErrorsState: errors => dispatch(updateRubyCodeErrors(errors))
+        onHighlightTarget: (id) => dispatch(highlightTarget(id)),
+        onShowConvertRubyToBlocksErrorAlert: () =>
+            showAlertWithTimeout(dispatch, "convertRubyToBlocksError"),
+        updateRubyCodeErrorsState: (errors) =>
+            dispatch(updateRubyCodeErrors(errors)),
     });
 
     // Allow incoming props to override redux-provided props. Used to mock in tests.
-    const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(
-        {}, stateProps, dispatchProps, ownProps
-    );
+    const mergeProps = (stateProps, dispatchProps, ownProps) =>
+        Object.assign({}, stateProps, dispatchProps, ownProps);
 
     return connect(
         mapStateToProps,
@@ -123,6 +122,4 @@ const RubyToBlocksConverterHOC = function (WrappedComponent) {
     )(RubyToBlocksConverterComponent);
 };
 
-export {
-    RubyToBlocksConverterHOC as default
-};
+export { RubyToBlocksConverterHOC as default };

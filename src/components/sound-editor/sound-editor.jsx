@@ -1,143 +1,149 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import classNames from 'classnames';
-import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
+import PropTypes from "prop-types";
+import React from "react";
+import classNames from "classnames";
+import {
+    defineMessages,
+    FormattedMessage,
+    injectIntl,
+    intlShape,
+} from "react-intl";
 
-import Waveform from '../waveform/waveform.jsx';
-import Label from '../forms/label.jsx';
-import Input from '../forms/input.jsx';
+import Waveform from "../waveform/waveform.jsx";
+import Label from "../forms/label.jsx";
+import Input from "../forms/input.jsx";
 
-import BufferedInputHOC from '../forms/buffered-input-hoc.jsx';
-import AudioSelector from '../../containers/audio-selector.jsx';
-import IconButton from '../icon-button/icon-button.jsx';
+import BufferedInputHOC from "../forms/buffered-input-hoc.jsx";
+import AudioSelector from "../../containers/audio-selector.jsx";
+import IconButton from "../icon-button/icon-button.jsx";
 
-import styles from './sound-editor.css';
+import styles from "./sound-editor.css";
 
-import playIcon from './icon--play.svg';
-import stopIcon from './icon--stop.svg';
-import redoIcon from './icon--redo.svg';
-import undoIcon from './icon--undo.svg';
-import fasterIcon from './icon--faster.svg';
-import slowerIcon from './icon--slower.svg';
-import louderIcon from './icon--louder.svg';
-import softerIcon from './icon--softer.svg';
-import robotIcon from './icon--robot.svg';
-import reverseIcon from './icon--reverse.svg';
-import fadeOutIcon from './icon--fade-out.svg';
-import fadeInIcon from './icon--fade-in.svg';
-import muteIcon from './icon--mute.svg';
+import playIcon from "./icon--play.svg";
+import stopIcon from "./icon--stop.svg";
+import redoIcon from "./icon--redo.svg";
+import undoIcon from "./icon--undo.svg";
+import fasterIcon from "./icon--faster.svg";
+import slowerIcon from "./icon--slower.svg";
+import louderIcon from "./icon--louder.svg";
+import softerIcon from "./icon--softer.svg";
+import robotIcon from "./icon--robot.svg";
+import reverseIcon from "./icon--reverse.svg";
+import fadeOutIcon from "./icon--fade-out.svg";
+import fadeInIcon from "./icon--fade-in.svg";
+import muteIcon from "./icon--mute.svg";
 
-import deleteIcon from './icon--delete.svg';
-import copyIcon from './icon--copy.svg';
-import pasteIcon from './icon--paste.svg';
-import copyToNewIcon from './icon--copy-to-new.svg';
+import deleteIcon from "./icon--delete.svg";
+import copyIcon from "./icon--copy.svg";
+import pasteIcon from "./icon--paste.svg";
+import copyToNewIcon from "./icon--copy-to-new.svg";
 
 const BufferedInput = BufferedInputHOC(Input);
 
 const messages = defineMessages({
     sound: {
-        id: 'gui.soundEditor.sound',
-        description: 'Label for the name of the sound',
-        defaultMessage: 'Sound'
+        id: "gui.soundEditor.sound",
+        description: "Label for the name of the sound",
+        defaultMessage: "Sound",
     },
     play: {
-        id: 'gui.soundEditor.play',
-        description: 'Title of the button to start playing the sound',
-        defaultMessage: 'Play'
+        id: "gui.soundEditor.play",
+        description: "Title of the button to start playing the sound",
+        defaultMessage: "Play",
     },
     stop: {
-        id: 'gui.soundEditor.stop',
-        description: 'Title of the button to stop the sound',
-        defaultMessage: 'Stop'
+        id: "gui.soundEditor.stop",
+        description: "Title of the button to stop the sound",
+        defaultMessage: "Stop",
     },
     copy: {
-        id: 'gui.soundEditor.copy',
-        description: 'Title of the button to copy the sound',
-        defaultMessage: 'Copy'
+        id: "gui.soundEditor.copy",
+        description: "Title of the button to copy the sound",
+        defaultMessage: "Copy",
     },
     paste: {
-        id: 'gui.soundEditor.paste',
-        description: 'Title of the button to paste the sound',
-        defaultMessage: 'Paste'
+        id: "gui.soundEditor.paste",
+        description: "Title of the button to paste the sound",
+        defaultMessage: "Paste",
     },
     copyToNew: {
-        id: 'gui.soundEditor.copyToNew',
-        description: 'Title of the button to copy the selection into a new sound',
-        defaultMessage: 'Copy to New'
+        id: "gui.soundEditor.copyToNew",
+        description:
+            "Title of the button to copy the selection into a new sound",
+        defaultMessage: "Copy to New",
     },
     delete: {
-        id: 'gui.soundEditor.delete',
-        description: 'Title of the button to delete the sound',
-        defaultMessage: 'Delete'
+        id: "gui.soundEditor.delete",
+        description: "Title of the button to delete the sound",
+        defaultMessage: "Delete",
     },
     save: {
-        id: 'gui.soundEditor.save',
-        description: 'Title of the button to save trimmed sound',
-        defaultMessage: 'Save'
+        id: "gui.soundEditor.save",
+        description: "Title of the button to save trimmed sound",
+        defaultMessage: "Save",
     },
     undo: {
-        id: 'gui.soundEditor.undo',
-        description: 'Title of the button to undo',
-        defaultMessage: 'Undo'
+        id: "gui.soundEditor.undo",
+        description: "Title of the button to undo",
+        defaultMessage: "Undo",
     },
     redo: {
-        id: 'gui.soundEditor.redo',
-        description: 'Title of the button to redo',
-        defaultMessage: 'Redo'
+        id: "gui.soundEditor.redo",
+        description: "Title of the button to redo",
+        defaultMessage: "Redo",
     },
     faster: {
-        id: 'gui.soundEditor.faster',
-        description: 'Title of the button to apply the faster effect',
-        defaultMessage: 'Faster'
+        id: "gui.soundEditor.faster",
+        description: "Title of the button to apply the faster effect",
+        defaultMessage: "Faster",
     },
     slower: {
-        id: 'gui.soundEditor.slower',
-        description: 'Title of the button to apply the slower effect',
-        defaultMessage: 'Slower'
+        id: "gui.soundEditor.slower",
+        description: "Title of the button to apply the slower effect",
+        defaultMessage: "Slower",
     },
     echo: {
-        id: 'gui.soundEditor.echo',
-        description: 'Title of the button to apply the echo effect',
-        defaultMessage: 'Echo'
+        id: "gui.soundEditor.echo",
+        description: "Title of the button to apply the echo effect",
+        defaultMessage: "Echo",
     },
     robot: {
-        id: 'gui.soundEditor.robot',
-        description: 'Title of the button to apply the robot effect',
-        defaultMessage: 'Robot'
+        id: "gui.soundEditor.robot",
+        description: "Title of the button to apply the robot effect",
+        defaultMessage: "Robot",
     },
     louder: {
-        id: 'gui.soundEditor.louder',
-        description: 'Title of the button to apply the louder effect',
-        defaultMessage: 'Louder'
+        id: "gui.soundEditor.louder",
+        description: "Title of the button to apply the louder effect",
+        defaultMessage: "Louder",
     },
     softer: {
-        id: 'gui.soundEditor.softer',
-        description: 'Title of the button to apply thr.softer effect',
-        defaultMessage: 'Softer'
+        id: "gui.soundEditor.softer",
+        description: "Title of the button to apply thr.softer effect",
+        defaultMessage: "Softer",
     },
     reverse: {
-        id: 'gui.soundEditor.reverse',
-        description: 'Title of the button to apply the reverse effect',
-        defaultMessage: 'Reverse'
+        id: "gui.soundEditor.reverse",
+        description: "Title of the button to apply the reverse effect",
+        defaultMessage: "Reverse",
     },
     fadeOut: {
-        id: 'gui.soundEditor.fadeOut',
-        description: 'Title of the button to apply the fade out effect',
-        defaultMessage: 'Fade out'
+        id: "gui.soundEditor.fadeOut",
+        description: "Title of the button to apply the fade out effect",
+        defaultMessage: "Fade out",
     },
     fadeIn: {
-        id: 'gui.soundEditor.fadeIn',
-        description: 'Title of the button to apply the fade in effect',
-        defaultMessage: 'Fade in'
+        id: "gui.soundEditor.fadeIn",
+        description: "Title of the button to apply the fade in effect",
+        defaultMessage: "Fade in",
     },
     mute: {
-        id: 'gui.soundEditor.mute',
-        description: 'Title of the button to apply the mute effect',
-        defaultMessage: 'Mute'
-    }
+        id: "gui.soundEditor.mute",
+        description: "Title of the button to apply the mute effect",
+        defaultMessage: "Mute",
+    },
 });
 
-const SoundEditor = props => (
+const SoundEditor = (props) => (
     <div
         className={styles.editorContainer}
         ref={props.setRef}
@@ -211,11 +217,7 @@ const SoundEditor = props => (
         </div>
         <div className={styles.row}>
             <div className={styles.waveformContainer}>
-                <Waveform
-                    data={props.chunkLevels}
-                    height={160}
-                    width={600}
-                />
+                <Waveform data={props.chunkLevels} height={160} width={600} />
                 <AudioSelector
                     playhead={props.playhead}
                     trimEnd={props.trimEnd}
@@ -230,25 +232,25 @@ const SoundEditor = props => (
             <div className={styles.inputGroup}>
                 {props.playhead ? (
                     <button
-                        className={classNames(styles.roundButton, styles.stopButtonn)}
+                        className={classNames(
+                            styles.roundButton,
+                            styles.stopButtonn
+                        )}
                         title={props.intl.formatMessage(messages.stop)}
                         onClick={props.onStop}
                     >
-                        <img
-                            draggable={false}
-                            src={stopIcon}
-                        />
+                        <img draggable={false} src={stopIcon} />
                     </button>
                 ) : (
                     <button
-                        className={classNames(styles.roundButton, styles.playButton)}
+                        className={classNames(
+                            styles.roundButton,
+                            styles.playButton
+                        )}
                         title={props.intl.formatMessage(messages.play)}
                         onClick={props.onPlay}
                     >
-                        <img
-                            draggable={false}
-                            src={playIcon}
-                        />
+                        <img draggable={false} src={playIcon} />
                     </button>
                 )}
             </div>
@@ -343,7 +345,7 @@ SoundEditor.propTypes = {
     setRef: PropTypes.func,
     tooLoud: PropTypes.bool.isRequired,
     trimEnd: PropTypes.number,
-    trimStart: PropTypes.number
+    trimStart: PropTypes.number,
 };
 
 export default injectIntl(SoundEditor);

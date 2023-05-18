@@ -1,5 +1,5 @@
 class FadeEffect {
-    constructor (audioContext, fadeIn, startSeconds, endSeconds) {
+    constructor(audioContext, fadeIn, startSeconds, endSeconds) {
         this.audioContext = audioContext;
 
         this.input = this.audioContext.createGain();

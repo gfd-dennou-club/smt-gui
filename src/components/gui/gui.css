@@ -44,7 +44,9 @@
         much better ways to solve that (e.g. undo #2124, remove this flex-basis entirely). However, they run their own
         risks of breaking things, so let's just leave this as-is for the time being.
     */
-    flex-basis: calc(1024px - 408px - (($space + $stage-standard-border-width) * 2));
+    flex-basis: calc(
+        1024px - 408px - (($space + $stage-standard-border-width) * 2)
+    );
     flex-grow: 1;
     flex-shrink: 0;
     position: relative;
@@ -62,7 +64,7 @@
 
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 500;
-    font-size: 0.80rem;
+    font-size: 0.8rem;
 
     /* Overrides for react-tabs styling */
     margin: 0 !important;
@@ -119,7 +121,7 @@
 }
 
 .tab:hover {
-  background-color: $ui-primary;
+    background-color: $ui-primary;
 }
 
 .tab.is-selected {
@@ -249,11 +251,10 @@ $fade-out-distance: 15px;
     position: absolute;
     top: calc(calc(-1 * $fade-out-distance) - 1px);
     left: -1px;
-    background: linear-gradient(rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.15));
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
     height: $fade-out-distance;
     width: calc(100% + 0.5px);
 }
-
 
 .extension-button {
     background: none;

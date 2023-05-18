@@ -52,11 +52,11 @@
 }
 
 [dir="ltr"] .question-input > input {
-    padding: 0 2rem 0 .75rem; /* To make room for the submit button */
+    padding: 0 2rem 0 0.75rem; /* To make room for the submit button */
 }
 
 [dir="rtl"] .question-input > input {
-    padding: 0 .75rem 0 2rem; /* To make room for the submit button */
+    padding: 0 0.75rem 0 2rem; /* To make room for the submit button */
 }
 
 .question-input > input:focus {

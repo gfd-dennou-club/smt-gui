@@ -5,7 +5,7 @@
  */
 export default function (Generator) {
     Generator.text = function (block) {
-        const text = Generator.quote_(Generator.getFieldValue(block, 'TEXT'));
+        const text = Generator.quote_(Generator.getFieldValue(block, "TEXT"));
         return [text, Generator.ORDER_ATOMIC];
     };
 

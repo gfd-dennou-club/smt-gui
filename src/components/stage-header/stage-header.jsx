@@ -1,50 +1,50 @@
-import classNames from 'classnames';
-import {defineMessages, injectIntl, intlShape} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
-import {connect} from 'react-redux';
-import VM from 'scratch-vm';
+import classNames from "classnames";
+import { defineMessages, injectIntl, intlShape } from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
+import { connect } from "react-redux";
+import VM from "scratch-vm";
 
-import Box from '../box/box.jsx';
-import Button from '../button/button.jsx';
-import Controls from '../../containers/controls.jsx';
-import {getStageDimensions} from '../../lib/screen-utils';
-import {STAGE_SIZE_MODES} from '../../lib/layout-constants';
+import Box from "../box/box.jsx";
+import Button from "../button/button.jsx";
+import Controls from "../../containers/controls.jsx";
+import { getStageDimensions } from "../../lib/screen-utils";
+import { STAGE_SIZE_MODES } from "../../lib/layout-constants";
 
-import fullScreenIcon from './icon--fullscreen.svg';
-import largeStageIcon from './icon--large-stage.svg';
-import smallStageIcon from './icon--small-stage.svg';
-import unFullScreenIcon from './icon--unfullscreen.svg';
+import fullScreenIcon from "./icon--fullscreen.svg";
+import largeStageIcon from "./icon--large-stage.svg";
+import smallStageIcon from "./icon--small-stage.svg";
+import unFullScreenIcon from "./icon--unfullscreen.svg";
 
-import smalrubyLogo from '../menu-bar/hatti.svg';
-import styles from './stage-header.css';
+import smalrubyLogo from "../menu-bar/hatti.svg";
+import styles from "./stage-header.css";
 
 const messages = defineMessages({
     largeStageSizeMessage: {
-        defaultMessage: 'Switch to large stage',
-        description: 'Button to change stage size to large',
-        id: 'gui.stageHeader.stageSizeLarge'
+        defaultMessage: "Switch to large stage",
+        description: "Button to change stage size to large",
+        id: "gui.stageHeader.stageSizeLarge",
     },
     smallStageSizeMessage: {
-        defaultMessage: 'Switch to small stage',
-        description: 'Button to change stage size to small',
-        id: 'gui.stageHeader.stageSizeSmall'
+        defaultMessage: "Switch to small stage",
+        description: "Button to change stage size to small",
+        id: "gui.stageHeader.stageSizeSmall",
     },
     fullStageSizeMessage: {
-        defaultMessage: 'Enter full screen mode',
-        description: 'Button to change stage size to full screen',
-        id: 'gui.stageHeader.stageSizeFull'
+        defaultMessage: "Enter full screen mode",
+        description: "Button to change stage size to full screen",
+        id: "gui.stageHeader.stageSizeFull",
     },
     unFullStageSizeMessage: {
-        defaultMessage: 'Exit full screen mode',
-        description: 'Button to get out of full screen mode',
-        id: 'gui.stageHeader.stageSizeUnFull'
+        defaultMessage: "Exit full screen mode",
+        description: "Button to get out of full screen mode",
+        id: "gui.stageHeader.stageSizeUnFull",
     },
     fullscreenControl: {
-        defaultMessage: 'Full Screen Control',
-        description: 'Button to enter/exit full screen mode',
-        id: 'gui.stageHeader.fullscreenControl'
-    }
+        defaultMessage: "Full Screen Control",
+        description: "Button to enter/exit full screen mode",
+        id: "gui.stageHeader.fullscreenControl",
+    },
 });
 
 const StageHeaderComponent = function (props) {
@@ -58,7 +58,7 @@ const StageHeaderComponent = function (props) {
         onSetStageUnFull,
         showBranding,
         stageSizeMode,
-        vm
+        vm,
     } = props;
 
     let header = null;
@@ -72,10 +72,7 @@ const StageHeaderComponent = function (props) {
                     rel="noopener noreferrer"
                     target="_blank"
                 >
-                    <img
-                        alt="Smalruby"
-                        src={smalrubyLogo}
-                    />
+                    <img alt="Smalruby" src={smalrubyLogo} />
                 </a>
             </div>
         ) : (
@@ -85,7 +82,9 @@ const StageHeaderComponent = function (props) {
                 onKeyPress={onKeyPress}
             >
                 <img
-                    alt={props.intl.formatMessage(messages.unFullStageSizeMessage)}
+                    alt={props.intl.formatMessage(
+                        messages.unFullStageSizeMessage
+                    )}
                     className={styles.stageButtonIcon}
                     draggable={false}
                     src={unFullScreenIcon}
@@ -97,7 +96,7 @@ const StageHeaderComponent = function (props) {
             <Box className={styles.stageHeaderWrapperOverlay}>
                 <Box
                     className={styles.stageMenuWrapper}
-                    style={{width: stageDimensions.width}}
+                    style={{ width: stageDimensions.width }}
                 >
                     <Controls vm={vm} />
                     {stageButton}
@@ -105,47 +104,54 @@ const StageHeaderComponent = function (props) {
             </Box>
         );
     } else {
-        const stageControls =
-            isPlayerOnly ? (
-                []
-            ) : (
-                <div className={styles.stageSizeToggleGroup}>
-                    <div>
-                        <Button
-                            className={classNames(
-                                styles.stageButton,
-                                styles.stageButtonFirst,
-                                (stageSizeMode === STAGE_SIZE_MODES.small) ? null : styles.stageButtonToggledOff
+        const stageControls = isPlayerOnly ? (
+            []
+        ) : (
+            <div className={styles.stageSizeToggleGroup}>
+                <div>
+                    <Button
+                        className={classNames(
+                            styles.stageButton,
+                            styles.stageButtonFirst,
+                            stageSizeMode === STAGE_SIZE_MODES.small
+                                ? null
+                                : styles.stageButtonToggledOff
+                        )}
+                        onClick={onSetStageSmall}
+                    >
+                        <img
+                            alt={props.intl.formatMessage(
+                                messages.smallStageSizeMessage
                             )}
-                            onClick={onSetStageSmall}
-                        >
-                            <img
-                                alt={props.intl.formatMessage(messages.smallStageSizeMessage)}
-                                className={styles.stageButtonIcon}
-                                draggable={false}
-                                src={smallStageIcon}
-                            />
-                        </Button>
-                    </div>
-                    <div>
-                        <Button
-                            className={classNames(
-                                styles.stageButton,
-                                styles.stageButtonLast,
-                                (stageSizeMode === STAGE_SIZE_MODES.large) ? null : styles.stageButtonToggledOff
-                            )}
-                            onClick={onSetStageLarge}
-                        >
-                            <img
-                                alt={props.intl.formatMessage(messages.largeStageSizeMessage)}
-                                className={styles.stageButtonIcon}
-                                draggable={false}
-                                src={largeStageIcon}
-                            />
-                        </Button>
-                    </div>
+                            className={styles.stageButtonIcon}
+                            draggable={false}
+                            src={smallStageIcon}
+                        />
+                    </Button>
                 </div>
-            );
+                <div>
+                    <Button
+                        className={classNames(
+                            styles.stageButton,
+                            styles.stageButtonLast,
+                            stageSizeMode === STAGE_SIZE_MODES.large
+                                ? null
+                                : styles.stageButtonToggledOff
+                        )}
+                        onClick={onSetStageLarge}
+                    >
+                        <img
+                            alt={props.intl.formatMessage(
+                                messages.largeStageSizeMessage
+                            )}
+                            className={styles.stageButtonIcon}
+                            draggable={false}
+                            src={largeStageIcon}
+                        />
+                    </Button>
+                </div>
+            </div>
+        );
         header = (
             <Box className={styles.stageHeaderWrapper}>
                 <Box className={styles.stageMenuWrapper}>
@@ -158,11 +164,15 @@ const StageHeaderComponent = function (props) {
                                 onClick={onSetStageFull}
                             >
                                 <img
-                                    alt={props.intl.formatMessage(messages.fullStageSizeMessage)}
+                                    alt={props.intl.formatMessage(
+                                        messages.fullStageSizeMessage
+                                    )}
                                     className={styles.stageButtonIcon}
                                     draggable={false}
                                     src={fullScreenIcon}
-                                    title={props.intl.formatMessage(messages.fullscreenControl)}
+                                    title={props.intl.formatMessage(
+                                        messages.fullscreenControl
+                                    )}
                                 />
                             </Button>
                         </div>
@@ -175,9 +185,9 @@ const StageHeaderComponent = function (props) {
     return header;
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     // This is the button's mode, as opposed to the actual current state
-    stageSizeMode: state.scratchGui.stageSize.stageSize
+    stageSizeMode: state.scratchGui.stageSize.stageSize,
 });
 
 StageHeaderComponent.propTypes = {
@@ -191,13 +201,11 @@ StageHeaderComponent.propTypes = {
     onSetStageUnFull: PropTypes.func.isRequired,
     showBranding: PropTypes.bool.isRequired,
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
 };
 
 StageHeaderComponent.defaultProps = {
-    stageSizeMode: STAGE_SIZE_MODES.large
+    stageSizeMode: STAGE_SIZE_MODES.large,
 };
 
-export default injectIntl(connect(
-    mapStateToProps
-)(StageHeaderComponent));
+export default injectIntl(connect(mapStateToProps)(StageHeaderComponent));

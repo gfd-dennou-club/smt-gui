@@ -15,13 +15,25 @@
  * @param {bool} isRtl are the boxes in RTL order.
  * @return {?number} index of the corresponding box, or null if one could not be found.
  */
-const indexForPositionOnList = ({x, y}, boxes, isRtl) => {
+const indexForPositionOnList = ({ x, y }, boxes, isRtl) => {
     if (boxes.length === 0) return null;
     let index = null;
-    const leftEdge = Math.min.apply(null, boxes.map(b => b.left));
-    const rightEdge = Math.max.apply(null, boxes.map(b => b.right));
-    const topEdge = Math.min.apply(null, boxes.map(b => b.top));
-    const bottomEdge = Math.max.apply(null, boxes.map(b => b.bottom));
+    const leftEdge = Math.min.apply(
+        null,
+        boxes.map((b) => b.left)
+    );
+    const rightEdge = Math.max.apply(
+        null,
+        boxes.map((b) => b.right)
+    );
+    const topEdge = Math.min.apply(
+        null,
+        boxes.map((b) => b.top)
+    );
+    const bottomEdge = Math.max.apply(
+        null,
+        boxes.map((b) => b.bottom)
+    );
     for (let n = 0; n < boxes.length; n++) {
         const box = boxes[n];
         // Construct an "extended" box for each, extending out to infinity if
@@ -50,6 +62,4 @@ const indexForPositionOnList = ({x, y}, boxes, isRtl) => {
     return index;
 };
 
-export {
-    indexForPositionOnList
-};
+export { indexForPositionOnList };

@@ -1,37 +1,35 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import bindAll from 'lodash.bindall';
+import PropTypes from "prop-types";
+import React from "react";
+import bindAll from "lodash.bindall";
 
-import Box from '../box/box.jsx';
-import styles from './loupe.css';
+import Box from "../box/box.jsx";
+import styles from "./loupe.css";
 
 const zoomScale = 3;
 
 class LoupeComponent extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'setCanvas'
-        ]);
+        bindAll(this, ["setCanvas"]);
     }
-    componentDidUpdate () {
+    componentDidUpdate() {
         this.draw();
     }
-    draw () {
+    draw() {
         const boxSize = 6 / zoomScale;
         const boxLineWidth = 1 / zoomScale;
         const colorRingWidth = 15 / zoomScale;
 
-        const ctx = this.canvas.getContext('2d');
-        const {color, data, width, height} = this.props.colorInfo;
+        const ctx = this.canvas.getContext("2d");
+        const { color, data, width, height } = this.props.colorInfo;
         this.canvas.width = zoomScale * width;
         this.canvas.height = zoomScale * height;
 
         // In order to scale the image data, must draw to a tmp canvas first
-        const tmpCanvas = document.createElement('canvas');
+        const tmpCanvas = document.createElement("canvas");
         tmpCanvas.width = width;
         tmpCanvas.height = height;
-        const tmpCtx = tmpCanvas.getContext('2d');
+        const tmpCtx = tmpCanvas.getContext("2d");
         const imageData = tmpCtx.createImageData(width, height);
         imageData.data.set(data);
         tmpCtx.putImageData(imageData, 0, 0);
@@ -43,10 +41,15 @@ class LoupeComponent extends React.Component {
 
         // Draw an outlined square at the cursor position (cursor is hidden)
         ctx.lineWidth = boxLineWidth;
-        ctx.strokeStyle = 'black';
+        ctx.strokeStyle = "black";
         ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
         ctx.beginPath();
-        ctx.rect((width / 2) - (boxSize / 2), (height / 2) - (boxSize / 2), boxSize, boxSize);
+        ctx.rect(
+            width / 2 - boxSize / 2,
+            height / 2 - boxSize / 2,
+            boxSize,
+            boxSize
+        );
         ctx.fill();
         ctx.stroke();
 
@@ -59,14 +62,11 @@ class LoupeComponent extends React.Component {
         ctx.stroke();
         ctx.restore();
     }
-    setCanvas (element) {
+    setCanvas(element) {
         this.canvas = element;
     }
-    render () {
-        const {
-            colorInfo,
-            ...boxProps
-        } = this.props;
+    render() {
+        const { colorInfo, ...boxProps } = this.props;
         return (
             <Box
                 {...boxProps}
@@ -75,10 +75,10 @@ class LoupeComponent extends React.Component {
                 element="canvas"
                 height={colorInfo.height}
                 style={{
-                    top: colorInfo.y - ((zoomScale * colorInfo.height) / 2),
-                    left: colorInfo.x - ((zoomScale * colorInfo.width) / 2),
+                    top: colorInfo.y - (zoomScale * colorInfo.height) / 2,
+                    left: colorInfo.x - (zoomScale * colorInfo.width) / 2,
                     width: colorInfo.width * zoomScale,
-                    height: colorInfo.height * zoomScale
+                    height: colorInfo.height * zoomScale,
                 }}
                 width={colorInfo.width}
             />
@@ -92,14 +92,14 @@ LoupeComponent.propTypes = {
             r: PropTypes.number,
             g: PropTypes.number,
             b: PropTypes.number,
-            a: PropTypes.number
+            a: PropTypes.number,
         }),
         data: PropTypes.instanceOf(Uint8Array),
         width: PropTypes.number,
         height: PropTypes.number,
         x: PropTypes.number,
-        y: PropTypes.number
-    })
+        y: PropTypes.number,
+    }),
 };
 
 export default LoupeComponent;

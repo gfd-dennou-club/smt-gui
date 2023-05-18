@@ -1,40 +1,44 @@
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import bindAll from 'lodash.bindall';
-import React from 'react';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import bindAll from "lodash.bindall";
+import React from "react";
 
 const MenuBarHOC = function (WrappedComponent) {
     class MenuBarContainer extends React.PureComponent {
-        constructor (props) {
+        constructor(props) {
             super(props);
 
             bindAll(this, [
-                'confirmReadyToReplaceProject',
-                'shouldSaveBeforeTransition'
+                "confirmReadyToReplaceProject",
+                "shouldSaveBeforeTransition",
             ]);
         }
-        confirmReadyToReplaceProject (message) {
+        confirmReadyToReplaceProject(message) {
             let readyToReplaceProject = true;
             if (this.props.projectChanged && !this.props.canCreateNew) {
                 readyToReplaceProject = this.props.confirmWithMessage(message);
             }
             return readyToReplaceProject;
         }
-        shouldSaveBeforeTransition () {
-            return (this.props.canSave && this.props.projectChanged);
+        shouldSaveBeforeTransition() {
+            return this.props.canSave && this.props.projectChanged;
         }
-        render () {
+        render() {
             const {
                 /* eslint-disable no-unused-vars */
                 projectChanged,
                 /* eslint-enable no-unused-vars */
                 ...props
             } = this.props;
-            return (<WrappedComponent
-                confirmReadyToReplaceProject={this.confirmReadyToReplaceProject}
-                shouldSaveBeforeTransition={this.shouldSaveBeforeTransition}
-                {...props}
-            />);
+            return (
+                <WrappedComponent
+                    confirmReadyToReplaceProject={
+                        this.confirmReadyToReplaceProject
+                    }
+                    shouldSaveBeforeTransition={this.shouldSaveBeforeTransition}
+                    {...props}
+                />
+            );
         }
     }
 
@@ -42,20 +46,19 @@ const MenuBarHOC = function (WrappedComponent) {
         canCreateNew: PropTypes.bool,
         canSave: PropTypes.bool,
         confirmWithMessage: PropTypes.func,
-        projectChanged: PropTypes.bool
+        projectChanged: PropTypes.bool,
     };
     MenuBarContainer.defaultProps = {
         // default to using standard js confirm
-        confirmWithMessage: message => (confirm(message)) // eslint-disable-line no-alert
+        confirmWithMessage: (message) => confirm(message), // eslint-disable-line no-alert
     };
-    const mapStateToProps = state => ({
-        projectChanged: state.scratchGui.projectChanged
+    const mapStateToProps = (state) => ({
+        projectChanged: state.scratchGui.projectChanged,
     });
     const mapDispatchToProps = () => ({});
     // Allow incoming props to override redux-provided props. Used to mock in tests.
-    const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(
-        {}, stateProps, dispatchProps, ownProps
-    );
+    const mergeProps = (stateProps, dispatchProps, ownProps) =>
+        Object.assign({}, stateProps, dispatchProps, ownProps);
     return connect(
         mapStateToProps,
         mapDispatchToProps,

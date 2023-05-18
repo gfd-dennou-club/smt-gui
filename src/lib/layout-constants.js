@@ -1,4 +1,4 @@
-import keyMirror from 'keymirror';
+import keyMirror from "keymirror";
 
 /**
  * Names for each state of the stage size toggle
@@ -13,7 +13,7 @@ const STAGE_SIZE_MODES = keyMirror({
     /**
      * The "small stage" button is pressed; the user would like a small stage.
      */
-    small: null
+    small: null,
 });
 
 /**
@@ -34,7 +34,7 @@ const STAGE_DISPLAY_SIZES = keyMirror({
     /**
      * Small stage (ignores browser width)
      */
-    small: null
+    small: null,
 });
 
 // zoom level to start with
@@ -49,12 +49,12 @@ export default {
     standardStageWidth: 480,
     standardStageHeight: 360,
     fullSizeMinWidth: 1096,
-    fullSizePaintMinWidth: 1250
+    fullSizePaintMinWidth: 1250,
 };
 
 export {
     BLOCKS_DEFAULT_SCALE,
     STAGE_DISPLAY_SCALES,
     STAGE_DISPLAY_SIZES,
-    STAGE_SIZE_MODES
+    STAGE_SIZE_MODES,
 };

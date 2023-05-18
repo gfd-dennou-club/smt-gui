@@ -1,33 +1,37 @@
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import React from 'react';
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import React from "react";
 
-import DeleteButton from '../delete-button/delete-button.jsx';
-import styles from './sprite-selector-item.css';
-import {ContextMenuTrigger} from 'react-contextmenu';
-import {DangerousMenuItem, ContextMenu, MenuItem} from '../context-menu/context-menu.jsx';
-import {FormattedMessage} from 'react-intl';
+import DeleteButton from "../delete-button/delete-button.jsx";
+import styles from "./sprite-selector-item.css";
+import { ContextMenuTrigger } from "react-contextmenu";
+import {
+    DangerousMenuItem,
+    ContextMenu,
+    MenuItem,
+} from "../context-menu/context-menu.jsx";
+import { FormattedMessage } from "react-intl";
 
 // react-contextmenu requires unique id to match trigger and context menu
 let contextMenuId = 0;
 
-const SpriteSelectorItem = props => (
+const SpriteSelectorItem = (props) => (
     <ContextMenuTrigger
         attributes={{
             className: classNames(props.className, styles.spriteSelectorItem, {
-                [styles.isSelected]: props.selected
+                [styles.isSelected]: props.selected,
             }),
             onClick: props.onClick,
             onMouseEnter: props.onMouseEnter,
             onMouseLeave: props.onMouseLeave,
             onMouseDown: props.onMouseDown,
-            onTouchStart: props.onMouseDown
+            onTouchStart: props.onMouseDown,
         }}
         disable={props.preventContextMenu}
         id={`${props.name}-${contextMenuId}`}
         ref={props.componentRef}
     >
-        {typeof props.number === 'undefined' ? null : (
+        {typeof props.number === "undefined" ? null : (
             <div className={styles.number}>{props.number}</div>
         )}
         {props.costumeURL ? (
@@ -47,13 +51,15 @@ const SpriteSelectorItem = props => (
                 <div className={styles.spriteDetails}>{props.details}</div>
             ) : null}
         </div>
-        {(props.selected && props.onDeleteButtonClick) ? (
+        {props.selected && props.onDeleteButtonClick ? (
             <DeleteButton
                 className={styles.deleteButton}
                 onClick={props.onDeleteButtonClick}
             />
-        ) : null }
-        {props.onDuplicateButtonClick || props.onDeleteButtonClick || props.onExportButtonClick ? (
+        ) : null}
+        {props.onDuplicateButtonClick ||
+        props.onDeleteButtonClick ||
+        props.onExportButtonClick ? (
             <ContextMenu id={`${props.name}-${contextMenuId++}`}>
                 {props.onDuplicateButtonClick ? (
                     <MenuItem onClick={props.onDuplicateButtonClick}>
@@ -72,7 +78,7 @@ const SpriteSelectorItem = props => (
                             id="gui.spriteSelectorItem.contextMenuExport"
                         />
                     </MenuItem>
-                ) : null }
+                ) : null}
                 {props.onDeleteButtonClick ? (
                     <DangerousMenuItem onClick={props.onDeleteButtonClick}>
                         <FormattedMessage
@@ -81,7 +87,7 @@ const SpriteSelectorItem = props => (
                             id="gui.spriteSelectorItem.contextMenuDelete"
                         />
                     </DangerousMenuItem>
-                ) : null }
+                ) : null}
             </ContextMenu>
         ) : null}
     </ContextMenuTrigger>
@@ -102,7 +108,7 @@ SpriteSelectorItem.propTypes = {
     onMouseEnter: PropTypes.func,
     onMouseLeave: PropTypes.func,
     preventContextMenu: PropTypes.bool,
-    selected: PropTypes.bool.isRequired
+    selected: PropTypes.bool.isRequired,
 };
 
 export default SpriteSelectorItem;

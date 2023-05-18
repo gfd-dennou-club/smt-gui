@@ -15,16 +15,16 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: $ui-white;
-    font-size: .75rem;
+    font-size: 0.75rem;
     font-weight: normal;
 }
 
 [dir="ltr"] .user-info .avatar {
-    margin-right: calc($space * .8125);
+    margin-right: calc($space * 0.8125);
 }
 
 [dir="rtl"] .user-info .avatar {
-    margin-left: calc($space * .8125);
+    margin-left: calc($space * 0.8125);
 }
 
 .user-info .avatar {
@@ -33,21 +33,21 @@
 }
 
 [dir="ltr"] .user-info .dropdown-caret-position {
-  margin-left: calc($space * .8125);
+    margin-left: calc($space * 0.8125);
 }
 
 [dir="rtl"] .user-info .dropdown-caret-position {
-  margin-right: calc($space * .8125);
+    margin-right: calc($space * 0.8125);
 }
 
 .user-info .dropdown-caret-position {
-  display: inline-block;
-  padding-bottom: .0625rem;
-  vertical-align: middle;
+    display: inline-block;
+    padding-bottom: 0.0625rem;
+    vertical-align: middle;
 }
 
 .user-info .profile-name {
-    font-size: .75rem;
-    line-height: .9375rem;
+    font-size: 0.75rem;
+    line-height: 0.9375rem;
     font-weight: bold;
 }

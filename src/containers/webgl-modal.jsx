@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import WebGlModalComponent from '../components/webgl-modal/webgl-modal.jsx';
+import WebGlModalComponent from "../components/webgl-modal/webgl-modal.jsx";
 
 class WebGlModal extends React.Component {
-    handleCancel () {
+    handleCancel() {
         window.history.back();
     }
-    render () {
+    render() {
         return (
             <WebGlModalComponent
                 isRtl={this.props.isRtl}
@@ -18,7 +18,7 @@ class WebGlModal extends React.Component {
 }
 
 WebGlModal.propTypes = {
-    isRtl: PropTypes.bool
+    isRtl: PropTypes.bool,
 };
 
 export default WebGlModal;

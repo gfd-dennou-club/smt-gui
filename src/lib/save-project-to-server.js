@@ -1,6 +1,6 @@
-import queryString from 'query-string';
-import xhr from 'xhr';
-import storage from '../lib/storage';
+import queryString from "query-string";
+import xhr from "xhr";
+import storage from "../lib/storage";
 
 /**
  * Save a project JSON to the project server.
@@ -19,27 +19,29 @@ export default function (projectId, vmState, params) {
         body: vmState,
         // If we set json:true then the body is double-stringified, so don't
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
-        withCredentials: true
+        withCredentials: true,
     };
-    const creatingProject = projectId === null || typeof projectId === 'undefined';
+    const creatingProject =
+        projectId === null || typeof projectId === "undefined";
     const queryParams = {};
-    if (params.hasOwnProperty('originalId')) queryParams.original_id = params.originalId;
-    if (params.hasOwnProperty('isCopy')) queryParams.is_copy = params.isCopy;
-    if (params.hasOwnProperty('isRemix')) queryParams.is_remix = params.isRemix;
-    if (params.hasOwnProperty('title')) queryParams.title = params.title;
+    if (params.hasOwnProperty("originalId"))
+        queryParams.original_id = params.originalId;
+    if (params.hasOwnProperty("isCopy")) queryParams.is_copy = params.isCopy;
+    if (params.hasOwnProperty("isRemix")) queryParams.is_remix = params.isRemix;
+    if (params.hasOwnProperty("title")) queryParams.title = params.title;
     let qs = queryString.stringify(queryParams);
     if (qs) qs = `?${qs}`;
     if (creatingProject) {
         Object.assign(opts, {
-            method: 'post',
-            url: `${storage.projectHost}/${qs}`
+            method: "post",
+            url: `${storage.projectHost}/${qs}`,
         });
     } else {
         Object.assign(opts, {
-            method: 'put',
-            url: `${storage.projectHost}/${projectId}${qs}`
+            method: "put",
+            url: `${storage.projectHost}/${projectId}${qs}`,
         });
     }
     return new Promise((resolve, reject) => {
@@ -55,7 +57,7 @@ export default function (projectId, vmState, params) {
             }
             body.id = projectId;
             if (creatingProject) {
-                body.id = body['content-name'];
+                body.id = body["content-name"];
             }
             resolve(body);
         });

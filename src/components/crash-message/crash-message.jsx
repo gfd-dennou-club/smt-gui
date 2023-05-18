@@ -1,18 +1,15 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import Box from '../box/box.jsx';
-import {FormattedMessage} from 'react-intl';
+import PropTypes from "prop-types";
+import React from "react";
+import Box from "../box/box.jsx";
+import { FormattedMessage } from "react-intl";
 
-import styles from './crash-message.css';
-import reloadIcon from './reload.svg';
+import styles from "./crash-message.css";
+import reloadIcon from "./reload.svg";
 
-const CrashMessage = props => (
+const CrashMessage = (props) => (
     <div className={styles.crashWrapper}>
         <Box className={styles.body}>
-            <img
-                className={styles.reloadIcon}
-                src={reloadIcon}
-            />
+            <img className={styles.reloadIcon} src={reloadIcon} />
             <h2>
                 <FormattedMessage
                     defaultMessage="Oops! Something went wrong."
@@ -22,9 +19,11 @@ const CrashMessage = props => (
             </h2>
             <p>
                 <FormattedMessage
-                    defaultMessage={'We are so sorry, but it looks like Smalruby has crashed. This bug has been' +
-                        ' automatically reported to the Smalruby Team. Please refresh your page to try' +
-                        ' again.'}
+                    defaultMessage={
+                        "We are so sorry, but it looks like Smalruby has crashed. This bug has been" +
+                        " automatically reported to the Smalruby Team. Please refresh your page to try" +
+                        " again."
+                    }
                     description="Message to inform the user that page has crashed."
                     id="gui.smalruby3.crashMessage.description"
                 />
@@ -36,15 +35,12 @@ const CrashMessage = props => (
                         description="Message to inform the user that page has crashed."
                         id="gui.crashMessage.errorNumber"
                         values={{
-                            errorId: props.eventId
+                            errorId: props.eventId,
                         }}
                     />
                 </p>
             )}
-            <button
-                className={styles.reloadButton}
-                onClick={props.onReload}
-            >
+            <button className={styles.reloadButton} onClick={props.onReload}>
                 <FormattedMessage
                     defaultMessage="Reload"
                     description="Button to reload the page when page crashes"
@@ -57,7 +53,7 @@ const CrashMessage = props => (
 
 CrashMessage.propTypes = {
     eventId: PropTypes.string,
-    onReload: PropTypes.func.isRequired
+    onReload: PropTypes.func.isRequired,
 };
 
 export default CrashMessage;

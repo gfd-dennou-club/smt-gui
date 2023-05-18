@@ -1,28 +1,30 @@
-import React from 'react';
-import classNames from 'classnames';
-import Box from '../box/box.jsx';
-import Monitor from '../../containers/monitor.jsx';
-import PropTypes from 'prop-types';
-import {OrderedMap} from 'immutable';
-import {stageSizeToTransform} from '../../lib/screen-utils';
+import React from "react";
+import classNames from "classnames";
+import Box from "../box/box.jsx";
+import Monitor from "../../containers/monitor.jsx";
+import PropTypes from "prop-types";
+import { OrderedMap } from "immutable";
+import { stageSizeToTransform } from "../../lib/screen-utils";
 
-import styles from './monitor-list.css';
+import styles from "./monitor-list.css";
 
-const MonitorList = props => (
+const MonitorList = (props) => (
     <Box
         // Use static `monitor-overlay` class for bounds of draggables
-        className={classNames(styles.monitorList, 'monitor-overlay')}
+        className={classNames(styles.monitorList, "monitor-overlay")}
         style={{
             width: props.stageSize.width,
-            height: props.stageSize.height
+            height: props.stageSize.height,
         }}
     >
         <Box
             className={styles.monitorListScaler}
             style={stageSizeToTransform(props.stageSize)}
         >
-            {props.monitors.valueSeq().filter(m => m.visible)
-                .map(monitorData => (
+            {props.monitors
+                .valueSeq()
+                .filter((m) => m.visible)
+                .map((monitorData) => (
                     <Monitor
                         draggable={props.draggable}
                         height={monitorData.height}
@@ -55,8 +57,8 @@ MonitorList.propTypes = {
         width: PropTypes.number,
         height: PropTypes.number,
         widthDefault: PropTypes.number,
-        heightDefault: PropTypes.number
-    }).isRequired
+        heightDefault: PropTypes.number,
+    }).isRequired,
 };
 
 export default MonitorList;

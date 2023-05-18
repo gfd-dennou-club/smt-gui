@@ -1,47 +1,45 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
-import VM from 'scratch-vm';
-import {injectIntl, intlShape} from 'react-intl';
-import {connect} from 'react-redux';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
+import VM from "scratch-vm";
+import { injectIntl, intlShape } from "react-intl";
+import { connect } from "react-redux";
 
-import ControlsComponent from '../components/controls/controls.jsx';
+import ControlsComponent from "../components/controls/controls.jsx";
 
-import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
+import RubyToBlocksConverterHOC from "../lib/ruby-to-blocks-converter-hoc.jsx";
 
 class Controls extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
-        bindAll(this, [
-            'handleGreenFlagClick',
-            'handleStopAllClick'
-        ]);
+        bindAll(this, ["handleGreenFlagClick", "handleStopAllClick"]);
     }
-    handleGreenFlagClick (e) {
+    handleGreenFlagClick(e) {
         e.preventDefault();
 
-        const converter = this.props.targetCodeToBlocks(this.props.intl.formatMessage);
+        const converter = this.props.targetCodeToBlocks(
+            this.props.intl.formatMessage
+        );
         if (!converter.result) {
             return;
         }
         const shiftKey = e.shiftKey;
-        converter.apply()
-            .then(() => {
-                if (shiftKey) {
-                    this.props.vm.setTurboMode(!this.props.turbo);
-                } else {
-                    if (!this.props.isStarted) {
-                        this.props.vm.start();
-                    }
-                    this.props.vm.greenFlag();
+        converter.apply().then(() => {
+            if (shiftKey) {
+                this.props.vm.setTurboMode(!this.props.turbo);
+            } else {
+                if (!this.props.isStarted) {
+                    this.props.vm.start();
                 }
-            });
+                this.props.vm.greenFlag();
+            }
+        });
     }
-    handleStopAllClick (e) {
+    handleStopAllClick(e) {
         e.preventDefault();
         this.props.vm.stopAll();
     }
-    render () {
+    render() {
         const {
             vm, // eslint-disable-line no-unused-vars
             targetCodeToBlocks, // eslint-disable-line no-unused-vars
@@ -68,18 +66,17 @@ Controls.propTypes = {
     projectRunning: PropTypes.bool.isRequired,
     targetCodeToBlocks: PropTypes.func,
     turbo: PropTypes.bool.isRequired,
-    vm: PropTypes.instanceOf(VM)
+    vm: PropTypes.instanceOf(VM),
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isStarted: state.scratchGui.vmStatus.running,
     projectRunning: state.scratchGui.vmStatus.running,
-    turbo: state.scratchGui.vmStatus.turbo
+    turbo: state.scratchGui.vmStatus.turbo,
 });
 // no-op function to prevent dispatch prop being passed to component
 const mapDispatchToProps = () => ({});
 
-export default RubyToBlocksConverterHOC(injectIntl(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Controls)));
+export default RubyToBlocksConverterHOC(
+    injectIntl(connect(mapStateToProps, mapDispatchToProps)(Controls))
+);

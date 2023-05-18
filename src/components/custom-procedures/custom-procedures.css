@@ -22,7 +22,7 @@
     position: relative;
 }
 
-.workspace :global(.injectionDiv){
+.workspace :global(.injectionDiv) {
     position: absolute;
     top: 0;
     right: 0;

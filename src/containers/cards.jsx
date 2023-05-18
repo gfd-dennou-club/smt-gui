@@ -1,6 +1,6 @@
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-import React from 'react';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import React from "react";
 
 import {
     activateDeck,
@@ -10,40 +10,36 @@ import {
     prevStep,
     dragCard,
     startDrag,
-    endDrag
-} from '../reducers/cards';
+    endDrag,
+} from "../reducers/cards";
 
-import {
-    openTipsLibrary
-} from '../reducers/modals';
+import { openTipsLibrary } from "../reducers/modals";
 
-import CardsComponent from '../components/cards/cards.jsx';
-import {loadImageData} from '../lib/libraries/decks/translate-image.js';
-import {notScratchDesktop} from '../lib/isScratchDesktop';
+import CardsComponent from "../components/cards/cards.jsx";
+import { loadImageData } from "../lib/libraries/decks/translate-image.js";
+import { notScratchDesktop } from "../lib/isScratchDesktop";
 
 class Cards extends React.Component {
-    componentDidMount () {
-        if (this.props.locale !== 'en') {
+    componentDidMount() {
+        if (this.props.locale !== "en") {
             loadImageData(this.props.locale);
         }
     }
-    componentDidUpdate (prevProps) {
+    componentDidUpdate(prevProps) {
         if (this.props.locale !== prevProps.locale) {
             loadImageData(this.props.locale);
         }
     }
-    render () {
-        return (
-            <CardsComponent {...this.props} />
-        );
+    render() {
+        return <CardsComponent {...this.props} />;
     }
 }
 
 Cards.propTypes = {
-    locale: PropTypes.string.isRequired
+    locale: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     visible: state.scratchGui.cards.visible,
     content: state.scratchGui.cards.content,
     activeDeckId: state.scratchGui.cards.activeDeckId,
@@ -54,11 +50,11 @@ const mapStateToProps = state => ({
     isRtl: state.locales.isRtl,
     locale: state.locales.locale,
     dragging: state.scratchGui.cards.dragging,
-    showVideos: notScratchDesktop()
+    showVideos: notScratchDesktop(),
 });
 
-const mapDispatchToProps = dispatch => ({
-    onActivateDeckFactory: id => () => dispatch(activateDeck(id)),
+const mapDispatchToProps = (dispatch) => ({
+    onActivateDeckFactory: (id) => () => dispatch(activateDeck(id)),
     onShowAll: () => {
         dispatch(openTipsLibrary());
         dispatch(closeCards());
@@ -69,10 +65,7 @@ const mapDispatchToProps = dispatch => ({
     onPrevStep: () => dispatch(prevStep()),
     onDrag: (e_, data) => dispatch(dragCard(data.x, data.y)),
     onStartDrag: () => dispatch(startDrag()),
-    onEndDrag: () => dispatch(endDrag())
+    onEndDrag: () => dispatch(endDrag()),
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Cards);
+export default connect(mapStateToProps, mapDispatchToProps)(Cards);

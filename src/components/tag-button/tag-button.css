@@ -2,7 +2,7 @@
 @import "../../css/units.css";
 
 .tag-button {
-    padding: .625rem 1rem;
+    padding: 0.625rem 1rem;
     background: $motion-primary;
     border-radius: 1.375rem;
     color: $ui-white;

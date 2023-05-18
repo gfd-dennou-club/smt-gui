@@ -1,5 +1,4 @@
-var ExampleExtension = function () {
-};
+var ExampleExtension = function () {};
 
 /**
  * @return {object} This extension's metadata.
@@ -8,7 +7,7 @@ ExampleExtension.prototype.getInfo = function () {
     return {
         // Required: the machine-readable name of this extension.
         // Will be used as the extension's namespace. Must not contain a '.' character.
-        id: 'someBlocks',
+        id: "someBlocks",
 
         // Optional: the human-readable name of this extension as string.
         // This and any other string to be displayed in the Scratch UI may either be
@@ -20,47 +19,48 @@ ExampleExtension.prototype.getInfo = function () {
         // internally namespace the messages such that two extensions could have
         // messages with the same ID without colliding.
         // See also: https://github.com/yahoo/react-intl/wiki/API#definemessages
-        name: 'Some Blocks',
+        name: "Some Blocks",
 
         // Optional: URI for an icon for this extension. Data URI OK.
         // If not present, use a generic icon.
         // TODO: what file types are OK? All web images? Just PNG?
-        iconURI: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DE' +
-            'UIMBgAEWB7i7uidhAAAAABJRU5ErkJggg==',
+        iconURI:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAAAAACyOJm3AAAAFklEQVQYV2P4DwMMEMgAI/+DE" +
+            "UIMBgAEWB7i7uidhAAAAABJRU5ErkJggg==",
 
         // Optional: Link to documentation content for this extension.
         // If not present, offer no link.
-        docsURI: 'https://....',
+        docsURI: "https://....",
 
         // Required: the list of blocks implemented by this extension,
         // in the order intended for display.
         blocks: [
             {
-                opcode: 'example-noop',
+                opcode: "example-noop",
                 blockType: Scratch.BlockType.COMMAND,
                 blockAllThreads: false,
-                text: 'do nothing',
-                func: 'noop'
+                text: "do nothing",
+                func: "noop",
             },
             {
-                opcode: 'example-conditional',
+                opcode: "example-conditional",
                 blockType: Scratch.BlockType.CONDITIONAL,
                 branchCount: 4,
                 isTerminal: true,
                 blockAllThreads: false,
-                text: 'choose [BRANCH]',
+                text: "choose [BRANCH]",
                 arguments: {
                     BRANCH: {
                         type: Scratch.ArgumentType.NUMBER,
-                        defaultValue: 1
-                    }
+                        defaultValue: 1,
+                    },
                 },
-                func: 'noop'
+                func: "noop",
             },
             {
                 // Required: the machine-readable name of this operation.
                 // This will appear in project JSON. Must not contain a '.' character.
-                opcode: 'myReporter', // becomes 'someBlocks.myReporter'
+                opcode: "myReporter", // becomes 'someBlocks.myReporter'
 
                 // Required: the kind of block we're defining, from a predefined list:
                 // 'command' - a normal command block, like "move {} steps"
@@ -99,7 +99,7 @@ ExampleExtension.prototype.getInfo = function () {
                 // Required: the human-readable text on this block, including argument
                 // placeholders. Argument placeholders should be in [MACRO_CASE] and
                 // must be [ENCLOSED_WITHIN_SQUARE_BRACKETS].
-                text: 'letter [LETTER_NUM] of [TEXT]',
+                text: "letter [LETTER_NUM] of [TEXT]",
 
                 // Required: describe each argument.
                 // Note that this is an array: the order of arguments will be used
@@ -111,7 +111,7 @@ ExampleExtension.prototype.getInfo = function () {
                         type: Scratch.ArgumentType.NUMBER,
 
                         // Optional: the default value of the argument
-                        defaultValue: 1
+                        defaultValue: 1,
                     },
 
                     // Required: the ID of the argument, which will be the name in the
@@ -121,34 +121,34 @@ ExampleExtension.prototype.getInfo = function () {
                         type: Scratch.ArgumentType.STRING,
 
                         // Optional: the default value of the argument
-                        defaultValue: 'text'
-                    }
+                        defaultValue: "text",
+                    },
                 },
 
                 // Optional: a string naming the function implementing this block.
                 // If this is omitted, use the opcode string.
-                func: 'myReporter',
+                func: "myReporter",
 
                 // Optional: list of target types for which this block should appear.
                 // If absent, assume it applies to all builtin targets -- that is:
                 // ['sprite', 'stage']
-                filter: ['someBlocks.wedo2', 'sprite', 'stage']
+                filter: ["someBlocks.wedo2", "sprite", "stage"],
             },
             {
-                opcode: 'example-Boolean',
+                opcode: "example-Boolean",
                 blockType: Scratch.BlockType.BOOLEAN,
-                text: 'return true',
-                func: 'returnTrue'
+                text: "return true",
+                func: "returnTrue",
             },
             {
-                opcode: 'example-hat',
+                opcode: "example-hat",
                 blockType: Scratch.BlockType.HAT,
-                text: 'after forever',
-                func: 'returnFalse'
+                text: "after forever",
+                func: "returnFalse",
             },
             {
                 // Another block...
-            }
+            },
         ],
 
         // Optional: define extension-specific menus here.
@@ -158,47 +158,48 @@ ExampleExtension.prototype.getInfo = function () {
                 // Static menu: list items which should appear in the menu.
                 {
                     // Required: the value of the menu item when it is chosen.
-                    value: 'itemId1',
+                    value: "itemId1",
 
                     // Optional: the human-readable label for this item.
                     // Use `value` as the text if this is absent.
-                    text: 'Item One'
+                    text: "Item One",
                 },
 
                 // The simplest form of a list item is a string which will be used as
                 // both value and text.
-                'itemId2'
+                "itemId2",
             ],
 
             // Dynamic menu: a string naming a function which returns an array as above.
             // Called each time the menu is opened.
-            menuB: 'getItemsForMenuB'
+            menuB: "getItemsForMenuB",
         },
 
         // Optional: translations
         translation_map: {
             de: {
-                'extensionName': 'Einige Blöcke',
-                'myReporter': 'Buchstabe [LETTER_NUM] von [TEXT]',
-                'myReporter.TEXT_default': 'Text',
-                'menuA_item1': 'Artikel eins',
+                extensionName: "Einige Blöcke",
+                myReporter: "Buchstabe [LETTER_NUM] von [TEXT]",
+                "myReporter.TEXT_default": "Text",
+                menuA_item1: "Artikel eins",
 
                 // Dynamic menus can be translated too
-                'menuB_example': 'Beispiel',
+                menuB_example: "Beispiel",
 
                 // This message contains ICU placeholders (see `myReporter()` below)
-                'myReporter.result': 'Buchstabe {LETTER_NUM} von {TEXT} ist {LETTER}.'
+                "myReporter.result":
+                    "Buchstabe {LETTER_NUM} von {TEXT} ist {LETTER}.",
             },
             it: {
                 // ...
-            }
+            },
         },
 
         // Optional: list new target type(s) provided by this extension.
         targetTypes: [
-            'wedo2', // automatically transformed to 'someBlocks.wedo2'
-            'speech' // automatically transformed to 'someBlocks.speech'
-        ]
+            "wedo2", // automatically transformed to 'someBlocks.wedo2'
+            "speech", // automatically transformed to 'someBlocks.speech'
+        ],
     };
 };
 
@@ -213,11 +214,18 @@ ExampleExtension.prototype.myReporter = function (args) {
     // Note: this implementation is not Unicode-clean; it's just here as an example.
     const result = args.TEXT.charAt(args.LETTER_NUM);
 
-    return ['Letter ', args.LETTER_NUM, ' of ', args.TEXT, ' is ', result, '.'].join('');
+    return [
+        "Letter ",
+        args.LETTER_NUM,
+        " of ",
+        args.TEXT,
+        " is ",
+        result,
+        ".",
+    ].join("");
 };
 
-ExampleExtension.prototype.noop = function () {
-};
+ExampleExtension.prototype.noop = function () {};
 
 ExampleExtension.prototype.returnTrue = function () {
     return true;

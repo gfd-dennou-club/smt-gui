@@ -1,15 +1,15 @@
-import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import React from "react";
+import { FormattedMessage } from "react-intl";
 
-import microbitMoreIconURL from './microbitMore.png';
-import microbitMoreInsetIconURL from './microbitMore-small.svg';
-import microbitMoreConnectionIconURL from './microbitMore-illustration.svg';
-import microbitMoreConnectionSmallIconURL from './microbitMore-small.svg';
+import microbitMoreIconURL from "./microbitMore.png";
+import microbitMoreInsetIconURL from "./microbitMore-small.svg";
+import microbitMoreConnectionIconURL from "./microbitMore-illustration.svg";
+import microbitMoreConnectionSmallIconURL from "./microbitMore-small.svg";
 
 export default {
-    name: 'micro:bit MORE v0.4.3',
-    extensionId: 'microbitMore',
-    collaborator: 'Yengawa Lab',
+    name: "micro:bit MORE v0.4.3",
+    extensionId: "microbitMore",
+    collaborator: "Yengawa Lab",
     iconURL: microbitMoreIconURL,
     insetIconURL: microbitMoreInsetIconURL,
     description: (
@@ -34,5 +34,5 @@ export default {
             id="gui.extension.microbit.connectingMessage"
         />
     ),
-    helpLink: 'https://lab.yengawa.com/project/scratch-microbit-more/'
+    helpLink: "https://lab.yengawa.com/project/scratch-microbit-more/",
 };

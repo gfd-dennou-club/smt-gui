@@ -110,7 +110,8 @@ $border-radius: 0.25rem;
     /*min-width: 1.5rem;*/
 }
 
-[dir="rtl"] .undo-icon, [dir="rtl"] .redo-icon {
+[dir="rtl"] .undo-icon,
+[dir="rtl"] .redo-icon {
     transform: scaleX(-1);
 }
 
@@ -120,7 +121,6 @@ $border-radius: 0.25rem;
     color: $text-primary;
     font-size: 0.625rem;
     user-select: none;
-
 }
 
 [dir="ltr"] .trim-button {

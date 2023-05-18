@@ -1,40 +1,40 @@
-import bindAll from 'lodash.bindall';
-import PropTypes from 'prop-types';
-import React from 'react';
+import bindAll from "lodash.bindall";
+import PropTypes from "prop-types";
+import React from "react";
 
-import SpriteInfoComponent from '../components/sprite-info/sprite-info.jsx';
+import SpriteInfoComponent from "../components/sprite-info/sprite-info.jsx";
 
 class SpriteInfo extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
         bindAll(this, [
-            'handleClickVisible',
-            'handleClickNotVisible',
-            'handlePressVisible',
-            'handlePressNotVisible'
+            "handleClickVisible",
+            "handleClickNotVisible",
+            "handlePressVisible",
+            "handlePressNotVisible",
         ]);
     }
-    handleClickVisible (e) {
+    handleClickVisible(e) {
         e.preventDefault();
         this.props.onChangeVisibility(true);
     }
-    handleClickNotVisible (e) {
+    handleClickNotVisible(e) {
         e.preventDefault();
         this.props.onChangeVisibility(false);
     }
-    handlePressVisible (e) {
-        if (e.key === ' ' || e.key === 'Enter') {
+    handlePressVisible(e) {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault();
             this.props.onChangeVisibility(true);
         }
     }
-    handlePressNotVisible (e) {
-        if (e.key === ' ' || e.key === 'Enter') {
+    handlePressNotVisible(e) {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault();
             this.props.onChangeVisibility(false);
         }
     }
-    render () {
+    render() {
         return (
             <SpriteInfoComponent
                 {...this.props}
@@ -56,7 +56,7 @@ SpriteInfo.propTypes = {
     onChangeX: PropTypes.func,
     onChangeY: PropTypes.func,
     x: PropTypes.number,
-    y: PropTypes.number
+    y: PropTypes.number,
 };
 
 export default SpriteInfo;

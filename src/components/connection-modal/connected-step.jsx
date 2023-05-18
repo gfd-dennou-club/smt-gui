@@ -1,14 +1,14 @@
-import {FormattedMessage} from 'react-intl';
-import PropTypes from 'prop-types';
-import React from 'react';
+import { FormattedMessage } from "react-intl";
+import PropTypes from "prop-types";
+import React from "react";
 
-import Box from '../box/box.jsx';
-import Dots from './dots.jsx';
-import bluetoothIcon from './icons/bluetooth-white.svg';
-import styles from './connection-modal.css';
-import classNames from 'classnames';
+import Box from "../box/box.jsx";
+import Dots from "./dots.jsx";
+import bluetoothIcon from "./icons/bluetooth-white.svg";
+import styles from "./connection-modal.css";
+import classNames from "classnames";
 
-const ConnectedStep = props => (
+const ConnectedStep = (props) => (
     <Box className={styles.body}>
         <Box className={styles.activityArea}>
             <Box className={styles.centeredRow}>
@@ -17,7 +17,7 @@ const ConnectedStep = props => (
                         className={styles.peripheralActivityIcon}
                         src={props.connectionIconURL}
                     />
-                    {props.extensionId !== 'mesh' && (
+                    {props.extensionId !== "mesh" && (
                         <img
                             className={styles.bluetoothConnectedIcon}
                             src={bluetoothIcon}
@@ -27,7 +27,12 @@ const ConnectedStep = props => (
             </Box>
         </Box>
         <Box className={styles.bottomArea}>
-            <Box className={classNames(styles.bottomAreaItem, styles.instructions)}>
+            <Box
+                className={classNames(
+                    styles.bottomAreaItem,
+                    styles.instructions
+                )}
+            >
                 {props.connectedMessage || (
                     <FormattedMessage
                         defaultMessage="Connected"
@@ -36,14 +41,18 @@ const ConnectedStep = props => (
                     />
                 )}
             </Box>
-            <Dots
-                success
-                className={styles.bottomAreaItem}
-                total={3}
-            />
-            <div className={classNames(styles.bottomAreaItem, styles.cornerButtons)}>
+            <Dots success className={styles.bottomAreaItem} total={3} />
+            <div
+                className={classNames(
+                    styles.bottomAreaItem,
+                    styles.cornerButtons
+                )}
+            >
                 <button
-                    className={classNames(styles.redButton, styles.connectionButton)}
+                    className={classNames(
+                        styles.redButton,
+                        styles.connectionButton
+                    )}
                     onClick={props.onDisconnect}
                 >
                     <FormattedMessage
@@ -72,7 +81,7 @@ ConnectedStep.propTypes = {
     connectionIconURL: PropTypes.string.isRequired,
     extensionId: PropTypes.string.isRequired,
     onCancel: PropTypes.func,
-    onDisconnect: PropTypes.func
+    onDisconnect: PropTypes.func,
 };
 
 export default ConnectedStep;

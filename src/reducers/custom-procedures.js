@@ -1,37 +1,39 @@
-const ACTIVATE_CUSTOM_PROCEDURES = 'scratch-gui/custom-procedures/ACTIVATE_CUSTOM_PROCEDURES';
-const DEACTIVATE_CUSTOM_PROCEDURES = 'scratch-gui/custom-procedures/DEACTIVATE_CUSTOM_PROCEDURES';
-const SET_CALLBACK = 'scratch-gui/custom-procedures/SET_CALLBACK';
+const ACTIVATE_CUSTOM_PROCEDURES =
+    "scratch-gui/custom-procedures/ACTIVATE_CUSTOM_PROCEDURES";
+const DEACTIVATE_CUSTOM_PROCEDURES =
+    "scratch-gui/custom-procedures/DEACTIVATE_CUSTOM_PROCEDURES";
+const SET_CALLBACK = "scratch-gui/custom-procedures/SET_CALLBACK";
 
 const initialState = {
     active: false,
     mutator: null,
-    callback: null
+    callback: null,
 };
 
 const reducer = function (state, action) {
-    if (typeof state === 'undefined') state = initialState;
+    if (typeof state === "undefined") state = initialState;
     switch (action.type) {
-    case ACTIVATE_CUSTOM_PROCEDURES:
-        return Object.assign({}, state, {
-            active: true,
-            mutator: action.mutator,
-            callback: action.callback
-        });
-    case DEACTIVATE_CUSTOM_PROCEDURES:
-        // Can be called without a mutator to deactivate without new procedure
-        // i.e. when clicking on the modal background
-        if (action.mutator) {
-            state.callback(action.mutator);
-        }
-        return Object.assign({}, state, {
-            active: false,
-            mutator: null,
-            callback: null
-        });
-    case SET_CALLBACK:
-        return Object.assign({}, state, {callback: action.callback});
-    default:
-        return state;
+        case ACTIVATE_CUSTOM_PROCEDURES:
+            return Object.assign({}, state, {
+                active: true,
+                mutator: action.mutator,
+                callback: action.callback,
+            });
+        case DEACTIVATE_CUSTOM_PROCEDURES:
+            // Can be called without a mutator to deactivate without new procedure
+            // i.e. when clicking on the modal background
+            if (action.mutator) {
+                state.callback(action.mutator);
+            }
+            return Object.assign({}, state, {
+                active: false,
+                mutator: null,
+                callback: null,
+            });
+        case SET_CALLBACK:
+            return Object.assign({}, state, { callback: action.callback });
+        default:
+            return state;
     }
 };
 
@@ -45,7 +47,7 @@ const reducer = function (state, action) {
 const activateCustomProcedures = (mutator, callback) => ({
     type: ACTIVATE_CUSTOM_PROCEDURES,
     mutator: mutator,
-    callback: callback
+    callback: callback,
 });
 
 /**
@@ -53,14 +55,14 @@ const activateCustomProcedures = (mutator, callback) => ({
  * @param {?Element} mutator The new mutator, or null if the callback should not be called.
  * @returns {object} An action object with type ACTIVATE_CUSTOM_PROCEDURES.
  */
-const deactivateCustomProcedures = mutator => ({
+const deactivateCustomProcedures = (mutator) => ({
     type: DEACTIVATE_CUSTOM_PROCEDURES,
-    mutator: mutator
+    mutator: mutator,
 });
 
 export {
     reducer as default,
     initialState as customProceduresInitialState,
     activateCustomProcedures,
-    deactivateCustomProcedures
+    deactivateCustomProcedures,
 };

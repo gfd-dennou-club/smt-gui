@@ -1,40 +1,40 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-import Blockly from 'scratch-blocks';
-import Generator from '../generator';
+import Blockly from "scratch-blocks";
+import Generator from "../generator";
 
-import MathBlocks from './math.js';
-import TextBlocks from './text.js';
-import ColourBlocks from './colour.js';
-import MotionBlocks from './motion.js';
-import LooksBlocks from './looks.js';
-import SoundBlocks from './sound.js';
-import EventBlocks from './event.js';
-import ControlBlocks from './control.js';
-import SensingBlocks from './sensing.js';
-import OperatorsBlocks from './operators.js';
-import DataBlocks from './data.js';
-import ProcedureBlocks from './procedure.js';
-import RubyBlocks from './ruby.js';
-import MusicBlocks from './music.js';
-import PenBlocks from './pen.js';
-import VideoBlocks from './video.js';
-import Text2SpeechBlocks from './text2speech.js';
-import TranslateBlocks from './translate.js';
-import MakeyMakeyBlocks from './makeymakey.js';
-import MicrobitBlocks from './microbit.js';
-import MicrobitMoreBlocks from './microbit_more.js';
-import BoostBlocks from './boost.js';
-import EV3Blocks from './ev3.js';
-import WeDo2Blocks from './wedo2.js';
-import GdxForBlocks from './gdx_for.js';
-import MeshBlocks from './mesh.js';
-import SmalrubotS1Blocks from './smalrubot_s1.js';
+import MathBlocks from "./math.js";
+import TextBlocks from "./text.js";
+import ColourBlocks from "./colour.js";
+import MotionBlocks from "./motion.js";
+import LooksBlocks from "./looks.js";
+import SoundBlocks from "./sound.js";
+import EventBlocks from "./event.js";
+import ControlBlocks from "./control.js";
+import SensingBlocks from "./sensing.js";
+import OperatorsBlocks from "./operators.js";
+import DataBlocks from "./data.js";
+import ProcedureBlocks from "./procedure.js";
+import RubyBlocks from "./ruby.js";
+import MusicBlocks from "./music.js";
+import PenBlocks from "./pen.js";
+import VideoBlocks from "./video.js";
+import Text2SpeechBlocks from "./text2speech.js";
+import TranslateBlocks from "./translate.js";
+import MakeyMakeyBlocks from "./makeymakey.js";
+import MicrobitBlocks from "./microbit.js";
+import MicrobitMoreBlocks from "./microbit_more.js";
+import BoostBlocks from "./boost.js";
+import EV3Blocks from "./ev3.js";
+import WeDo2Blocks from "./wedo2.js";
+import GdxForBlocks from "./gdx_for.js";
+import MeshBlocks from "./mesh.js";
+import SmalrubotS1Blocks from "./smalrubot_s1.js";
 
-const SCALAR_TYPE = '';
-const LIST_TYPE = 'list';
+const SCALAR_TYPE = "";
+const LIST_TYPE = "list";
 
-const RubyGenerator = new Generator('Ruby');
+const RubyGenerator = new Generator("Ruby");
 
 RubyGenerator.addReservedWords(
     `BEGIN
@@ -77,37 +77,39 @@ RubyGenerator.addReservedWords(
      end
      next
      return
-     until`.split(/\s+/));
+     until`.split(/\s+/)
+);
 
 /* eslint-disable no-multi-spaces */
-RubyGenerator.ORDER_ATOMIC = 0;            // 0 "" ...
-RubyGenerator.ORDER_COLLECTION = 1;        // tuples, lists, dictionaries
+RubyGenerator.ORDER_ATOMIC = 0; // 0 "" ...
+RubyGenerator.ORDER_COLLECTION = 1; // tuples, lists, dictionaries
 RubyGenerator.ORDER_STRING_CONVERSION = 1; // `expression...`
-RubyGenerator.ORDER_MEMBER = 2;            // ::
-RubyGenerator.ORDER_INDEX = 3;             // []
-RubyGenerator.ORDER_FUNCTION_CALL = 4;     // ()
-RubyGenerator.ORDER_UNARY_SIGN = 5;        // +(単項)  !  ~
-RubyGenerator.ORDER_EXPONENTIATION = 6;    // **
-RubyGenerator.ORDER_UNARY_MINUS_SIGN = 7;  // -(単項)
-RubyGenerator.ORDER_MULTIPLICATIVE = 8;    // *  /  %
-RubyGenerator.ORDER_ADDITIVE = 9;          // +  -
-RubyGenerator.ORDER_BITWISE_SHIFT = 10;    // << >>
-RubyGenerator.ORDER_BITWISE_AND = 11;      // &
-RubyGenerator.ORDER_BITWISE_XOR = 12;      // ^
-RubyGenerator.ORDER_BITWISE_OR = 12;       // |
-RubyGenerator.ORDER_RELATIONAL = 13;       // > >=  < <=
-RubyGenerator.ORDER_EQUALS = 14;           // <=> ==  === !=  =~  !~
-RubyGenerator.ORDER_LOGICAL_AND = 15;      // &&
-RubyGenerator.ORDER_LOGICAL_OR = 16;       // ||
-RubyGenerator.ORDER_RANGE = 17;            // ..  ...
-RubyGenerator.ORDER_CONDITIONAL = 18;      // ?:(条件演算子)
-RubyGenerator.ORDER_ASSIGNMENT = 19;       // =(+=, -= ... )
-RubyGenerator.ORDER_NOT = 20;              // not
-RubyGenerator.ORDER_AND_OR = 21;           // and or
-RubyGenerator.ORDER_NONE = 99;             // (...)
+RubyGenerator.ORDER_MEMBER = 2; // ::
+RubyGenerator.ORDER_INDEX = 3; // []
+RubyGenerator.ORDER_FUNCTION_CALL = 4; // ()
+RubyGenerator.ORDER_UNARY_SIGN = 5; // +(単項)  !  ~
+RubyGenerator.ORDER_EXPONENTIATION = 6; // **
+RubyGenerator.ORDER_UNARY_MINUS_SIGN = 7; // -(単項)
+RubyGenerator.ORDER_MULTIPLICATIVE = 8; // *  /  %
+RubyGenerator.ORDER_ADDITIVE = 9; // +  -
+RubyGenerator.ORDER_BITWISE_SHIFT = 10; // << >>
+RubyGenerator.ORDER_BITWISE_AND = 11; // &
+RubyGenerator.ORDER_BITWISE_XOR = 12; // ^
+RubyGenerator.ORDER_BITWISE_OR = 12; // |
+RubyGenerator.ORDER_RELATIONAL = 13; // > >=  < <=
+RubyGenerator.ORDER_EQUALS = 14; // <=> ==  === !=  =~  !~
+RubyGenerator.ORDER_LOGICAL_AND = 15; // &&
+RubyGenerator.ORDER_LOGICAL_OR = 16; // ||
+RubyGenerator.ORDER_RANGE = 17; // ..  ...
+RubyGenerator.ORDER_CONDITIONAL = 18; // ?:(条件演算子)
+RubyGenerator.ORDER_ASSIGNMENT = 19; // =(+=, -= ... )
+RubyGenerator.ORDER_NOT = 20; // not
+RubyGenerator.ORDER_AND_OR = 21; // and or
+RubyGenerator.ORDER_NONE = 99; // (...)
 /* eslint-enable no-multi-spaces */
 
-RubyGenerator.init = function (options) { // eslint-disable-line no-unused-vars
+RubyGenerator.init = function (options) {
+    // eslint-disable-line no-unused-vars
     this.definitions_ = {};
     if (this.variableDB_) {
         this.variableDB_.reset();
@@ -133,8 +135,10 @@ RubyGenerator.finish = function (code, options) {
 
     const comments = RubyGenerator.getTargetCommentTexts();
     if (comments.length > 0) {
-        const commentCodes = comments.map(comment => `${this.prefixLines(comment, '# ')}\n`);
-        code = `${commentCodes.join('\n')}\n${code}`;
+        const commentCodes = comments.map(
+            (comment) => `${this.prefixLines(comment, "# ")}\n`
+        );
+        code = `${commentCodes.join("\n")}\n${code}`;
     }
 
     if (options && options.withSpriteNew) {
@@ -146,12 +150,12 @@ RubyGenerator.finish = function (code, options) {
     }
 
     if (defs.length === 0 && code.length === 0) {
-        return '';
+        return "";
     }
 
-    let s = '';
+    let s = "";
     if (defs.length > 0) {
-        s += `${defs.join('\n')}\n\n`;
+        s += `${defs.join("\n")}\n\n`;
     }
 
     return s + code;
@@ -161,23 +165,28 @@ RubyGenerator.initTargets = function (options) {
     this.requires_ = {};
     this.prepares_ = {};
 
-    if (options && options.hasOwnProperty('requires')) {
-        options.requires.forEach(name => {
+    if (options && options.hasOwnProperty("requires")) {
+        options.requires.forEach((name) => {
             this.requires_[`require__${name}`] = `require "${name}"`;
         });
     }
 };
 
-RubyGenerator.finishTargets = function (code, options) { // eslint-disable-line no-unused-vars
-    let s = '';
-    const requires = Object.keys(this.requires_).map(name => this.requires_[name]);
+RubyGenerator.finishTargets = function (code, options) {
+    // eslint-disable-line no-unused-vars
+    let s = "";
+    const requires = Object.keys(this.requires_).map(
+        (name) => this.requires_[name]
+    );
     if (requires.length > 0) {
-        s += `${requires.join('\n')}\n\n`;
+        s += `${requires.join("\n")}\n\n`;
     }
 
-    const prepares = Object.keys(this.prepares_).map(name => this.prepares_[name]);
+    const prepares = Object.keys(this.prepares_).map(
+        (name) => this.prepares_[name]
+    );
     if (prepares.length > 0) {
-        s += `${prepares.join('\n')}\n\n`;
+        s += `${prepares.join("\n")}\n\n`;
     }
 
     return s + code;
@@ -199,32 +208,36 @@ RubyGenerator.scalarToCode = function (scalar) {
 };
 
 RubyGenerator.listToCode = function (list) {
-    const values = list.map(i => {
-        if (this.isString(i)) {
-            return this.quote_(i);
-        }
-        return i;
-    }).join(', ');
+    const values = list
+        .map((i) => {
+            if (this.isString(i)) {
+                return this.quote_(i);
+            }
+            return i;
+        })
+        .join(", ");
     return `[${values}]`;
 };
 
-RubyGenerator.hashToCode = function (hash, separator = ': ', brace = true) {
+RubyGenerator.hashToCode = function (hash, separator = ": ", brace = true) {
     const lines = [];
     for (const key in hash) {
         const value = hash[key];
         lines.push(`${key}${separator}${value}`);
     }
-    let code = lines.join(',\n');
+    let code = lines.join(",\n");
     if (brace) {
-        code = ['{', this.prefixLines(code, this.INDENT), '}'].join('\n');
+        code = ["{", this.prefixLines(code, this.INDENT), "}"].join("\n");
     }
     return code;
 };
 
 RubyGenerator.numberOrStringToCode = function (value) {
-    if (RubyGenerator.isString(value) &&
+    if (
+        RubyGenerator.isString(value) &&
         value[0] === '"' &&
-        value[value.length - 1] === '"') {
+        value[value.length - 1] === '"'
+    ) {
         const s = value.slice(1, value.length - 1);
         const n = Number(s);
         if (!isNaN(n) && !(n === 0 && RubyGenerator.isWhiteSpace(s))) {
@@ -261,20 +274,24 @@ RubyGenerator.spriteNew = function (renderedTarget) {
     }
     const costumes = renderedTarget.sprite.costumes;
     if (costumes.length > 0) {
-        const s = costumes.map(i => {
-            const h = {
-                asset_id: this.quote_(i.assetId),
-                name: this.quote_(i.name),
-                bitmap_resolution: i.bitmapResolution ? i.bitmapResolution : 1,
-                data_format: this.quote_(i.dataFormat),
-                rotation_center_x: i.rotationCenterX,
-                rotation_center_y: i.rotationCenterY
-            };
-            return this.hashToCode(h);
-        }).join(',\n');
+        const s = costumes
+            .map((i) => {
+                const h = {
+                    asset_id: this.quote_(i.assetId),
+                    name: this.quote_(i.name),
+                    bitmap_resolution: i.bitmapResolution
+                        ? i.bitmapResolution
+                        : 1,
+                    data_format: this.quote_(i.dataFormat),
+                    rotation_center_x: i.rotationCenterX,
+                    rotation_center_y: i.rotationCenterY,
+                };
+                return this.hashToCode(h);
+            })
+            .join(",\n");
         attributes.costumes = `[\n${this.prefixLines(s, this.INDENT)}\n]`;
     }
-    if (renderedTarget.rotationStyle !== 'all around') {
+    if (renderedTarget.rotationStyle !== "all around") {
         attributes.rotation_style = this.quote_(renderedTarget.rotationStyle);
     }
 
@@ -283,45 +300,49 @@ RubyGenerator.spriteNew = function (renderedTarget) {
     for (const id in renderedTarget.variables) {
         const v = renderedTarget.variables[id];
         switch (v.type) {
-        case SCALAR_TYPE:
-            variables.push(v);
-            break;
-        case LIST_TYPE:
-            lists.push(v);
-            break;
+            case SCALAR_TYPE:
+                variables.push(v);
+                break;
+            case LIST_TYPE:
+                lists.push(v);
+                break;
         }
     }
     if (variables.length > 0) {
-        const s = variables.map(i => {
-            const h = {
-                name: this.quote_(i.name)
-            };
-            if (i.value !== 0) {
-                h.value = this.scalarToCode(i.value);
-            }
-            return this.hashToCode(h);
-        }).join(',\n');
+        const s = variables
+            .map((i) => {
+                const h = {
+                    name: this.quote_(i.name),
+                };
+                if (i.value !== 0) {
+                    h.value = this.scalarToCode(i.value);
+                }
+                return this.hashToCode(h);
+            })
+            .join(",\n");
         attributes.variables = `[\n${this.prefixLines(s, this.INDENT)}\n]`;
     }
     if (lists.length > 0) {
-        const s = lists.map(i => {
-            const h = {
-                name: this.quote_(i.name)
-            };
-            if (i.value.length > 0) {
-                h.value = this.listToCode(i.value);
-            }
-            return this.hashToCode(h);
-        }).join(',\n');
+        const s = lists
+            .map((i) => {
+                const h = {
+                    name: this.quote_(i.name),
+                };
+                if (i.value.length > 0) {
+                    h.value = this.listToCode(i.value);
+                }
+                return this.hashToCode(h);
+            })
+            .join(",\n");
         attributes.lists = `[\n${this.prefixLines(s, this.INDENT)}\n]`;
     }
 
-    let code = this.hashToCode(attributes, ': ', false);
+    let code = this.hashToCode(attributes, ": ", false);
     if (code.length > 0) {
-        const indent = renderedTarget.isStage ? '          ' : '           ';
+        const indent = renderedTarget.isStage ? "          " : "           ";
         code = `,\n${this.prefixLines(code, indent)}`;
     }
-    const klass = renderedTarget.isStage ? 'Stage' : 'Sprite';
+    const klass = renderedTarget.isStage ? "Stage" : "Sprite";
     const name = renderedTarget.sprite.name;
     return `${klass}.new(${this.quote_(name)}${code})`;
 };
@@ -331,7 +352,7 @@ RubyGenerator.scrubNakedValue = function (line) {
 };
 
 RubyGenerator.escapeChars_ = {
-    '"': '\\"'
+    '"': '\\"',
 };
 
 RubyGenerator.quote_ = function (string) {
@@ -343,19 +364,19 @@ RubyGenerator.quote_ = function (string) {
         sb.push(RubyGenerator.escapeChars_[ch] || ch);
     }
     sb.push('"');
-    return sb.join('');
+    return sb.join("");
 };
 
 RubyGenerator.scrub_ = function (block, code) {
     if (code === null) {
-        return '';
+        return "";
     }
 
-    let commentCode = '';
+    let commentCode = "";
     if (!this.isConnectedValue(block)) {
         let comment = this.getCommentText(block);
         if (comment) {
-            commentCode += `${this.prefixLines(comment, '# ')}\n`;
+            commentCode += `${this.prefixLines(comment, "# ")}\n`;
         }
         const inputs = this.getInputs(block);
         for (const name in inputs) {
@@ -364,7 +385,7 @@ RubyGenerator.scrub_ = function (block, code) {
             if (childBlock) {
                 comment = this.allNestedComments(childBlock);
                 if (comment) {
-                    commentCode += this.prefixLines(comment, '# ');
+                    commentCode += this.prefixLines(comment, "# ");
                 }
             }
         }
@@ -372,33 +393,33 @@ RubyGenerator.scrub_ = function (block, code) {
 
     const nextBlock = this.getBlock(block.next);
     let nextCode = this.blockToCode(nextBlock);
-    let endCode = '';
+    let endCode = "";
     if (block.isStatement) {
-        if (nextCode !== '') {
+        if (nextCode !== "") {
             nextCode = this.prefixLines(nextCode, this.INDENT);
         }
-        endCode = 'end\n';
+        endCode = "end\n";
         delete block.isStatement;
     }
     return commentCode + code + nextCode + endCode;
 };
 
 RubyGenerator.spriteName = function () {
-    return 'self';
+    return "self";
 };
 
 const escapeIdentityRegexp =
     /[\x00-\x1f\x7f-\x9f !"#$%&'()*+,-./:;<=>?@[\\\]^`{|}~]/g; // eslint-disable-line no-control-regex
 
 RubyGenerator.escapeVariableName = function (s) {
-    return s.replace(escapeIdentityRegexp, '_');
+    return s.replace(escapeIdentityRegexp, "_");
 };
 
 RubyGenerator.escapeMethodName = RubyGenerator.escapeVariableName;
 
 RubyGenerator.makeVariableName = function (isStage, name) {
-    const prefix = isStage ? '$' : '@';
-    return `${prefix}${name.replace(escapeIdentityRegexp, '_')}`;
+    const prefix = isStage ? "$" : "@";
+    return `${prefix}${name.replace(escapeIdentityRegexp, "_")}`;
 };
 
 RubyGenerator.variableName = function (id, type = SCALAR_TYPE) {
@@ -428,8 +449,10 @@ RubyGenerator.listName = function (id) {
 
 RubyGenerator.getScripts = function () {
     return Generator.prototype.getScripts.call(this).sort((a, b) => {
-        const aValue = (this.getBlock(a).opcode === 'procedures_definition' ? 1 : -1);
-        const bValue = (this.getBlock(b).opcode === 'procedures_definition' ? 1 : -1);
+        const aValue =
+            this.getBlock(a).opcode === "procedures_definition" ? 1 : -1;
+        const bValue =
+            this.getBlock(b).opcode === "procedures_definition" ? 1 : -1;
         return bValue - aValue;
     });
 };

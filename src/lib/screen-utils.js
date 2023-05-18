@@ -1,4 +1,8 @@
-import layout, {STAGE_DISPLAY_SCALES, STAGE_SIZE_MODES, STAGE_DISPLAY_SIZES} from '../lib/layout-constants';
+import layout, {
+    STAGE_DISPLAY_SCALES,
+    STAGE_SIZE_MODES,
+    STAGE_DISPLAY_SIZES,
+} from "../lib/layout-constants";
 
 /**
  * @typedef {object} StageDimensions
@@ -16,7 +20,7 @@ const STAGE_DIMENSION_DEFAULTS = {
     fullScreenSpacingBorderAdjustment: 12,
     // referencing css/units.css,
     // menuHeightAdjustment = $stage-menu-height
-    menuHeightAdjustment: 44
+    menuHeightAdjustment: 44,
 };
 
 /**
@@ -47,26 +51,31 @@ const getStageDimensions = (stageSize, isFullScreen) => {
         widthDefault: layout.standardStageWidth,
         height: 0,
         width: 0,
-        scale: 0
+        scale: 0,
     };
 
     if (isFullScreen) {
-        stageDimensions.height = window.innerHeight -
+        stageDimensions.height =
+            window.innerHeight -
             STAGE_DIMENSION_DEFAULTS.menuHeightAdjustment -
             STAGE_DIMENSION_DEFAULTS.fullScreenSpacingBorderAdjustment;
 
-        stageDimensions.width = stageDimensions.height + (stageDimensions.height / 3);
+        stageDimensions.width =
+            stageDimensions.height + stageDimensions.height / 3;
 
         if (stageDimensions.width > window.innerWidth) {
             stageDimensions.width = window.innerWidth;
-            stageDimensions.height = stageDimensions.width * .75;
+            stageDimensions.height = stageDimensions.width * 0.75;
         }
 
-        stageDimensions.scale = stageDimensions.width / stageDimensions.widthDefault;
+        stageDimensions.scale =
+            stageDimensions.width / stageDimensions.widthDefault;
     } else {
         stageDimensions.scale = STAGE_DISPLAY_SCALES[stageSize];
-        stageDimensions.height = stageDimensions.scale * stageDimensions.heightDefault;
-        stageDimensions.width = stageDimensions.scale * stageDimensions.widthDefault;
+        stageDimensions.height =
+            stageDimensions.scale * stageDimensions.heightDefault;
+        stageDimensions.width =
+            stageDimensions.scale * stageDimensions.widthDefault;
     }
 
     // Round off dimensions to prevent resampling/blurriness
@@ -86,7 +95,12 @@ const getStageDimensions = (stageSize, isFullScreen) => {
  * @param {number} sizeInfo.heightDefault The default height
  * @returns {object} the CSS transform
  */
-const stageSizeToTransform = ({width, height, widthDefault, heightDefault}) => {
+const stageSizeToTransform = ({
+    width,
+    height,
+    widthDefault,
+    heightDefault,
+}) => {
     const scaleX = width / widthDefault;
     const scaleY = height / heightDefault;
     if (scaleX === 1 && scaleY === 1) {
@@ -94,11 +108,7 @@ const stageSizeToTransform = ({width, height, widthDefault, heightDefault}) => {
         // it messes up `position: fixed` elements like the context menu.
         return;
     }
-    return {transform: `scale(${scaleX},${scaleY})`};
+    return { transform: `scale(${scaleX},${scaleY})` };
 };
 
-export {
-    getStageDimensions,
-    resolveStageSize,
-    stageSizeToTransform
-};
+export { getStageDimensions, resolveStageSize, stageSizeToTransform };

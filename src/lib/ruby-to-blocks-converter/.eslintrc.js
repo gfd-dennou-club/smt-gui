@@ -1,6 +1,6 @@
 module.exports = {
-    extends: ['../../.eslintrc.js'],
+    extends: ["../../.eslintrc.js"],
     rules: {
-        'eqeqeq': 0
-    }
+        eqeqeq: 0,
+    },
 };

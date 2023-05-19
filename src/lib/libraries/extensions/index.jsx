@@ -56,7 +56,30 @@ import smalrubotS1InsetIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 import smalrubotS1ConnectionIconURL from "./smalrubot-s1/smalrubot-s1-illustration.png";
 import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 
+import sampleIconURL from './sample/sample.png';
+import sampleInsetIconURL from './sample/sample-small.png';
+
 const extensions = [
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Sample"
+                description="Name for the 'sample' extension"
+                id="gui.extension.sample.name"
+            />
+        ),
+        extensionId: "sample",
+        iconURL: sampleIconURL,
+        insetIconURL: sampleInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Sample blocks"
+                description="Sample blocks for SmT"
+                id="gui.extension.sample.description"
+            />
+        ),
+        featured: true,
+    },
     {
         name: (
             <FormattedMessage

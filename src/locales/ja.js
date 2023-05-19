@@ -72,4 +72,13 @@ export default {
     "smalrubotS1.positionsMenu.touch": "タッチ",
     "smalrubotS1.positionsMenu.light": "光",
     "smalrubotS1.positionsMenu.sound": "音",
+    "gui.extension.sample.name": "サンプル",
+    "gui.extension.sample.description": "サンプル",
+    "sample.name": "サンプル",
+    "sample.command0": "コマンド",
+    "sample.command1": "コマンド[TEXT][NUM]",
+    "sample.command2": "コマンド[TEXT1]",
+    "sample.command3": "コマンド[TEXT1] [NUM1]",    
+    "sample.flag0": "真偽",    
+    "sample.value0": "値",    
 };

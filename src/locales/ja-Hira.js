@@ -73,4 +73,13 @@ export default {
     "smalrubotS1.positionsMenu.touch": "タッチ",
     "smalrubotS1.positionsMenu.light": "ひかり",
     "smalrubotS1.positionsMenu.sound": "おと",
+    "gui.extension.sample.name": "さんぷる",
+    "gui.extension.sample.description": "さんぷる",
+    "sample.name": "さんぷる",
+    "sample.command0": "こまんど",
+    "sample.command1": "こまんど[TEXT][NUM]",
+    "sample.command2": "こまんど[TEXT1]",
+    "sample.command3": "こまんど[TEXT1] [NUM1]",
+    "sample.flag0": "しんぎ",    
+    "sample.value0": "あたい",    
 };

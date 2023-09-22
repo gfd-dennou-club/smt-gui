@@ -81,4 +81,13 @@ export default {
     "sample.command3": "コマンド[TEXT1] [NUM1]",    
     "sample.flag0": "真偽",    
     "sample.value0": "値",    
+    "gui.extension.i2c_uart.name": "i2c_uart",
+    "gui.extension.i2c_uart.description": "I2C_UART",
+    "i2c_uart.name": "I2C_UART",
+    "i2c_uart.command0": "コマンド",
+    "i2c_uart.command1": "コマンド[TEXT][NUM]",
+    "i2c_uart.command2": "コマンド[TEXT1]",
+    "i2c_uart.command3": "コマンド[TEXT1] [NUM1]",    
+    "i2c_uart.flag0": "真偽",    
+    "i2c_uart.value0": "値",    
 };

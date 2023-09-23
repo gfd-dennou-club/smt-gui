@@ -86,7 +86,7 @@ export default {
     "i2c_uart.name": "I2C_UART",
     "i2c_uart.i2c_init": "I2C-[TEXT]: GPIO[NUM1], [NUM2] を使う(SCL, SDA)",
     "i2c_uart.i2c_write": "出力 I2C-[TEXT]: アドレス [NUM1], コマンド [NUM2], 値 [NUM3]",
-    "i2c_uart.i2c_read": "INPUT I2C-[TEXT]: アドレス [NUM1], バイト数 [NUM2]",
+    "i2c_uart.i2c_read": "入力 I2C-[TEXT]: アドレス [NUM1], バイト数 [NUM2]",
     "i2c_uart.uart_init": "UART-[TEXT] を使う",    
     "i2c_uart.uart_write": "出力 UART-[TEXT1]: [TEXT2]",    
     "i2c_uart.uart_read": "入力 I2C-[TEXT]",    

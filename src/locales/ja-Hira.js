@@ -81,5 +81,12 @@ export default {
     "sample.command2": "こまんど[TEXT1]",
     "sample.command3": "こまんど[TEXT1] [NUM1]",
     "sample.flag0": "しんぎ",    
-    "sample.value0": "あたい",    
+    "sample.value0": "あたい", 
+    "i2c_uart.name": "I2C_UART",
+    "i2c_uart.i2c_init": "I2C-[TEXT]: GPIO[NUM1], [NUM2] をつかう(SCL, SDA)",
+    "i2c_uart.i2c_write": "しゅつりょく I2C-[TEXT]: あどれす [NUM1], こまんど [NUM2], あたい [NUM3]",
+    "i2c_uart.i2c_read": "にゅうりょく I2C-[TEXT]: あどれす [NUM1], ばいとすう [NUM2]",
+    "i2c_uart.uart_init": "UART-[TEXT] をつかう",    
+    "i2c_uart.uart_write": "しゅつりょく UART-[TEXT1]: [TEXT2]",    
+    "i2c_uart.uart_read": "にゅうりょく I2C-[TEXT]",       
 };

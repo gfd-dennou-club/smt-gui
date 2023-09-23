@@ -86,7 +86,7 @@ const extensions = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="I2C_UART"
+                defaultMessage="I2C, UART"
                 description="Name for the 'i2c_uart' extension"
                 id="gui.extension.i2c_uart.name"
             />
@@ -96,7 +96,7 @@ const extensions = [
         insetIconURL: i2cuartInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="I2C_UART blocks"
+                defaultMessage="I2C, UART blocks"
                 description="i2c_uart blocks for SmT"
                 id="gui.extension.i2c_uart.description"
             />

@@ -56,32 +56,59 @@ import smalrubotS1InsetIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 import smalrubotS1ConnectionIconURL from "./smalrubot-s1/smalrubot-s1-illustration.png";
 import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 
-import sampleIconURL from './sample/sample.png';
-import sampleInsetIconURL from './sample/sample-small.png';
+
+//import sampleIconURL from './sample/sample.png';
+//import sampleInsetIconURL from './sample/sample-small.png';
+
+import rubyclubIconURL from './rubyclub/rubyclub.png';
+import rubyclubInsetIconURL from './rubyclub/rubyclub-small.png';
+
+import kaniroboNormalIconURL from './kaniroboNormal/kaniroboNormal.png';
+import kaniroboNormalInsetIconURL from './kaniroboNormal/kaniroboNormal-small.png';
 
 const extensions = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Sample"
-                description="Name for the 'sample' extension"
-                id="gui.extension.sample.name"
+                defaultMessage="KaniroboNormal"
+                description="Name for the 'kaniroboNormal' extension"
+                id="gui.extension.kaniroboNormal.name"
             />
         ),
-        extensionId: "sample",
-        iconURL: sampleIconURL,
-        insetIconURL: sampleInsetIconURL,
+        extensionId: "kaniroboNormal",
+        iconURL: kaniroboNormalIconURL,
+        insetIconURL: kaniroboNormalInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Sample blocks"
-                description="Sample blocks for SmT"
-                id="gui.extension.sample.description"
+                defaultMessage="KaniroboNormal blocks"
+                description="KaniroboNormal blocks for SmT"
+                id="gui.extension.kaniroboNormal.description"
             />
         ),
         featured: true,
     },
     {
         name: (
+            <FormattedMessage
+                defaultMessage="Rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
+            />
+        ),
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
+            />
+        ),
+        featured: true,
+    },
+    {
+       name: (
             <FormattedMessage
                 defaultMessage="Music"
                 description="Name for the 'Music' extension"

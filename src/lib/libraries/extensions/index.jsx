@@ -56,26 +56,26 @@ import smalrubotS1InsetIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 import smalrubotS1ConnectionIconURL from "./smalrubot-s1/smalrubot-s1-illustration.png";
 import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 
-import sampleIconURL from './sample/sample.png';
-import sampleInsetIconURL from './sample/sample-small.png';
+import gpiohardIconURL from './gpiohard/gpiohard.png';
+import gpiohardInsetIconURL from './gpiohard/gpiohard-small.png';
 
 const extensions = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Sample"
-                description="Name for the 'sample' extension"
-                id="gui.extension.sample.name"
+                defaultMessage="GpioHard"
+                description="Name for the 'GpioHard' extension"
+                id="gui.extension.gpiohard.name"
             />
         ),
-        extensionId: "sample",
-        iconURL: sampleIconURL,
-        insetIconURL: sampleInsetIconURL,
+        extensionId: "gpiohard",
+        iconURL: gpiohardIconURL,
+        insetIconURL: gpiohardInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Sample blocks"
-                description="Sample blocks for SmT"
-                id="gui.extension.sample.description"
+                defaultMessage="GpioHard blocks"
+                description="GpioHard blocks for SmT"
+                id="gui.extension.gpiohard.description"
             />
         ),
         featured: true,

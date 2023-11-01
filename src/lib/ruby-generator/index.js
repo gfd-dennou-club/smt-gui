@@ -31,7 +31,7 @@ import GdxForBlocks from "./gdx_for.js";
 import MeshBlocks from "./mesh.js";
 import SmalrubotS1Blocks from "./smalrubot_s1.js";
 import SampleBlocks from "./sample.js";
-
+import GpioHardBlocks from "./gpio_hard.js";
 const SCALAR_TYPE = "";
 const LIST_TYPE = "list";
 
@@ -486,5 +486,6 @@ GdxForBlocks(RubyGenerator);
 MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
 SampleBlocks(RubyGenerator);
-
+////
+GpioHardBlocks(RubyGenerator);
 export default RubyGenerator;

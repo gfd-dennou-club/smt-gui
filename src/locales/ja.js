@@ -80,5 +80,14 @@ export default {
     "sample.command2": "コマンド[TEXT1]",
     "sample.command3": "コマンド[TEXT1] [NUM1]",    
     "sample.flag0": "真偽",    
-    "sample.value0": "値",    
-};
+    "sample.value0": "値",  
+    "OUTPUT.GPIO":"出力:GPIO [NUM1]を使う",   
+    "INPUT.GPIO":"入力:GPIO [NUM1]を使う", 
+    "PWM.GPIO":"PWM:GPIO[NUM1]を使う",    
+    "ADC.GPIO":"ADC:GPIO[NUM1]を使う", 
+    "SET.GPIO.OUT.VALUE":"出力:GPIO[NUM1]の値を[SETVALUE]にする",
+    "INPUT.GPIO.VALUE":"入力:GPIO[NUM1]の値",
+    "SET.GPIO.DUTY":"PWM:GPIO[NUM1]のデューティー比を[VALUE]にする",
+    "SET.GPIO.FREQUENCY":"PWM:FPIO[NUM1]周波数を[VALUE]にする",
+    "SET.GPIO.VOLT": "ADC:GPIO[VALUE]の電圧",
+    };

@@ -33,7 +33,7 @@ export default function (Generator) {
 
     Generator.gpiohard_set_gpio_output_value = function (block) {
         const num1 = getUnquoteText(block,'NUM1',Generator.ORDER_NONE);
-        const value = Generator.getFieldValue(block, 'SETVALUE',Generator.ORDER_NONE) || 1;
+        const value = Generator.getFieldValue(block, 'SETVALUE',Generator.ORDER_NONE);
 
         return `led${num1}.write(${value})\n`;
     };

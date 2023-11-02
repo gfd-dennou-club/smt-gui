@@ -59,11 +59,14 @@ import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small
 import sampleIconURL from './sample/sample.png';
 import sampleInsetIconURL from './sample/sample-small.png';
 
+import GPIOeasyIconURL from './GPIOeasy/sample.png';
+import GPIOeasyInsetIconURL from './GPIOeasy/sample-small.png';
+
 const extensions = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="Sample"
+                defaultMessage="GPIOeasy"
                 description="Name for the 'sample' extension"
                 id="gui.extension.sample.name"
             />
@@ -76,6 +79,26 @@ const extensions = [
                 defaultMessage="Sample blocks"
                 description="Sample blocks for SmT"
                 id="gui.extension.sample.description"
+            />
+        ),
+        featured: true,
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="GPIOeasy"
+                description="Name for the 'GPIOeasy' extension"
+                id="gui.extension.GPIOeasy.name"
+            />
+        ),
+        extensionId: "GPIOeasy",
+        iconURL: GPIOeasyIconURL,
+        insetIconURL: GPIOeasyInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="GPIOeasy blocks"
+                description="GPIOeasy blocks for SmT"
+                id="gui.extension.GPIOeasy.description"
             />
         ),
         featured: true,

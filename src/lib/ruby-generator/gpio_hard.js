@@ -39,7 +39,7 @@ export default function (Generator) {
     };
     Generator.gpiohard_input_gpio_value = function (block) {
         const num1 = getUnquoteText(block,'NUM1',Generator.ORDER_NONE);
-        return `sw${num1}.read\n`;
+        return [`sw${num1}.read\n`];
     };
     Generator.gpiohard_set_gpio_duty = function (block) {
         const num1= getUnquoteText(block,'NUM1',Generator.ORDER_NONE);
@@ -56,7 +56,7 @@ export default function (Generator) {
     Generator.gpiohard_set_gpio_volt = function (block) {
         const value = getUnquoteText(block,'VALUE',Generator.ORDER_NONE);
         
-        return `adc${value}.read\n`;
+        return [`adc${value}.read\n`];
     }
     return Generator;
 }

@@ -58,8 +58,54 @@ import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small
 
 import sampleIconURL from './sample/sample.png';
 import sampleInsetIconURL from './sample/sample-small.png';
+import rubyclubIconURL from './rubyclub/sample.png';
+import rubyclubInsetIconURL from './rubyclub/rubyclub-small.png';
+
+// import mkmusicIconURL from "./mkmusic/music.png";
+// import mkmusicInsetIconURL from "./mkmusic/music-small.svg";
+
 
 const extensions = [
+    // {
+    //     name: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic"
+    //             description="Name for the 'mkmusic' extension"
+    //             id="gui.extension.mkmusic.name"
+    //         />
+    //     ),
+    //     extensionId: "mkmusic",
+    //     iconURL: mkmusicIconURL,
+    //     insetIconURL: mkmusicInsetIconURL,
+    //     description: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic blocks"
+    //             description="mkmusic blocks for SmT"
+    //             id="gui.extension.mkmusic.description"
+    //         />
+    //     ),
+    //     featured: true,
+    // },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
+            />
+        ),
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
+            />
+        ),
+        featured: true,
+    },
     {
         name: (
             <FormattedMessage
@@ -79,6 +125,9 @@ const extensions = [
             />
         ),
         featured: true,
+
+
+
     },
     {
         name: (

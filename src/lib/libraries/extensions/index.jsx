@@ -57,6 +57,7 @@ import smalrubotS1ConnectionIconURL from "./smalrubot-s1/smalrubot-s1-illustrati
 import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 
 
+
 //import sampleIconURL from './sample/sample.png';
 //import sampleInsetIconURL from './sample/sample-small.png';
 
@@ -74,6 +75,46 @@ import i2cuartInsetIconURL from './i2c_uart/i2c_uart-small.png';
 
 
 const extensions = [
+    // {
+    //     name: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic"
+    //             description="Name for the 'mkmusic' extension"
+    //             id="gui.extension.mkmusic.name"
+    //         />
+    //     ),
+    //     extensionId: "mkmusic",
+    //     iconURL: mkmusicIconURL,
+    //     insetIconURL: mkmusicInsetIconURL,
+    //     description: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic blocks"
+    //             description="mkmusic blocks for SmT"
+    //             id="gui.extension.mkmusic.description"
+    //         />
+    //     ),
+    //     featured: true,
+    // },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
+            />
+        ),
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
+            />
+        ),
+        featured: true,
+    },
     {
         name: (
             <FormattedMessage
@@ -113,6 +154,9 @@ const extensions = [
             />
         ),
         featured: true,
+
+
+
     },
     {
         name: (

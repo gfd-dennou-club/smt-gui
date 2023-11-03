@@ -32,6 +32,7 @@ import TranslateConverter from "./translate";
 import MakeyMakeyConverter from "./makeymakey";
 import VideoConverter from "./video";
 import Text2SpeechConverter from "./text2speech";
+import I2C_UARTConverter from "./i2c_uart";
 
 const messages = defineMessages({
     couldNotConvertPremitive: {
@@ -94,6 +95,7 @@ class RubyToBlocksConverter {
             BoostConverter,
             TranslateConverter,
             MakeyMakeyConverter,
+            I2C_UARTConverter,
 
             MotionConverter,
             LooksConverter,

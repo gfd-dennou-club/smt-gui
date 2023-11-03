@@ -95,6 +95,28 @@ const extensions = [
     //     ),
     //     featured: true,
     // },
+/*
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
+            />
+        ),
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
+            />
+        ),
+        featured: true,
+    },
+*/
     {
         name: (
             <FormattedMessage
@@ -174,26 +196,6 @@ const extensions = [
                 defaultMessage="I2C, UART blocks"
                 description="i2c_uart blocks for SmT"
                 id="gui.extension.i2c_uart.description"
-            />
-        ),
-        featured: true,
-    },
-    {
-        name: (
-            <FormattedMessage
-                defaultMessage="Rubyclub"
-                description="Name for the 'rubyclub' extension"
-                id="gui.extension.rubyclub.name"
-            />
-        ),
-        extensionId: "rubyclub",
-        iconURL: rubyclubIconURL,
-        insetIconURL: rubyclubInsetIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="Rubyclub blocks"
-                description="Rubyclub blocks for SmT"
-                id="gui.extension.rubyclub.description"
             />
         ),
         featured: true,

@@ -56,30 +56,107 @@ import smalrubotS1InsetIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 import smalrubotS1ConnectionIconURL from "./smalrubot-s1/smalrubot-s1-illustration.png";
 import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small.png";
 
-import sampleIconURL from './sample/sample.png';
-import sampleInsetIconURL from './sample/sample-small.png';
+
+
+//import sampleIconURL from './sample/sample.png';
+//import sampleInsetIconURL from './sample/sample-small.png';
+
+import rubyclubIconURL from './rubyclub/rubyclub.png';
+import rubyclubInsetIconURL from './rubyclub/rubyclub-small.png';
+
+import kaniroboNormalIconURL from './kaniroboNormal/kaniroboNormal.png';
+import kaniroboNormalInsetIconURL from './kaniroboNormal/kaniroboNormal-small.png';
+
+import gpiohardIconURL from './gpiohard/gpiohard.png';
+import gpiohardInsetIconURL from './gpiohard/gpiohard-small.png';
+
+import i2cuartIconURL from './i2c_uart/i2c_uart.png';
+import i2cuartInsetIconURL from './i2c_uart/i2c_uart-small.png';
+
 
 import GPIOeasyIconURL from './GPIOeasy/sample.png';
 import GPIOeasyInsetIconURL from './GPIOeasy/sample-small.png';
 
 const extensions = [
+    // {
+    //     name: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic"
+    //             description="Name for the 'mkmusic' extension"
+    //             id="gui.extension.mkmusic.name"
+    //         />
+    //     ),
+    //     extensionId: "mkmusic",
+    //     iconURL: mkmusicIconURL,
+    //     insetIconURL: mkmusicInsetIconURL,
+    //     description: (
+    //         <FormattedMessage
+    //             defaultMessage="mkmusic blocks"
+    //             description="mkmusic blocks for SmT"
+    //             id="gui.extension.mkmusic.description"
+    //         />
+    //     ),
+    //     featured: true,
+    // },
+/*
     {
         name: (
             <FormattedMessage
-                defaultMessage="GPIOeasy"
-                description="Name for the 'sample' extension"
-                id="gui.extension.sample.name"
+                defaultMessage="Rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
             />
         ),
-        extensionId: "sample",
-        iconURL: sampleIconURL,
-        insetIconURL: sampleInsetIconURL,
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Sample blocks"
-                description="Sample blocks for SmT"
-                id="gui.extension.sample.description"
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
             />
+        ),
+        featured: true,
+    },
+*/
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="rubyclub"
+                description="Name for the 'rubyclub' extension"
+                id="gui.extension.rubyclub.name"
+            />
+        ),
+        extensionId: "rubyclub",
+        iconURL: rubyclubIconURL,
+        insetIconURL: rubyclubInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Rubyclub blocks"
+                description="Rubyclub blocks for SmT"
+                id="gui.extension.rubyclub.description"
+            />
+        ),
+        featured: true,
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="KaniroboNormal"
+                description="Name for the 'kaniroboNormal' extension"
+                id="gui.extension.kaniroboNormal.name"
+            />
+        ),
+        extensionId: "kaniroboNormal",
+        iconURL: kaniroboNormalIconURL,
+        insetIconURL: kaniroboNormalInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="KaniroboNormal blocks"
+                description="KaniroboNormal blocks for SmT"
+                id="gui.extension.kaniroboNormal.description"
+                      />
         ),
         featured: true,
     },
@@ -99,6 +176,46 @@ const extensions = [
                 defaultMessage="GPIOeasy blocks"
                 description="GPIOeasy blocks for SmT"
                 id="gui.extension.GPIOeasy.description"
+            />
+        ),
+        featured: true,
+    },          
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="GpioHard"
+                description="Name for the 'GpioHard' extension"
+                id="gui.extension.gpiohard.name"
+            />
+        ),
+        extensionId: "gpiohard",
+        iconURL: gpiohardIconURL,
+        insetIconURL: gpiohardInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="GpioHard blocks"
+                description="GpioHard blocks for SmT"
+                id="gui.extension.gpiohard.description"
+            />
+        ),
+        featured: true,
+    },
+     {
+        name: (
+            <FormattedMessage        
+                defaultMessage="I2C, UART"
+                description="Name for the 'i2c_uart' extension"
+                id="gui.extension.i2c_uart.name"
+            />
+        ),
+        extensionId: "i2c_uart",
+        iconURL: i2cuartIconURL,
+        insetIconURL: i2cuartInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="I2C, UART blocks"
+                description="i2c_uart blocks for SmT"
+                id="gui.extension.i2c_uart.description"
             />
         ),
         featured: true,

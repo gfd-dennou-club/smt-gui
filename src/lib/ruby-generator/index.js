@@ -32,6 +32,8 @@ import MeshBlocks from "./mesh.js";
 import SmalrubotS1Blocks from "./smalrubot_s1.js";
 import SampleBlocks from "./sample.js";
 import KaniroboNormalBlocks from "./kanirobo_normal.js";
+import GpioHardBlocks from "./gpio_hard.js";
+import I2C_UARTBlocks from "./i2c_uart.js";
 
 const SCALAR_TYPE = "";
 const LIST_TYPE = "list";
@@ -488,5 +490,7 @@ MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
 SampleBlocks(RubyGenerator);
 KaniroboNormalBlocks(RubyGenerator);
+GpioHardBlocks(RubyGenerator);
+I2C_UARTBlocks(RubyGenerator);
 
 export default RubyGenerator;

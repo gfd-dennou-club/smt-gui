@@ -91,4 +91,13 @@ export default {
     "SET.GPIO.DUTY":"PWM:GPIO[NUM1]のデューティーひを[VALUE]にする",
     "SET.GPIO.FREQUENCY":"PWM:FPIO[NUM1]しゅうはすうを[VALUE]にする",
     "SET.GPIO.VOLT": "ADC:GPIO[VALUE]のでんあつ",
+    "gui.extension.i2c_uart.name": "I2C,UART",
+    "gui.extension.i2c_uart.description": "I2C, UARTをつかう",
+    "i2c_uart.name": "I2C, UART",
+    "i2c_uart.i2c_init": "I2C-[TEXT]: GPIO[NUM1], [NUM2] をつかう(SCL, SDA)",
+    "i2c_uart.i2c_write": "しゅつりょく I2C-[TEXT]: あどれす [NUM1], こまんど [NUM2], あたい [NUM3]",
+    "i2c_uart.i2c_read": "にゅうりょく I2C-[TEXT]: あどれす [NUM1], ばいとすう [NUM2]",
+    "i2c_uart.uart_init": "UART-[TEXT] をつかう",    
+    "i2c_uart.uart_write": "しゅつりょく UART-[TEXT1]: [TEXT2]",    
+    "i2c_uart.uart_read": "にゅうりょく I2C-[TEXT]",
 };

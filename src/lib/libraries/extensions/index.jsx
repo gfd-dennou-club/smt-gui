@@ -59,6 +59,9 @@ import smalrubotS1ConnectionSmallIconURL from "./smalrubot-s1/smalrubot-s1-small
 import gpiohardIconURL from './gpiohard/gpiohard.png';
 import gpiohardInsetIconURL from './gpiohard/gpiohard-small.png';
 
+import i2cuartIconURL from './i2c_uart/i2c_uart.png';
+import i2cuartInsetIconURL from './i2c_uart/i2c_uart-small.png';
+
 const extensions = [
     {
         name: (
@@ -76,6 +79,26 @@ const extensions = [
                 defaultMessage="GpioHard blocks"
                 description="GpioHard blocks for SmT"
                 id="gui.extension.gpiohard.description"
+            />
+        ),
+        featured: true,
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="I2C, UART"
+                description="Name for the 'i2c_uart' extension"
+                id="gui.extension.i2c_uart.name"
+            />
+        ),
+        extensionId: "i2c_uart",
+        iconURL: i2cuartIconURL,
+        insetIconURL: i2cuartInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="I2C, UART blocks"
+                description="i2c_uart blocks for SmT"
+                id="gui.extension.i2c_uart.description"
             />
         ),
         featured: true,

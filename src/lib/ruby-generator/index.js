@@ -30,6 +30,7 @@ import WeDo2Blocks from './wedo2.js';
 import GdxForBlocks from './gdx_for.js';
 import MeshBlocks from './mesh.js';
 import SmalrubotS1Blocks from './smalrubot_s1.js';
+import koshien from './koshien.js';
 
 const SCALAR_TYPE = '';
 const LIST_TYPE = 'list';
@@ -283,12 +284,12 @@ RubyGenerator.spriteNew = function (renderedTarget) {
     for (const id in renderedTarget.variables) {
         const v = renderedTarget.variables[id];
         switch (v.type) {
-        case SCALAR_TYPE:
-            variables.push(v);
-            break;
-        case LIST_TYPE:
-            lists.push(v);
-            break;
+            case SCALAR_TYPE:
+                variables.push(v);
+                break;
+            case LIST_TYPE:
+                lists.push(v);
+                break;
         }
     }
     if (variables.length > 0) {
@@ -462,5 +463,6 @@ WeDo2Blocks(RubyGenerator);
 GdxForBlocks(RubyGenerator);
 MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
+koshien(RubyGenerator);
 
 export default RubyGenerator;

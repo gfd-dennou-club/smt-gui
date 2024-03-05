@@ -401,18 +401,18 @@ const extensions = [
         name: (
             <FormattedMessage
                 defaultMessage="甲子園"
-                description="Name for the 'kousien' extension"
-                id="gui.extension.kousien.name"
+                description="Name for the 'koshien' extension"
+                id="gui.extension.koshien.name"
             />
         ),
-        extensionId: 'kousien',
+        extensionId: 'koshien',
         iconURL: musicIconURL,
         insetIconURL: musicInsetIconURL,
         description: (
             <FormattedMessage
                 defaultMessage="Play instruments and drums."
-                description="Description for the 'kousien' extension"
-                id="gui.extension.kousien.description"
+                description="Description for the 'koshien' extension"
+                id="gui.extension.koshien.description"
             />
         ),
         featured: true

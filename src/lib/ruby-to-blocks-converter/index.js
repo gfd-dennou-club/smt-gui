@@ -32,6 +32,7 @@ import TranslateConverter from './translate';
 import MakeyMakeyConverter from './makeymakey';
 import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
+import KoshienConverter from './koshien';
 
 const messages = defineMessages({
     couldNotConvertPremitive: {
@@ -99,7 +100,8 @@ class RubyToBlocksConverter {
             SensingConverter,
             OperatorsConverter,
             VariablesConverter,
-            MyBlocksConverter
+            MyBlocksConverter,
+            KoshienConverter
         ];
         this._receiverToMethods = {};
         this.reset();

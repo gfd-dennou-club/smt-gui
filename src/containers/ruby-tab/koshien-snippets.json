@@ -1,0 +1,42 @@
+{
+    "koshien.move_to": {
+        "snippet": "koshien.move_to([${1:0},{2:0}])",
+        "description": "x座標 (0) y座標 (0) に移動する"
+    },
+    "koshien.get_map_area": {
+        "snippet": "koshien.get_map_area([${1:0},{2:0}])",
+        "description": "x座標 (0) y座標 (0) 付近のマップ情報を取得"
+    },
+    "koshien.set_dynamite": {
+        "snippet": "koshien.set_dynamite([${1:0},{2:0}])",
+        "description": "ダイナマイトをx座標 (0) y座標 (0) に置く"
+    },
+    "koshien.set_bomb": {
+        "snippet": "koshien.set_bomb([${1:0},{2:0}])",
+        "description": "爆弾をx座標 (0) y座標 (0) に置く"
+    },
+    "koshien.map": {
+        "snippet": "koshien.map([${1:0},{2:0}])",
+        "description": "x座標 (0) y座標 (0) のマップ情報"
+    },
+    "koshien.other_player_x": {
+        "snippet": "koshien.other_player_x",
+        "description": "対戦キャラクタの x座標"
+    },
+    "koshien.other_player_y": {
+        "snippet": "koshien.other_player_y",
+        "description": "対戦キャラクタの y座標"
+    },
+    "koshien.player_x": {
+        "snippet": "koshien.player_x",
+        "description": "プレイヤーの x座標"
+    },
+    "koshien.player_y": {
+        "snippet": "koshien.player_y",
+        "description": "プレイヤーの y座標"
+    },
+    "koshien.enemy_x": {
+        "snippet": "koshien.player_y",
+        "description": "プレイヤーの y座標"
+    }
+}

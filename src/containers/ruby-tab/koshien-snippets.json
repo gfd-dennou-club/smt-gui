@@ -52,8 +52,8 @@
         "description": "ゴールの y座標"
     },
     "koshien.set_name": {
-        "snippet": "koshien.set_name(${1:test})",
-        "description": "プレイヤー名を (test) にする"
+        "snippet": "koshien.set_name(${1:'test'})",
+        "description": "プレイヤー名を ('test') にする"
     },
     "koshien.turn_over": {
         "snippet": "koshien.turn_over",

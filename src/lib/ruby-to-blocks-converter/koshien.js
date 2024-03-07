@@ -1,5 +1,11 @@
+import Primitive from './primitive';
 
 const Koshien = 'koshien'
+const ItemMenu = {
+    dynamite: 'dynamite',
+    bomb: 'bomb'
+}
+
 const KoshienConverter = {
     register: function (converter) {
         converter.registerCallMethod('self', Koshien, 0, params => {
@@ -7,6 +13,7 @@ const KoshienConverter = {
 
             return converter.createRubyExpressionBlock(Koshien, node);
         });
+
         converter.registerCallMethod(Koshien, 'move_to', 1, params => {
             const { receiver, args } = params;
 
@@ -35,7 +42,8 @@ const KoshienConverter = {
             if (!converter.isNumberOrBlock(args[0].value[0])) return null;
             if (!converter.isNumberOrBlock(args[0].value[1])) return null;
 
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_set_dynamite', 'statement');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_set_item', 'statement');
+            converter.addField(block, 'ITEM', 'dynamite');
             converter.addNumberInput(block, 'X', 'math_number', args[0].value[0], 0);
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
@@ -46,7 +54,8 @@ const KoshienConverter = {
             if (!converter.isNumberOrBlock(args[0].value[0])) return null;
             if (!converter.isNumberOrBlock(args[0].value[1])) return null;
 
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_set_bomb', 'statement');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_set_item', 'statement');
+            converter.addField(block, 'ITEM', 'bomb');
             converter.addNumberInput(block, 'X', 'math_number', args[0].value[0], 0);
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
@@ -64,35 +73,59 @@ const KoshienConverter = {
         });
         converter.registerCallMethod(Koshien, 'other_player_x', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_other_player_x', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'other_player');
+            converter.addField(block, 'COORDINATE', 'x');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'other_player_y', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_other_player_y', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'other_player');
+            converter.addField(block, 'COORDINATE', 'y');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'enemy_x', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_enemy_x', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'enemy');
+            converter.addField(block, 'COORDINATE', 'x');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'enemy_y', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_enemy_y', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'enemy');
+            converter.addField(block, 'COORDINATE', 'y');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'goal_x', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_goal_x', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'goal');
+            converter.addField(block, 'COORDINATE', 'x');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'goal_y', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_goal_y', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'goal');
+            converter.addField(block, 'COORDINATE', 'y');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'player_x', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_player_x', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'player');
+            converter.addField(block, 'COORDINATE', 'x');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'player_y', 0, params => {
             const { receiver } = params;
-            return converter.changeRubyExpressionBlock(receiver, 'koshien_player_y', 'value');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
+            converter.addField(block, 'TARGET', 'player');
+            converter.addField(block, 'COORDINATE', 'y');
+            return block;
         });
         converter.registerCallMethod(Koshien, 'set_name', 1, params => {
             const { receiver, args } = params;

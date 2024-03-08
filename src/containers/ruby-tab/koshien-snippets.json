@@ -64,7 +64,7 @@
         "description": "ターンを終了する"
     },
     "koshien.connect_game": {
-        "snippet": "koshien.connect_game(player:${1:'test'})",
+        "snippet": "koshien.connect_game(player_name:${1:'test'})",
         "description": "プレイヤー名('test')ゲームに接続する"
     },
     "koshien.position_x": {

@@ -34,11 +34,11 @@ export default function (Generator) {
         const x = Generator.valueToCode(block, 'X', Generator.ORDER_NONE) || 0;
         const y = Generator.valueToCode(block, 'Y', Generator.ORDER_NONE) || 0;
         const location = Generator.valueToCode(block, 'LOCATION', Generator.ORDER_NONE) || Generator.quote_('map_1');
-        return [`koshien.map(${x},${y} on: ${location})`];
+        return [`koshien.map(${x},${y}, on: ${location})`];
     };
     Generator.koshien_map_all = function (block) {
         const location = Generator.valueToCode(block, 'LOCATION', Generator.ORDER_NONE) || Generator.quote_('map_1');
-        return [`koshien.map(save_as: ${location})`];
+        return [`koshien.map_all(save_as: ${location})`];
     };
     Generator.koshien_locate_objects = function (block) {
         const x = Generator.valueToCode(block, 'X', Generator.ORDER_NONE) || 0;

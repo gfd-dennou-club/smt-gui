@@ -92,7 +92,7 @@ class RubyTab extends React.Component {
             this.props.onRequestCloseFile();
             downloadProjectCallback();
             if (this.props.onProjectTelemetryEvent) {
-                const metadata = collectMetadata(this.props.vm, this.props.projectTitle, this.props.local);
+                const metadata = collectMetadata(this.props.vm, this.props.projectTitle, this.props.locale);
                 this.props.onProjectTelemetryEvent('projectDidSave', metadata);
             }
         };

@@ -1,6 +1,6 @@
 ---
-name: 課題
-about: 課題全般 (要望、改善、質問など)
+name: 課題全般
+about: 要望、改善、質問などの課題全般
 title: ""
 labels: ""
 assignees: ""

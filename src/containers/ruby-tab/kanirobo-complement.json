@@ -1,0 +1,98 @@
+{
+  "motor25 = GPIO.new": {
+    "snippet": "motor25 = GPIO.new(25, GPIO::OUT)",
+    "description": "モーター1を初期化"
+  },
+  "motor32 = GPIO.new": {
+    "snippet": "motor32 = GPIO.new(32, GPIO::OUT)",
+    "description": "モーター2を初期化"
+  },
+  "motor26_pwm = PWM.new": {
+    "snippet": "motor26_pwm = PWM.new(26, ch=0)",
+    "description": "モーター1のPWMを初期化"
+  },
+  "motor33_pwm = PWM.new": {
+    "snippet": "motor33_pwm = PWM.new(33, ch=0)",
+    "description": "モーター2のPWMを初期化"
+  },
+  "motor25.write": {
+    "snippet": "motor25.write(1)",
+    "description": "モーター1を前方向にセット"
+  },
+  "motor32.write": {
+    "snippet": "motor32.write(1)",
+    "description": "モーター2を前方向にセット"
+  },
+  "motor26_pwm.duty": {
+    "snippet": "motor26_pwm.duty((500 % 1024).to_i)",
+    "description": "モーター1のデューティー比を500(0~1023)にする"
+  },
+  "motor33_pwm.duty": {
+    "snippet": "motor33_pwm.duty((500 % 1024).to_i)",
+    "description": "モーター2のデューティー比を500(0~1023)にする"
+  },
+  "lux36 = ADC.new": {
+    "snippet": "lux36 = ADC.new(36, ADC::ATTEN_11DB, ADC::WIDTH_12BIT)",
+    "description": "ライトセンサー1を初期化"
+  },
+  "lux34 = ADC.new": {
+    "snippet": "lux34 = ADC.new(34, ADC::ATTEN_11DB, ADC::WIDTH_12BIT)",
+    "description": "ライトセンサー2を初期化"
+  },
+  "lux35 = ADC.new": {
+    "snippet": "lux35 = ADC.new(35, ADC::ATTEN_11DB, ADC::WIDTH_12BIT)",
+    "description": "ライトセンサー3を初期化"
+  },
+  "lux2 = ADC.new": {
+    "snippet": "lux2 = ADC.new(2, ADC::ATTEN_11DB, ADC::WIDTH_12BIT)",
+    "description": "ライトセンサー4を初期化"
+  },
+  "lux36.rawread": {
+    "snippet": "lux36.rawread",
+    "description": "ライトセンサー1の値"
+  },
+  "lux34.rawread": {
+    "snippet": "lux34.rawread",
+    "description": "ライトセンサー2の値"
+  },
+  "lux35.rawread": {
+    "snippet": "lux35.rawread",
+    "description": "ライトセンサー3の値"
+  },
+  "lux2.rawread": {
+    "snippet": "lux2.rawread",
+    "description": "ライトセンサー4の値"
+  },
+  "servo27_pwm.duty": {
+    "snippet": "servo27 = PWM.new(27, ch=3)",
+    "description": "サーボモーター1を初期化"
+  },
+  "servo14_pwm.duty": {
+    "snippet": "servo14 = PWM.new(14, ch=2)",
+    "description": "サーボモーター2を初期化"
+  },
+  "servo27.freq": {
+    "snippet": "servo27.freq(80)",
+    "description": "サーボモーター1の周波数を80にする"
+  },
+  "servo14.freq": {
+    "snippet": "servo14.freq(80)",
+    "description": "サーボモーター2の周波数を80にする"
+  },
+  "servo27.duty": {
+    "snippet": "servo27.duty((0 % 1024).to_i)",
+    "description": "サーボモーター1のデューティー比を0にする"
+  },
+  "servo14.duty": {
+    "snippet": "servo14.duty((0 % 1024).to_i)",
+    "description": "サーボモーター2のデューティー比を0にする"
+  },
+  "( 0.to_f * (150 - 50) / 90.0 + 50).to_i": {
+    "snippet": "( 0.to_f * (150 - 50) / 90.0 + 50).to_i",
+    "description": "0度"
+  },
+  "puts": {
+    "snippet": "puts( 'test' )",
+    "description": "デバッグ出力"
+  }
+}

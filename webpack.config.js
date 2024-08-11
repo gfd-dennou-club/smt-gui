@@ -6,7 +6,7 @@ const fs = require('fs');
 // Plugins
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 
@@ -68,10 +68,11 @@ const base = {
             }, {
                 loader: 'css-loader',
                 options: {
-                    modules: true,
+                    modules: {
+                        localIdentName: '[name]_[local]_[hash:base64:5]'
+                    },
                     importLoaders: 1,
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
-                    camelCase: true
+                    localsConvention: 'camelCase'
                 }
             }, {
                 loader: 'postcss-loader',
@@ -99,7 +100,7 @@ const base = {
     },
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 include: /\.min\.js$/
             })
         ]

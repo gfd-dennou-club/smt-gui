@@ -4,3 +4,5 @@ dist/*
 static/javascripts/*
 opal/*
 coverage/*
+test/*
+src/examples/*

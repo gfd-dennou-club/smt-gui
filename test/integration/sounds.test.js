@@ -45,7 +45,7 @@ describe('Working with sounds', () => {
         // Add a new sound
         await clickXpath('//button[@aria-label="Choose a Sound"]');
         el = await findByXpath("//input[@placeholder='Search']");
-        await el.sendKeys('chom');
+        await el.sendKeys('chom'); // cspell:disable-line
         await clickText('Chomp'); // Should close the modal, then click the sounds in the selector
         await findByXpath("//input[@value='Chomp']"); // Should show editor for new sound
 

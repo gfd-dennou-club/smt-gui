@@ -42,7 +42,7 @@ describe('Working with the blocks', () => {
         await clickText('join', scope.blocksTab); // Click "join <hello> <world>" block
         await findByText('apple banana', scope.reportedValue); // Tooltip with result
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Switching sprites updates the block menus', async () => {
@@ -58,7 +58,7 @@ describe('Working with the blocks', () => {
         await findByText('Stage selected: no motion blocks');
 
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Creating variables', async () => {
@@ -103,10 +103,10 @@ describe('Working with the blocks', () => {
         await clickText('hide', scope.contextMenu);
         await driver.sleep(100);
         const monitorExists = await textExists('score', scope.monitors);
-        await expect(monitorExists).toBeFalsy();
+        expect(monitorExists).toBeFalsy();
 
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Creating a list', async () => {
@@ -144,10 +144,10 @@ describe('Working with the blocks', () => {
         await clickText('hide', scope.contextMenu);
         await driver.sleep(100);
         const monitorExists = await textExists('list1', scope.monitors);
-        await expect(monitorExists).toBeFalsy();
+        expect(monitorExists).toBeFalsy();
 
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Custom procedures', async () => {
@@ -165,7 +165,7 @@ describe('Working with the blocks', () => {
         await findByText('define', scope.blocksTab);
 
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Adding an extension', async () => {
@@ -179,7 +179,7 @@ describe('Working with the blocks', () => {
         await findByText('stamp', scope.blocksTab);
 
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Record option from sound block menu opens sound recorder', async () => {
@@ -195,7 +195,7 @@ describe('Working with the blocks', () => {
             .accept();
         await findByText('Record Sound'); // Sound recorder is open
         const logs = await getLogs();
-        await expect(logs).toEqual([]);
+        expect(logs).toEqual([]);
     });
 
     test('Renaming costume changes the default costume name in the toolbox', async () => {

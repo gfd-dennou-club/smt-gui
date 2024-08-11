@@ -4,35 +4,46 @@
 [![Introduce Smalruby 3 based Scratch 3.0](https://img.youtube.com/vi/UNkinwLk6uQ/0.jpg)](https://www.youtube.com/watch?v=UNkinwLk6uQ)
 
 ## Installation
+
 This requires you to have Git and Node.js installed.
 
 In your own node environment/application:
+
 ```bash
 npm install https://github.com/smalruby/smalruby3-gui.git
 ```
+
 If you want to edit/play yourself:
+
 ```bash
 git clone https://github.com/smalruby/smarluby3-gui.git
 cd smarluby3-gui
 npm install
 ```
 
-**You may want to add `--depth=1` to the `git clone` command because there are some [large files in the git repository history](https://github.com/LLK/scratch-gui/issues/5140).**
+**You may want to add `--depth=1` to the `git clone` command because there are some [large files in the git repository
+history](https://github.com/scratchfoundation/scratch-gui/issues/5140).**
 
 ## Getting started
+
 Running the project requires Node.js to be installed.
 
 ## Running
+
 Open a Command Prompt or Terminal in the repository and run:
+
 ```bash
 npm start
 ```
+
 Then go to [http://localhost:8601/](http://localhost:8601/) - the playground outputs the default GUI component
 
 ## Testing
+
 ### Documentation
 
-You may want to review the documentation for [Jest](https://facebook.github.io/jest/docs/en/api.html) and [Enzyme](http://airbnb.io/enzyme/docs/api/) as you write your tests.
+You may want to review the documentation for [Jest](https://facebook.github.io/jest/docs/en/api.html) and
+[Enzyme](http://airbnb.io/enzyme/docs/api/) as you write your tests.
 
 See [jest cli docs](https://facebook.github.io/jest/docs/en/cli.html#content) for more options.
 
@@ -45,6 +56,7 @@ Before running any tests, make sure you have run `npm install` from this (scratc
 #### Main testing command
 
 To run linter, unit tests, build, and integration tests, all at once:
+
 ```bash
 npm test
 ```
@@ -52,11 +64,13 @@ npm test
 #### Running unit tests
 
 To run unit tests in isolation:
+
 ```bash
 npm run test:unit
 ```
 
 To run unit tests in watch mode (watches for code changes and continuously runs tests):
+
 ```bash
 npm run test:unit -- --watch
 ```
@@ -71,6 +85,8 @@ $(npm bin)/jest --runInBand test/unit/components/button.test.jsx
 
 Integration tests use a headless browser to manipulate the actual HTML and javascript that the repo
 produces. You will not see this activity (though you can hear it when sounds are played!).
+
+To run the integration tests, you'll first need to install Chrome, Chromium, or a variant, along with Chromedriver.
 
 Note that integration tests require you to first create a build that can be loaded in a browser:
 
@@ -108,14 +124,14 @@ npm install chromedriver@{version}
 
 When running `npm install`, you can get warnings about optional dependencies:
 
-```
+```text
 npm WARN optional Skipping failed optional dependency /chokidar/fsevents:
 npm WARN notsup Not compatible with your operating system or architecture: fsevents@1.2.7
 ```
 
 You can suppress them by adding the `no-optional` switch:
 
-```
+```bash
 npm install --no-optional
 ```
 
@@ -125,7 +141,7 @@ Further reading: [Stack Overflow](https://stackoverflow.com/questions/36725181/n
 
 When installing for the first time, you can get warnings that need to be resolved:
 
-```
+```text
 npm WARN eslint-config-scratch@5.0.0 requires a peer of babel-eslint@^8.0.1 but none was installed.
 npm WARN eslint-config-scratch@5.0.0 requires a peer of eslint@^4.0 but none was installed.
 npm WARN scratch-paint@0.2.0-prerelease.20190318170811 requires a peer of react-intl-redux@^0.7 but none was installed.
@@ -134,13 +150,13 @@ npm WARN scratch-paint@0.2.0-prerelease.20190318170811 requires a peer of react-
 
 You can check which versions are available:
 
-```
+```bash
 npm view react-intl-redux@0.* version
 ```
 
 You will need to install the required version:
 
-```
+```bash
 npm install  --no-optional --save-dev react-intl-redux@^0.7
 ```
 
@@ -155,7 +171,7 @@ smalruby-gui@0.9.1 /path/to/smalruby3-gui
 
 You will need to install those as well:
 
-```
+```bash
 npm install  --no-optional --save-dev react-responsive@^5.0.0
 ```
 
@@ -164,6 +180,7 @@ Further reading: [Stack Overflow](https://stackoverflow.com/questions/46602286/n
 ## Troubleshooting
 
 If you run into npm install errors, try these steps:
+
 1. run `npm cache clean --force`
 2. Delete the node_modules directory
 3. Delete package-lock.json

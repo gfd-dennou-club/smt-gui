@@ -406,10 +406,9 @@ class SeleniumHelper {
         }
     }
 
-    takeScreenshot (path) {
-        return this.driver.takeScreenshot().then(image => {
-            fs.writeFileSync(path, image, 'base64');
-        });
+    async takeScreenshot (path) {
+        const image = await this.driver.takeScreenshot();
+        fs.writeFileSync(path, image, 'base64');
     }
 
     urlFor (path) {

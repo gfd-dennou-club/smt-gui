@@ -103,7 +103,7 @@ describe('Working with the blocks', () => {
         await clickText('hide', scope.contextMenu);
         await driver.sleep(100);
         const monitorExists = await textExists('score', scope.monitors);
-        expect(monitorExists).toBeFalsy();
+        await expect(monitorExists).toBeFalsy();
 
         const logs = await getLogs();
         expect(logs).toEqual([]);
@@ -144,7 +144,7 @@ describe('Working with the blocks', () => {
         await clickText('hide', scope.contextMenu);
         await driver.sleep(100);
         const monitorExists = await textExists('list1', scope.monitors);
-        expect(monitorExists).toBeFalsy();
+        await expect(monitorExists).toBeFalsy();
 
         const logs = await getLogs();
         expect(logs).toEqual([]);

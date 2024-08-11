@@ -20,7 +20,7 @@ const MakeyMakeyConverter = {
                     this._addInput(
                         block,
                         'KEY',
-                        this._createFieldBlock('makeymakey_menu_KEY', 'KEY', args[1]),
+                        this._createFieldBlock('makeymakey_menu_KEY', 'KEY', args[1])
                     );
                     this._setParent(rubyBlock, block);
                 }

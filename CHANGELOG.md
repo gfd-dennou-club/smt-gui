@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.10](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.9...v4.0.10) (2024-08-10)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([6078482](https://github.com/scratchfoundation/scratch-gui/commit/6078482752df1fc3e7e7c3a4a23b397a6ea626f7))
+
+## [4.0.9](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.8...v4.0.9) (2024-08-09)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([1868ae9](https://github.com/scratchfoundation/scratch-gui/commit/1868ae902256f89f3d597e54d72f8c0763191972))
+
+## [4.0.8](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.7...v4.0.8) (2024-08-08)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([145cfd3](https://github.com/scratchfoundation/scratch-gui/commit/145cfd3d583b18e4504bbbeec0ad4119f79cc2a1))
+
+## [4.0.7](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.6...v4.0.7) (2024-08-08)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([68c2da0](https://github.com/scratchfoundation/scratch-gui/commit/68c2da0402443421d2ea45e63a6c9e1155db2107))
+
+## [4.0.6](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.5...v4.0.6) (2024-08-01)
+
+
+### Reverts
+
+* Revert "ci: reduce package size" ([1054259](https://github.com/scratchfoundation/scratch-gui/commit/105425909c92cb5c162be2d03434e4338ec8cfa5))
+* Revert "fix(package): don't omit src" ([d7c5f60](https://github.com/scratchfoundation/scratch-gui/commit/d7c5f60f808b5658457c9af2a3fe124d791aff9f))
+
+## [4.0.5](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.4...v4.0.5) (2024-07-31)
+
+
+### Bug Fixes
+
+* [UEPR-27] Updated the css loader and added libraries to the build ([b7808e8](https://github.com/scratchfoundation/scratch-gui/commit/b7808e8d523ec48ddfb43e4de6ba1843a10f39be))
+* [UEPR-30] Updated style-loader version to fix component not rendering ([509d294](https://github.com/scratchfoundation/scratch-gui/commit/509d294132dd27316049f98fbc2e842da2681969))
+
+## [4.0.4](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.3...v4.0.4) (2024-04-24)
+
+
+### Bug Fixes
+
+* **deps:** bump scratch-paint from 2.2.2 to 2.2.151 ([898bbfd](https://github.com/scratchfoundation/scratch-gui/commit/898bbfdc445dae4a716c2cc9bf6cdb68594f8886))
+* **deps:** update dependency react-tooltip to v4 ([3c2afd1](https://github.com/scratchfoundation/scratch-gui/commit/3c2afd102a5c74c0b83f3b9654b926de235c31fc))
+
+## [4.0.3](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.2...v4.0.3) (2024-04-12)
+
+
+### Bug Fixes
+
+* force publish ([dbc8f1d](https://github.com/scratchfoundation/scratch-gui/commit/dbc8f1d6d116e51f6c39e65bc276b24901aa4e57))
+
+## [4.0.2](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.1...v4.0.2) (2024-04-10)
+
+
+### Bug Fixes
+
+* **package:** don't omit src ([8ffff71](https://github.com/scratchfoundation/scratch-gui/commit/8ffff71a5ea86c25e906f5c51024e3ca0aba6c9b))
+
+## [4.0.1](https://github.com/scratchfoundation/scratch-gui/compare/v4.0.0...v4.0.1) (2024-04-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cookie to ^0.6.0 ([ebb4b6f](https://github.com/scratchfoundation/scratch-gui/commit/ebb4b6f89f36fc714ad5f54b2c2a338a97d5dd97))
+
+# [4.0.0](https://github.com/scratchfoundation/scratch-gui/compare/v3.6.18...v4.0.0) (2024-03-29)
+
+
+### Bug Fixes
+
+* **build:** add exports field to package.json ([43a1e8f](https://github.com/scratchfoundation/scratch-gui/commit/43a1e8f0c32c5e188209521bd20c67fa1a75e47d))
+* **build:** bring back BUILD_MODE now that the dust is settling ([3b89677](https://github.com/scratchfoundation/scratch-gui/commit/3b8967756c6ef650749b1c005be987e5832d167f))
+* **deps:** update dependency scratch-vm to v4 ([bfb634d](https://github.com/scratchfoundation/scratch-gui/commit/bfb634d487df35d861aefe5223a5409a6e254f37))
+* **deps:** update scratch-{svg-renderer,vm,webpack-configuration} ([48fb28a](https://github.com/scratchfoundation/scratch-gui/commit/48fb28a685fd9427e1c2e256b25da1ac3ff1a0d2))
+* remove unnecessary babel-jest transform config ([df34896](https://github.com/scratchfoundation/scratch-gui/commit/df3489619af9918ca54172817d1c886205c2182f))
+
+
+* build!: use scratch-webpack-configuration ([f1438f7](https://github.com/scratchfoundation/scratch-gui/commit/f1438f73e3f7aa9fe423c0f01c0db12e76645026))
+
+
+### BREAKING CHANGES
+
+* changes layout of output files and browser compatibility
+
 ## [3.6.18](https://github.com/scratchfoundation/scratch-gui/compare/v3.6.17...v3.6.18) (2024-03-12)
 
 

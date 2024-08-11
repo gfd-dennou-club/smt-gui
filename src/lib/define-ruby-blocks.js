@@ -5,7 +5,7 @@
  */
 export default function (ScratchBlocks) {
     const name = 'ruby';
-    if (ScratchBlocks.Categories.hasOwnProperty(name)) {
+    if (Object.prototype.hasOwnProperty.call(ScratchBlocks.Categories, name)) {
         return ScratchBlocks;
     }
     ScratchBlocks.Categories[name] = name;

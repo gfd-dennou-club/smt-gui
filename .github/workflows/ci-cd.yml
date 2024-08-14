@@ -36,6 +36,8 @@ jobs:
                   EOF
             - name: Install Dependencies
               run: npm ci
+            - name: Build scratch-vm for smalruby
+              run: npm run setup-scratch-vm
             - name: Lint
               run: npm run test:lint
             - name: Cache node_modules

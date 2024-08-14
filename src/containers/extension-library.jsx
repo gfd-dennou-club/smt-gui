@@ -17,7 +17,7 @@ const messages = defineMessages({
     },
     extensionUrl: {
         defaultMessage: 'Enter the URL of the extension',
-        description: 'Prompt for unoffical extension url',
+        description: 'Prompt for unofficial extension url',
         id: 'gui.extensionLibrary.extensionUrl'
     }
 });

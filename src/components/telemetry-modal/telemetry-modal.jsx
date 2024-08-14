@@ -138,20 +138,7 @@ class TelemetryModal extends React.PureComponent {
 
                 <Box className={styles.body}>
                     <p><FormattedMessage {...messages.bodyText1} /></p>
-                    <p><FormattedMessage
-                        {...messages.bodyText2}
-                        values={{
-                            privacyPolicyLink: (<a
-                                className={styles.privacyPolicyLink}
-                                href="https://scratch.mit.edu/privacy_policy/"
-                                onClick={this.props.onShowPrivacyPolicy}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <FormattedMessage {...messages.privacyPolicyLink} />
-                            </a>)
-                        }}
-                    /></p>
+                    <p><FormattedMessage {...messages.bodyText2} /></p>
                     <Box className={styles.radioButtons}>
                         <label className={isOn ? styles.labelSelected : null}>
                             <input

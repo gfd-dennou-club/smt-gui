@@ -45,11 +45,11 @@ const BrowserModal = ({intl, ...props}) => {
                             props.error ? <FormattedMessage
                                 defaultMessage="We are very sorry, but it looks like you are using a browser version that Smalruby does not support. We recommend updating to the latest version of a supported browser such as Google Chrome, Mozilla Firefox, Microsoft Edge, or Apple Safari. "
                                 description="Error message when the browser does not meet our minimum requirements"
-                                id="gui.unsupportedBrowser.notRecommended"
+                                id="gui.smalruby3.unsupportedBrowser.notRecommended"
                             /> : <FormattedMessage
                                 defaultMessage="We are very sorry, but Smalruby does not support this browser. We recommend updating to the latest version of a supported browser such as Google Chrome, Mozilla Firefox, Microsoft Edge, or Apple Safari."
                                 description="Error message when the browser does not work at all (IE)"
-                                id="gui.unsupportedBrowser.description"
+                                id="gui.smalruby3.unsupportedBrowser.description"
                             />
                         }
                         { /* eslint-enable max-len */ }

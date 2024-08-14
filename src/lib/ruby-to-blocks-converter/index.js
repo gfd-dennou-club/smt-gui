@@ -35,10 +35,10 @@ import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
 
 const messages = defineMessages({
-    couldNotConvertPremitive: {
+    couldNotConvertPrimitive: {
         defaultMessage: '"{ SOURCE }" could not be converted the block.',
-        description: 'Error message for converting ruby to block when find the premitive',
-        id: 'gui.smalruby3.rubyToBlocksConverter.couldNotConvertPremitive'
+        description: 'Error message for converting ruby to block when find the primitive',
+        id: 'gui.smalruby3.rubyToBlocksConverter.couldNotConvertPrimitive'
     },
     wrongInstruction: {
         defaultMessage: '"{ SOURCE }" is the wrong instruction.',
@@ -182,7 +182,7 @@ class RubyToBlocksConverter {
                     throw new RubyToBlocksConverterError(
                         block.node,
                         this._translator(
-                            messages.couldNotConvertPremitive,
+                            messages.couldNotConvertPrimitive,
                             {SOURCE: this._getSource(block.node)}
                         )
                     );

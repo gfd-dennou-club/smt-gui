@@ -168,33 +168,6 @@ jobs:
               with:
                 name: integration-test-output
                 path: ./test-results/*
-    deploy-npm:
-        needs: [test-integration, test-unit]
-        if: (github.ref == 'refs/heads/master') || (github.ref == 'refs/heads/develop') || (github.ref == 'refs/heads/beta') || startsWith(github.ref, 'refs/heads/hotfix')
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Retrieve npm dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve Dist Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./dist
-                key: ${{ runner.os }}-dist-${{ hashFiles('package-lock.json') }}
-            - run: |
-                if [[ ${{contains(github.ref, 'hotfix')}}  ]]; then
-                sed -e "s|hotfix/REPLACE|${{ github.ref_name }}|" --in-place release.config.js
-                fi
-            - name: Semantic Release
-              env:
-                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: npx --no -- semantic-release
     deploy-gh-pages:
         needs: [test-integration, test-unit]
         if: (!(startsWith(github.ref, 'refs/heads/dependabot/') || startsWith(github.ref, 'refs/heads/renovate/')))
@@ -214,8 +187,18 @@ jobs:
                     ./build
                 key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
             - name: Deploy playground to GitHub Pages
-              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 publish_dir: ./build
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
+            - run: |
+                rm node_modules/gh-pages/.cache
+            - name: Deploy playground to Smalruby.app GitHub Pages
+              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./build
+                full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
+                cname: smalruby.app
+                external_repository: smalruby/smalruby.app

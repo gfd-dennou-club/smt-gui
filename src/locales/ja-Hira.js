@@ -12,6 +12,7 @@ export default {
     'gui.smalruby3.menuBar.generateRubyFromCode': 'コードからルビーにへんかんします',
     'gui.smalruby3.unsupportedBrowser.notRecommended': 'もうしわけありません。スモウルビー3.0はおつかいのバージョンのブラウザをサポートしていません。グーグル クローム、モジラ ファイアーフォックス、マイクロソフト エッジ、アップル サファリのようなサポートしているさいしんのバージョンにアップデートすることをおすすめします。',
     'gui.smalruby3.unsupportedBrowser.description': 'もうしわけありません。スモウルビー3.0はインターネットエクスプローラ、ビヴァルディ、オペラ、シルクをサポートしていません。グーグル クローム、モジラ ファイアーフォックス、マイクロソフト エッジのようなあたらしいブラウザのりようをおすすめします。',
+    'gui.smalruby3.unsupportedBrowser.previewfaq': 'スモウルビーは スクラッチ 3.0をベースにかいはつしていますので、くわしくしりたいばあいは スクラッチ の {previewFaqLink} をごらんください。',
     'gui.smalruby3.webglModal.description': 'ざんねんながら、ブラウザーやコンピューターが{webGlLink}ようです。このぎじゅつはスモウルビー3.0のじっこうにひっすです。',
     'gui.smalruby3.alerts.convertRubyToBlocksError': 'ルビーからコードにへんかんできませんでした。ルビーをなおしてください！',
     'gui.smalruby3.telemetryOptIn.label': 'スモウルビーをかいぜんするためのりようじょうきょうのほうこく',

@@ -72,7 +72,7 @@ const BrowserModal = ({intl, ...props}) => {
                         <FormattedMessage
                             defaultMessage="Smalruby is based Scratch 3.0. So to learn more, go to the {previewFaqLink}." // eslint-disable-line max-len
                             description="Invitation to try 3.0 preview"
-                            id="gui.unsupportedBrowser.previewfaq"
+                            id="gui.smalruby3.unsupportedBrowser.previewfaq"
                             values={{
                                 previewFaqLink: (
                                     <a

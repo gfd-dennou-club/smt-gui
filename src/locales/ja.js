@@ -12,6 +12,7 @@ export default {
     'gui.smalruby3.menuBar.generateRubyFromCode': 'コードからルビーに変換します',
     'gui.smalruby3.unsupportedBrowser.notRecommended': '申し訳ありません。スモウルビー3.0はお使いのバージョンのブラウザをサポートしていません。Google Chrome、Mozilla Firefox、Microsoft Edge、Apple Safariのようなサポートしている最新のバージョンにアップデートすることをお勧めします。',
     'gui.smalruby3.unsupportedBrowser.description': '申し訳ありません。スモウルビー3.0はInternet Explorer、Vivaldi、Opera、Silkをサポートしていません。Google Chrome、Mozilla Firefox、Microsoft Edgeのような新しいブラウザの利用をお勧めします。',
+    'gui.smalruby3.unsupportedBrowser.previewfaq': 'スモウルビーは Scratch 3.0をベースに開発していますので、詳しく知りたい場合は Scratch の {previewFaqLink} をご覧ください。',
     'gui.smalruby3.webglModal.description': '残念ながら、ブラウザーやコンピューターが{webGlLink}ようです。この技術はスモウルビー3.0の実行に必須です。',
     'gui.smalruby3.alerts.convertRubyToBlocksError': 'ルビーからコードに変換できませんでした。ルビーを修正してください！',
     'gui.smalruby3.telemetryOptIn.label': 'スモウルビーを改善するための利用状況の報告',

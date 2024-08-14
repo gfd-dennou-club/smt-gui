@@ -10,6 +10,7 @@ export default {
     "gui.smalruby3.menuBar.generateRubyFromCode": "Generate Ruby from Code",
     "gui.smalruby3.unsupportedBrowser.notRecommended": "We are very sorry, but it looks like you are using a browser version that Smalruby 3.0 does not support. We recommend updating to the latest version of a supported browser such as Google Chrome, Mozilla Firefox, Microsoft Edge, or Apple Safari. ",
     "gui.smalruby3.unsupportedBrowser.description": "We're very sorry, but Smalruby 3.0 does not support Internet Explorer, Vivaldi, Opera or Silk. We recommend trying a newer browser such as Google Chrome, Mozilla Firefox, or Microsoft Edge.",
+    "gui.smalruby3.unsupportedBrowser.previewfaq": "Smalruby is based Scratch 3.0. So to learn more, go to the {previewFaqLink}.",
     "gui.smalruby3.webglModal.description": "Unfortunately it looks like your browser or computer {webGlLink}. This technology is needed for Smalruby 3.0 to run.",
     "gui.smalruby3.alerts.convertRubyToBlocksError": "Could not convert Ruby to Code. Please fix Ruby!",
     "gui.smalruby3.telemetryOptIn.label": "Report statistics to improve Smalruby",

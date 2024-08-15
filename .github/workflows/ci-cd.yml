@@ -170,7 +170,7 @@ jobs:
                 path: ./test-results/*
     deploy-gh-pages:
         needs: [test-integration, test-unit]
-        if: (!(startsWith(github.ref, 'refs/heads/dependabot/') || startsWith(github.ref, 'refs/heads/renovate/')))
+        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/hotfix/'))
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
@@ -195,7 +195,7 @@ jobs:
             - name: Deploy playground to Smalruby.app GitHub Pages
               uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
               with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
+                deploy_key: ${{ secrets.SMALRUBY_APP_DEPLOY_KEY }}
                 publish_dir: ./build
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
                 cname: smalruby.app

@@ -24,6 +24,7 @@ const WebGlModal = ({intl, ...props}) => (
     >
         <div dir={props.isRtl ? 'rtl' : 'ltr'}>
             <Box className={styles.illustration} />
+
             <Box className={styles.body}>
                 <h2>
                     <FormattedMessage {...messages.label} />

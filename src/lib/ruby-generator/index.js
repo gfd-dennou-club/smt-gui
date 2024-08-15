@@ -161,7 +161,7 @@ RubyGenerator.initTargets = function (options) {
     this.requires_ = {};
     this.prepares_ = {};
 
-    if (options && options.hasOwnProperty('requires')) {
+    if (options && Object.prototype.hasOwnProperty.call(options, 'requires')) {
         options.requires.forEach(name => {
             this.requires_[`require__${name}`] = `require "${name}"`;
         });
@@ -407,12 +407,12 @@ RubyGenerator.variableName = function (id, type = SCALAR_TYPE) {
     let isStage;
     const target = this.currentTarget;
     const variables = target.variables;
-    if (variables.hasOwnProperty(id)) {
+    if (Object.prototype.hasOwnProperty.call(variables, id)) {
         currVar = variables[id];
         isStage = target.isStage;
     } else if (target.runtime && !target.isStage) {
         const stage = target.runtime.getTargetForStage();
-        if (stage && stage.variables.hasOwnProperty(id)) {
+        if (stage && Object.prototype.hasOwnProperty.call(stage.variables, id)) {
             currVar = stage.variables[id];
             isStage = true;
         }

@@ -1,6 +1,8 @@
-node_modules/*
-build/*
-dist/*
-static/javascripts/*
-opal/*
-coverage/*
+/node_modules/
+/build/
+/dist/
+/test/
+/src/examples/
+/static/javascripts/
+/opal/
+/coverage/

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import log from '../log';
 import Blockly from 'scratch-blocks';
 import RubyParser from '../ruby-parser';
+// eslint-disable-next-line import/no-unresolved
 import Variable from 'scratch-vm/src/engine/variable';
 
 import Primitive from './primitive';
@@ -34,10 +35,10 @@ import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
 
 const messages = defineMessages({
-    couldNotConvertPremitive: {
+    couldNotConvertPrimitive: {
         defaultMessage: '"{ SOURCE }" could not be converted the block.',
-        description: 'Error message for converting ruby to block when find the premitive',
-        id: 'gui.smalruby3.rubyToBlocksConverter.couldNotConvertPremitive'
+        description: 'Error message for converting ruby to block when find the primitive',
+        id: 'gui.smalruby3.rubyToBlocksConverter.couldNotConvertPrimitive'
     },
     wrongInstruction: {
         defaultMessage: '"{ SOURCE }" is the wrong instruction.',
@@ -181,7 +182,7 @@ class RubyToBlocksConverter {
                     throw new RubyToBlocksConverterError(
                         block.node,
                         this._translator(
-                            messages.couldNotConvertPremitive,
+                            messages.couldNotConvertPrimitive,
                             {SOURCE: this._getSource(block.node)}
                         )
                     );
@@ -241,11 +242,11 @@ class RubyToBlocksConverter {
             Object.keys(this._context[storeName]).forEach(name => {
                 const variable = this._context[storeName][name];
                 if (variable.scope === 'global') {
-                    if (!stage.variables.hasOwnProperty(variable.id)) {
+                    if (!Object.prototype.hasOwnProperty.call(stage.variables, variable.id)) {
                         stage.createVariable(variable.id, variable.name, variable.type);
                     }
                 } else if (!target.isStage) {
-                    if (!target.variables.hasOwnProperty(variable.id)) {
+                    if (!Object.prototype.hasOwnProperty.call(target.variables, variable.id)) {
                         target.createVariable(variable.id, variable.name, variable.type);
                     }
                 }
@@ -254,7 +255,7 @@ class RubyToBlocksConverter {
 
         Object.keys(this._context.broadcastMsgs).forEach(name => {
             const broadcastMsg = this._context.broadcastMsgs[name];
-            if (!stage.variables.hasOwnProperty(broadcastMsg.id)) {
+            if (!Object.prototype.hasOwnProperty.call(stage.variables, broadcastMsg.id)) {
                 stage.createVariable(broadcastMsg.id, broadcastMsg.name, Variable.BROADCAST_MESSAGE_TYPE);
             }
         });
@@ -369,7 +370,7 @@ class RubyToBlocksConverter {
     _callConvertersHandler (handlerName, ...args) {
         for (let i = 0; i < this._converters.length; i++) {
             const converter = this._converters[i];
-            if (converter.hasOwnProperty(handlerName)) {
+            if (Object.prototype.hasOwnProperty.call(converter, handlerName)) {
                 const block = converter[handlerName].apply(this, args);
                 if (block) {
                     return block;
@@ -405,14 +406,14 @@ class RubyToBlocksConverter {
         }
 
         Object.keys(saved).forEach(key => {
-            if (this._context.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(this._context, key)) {
                 Object.keys(this._context[key]).forEach(id => {
-                    if (!saved[key].hasOwnProperty(id)) {
+                    if (!Object.prototype.hasOwnProperty.call(saved[key], id)) {
                         delete this._context[key][id];
                     }
                 });
                 Object.keys(saved[key]).forEach(id => {
-                    if (!this._context[key].hasOwnProperty(id)) {
+                    if (!Object.prototype.hasOwnProperty.call(this._context[key], id)) {
                         this._context[key][id] = saved[key][id];
                     }
                 });
@@ -524,7 +525,7 @@ class RubyToBlocksConverter {
 
     _isBlock (block) {
         try {
-            return block.hasOwnProperty('opcode');
+            return Object.prototype.hasOwnProperty.call(block, 'opcode');
         } catch (e) {
             return false;
         }
@@ -869,7 +870,7 @@ class RubyToBlocksConverter {
         if (keys.length === 0) {
             return this._lookupOrCreateBroadcastMsg(defaultName);
         }
-        if (this._context.broadcastMsgs.hasOwnProperty(defaultName)) {
+        if (Object.prototype.hasOwnProperty.call(this._context.broadcastMsgs, defaultName)) {
             return this._context.broadcastMsgs[defaultName];
         }
         return this._context.broadcastMsgs[keys[0]];
@@ -994,7 +995,7 @@ class RubyToBlocksConverter {
 
         variable.isBoolean = true;
 
-        if (this._context.argumentBlocks.hasOwnProperty(variable.id)) {
+        if (Object.prototype.hasOwnProperty.call(this._context.argumentBlocks, variable.id)) {
             this._context.argumentBlocks[variable.id].forEach(id => {
                 const b = this._context.blocks[id];
                 b.opcode = 'argument_reporter_boolean';
@@ -1372,7 +1373,7 @@ class RubyToBlocksConverter {
         this._checkNumChildren(node, 1);
 
         const varName = node.children[0].toString();
-        if (this._context.localVariables.hasOwnProperty(varName)) {
+        if (Object.prototype.hasOwnProperty.call(this._context.localVariables, varName)) {
             const variable = this._context.localVariables[varName];
             const block = this._callConvertersHandler('onVar', 'local', variable);
             if (block) {

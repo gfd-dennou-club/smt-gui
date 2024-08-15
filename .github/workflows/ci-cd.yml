@@ -200,3 +200,39 @@ jobs:
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
                 cname: smalruby.app
                 external_repository: smalruby/smalruby.app
+    deploy-gh-pages-branch:
+        needs: [test-integration, test-unit]
+        if: |
+          (!(
+            github.ref == 'refs/heads/master' ||
+            github.ref == 'refs/heads/develop' ||
+            startsWith(github.ref, 'refs/heads/hotfix/') ||
+            startsWith(github.ref, 'refs/heads/dependabot/') ||
+            startsWith(github.ref, 'refs/heads/renovate/')
+          ))
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+            - name: Retrieve npm dependencies
+              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
+              with:
+                path:
+                    node_modules
+                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+            - name: Retrieve Build Directory
+              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
+              with:
+                path:
+                    ./build
+                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+            - name: Set branch name
+              id: branch
+              run: echo "::set-output name=BRANCH_NAME::${GITHUB_REF##*/}"
+            - name: Deploy playground to GitHub Pages
+              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./build
+                full_commit_message: "Build for ${{ steps.branch.outputs.BRANCH_NAME }} (${{ github.sha }}) ${{ github.event.head_commit.message }}"
+                destination_dir: ${{ steps.branch.outputs.BRANCH_NAME }}
+                keep_files: true

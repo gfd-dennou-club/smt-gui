@@ -48,11 +48,16 @@ describe('Menu bar settings', () => {
         await findByXpath('//*[li[span[text()="Save to your computer"]] and not(@data-tip="tooltip")]');
     });
 
+    // 外部サイトへアクセスするためCIではスキップする
     test('Logo should be clickable', async () => {
         await loadUri(uri);
-        await clickXpath('//img[@alt="Smalruby"]');
-        const currentUrl = await driver.getCurrentUrl();
-        await expect(currentUrl).toEqual('https://smalruby.jp/');
+        if (process.env.CI) {
+            await findByXpath('//img[@alt="Smalruby"]');
+        } else {
+            await clickXpath('//img[@alt="Smalruby"]');
+            const currentUrl = await driver.getCurrentUrl();
+            await expect(currentUrl).toEqual('https://smalruby.jp/');
+        }
     });
 
     test('(GH#4064) Project name should be editable', async () => {

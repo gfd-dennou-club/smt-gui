@@ -24,8 +24,6 @@ export default {
     'gui.smalruby3.telemetryOptIn.buttonTextYes': 'はい、スモウルビーの改善に協力します。',
     'gui.smalruby3.extension.mesh.name': 'メッシュ',
     'gui.smalruby3.extension.mesh.description': 'ネットワーク上でユーザー間のやりとりを行う。',
-    'gui.smalruby3.extension.koshien.name': 'スモウルビー甲子園',
-    'gui.smalruby3.extension.koshien.description': 'スモウルビー甲子園のAIを作成する。',
     'mesh.categoryName': 'メッシュ',
     'mesh.sensorValue': '[NAME] センサーの値',
     'mesh.hostPeripheralName': 'メッシュのホストになる 【{ MESH_ID }】',

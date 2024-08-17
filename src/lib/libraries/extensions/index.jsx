@@ -56,9 +56,6 @@ import smalrubotS1InsetIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 import smalrubotS1ConnectionIconURL from './smalrubot-s1/smalrubot-s1-illustration.png';
 import smalrubotS1ConnectionSmallIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 
-import koshienIconURL from './koshien/koshien.png';
-import koshienInsetIconURL from './koshien/koshien-small.png';
-
 const extensions = [
     {
         name: (
@@ -399,31 +396,14 @@ const extensions = [
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/SmalrubotS1'
-    },
-    {
-        name: (
-            <FormattedMessage
-                defaultMessage="Smalruby Koshien"
-                description="Name for the 'koshien' extension"
-                id="gui.smalruby3.extension.koshien.name"
-            />
-        ),
-        extensionId: 'koshien',
-        iconURL: koshienIconURL,
-        insetIconURL: koshienInsetIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="Smalruby Koshien AI."
-                description="Description for the 'koshien' extension"
-                id="gui.smalruby3.extension.koshien.description"
-            />
-        ),
-        featured: true
     }
 ];
 
 // Injected for extra extensions
 import microbitMore from './microbitMore/index.jsx';
 extensions.push(microbitMore);
+
+import koshien from './koshien/index.jsx';
+extensions.push(koshien);
 
 export default extensions;

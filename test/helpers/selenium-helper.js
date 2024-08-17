@@ -133,7 +133,7 @@ class SeleniumHelper {
         const chromeCapabilities = webdriver.Capabilities.chrome();
         const args = [];
         if (USE_HEADLESS) {
-            args.push('--headless');
+            args.push('--headless=new');
         }
 
         if (IS_ROOT_USER) {
@@ -141,7 +141,6 @@ class SeleniumHelper {
             args.push('--disable-setuid-sandbox');
         }
 
-        args.push('--disable-gpu');
         args.push('--disable-dev-shm-usage');
         args.push('--disable-extensions');
 

@@ -48,16 +48,18 @@ describe('Menu bar settings', () => {
         await findByXpath('//*[li[span[text()="Save to your computer"]] and not(@data-tip="tooltip")]');
     });
 
-    // 外部サイトへアクセスするためCIではスキップする
     test('Logo should be clickable', async () => {
         await loadUri(uri);
+
+        // 外部サイトへアクセスするためCIではスキップする
         if (process.env.CI) {
             await findByXpath('//img[@alt="Smalruby"]');
-        } else {
-            await clickXpath('//img[@alt="Smalruby"]');
-            const currentUrl = await driver.getCurrentUrl();
-            await expect(currentUrl).toEqual('https://smalruby.jp/');
+            return;
         }
+
+        await clickXpath('//img[@alt="Smalruby"]');
+        const currentUrl = await driver.getCurrentUrl();
+        await expect(currentUrl).toEqual('https://smalruby.jp/');
     });
 
     test('(GH#4064) Project name should be editable', async () => {
@@ -75,7 +77,7 @@ describe('Menu bar settings', () => {
         const input = await findByXpath('//input[@accept=".sb,.sb2,.sb3"]');
         await input.sendKeys(path.resolve(__dirname, '../fixtures/project1.sb3'));
         // No replace alert since no changes were made
-        await findByText('project1-sprite');
+        await findByText('project1-sprite', scope.spriteTile);
     });
 
     test('User is warned before uploading project file over an edited project', async () => {
@@ -83,7 +85,8 @@ describe('Menu bar settings', () => {
 
         // Change the project by deleting a sprite
         await rightClickText('Sprite1', scope.spriteTile);
-        await clickText('delete', scope.spriteTile);
+        await findByText('delete', scope.contextMenu);
+        await clickText('delete', scope.contextMenu);
 
         await clickXpath(FILE_MENU_XPATH);
         await clickText('Load from your computer');
@@ -91,7 +94,7 @@ describe('Menu bar settings', () => {
         await input.sendKeys(path.resolve(__dirname, '../fixtures/project1.sb3'));
         await driver.switchTo().alert()
             .accept();
-        await findByText('project1-sprite');
+        await findByText('project1-sprite', scope.spriteTile);
     });
 
     test('Theme picker shows themes', async () => {

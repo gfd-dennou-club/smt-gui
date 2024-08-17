@@ -1,5 +1,3 @@
-import {a} from 'bowser';
-
 const Koshien = 'koshien';
 
 const KoshienConverter = {
@@ -21,6 +19,7 @@ const KoshienConverter = {
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'calc_route', 1, params => {
             const {receiver, args} = params;
 
@@ -39,6 +38,7 @@ const KoshienConverter = {
             converter.addNumberInput(block, 'LIST', 'math_number', Number(args[0].get('sym:except_cells')), 0);
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'get_map_area', 1, params => {
             const {receiver, args} = params;
 
@@ -50,6 +50,7 @@ const KoshienConverter = {
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'set_dynamite', 1, params => {
             const {receiver, args} = params;
 
@@ -62,6 +63,7 @@ const KoshienConverter = {
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'set_bomb', 1, params => {
             const {receiver, args} = params;
 
@@ -74,6 +76,7 @@ const KoshienConverter = {
             converter.addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'map', 3, params => {
             const {receiver, args} = params;
 
@@ -90,6 +93,7 @@ const KoshienConverter = {
 
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'map_all', 1, params => {
             const {receiver, args} = params;
 
@@ -100,26 +104,28 @@ const KoshienConverter = {
             converter.addTextInput(block, 'LOCATION', location, 'map_1');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'locate_objects', 1, params => {
             const {receiver, args} = params;
 
-            const sq_size = args[0].get('sym:sq_size').value;
+            const sqSize = args[0].get('sym:sq_size').value;
             const cent = args[0].get('sym:cent').value;
             const objects = args[0].get('sym:objects').value;
 
-            if (!converter.isNumberOrBlock(sq_size)) return null;
+            if (!converter.isNumberOrBlock(sqSize)) return null;
             if (!converter.isStringOrBlock(cent)) return null;
             if (!converter.isStringOrBlock(objects)) return null;
 
-            const cent_coordinate = cent.split(':');
+            const centCoordinate = cent.split(':');
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_locate_objects', 'value');
-            converter.addNumberInput(block, 'SIZE', 'math_number', sq_size, 0);
-            converter.addNumberInput(block, 'X', 'math_number', Number(cent_coordinate[0]), 0);
-            converter.addNumberInput(block, 'Y', 'math_number', Number(cent_coordinate[1]), 0);
+            converter.addNumberInput(block, 'SIZE', 'math_number', sqSize, 0);
+            converter.addNumberInput(block, 'X', 'math_number', Number(centCoordinate[0]), 0);
+            converter.addNumberInput(block, 'Y', 'math_number', Number(centCoordinate[1]), 0);
             converter.addTextInput(block, 'ITEM', objects, '0');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'other_player_x', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -127,6 +133,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'other_player_y', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -134,6 +141,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'y');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'enemy_x', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -141,6 +149,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'enemy_y', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -148,6 +157,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'y');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'goal_x', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -155,6 +165,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'goal_y', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -162,6 +173,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'y');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'player_x', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -169,6 +181,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'player_y', 0, params => {
             const {receiver} = params;
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_target_coordinate', 'value');
@@ -176,10 +189,12 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'y');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'turn_over', 0, params => {
             const {receiver} = params;
             return converter.changeRubyExpressionBlock(receiver, 'koshien_turn_over', 'value');
         });
+
         converter.registerCallMethod(Koshien, 'connect_game', 1, params => {
             const {receiver, args} = params;
 
@@ -190,6 +205,7 @@ const KoshienConverter = {
             converter.addTextInput(block, 'NAME', name, 'test');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'position_x', 1, params => {
             const {receiver, args} = params;
 
@@ -200,6 +216,7 @@ const KoshienConverter = {
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
+
         converter.registerCallMethod(Koshien, 'position_y', 1, params => {
             const {receiver, args} = params;
 
@@ -212,4 +229,5 @@ const KoshienConverter = {
         });
     }
 };
+
 export default KoshienConverter;

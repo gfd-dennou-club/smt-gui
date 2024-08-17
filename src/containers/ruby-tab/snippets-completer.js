@@ -20,6 +20,7 @@ import MeshSnippets from './mesh-snippets.json';
 import SmalrubotS1Snippets from './smalrubot-s1-snippets.json';
 import MicrobitMoreSnippets from './microbit-more-snippets.json';
 import KoshienSnippets from './koshien-snippets.json';
+
 class SnippetsCompleter extends BaseCompleter {
     #completions = [];
 

@@ -22,6 +22,8 @@ export default {
     "gui.smalruby3.telemetryOptIn.buttonTextYes": "Yes, I'd like to help improve Smalruby",
     'gui.smalruby3.extension.mesh.name': 'Mesh',
     'gui.smalruby3.extension.mesh.description': 'Allowing users to interact over a computer network.',
+    'gui.smalruby3.extension.koshien.name': 'Smalruby Koshien',
+    'gui.smalruby3.extension.koshien.description': 'Smalruby Koshien AI.',
     'mesh.categoryName': 'Mesh',
     'mesh.sensorValue': '[NAME] sensor value',
     'mesh.hostPeripheralName': 'Mesh Host [{ MESH_ID }]',

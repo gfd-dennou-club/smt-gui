@@ -30,7 +30,7 @@ import WeDo2Blocks from './wedo2.js';
 import GdxForBlocks from './gdx_for.js';
 import MeshBlocks from './mesh.js';
 import SmalrubotS1Blocks from './smalrubot_s1.js';
-import koshien from './koshien.js';
+import KoshienBlocks from './koshien.js';
 
 const SCALAR_TYPE = '';
 const LIST_TYPE = 'list';
@@ -463,6 +463,6 @@ WeDo2Blocks(RubyGenerator);
 GdxForBlocks(RubyGenerator);
 MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
-koshien(RubyGenerator);
+KoshienBlocks(RubyGenerator);
 
 export default RubyGenerator;

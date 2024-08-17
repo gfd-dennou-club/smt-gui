@@ -24,6 +24,8 @@ export default {
     'gui.smalruby3.rubyToBlocksConverter.wrongInstruction': '「{ SOURCE }」はめいれいがまちがっています。',
     'gui.smalruby3.extension.mesh.name': 'メッシュ',
     'gui.smalruby3.extension.mesh.description': 'ネットワークじょうでユーザーかんのやりとりをおこなう。',
+    'gui.smalruby3.extension.koshien.name': 'スモウルビー こうしえん',
+    'gui.smalruby3.extension.koshien.description': 'スモウルビー こうしえんのエー・アイを作成する。',
     'mesh.categoryName': 'メッシュ',
     'mesh.sensorValue': '[NAME] センサーのあたい',
     'mesh.hostPeripheralName': 'メッシュのホストになる 【{ MESH_ID }】',

@@ -3,7 +3,6 @@
  * @param {RubyGenerator} Generator The RubyGenerator
  * @return {RubyGenerator} same as param.
  */
-
 export default function (Generator) {
     Generator.koshien_move_to = function (block) {
         const x = Generator.valueToCode(block, 'X', Generator.ORDER_NONE) || 0;
@@ -11,13 +10,13 @@ export default function (Generator) {
         return `koshien.move_to([${x},${y}])\n`;
     };
     Generator.koshien_calc_route = function (block) {
-        const src_x = Generator.valueToCode(block, 'SRC_X', Generator.ORDER_NONE) || 0;
-        const src_y = Generator.valueToCode(block, 'SRC_Y', Generator.ORDER_NONE) || 0;
-        const dst_x = Generator.valueToCode(block, 'DST_X', Generator.ORDER_NONE) || 0;
-        const dst_y = Generator.valueToCode(block, 'DST_Y', Generator.ORDER_NONE) || 0;
+        const srcX = Generator.valueToCode(block, 'SRC_X', Generator.ORDER_NONE) || 0;
+        const srcY = Generator.valueToCode(block, 'SRC_Y', Generator.ORDER_NONE) || 0;
+        const dstX = Generator.valueToCode(block, 'DST_X', Generator.ORDER_NONE) || 0;
+        const dstY = Generator.valueToCode(block, 'DST_Y', Generator.ORDER_NONE) || 0;
         const list = Generator.valueToCode(block, 'LIST', Generator.ORDER_NONE) || 0;
 
-        return [`koshien.calc_route(src:"${src_x}:${src_y}",dst:"${dst_x}:${dst_y}",except_cells:${list})`];
+        return [`koshien.calc_route(src:"${srcX}:${srcY}",dst:"${dstX}:${dstY}",except_cells:${list})`];
     };
     Generator.koshien_get_map_area = function (block) {
         const x = Generator.valueToCode(block, 'X', Generator.ORDER_NONE) || 0;
@@ -44,7 +43,8 @@ export default function (Generator) {
         const x = Generator.valueToCode(block, 'X', Generator.ORDER_NONE) || 0;
         const y = Generator.valueToCode(block, 'Y', Generator.ORDER_NONE) || 0;
         const size = Generator.valueToCode(block, 'SIZE', Generator.ORDER_NONE) || 5;
-        const item = Generator.valueToCode(block, 'ITEM', Generator.ORDER_NONE) || Generator.quote_('["A","B","C","D"]');
+        const item =
+            Generator.valueToCode(block, 'ITEM', Generator.ORDER_NONE) || Generator.quote_('["A","B","C","D"]');
 
         return [`koshien.locate_objects(sq_size:${size},cent:"${x}:${y}",objects:${item})`];
     };

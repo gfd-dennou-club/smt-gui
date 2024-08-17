@@ -56,6 +56,9 @@ import smalrubotS1InsetIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 import smalrubotS1ConnectionIconURL from './smalrubot-s1/smalrubot-s1-illustration.png';
 import smalrubotS1ConnectionSmallIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 
+import koshienIconURL from './koshien/koshien.png';
+import koshienInsetIconURL from './koshien/koshien-small.png';
+
 const extensions = [
     {
         name: (
@@ -400,19 +403,19 @@ const extensions = [
     {
         name: (
             <FormattedMessage
-                defaultMessage="甲子園"
+                defaultMessage="Smalruby Koshien"
                 description="Name for the 'koshien' extension"
-                id="gui.extension.koshien.name"
+                id="gui.smalruby3.extension.koshien.name"
             />
         ),
         extensionId: 'koshien',
-        iconURL: musicIconURL,
-        insetIconURL: musicInsetIconURL,
+        iconURL: koshienIconURL,
+        insetIconURL: koshienInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Play instruments and drums."
+                defaultMessage="Smalruby Koshien AI."
                 description="Description for the 'koshien' extension"
-                id="gui.extension.koshien.description"
+                id="gui.smalruby3.extension.koshien.description"
             />
         ),
         featured: true

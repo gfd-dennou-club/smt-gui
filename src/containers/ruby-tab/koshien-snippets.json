@@ -1,0 +1,78 @@
+{
+    "koshien.move_to": {
+        "snippet": "koshien.move_to([${1:0},${2:0}])",
+        "description": "x座標 (0) y座標 (0) に移動する"
+    },
+    "koshien.get_map_area": {
+        "snippet": "koshien.get_map_area([${1:0},${2:0}])",
+        "description": "x座標 (0) y座標 (0) 付近のマップ情報を取得"
+    },
+    "koshien.calc_route": {
+        "snippet": "koshien.calc_route(src:'${1:0:0}',dst:'${2:0:0}' except_cells:${3:1}])",
+        "description": "2点間の最短距離 始点 x座標 (0) y座標 (0) 終点 x座標 (0) y座標 (0) 通らない道 リスト (0)"
+    },
+    "koshien.set_dynamite": {
+        "snippet": "koshien.set_dynamite([${1:0},${2:0}])",
+        "description": "ダイナマイトをx座標 (0) y座標 (0) に置く"
+    },
+    "koshien.set_bomb": {
+        "snippet": "koshien.set_bomb([${1:0},${2:0}])",
+        "description": "爆弾をx座標 (0) y座標 (0) に置く"
+    },
+    "koshien.map": {
+        "snippet": "koshien.map(${1:0},${2:0} on:${3:'map_1'})",
+        "description": "x座標 (0) y座標 (0) のマップ情報を('map_1')に保存"
+    },
+    "koshien.map_all": {
+        "snippet": "koshien.map_all(save_as:${'map_1'})",
+        "description": "マップ情報を('map_1')に保存"
+    },
+    "koshien.other_player_x": {
+        "snippet": "koshien.other_player_x",
+        "description": "対戦キャラクタの x座標"
+    },
+    "koshien.other_player_y": {
+        "snippet": "koshien.other_player_y",
+        "description": "対戦キャラクタの y座標"
+    },
+    "koshien.player_x": {
+        "snippet": "koshien.player_x",
+        "description": "プレイヤーの x座標"
+    },
+    "koshien.player_y": {
+        "snippet": "koshien.player_y",
+        "description": "プレイヤーの y座標"
+    },
+    "koshien.enemy_x": {
+        "snippet": "koshien.enemy_x",
+        "description": "妨害キャラクタの x座標"
+    },
+    "koshien.enemy_y": {
+        "snippet": "koshien.enemy_y",
+        "description": "妨害キャラクタの y座標"
+    },
+    "koshien.goal_x": {
+        "snippet": "koshien.goal_x",
+        "description": "ゴールの x座標"
+    },
+    "koshien.goal_y": {
+        "snippet": "koshien.goal_y",
+        "description": "ゴールの y座標"
+    },
+    "koshien.turn_over": {
+        "snippet": "koshien.turn_over",
+        "description": "ターンを終了する"
+    },
+    "koshien.connect_game": {
+        "snippet": "koshien.connect_game(player_name:${1:'test'})",
+        "description": "プレイヤー名('test')ゲームに接続する"
+    },
+    "koshien.position_x": {
+        "snippet": "koshien.position_x(${1:'0:0'})",
+        "description": "('0:0')のx座標"
+    },
+    "koshien.position_y": {
+        "snippet": "koshien.position_y(${1:'0:0'})",
+        "description": "('0:0')のy座標"
+    }
+}

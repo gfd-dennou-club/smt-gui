@@ -396,6 +396,26 @@ const extensions = [
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/SmalrubotS1'
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="甲子園"
+                description="Name for the 'koshien' extension"
+                id="gui.extension.koshien.name"
+            />
+        ),
+        extensionId: 'koshien',
+        iconURL: musicIconURL,
+        insetIconURL: musicInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Play instruments and drums."
+                description="Description for the 'koshien' extension"
+                id="gui.extension.koshien.description"
+            />
+        ),
+        featured: true
     }
 ];
 

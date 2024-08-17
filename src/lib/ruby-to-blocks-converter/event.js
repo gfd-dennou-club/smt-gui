@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import Variable from 'scratch-vm/src/engine/variable';
 import {KeyOptions} from './constants';
 

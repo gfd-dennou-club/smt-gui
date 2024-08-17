@@ -129,7 +129,8 @@ class Generator {
         this.init(options);
 
         let code;
-        if (options && options.hasOwnProperty('targetsCode') && options.targetsCode.hasOwnProperty(target.id)) {
+        if (options && Object.prototype.hasOwnProperty.call(options, 'targetsCode') &&
+            Object.prototype.hasOwnProperty.call(options.targetsCode, target.id)) {
             code = `${options.targetsCode[target.id]}\n`.replace(/\n\s+$/, '\n');
         } else {
             const codes = [];

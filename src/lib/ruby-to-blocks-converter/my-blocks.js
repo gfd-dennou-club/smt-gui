@@ -24,7 +24,7 @@ const MyBlocksConverter = {
                         }
                     });
 
-                    if (this._context.procedureCallBlocks.hasOwnProperty(procedure.id)) {
+                    if (Object.prototype.hasOwnProperty.call(this._context.procedureCallBlocks, procedure.id)) {
                         this._context.procedureCallBlocks[procedure.id].push(block.id);
                     } else {
                         this._context.procedureCallBlocks[procedure.id] = [block.id];
@@ -78,7 +78,7 @@ const MyBlocksConverter = {
                     }
                 }
             });
-            if (this._context.argumentBlocks.hasOwnProperty(variable.id)) {
+            if (Object.prototype.hasOwnProperty.call(this._context.argumentBlocks, variable.id)) {
                 this._context.argumentBlocks[variable.id].push(block.id);
             } else {
                 this._context.argumentBlocks[variable.id] = [block.id];
@@ -148,7 +148,7 @@ const MyBlocksConverter = {
         });
 
         if (booleanIndexes.length > 0 &&
-            this._context.procedureCallBlocks.hasOwnProperty(procedure.id)) {
+            Object.prototype.hasOwnProperty.call(this._context.procedureCallBlocks, procedure.id)) {
             this._context.procedureCallBlocks[procedure.id].forEach(id => {
                 const b = this._context.blocks[id];
                 b.mutation.proccode = procedure.procCode.join(' ');

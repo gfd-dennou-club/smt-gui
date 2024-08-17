@@ -1,3 +1,13 @@
+---
+name: Bug Report
+about: Report bugs and Glitches
+title: [bug]
+labels:
+  - bug
+assignees: ""
+
+---
+
 ### Expected Behavior
 
 _Please describe what should happen_
@@ -13,3 +23,4 @@ _Explain what someone needs to do in order to see what's described in *Actual be
 ### Operating System and Browser
 
 _e.g. Mac OS 10.11.6 Safari 10.0_
+

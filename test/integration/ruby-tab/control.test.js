@@ -40,7 +40,7 @@ describe('Ruby Tab: Control category blocks', () => {
         await clickText('Abby', scope.modal);
         await findByXpath(
             '//div[contains(@class, "sprite-selector-item_is-selected")]' +
-                '/*/div[contains(@class, "sprite-selector-item_sprite-name_1PXjh") and text()="Abby"]'
+                '/*/div[contains(@class, "sprite-selector-item_sprite-name") and text()="Abby"]'
         );
         await clickText('Sprite1', scope.spriteItems);
 

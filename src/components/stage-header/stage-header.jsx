@@ -68,7 +68,7 @@ const StageHeaderComponent = function (props) {
         const stageButton = showBranding ? (
             <div className={styles.embedSmalrubyLogo}>
                 <a
-                    href="https://smalruby.jp/smalruby3-gui"
+                    href="https://smalruby.app"
                     rel="noopener noreferrer"
                     target="_blank"
                 >

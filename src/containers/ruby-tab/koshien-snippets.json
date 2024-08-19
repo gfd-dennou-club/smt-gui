@@ -1,15 +1,23 @@
 {
+    "koshien.connect_game": {
+        "snippet": "koshien.connect_game(name: ${1:\"player1\"})",
+        "description": "プレイヤー名を (player1) にして、ゲームサーバへ接続する"
+    },
     "koshien.move_to": {
-        "snippet": "koshien.move_to([${1:0},${2:0}])",
-        "description": "x座標 (0) y座標 (0) に移動する"
+        "snippet": "koshien.move_to(${1:0}, ${2:0})",
+        "description": "x座標 (0)、y座標 (0) に移動する"
     },
     "koshien.get_map_area": {
-        "snippet": "koshien.get_map_area([${1:0},${2:0}])",
-        "description": "x座標 (0) y座標 (0) 付近のマップ情報を取得"
+        "snippet": "koshien.get_map_area(${1:0}, ${2:0})",
+        "description": "x座標が (0) 、y座標が (0) 付近のマップ情報を取得する"
+    },
+    "koshien.map": {
+        "snippet": "koshien.map(${1:0}, ${2:0})",
+        "description": "x座標が (0) 、y座標が (0) のマップ情報"
     },
     "koshien.calc_route": {
-        "snippet": "koshien.calc_route(src:'${1:0:0}',dst:'${2:0:0}' except_cells:${3:1}])",
-        "description": "2点間の最短距離 始点 x座標 (0) y座標 (0) 終点 x座標 (0) y座標 (0) 通らない道 リスト (0)"
+        "snippet": "koshien.calc_route(src: [${1:0}, ${2:0}], dst: [${3:0}, ${4:0}], except_cells: ${5:\"通らない座標\"}, result: ${6:\"最短経路\"})",
+        "description": "２点間の最短経路 始点 x座標 (0) y座標 (0) 終点 x座標 (0) y座標 (0) 通らない座標 リスト (通らない座標) をリスト (最短経路) に保存する"
     },
     "koshien.set_dynamite": {
         "snippet": "koshien.set_dynamite([${1:0},${2:0}])",
@@ -19,13 +27,13 @@
         "snippet": "koshien.set_bomb([${1:0},${2:0}])",
         "description": "爆弾をx座標 (0) y座標 (0) に置く"
     },
-    "koshien.map": {
-        "snippet": "koshien.map(${1:0},${2:0} on:${3:'map_1'})",
-        "description": "x座標 (0) y座標 (0) のマップ情報を('map_1')に保存"
+    "koshien.save_map_all": {
+        "snippet": "koshien.save_map_all(${1:\"map1\"})",
+        "description": "すべてのマップ情報を (map1) に保存する"
     },
-    "koshien.map_all": {
-        "snippet": "koshien.map_all(save_as:${'map_1'})",
-        "description": "マップ情報を('map_1')に保存"
+    "koshien.load_map": {
+        "snippet": "koshien.load_map(${1:\"map1\"}, ${2:0}, ${3:0})",
+        "description": "x座標が (0) 、y座標が (0) のマップ情報を (map1) から読み込む"
     },
     "koshien.other_player_x": {
         "snippet": "koshien.other_player_x",
@@ -63,16 +71,12 @@
         "snippet": "koshien.turn_over",
         "description": "ターンを終了する"
     },
-    "koshien.connect_game": {
-        "snippet": "koshien.connect_game(player_name:${1:'test'})",
-        "description": "プレイヤー名('test')ゲームに接続する"
+    "koshien.coordinate_of_x": {
+        "snippet": "koshien.coordinate_of_x(${1:'0:0'})",
+        "description": "(0:0) のx座標"
     },
-    "koshien.position_x": {
-        "snippet": "koshien.position_x(${1:'0:0'})",
-        "description": "('0:0')のx座標"
-    },
-    "koshien.position_y": {
-        "snippet": "koshien.position_y(${1:'0:0'})",
-        "description": "('0:0')のy座標"
+    "koshien.coordinate_of_y": {
+        "snippet": "koshien.coordinate_of_y(${1:'0:0'})",
+        "description": "(0:0) のy座標"
     }
 }

@@ -428,6 +428,29 @@ RubyGenerator.listName = function (id) {
     return this.variableName(id, LIST_TYPE);
 };
 
+RubyGenerator.variableNameByName = function (name, type = SCALAR_TYPE) {
+    let currVar;
+    let isStage;
+    const target = this.currentTarget;
+    if (target.runtime) {
+        const stage = target.runtime.getTargetForStage();
+        currVar = stage.lookupVariableByNameAndType(name, type);
+        isStage = true;
+    }
+    if (!currVar) {
+        currVar = target.lookupVariableByNameAndType(name, type);
+        isStage = target.isStage;
+    }
+    if (currVar && currVar.type === type) {
+        return this.makeVariableName(isStage, currVar.name);
+    }
+    return null;
+};
+
+RubyGenerator.listNameByName = function (name) {
+    return this.variableNameByName(name, LIST_TYPE);
+};
+
 RubyGenerator.getScripts = function () {
     return Generator.prototype.getScripts.call(this).sort((a, b) => {
         const aValue = (this.getBlock(a).opcode === 'procedures_definition' ? 1 : -1);

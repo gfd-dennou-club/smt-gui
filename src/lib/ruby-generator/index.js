@@ -30,6 +30,7 @@ import WeDo2Blocks from './wedo2.js';
 import GdxForBlocks from './gdx_for.js';
 import MeshBlocks from './mesh.js';
 import SmalrubotS1Blocks from './smalrubot_s1.js';
+import KoshienBlocks from './koshien.js';
 
 const SCALAR_TYPE = '';
 const LIST_TYPE = 'list';
@@ -427,6 +428,29 @@ RubyGenerator.listName = function (id) {
     return this.variableName(id, LIST_TYPE);
 };
 
+RubyGenerator.variableNameByName = function (name, type = SCALAR_TYPE) {
+    let currVar;
+    let isStage;
+    const target = this.currentTarget;
+    if (target.runtime) {
+        const stage = target.runtime.getTargetForStage();
+        currVar = stage.lookupVariableByNameAndType(name, type);
+        isStage = true;
+    }
+    if (!currVar) {
+        currVar = target.lookupVariableByNameAndType(name, type);
+        isStage = target.isStage;
+    }
+    if (currVar && currVar.type === type) {
+        return this.makeVariableName(isStage, currVar.name);
+    }
+    return null;
+};
+
+RubyGenerator.listNameByName = function (name) {
+    return this.variableNameByName(name, LIST_TYPE);
+};
+
 RubyGenerator.getScripts = function () {
     return Generator.prototype.getScripts.call(this).sort((a, b) => {
         const aValue = (this.getBlock(a).opcode === 'procedures_definition' ? 1 : -1);
@@ -462,5 +486,6 @@ WeDo2Blocks(RubyGenerator);
 GdxForBlocks(RubyGenerator);
 MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
+KoshienBlocks(RubyGenerator);
 
 export default RubyGenerator;

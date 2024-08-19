@@ -33,6 +33,7 @@ import TranslateConverter from './translate';
 import MakeyMakeyConverter from './makeymakey';
 import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
+import KoshienConverter from './koshien';
 
 const messages = defineMessages({
     couldNotConvertPrimitive: {
@@ -113,7 +114,8 @@ class RubyToBlocksConverter {
             Text2SpeechConverter,
             Wedo2Converter,
             MicrobitMoreConverter,
-            MeshConverter
+            MeshConverter,
+            KoshienConverter
         ].forEach(x => x.register(this));
     }
 

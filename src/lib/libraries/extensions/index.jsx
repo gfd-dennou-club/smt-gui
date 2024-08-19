@@ -403,4 +403,7 @@ const extensions = [
 import microbitMore from './microbitMore/index.jsx';
 extensions.push(microbitMore);
 
+import koshien from './koshien/index.jsx';
+extensions.push(koshien);
+
 export default extensions;

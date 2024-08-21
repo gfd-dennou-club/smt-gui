@@ -99,38 +99,6 @@ const distConfig = baseConfig.clone()
                 }
             ]
         })
-    )
-    .addPlugin(
-        new WorkboxPlugin.GenerateSW({
-            clientsClaim: true,
-            skipWaiting: true,
-            additionalManifestEntries: assetsManifest,
-            exclude: [
-                /\.DS_Store/
-            ],
-            maximumFileSizeToCacheInBytes: 32 * 1024 * 1024
-        })
-    )
-    .addPlugin(
-        new WebpackPwaManifest({
-            name: 'Smalruby',
-            short_name: 'Smalruby',
-            description: 'GraphicaL User Interface for creating and running Smalruby 3.0 projects',
-            background_color: '#ffffff',
-            orientation: 'any',
-            crossorigin: 'use-credentials',
-            inject: true,
-            ios: {
-                'apple-mobile-web-app-title': 'Smalruby',
-                'apple-mobile-web-app-status-bar-style': 'default'
-            },
-            icons: [
-                {
-                    src: path.resolve('static/pwa-icon.png'),
-                    sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
-                }
-            ]
-        })
     );
 
 // build the examples and debugging tools in `build/`
@@ -193,7 +161,39 @@ const buildConfig = baseConfig.clone()
                 context: 'src/examples'
             }
         ]
-    }));
+    }))
+    .addPlugin(
+        new WorkboxPlugin.GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+            additionalManifestEntries: assetsManifest,
+            exclude: [
+                /\.DS_Store/
+            ],
+            maximumFileSizeToCacheInBytes: 32 * 1024 * 1024
+        })
+    )
+    .addPlugin(
+        new WebpackPwaManifest({
+            name: 'Smalruby',
+            short_name: 'Smalruby',
+            description: 'GraphicaL User Interface for creating and running Smalruby 3.0 projects',
+            background_color: '#ffffff',
+            orientation: 'any',
+            crossorigin: 'use-credentials',
+            inject: true,
+            ios: {
+                'apple-mobile-web-app-title': 'Smalruby',
+                'apple-mobile-web-app-status-bar-style': 'default'
+            },
+            icons: [
+                {
+                    src: path.resolve('static/pwa-icon.png'),
+                    sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+                }
+            ]
+        })
+    );
 
 // Skip building `dist/` unless explicitly requested
 // It roughly doubles build time and isn't needed for `scratch-gui` development

@@ -107,8 +107,6 @@ const buildConfig = baseConfig.clone()
     .merge({
         entry: {
             gui: './src/playground/index.jsx',
-            blocksonly: './src/playground/blocks-only.jsx',
-            compatibilitytesting: './src/playground/compatibility-testing.jsx',
             player: './src/playground/player.jsx'
         },
         output: {
@@ -126,20 +124,6 @@ const buildConfig = baseConfig.clone()
         template: 'src/playground/index.ejs',
         filename: 'ja.html',
         title: 'スモウルビー',
-        originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
-    }))
-    .addPlugin(new HtmlWebpackPlugin({
-        chunks: ['blocksonly'],
-        filename: 'blocks-only.html',
-        template: 'src/playground/index.ejs',
-        title: 'Smalruby: Blocks Only Example',
-        originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
-    }))
-    .addPlugin(new HtmlWebpackPlugin({
-        chunks: ['compatibilitytesting'],
-        filename: 'compatibility-testing.html',
-        template: 'src/playground/index.ejs',
-        title: 'Smalruby: Compatibility Testing',
         originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
     }))
     .addPlugin(new HtmlWebpackPlugin({

@@ -120,13 +120,13 @@ jobs:
               with:
                 path:
                     ./build
-                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Cache Dist Directory
               uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
               with:
                 path:
                     ./dist
-                key: ${{ runner.os }}-dist-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-dist-${{ github.sha }}
             - name: Store Build Output
               uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
               with:
@@ -156,7 +156,7 @@ jobs:
               with:
                 path:
                     ./build
-                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-build-${{ github.sha }}
             - run: |
                 for F in chrome chromium chromedriver; do
                     which $F && $F --version || echo Not found: $F
@@ -185,7 +185,7 @@ jobs:
               with:
                 path:
                     ./build
-                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Deploy playground to GitHub Pages
               uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
               with:
@@ -209,7 +209,7 @@ jobs:
               with:
                 path:
                     ./build
-                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Deploy playground to Smalruby.app GitHub Pages
               uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
               with:
@@ -242,7 +242,7 @@ jobs:
               with:
                 path:
                     ./build
-                key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
+                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Set branch name
               id: branch
               run: echo "::set-output name=BRANCH_NAME::${GITHUB_REF##*/}"

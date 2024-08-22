@@ -148,6 +148,7 @@ const buildConfig = baseConfig.clone()
     }))
     .addPlugin(
         new WorkboxPlugin.GenerateSW({
+            disableDevLogs: !process.env.DEBUG,
             clientsClaim: true,
             skipWaiting: true,
             additionalManifestEntries: assetsManifest,
@@ -159,6 +160,7 @@ const buildConfig = baseConfig.clone()
     )
     .addPlugin(
         new WebpackPwaManifest({
+            publicPath: './',
             name: 'Smalruby',
             short_name: 'Smalruby',
             description: 'GraphicaL User Interface for creating and running Smalruby 3.0 projects',

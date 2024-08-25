@@ -68,8 +68,8 @@ const KoshienConverter = {
 
             if (!checkPosition(src)) return null;
             if (!checkPosition(dst)) return null;
-            if (!converter.isListBlock(exceptCells)) return null;
-            if (!converter.isListBlock(result)) return null;
+            if (!converter.isListBlock(exceptCells) && !converter.isNil(exceptCells)) return null;
+            if (!converter.isListBlock(result) && !converter.isNil(result)) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_calcRoute', 'statement');
             converter.addTextInput(block, 'SRC', src, '0:0');
@@ -113,7 +113,7 @@ const KoshienConverter = {
             const {receiver, args} = params;
 
             if (!checkPosition(args[0])) return null;
-            if (!converter.isVariableBlock(args[1])) return null;
+            if (!converter.isVariableBlock(args[1]) && !converter.isNil(args[1])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_mapFrom', 'value');
             converter.addTextInput(block, 'POSITION', args[0], '0:0');
@@ -133,7 +133,7 @@ const KoshienConverter = {
             if (!converter.isNumberOrBlock(sqSize)) return null;
             if (!checkPosition(cent)) return null;
             if (!converter.isStringOrBlock(objects)) return null;
-            if (!converter.isListBlock(result)) return null;
+            if (!converter.isListBlock(result) && !converter.isNil(result)) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_locateObjects', 'statement');
             converter.addNumberInput(block, 'SQ_SIZE', 'math_number', sqSize, 0);

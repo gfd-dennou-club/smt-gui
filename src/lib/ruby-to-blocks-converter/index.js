@@ -509,6 +509,10 @@ class RubyToBlocksConverter {
         return value === false || (value && value.type === 'false');
     }
 
+    isNil (value) {
+        return value === Opal.nil || (value && value.type === 'nil');
+    }
+
     _isArray (value) {
         return _.isArray(value) || (value && value.type === 'array');
     }
@@ -1272,6 +1276,10 @@ class RubyToBlocksConverter {
 
     _onHash (node) {
         return new Primitive('hash', new Map(node.children.map(childNode => this._process(childNode))), node);
+    }
+
+    _onNil (node) {
+        return new Primitive('nil', Opal.nil, node);
     }
 
     _onPair (node) {

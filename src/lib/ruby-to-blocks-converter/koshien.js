@@ -19,131 +19,106 @@ const KoshienConverter = {
             return block;
         });
 
-        const checkX = block => {
+        const checkPosition = block => {
             if (converter.isBlock(block)) return true;
-            return block.value >= 0 && block.value <= 14;
+            if (!converter.isString(block)) return false;
+            const position = block.value.split(':');
+            const x = Number(position[0]);
+            const y = Number(position[1]);
+            return x >= 0 && x <= 14 && y >= 0 && y <= 14;
         };
-        const checkY = checkX;
 
-        converter.registerCallMethod(Koshien, 'get_map_area', 2, params => {
+        converter.registerCallMethod(Koshien, 'get_map_area', 1, params => {
             const {receiver, args} = params;
 
-            if (!converter.isNumberOrBlock(args[0])) return null;
-            if (!checkX(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
-            if (!checkY(args[1])) return null;
+            if (!checkPosition(args[0])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_getMapArea', 'statement');
-            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'map', 2, params => {
+        converter.registerCallMethod(Koshien, 'map', 1, params => {
             const {receiver, args} = params;
 
-            if (!converter.isNumberOrBlock(args[0])) return null;
-            if (!checkX(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
-            if (!checkY(args[1])) return null;
+            if (!checkPosition(args[0])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_map', 'value');
-            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
-
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'move_to', 2, params => {
+        converter.registerCallMethod(Koshien, 'move_to', 1, params => {
             const {receiver, args} = params;
 
-            if (!converter.isNumberOrBlock(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
+            if (!checkPosition(args[0])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_moveTo', 'statement');
-            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             return block;
         });
 
         converter.registerCallMethod(Koshien, 'calc_route', 1, params => {
             const {receiver, args} = params;
 
-            const srcArray = args[0].get('sym:src');
-            const dstArray = args[0].get('sym:dst');
+            const src = args[0].get('sym:src');
+            const dst = args[0].get('sym:dst');
             const exceptCells = args[0].get('sym:except_cells');
             const result = args[0].get('sym:result');
-            if (!converter.isNumberOrBlock(srcArray.value[0])) return null;
-            if (!checkX(srcArray.value[0])) return null;
-            if (!converter.isNumberOrBlock(srcArray.value[1])) return null;
-            if (!checkY(srcArray.value[1])) return null;
-            if (!converter.isNumberOrBlock(dstArray.value[0])) return null;
-            if (!checkX(dstArray.value[0])) return null;
-            if (!converter.isNumberOrBlock(dstArray.value[1])) return null;
-            if (!checkY(dstArray.value[1])) return null;
-            if (!converter.isString(exceptCells)) return null;
-            if (!converter.isString(result)) return null;
+
+            if (!checkPosition(src)) return null;
+            if (!checkPosition(dst)) return null;
+            if (!converter.isListBlock(exceptCells)) return null;
+            if (!converter.isListBlock(result)) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_calcRoute', 'statement');
-            converter.addNumberInput(block, 'SRC_X', 'math_number', srcArray.value[0], 0);
-            converter.addNumberInput(block, 'SRC_Y', 'math_number', srcArray.value[1], 0);
-            converter.addNumberInput(block, 'DST_X', 'math_number', dstArray.value[0], 0);
-            converter.addNumberInput(block, 'DST_Y', 'math_number', dstArray.value[1], 0);
-            converter.addField(block, 'EXCEPT_CELLS', exceptCells);
-            converter.addField(block, 'RESULT', result);
+            converter.addTextInput(block, 'SRC', src, '0:0');
+            converter.addTextInput(block, 'DST', dst, '0:0');
+            converter.addField(block, 'EXCEPT_CELLS', converter.lookupListFromListBlock(exceptCells)?.name || ' ');
+            converter.removeListBlock(exceptCells);
+            converter.addField(block, 'RESULT', converter.lookupListFromListBlock(result)?.name || ' ');
+            converter.removeListBlock(result);
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'set_dynamite', 2, params => {
+        converter.registerCallMethod(Koshien, 'set_dynamite', 1, params => {
             const {receiver, args} = params;
 
-            if (!converter.isNumberOrBlock(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
+            if (!checkPosition(args[0])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_setItem', 'statement');
             converter.addField(block, 'ITEM', 'dynamite');
-            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'set_bomb', 2, params => {
+        converter.registerCallMethod(Koshien, 'set_bomb', 1, params => {
             const {receiver, args} = params;
 
-            if (!converter.isNumberOrBlock(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
+            if (!checkPosition(args[0])) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_setItem', 'statement');
             converter.addField(block, 'ITEM', 'bomb');
-            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'save_map_all', 1, params => {
-            const {receiver, args} = params;
+        converter.registerCallMethod(Koshien, 'map_all', 0, params => {
+            const {receiver} = params;
 
-            if (!converter.isStringOrBlock(args[0])) return null;
-
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_saveMapAll', 'statement');
-            converter.addTextInput(block, 'LOCATION', args[0], 'map1');
-            return block;
+            return converter.changeRubyExpressionBlock(receiver, 'koshien_mapAll', 'value');
         });
 
-        converter.registerCallMethod(Koshien, 'load_map', 3, params => {
+        converter.registerCallMethod(Koshien, 'map_from', 2, params => {
             const {receiver, args} = params;
 
-            if (!converter.isStringOrBlock(args[0])) return null;
-            if (!converter.isNumberOrBlock(args[1])) return null;
-            if (!checkX(args[1])) return null;
-            if (!converter.isNumberOrBlock(args[2])) return null;
-            if (!checkY(args[2])) return null;
+            if (!checkPosition(args[0])) return null;
+            if (!converter.isVariableBlock(args[1])) return null;
 
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_loadMap', 'value');
-            converter.addTextInput(block, 'LOCATION', args[0], 'map1');
-            converter.addNumberInput(block, 'X', 'math_number', args[1], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', args[2], 0);
-
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_mapFrom', 'value');
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
+            converter.addField(block, 'MAP', converter.lookupVariableFromVariableBlock(args[1])?.name || ' ');
+            converter.removeListBlock(args[1]);
             return block;
         });
 
@@ -151,24 +126,21 @@ const KoshienConverter = {
             const {receiver, args} = params;
 
             const sqSize = args[0].get('sym:sq_size');
-            const centArray = args[0].get('sym:cent');
+            const cent = args[0].get('sym:cent');
             const objects = args[0].get('sym:objects');
             const result = args[0].get('sym:result');
 
             if (!converter.isNumberOrBlock(sqSize)) return null;
-            if (!converter.isNumberOrBlock(centArray.value[0])) return null;
-            if (!checkX(centArray.value[0])) return null;
-            if (!converter.isNumberOrBlock(centArray.value[1])) return null;
-            if (!checkY(centArray.value[1])) return null;
+            if (!checkPosition(cent)) return null;
             if (!converter.isStringOrBlock(objects)) return null;
-            if (!converter.isStringOrBlock(result)) return null;
+            if (!converter.isListBlock(result)) return null;
 
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_locateObjects', 'statement');
             converter.addNumberInput(block, 'SQ_SIZE', 'math_number', sqSize, 0);
-            converter.addNumberInput(block, 'X', 'math_number', centArray.value[0], 0);
-            converter.addNumberInput(block, 'Y', 'math_number', centArray.value[1], 0);
-            converter.addTextInput(block, 'OBJECTS', objects, '0');
-            converter.addField(block, 'RESULT', result);
+            converter.addTextInput(block, 'POSITION', cent, '0:0');
+            converter.addTextInput(block, 'OBJECTS', objects, 'A B C D');
+            converter.addField(block, 'RESULT', converter.lookupListFromListBlock(result)?.name || ' ');
+            converter.removeListBlock(result);
             return block;
         });
 
@@ -241,25 +213,42 @@ const KoshienConverter = {
             return converter.changeRubyExpressionBlock(receiver, 'koshien_turnOver', 'statement');
         });
 
-
-        converter.registerCallMethod(Koshien, 'coordinate_of_x', 1, params => {
+        const checkX = block => {
+            if (converter.isBlock(block)) return true;
+            if (!converter.isNumber(block)) return false;
+            return block.value >= 0 && block.value <= 14;
+        };
+        const checkY = checkX;
+        converter.registerCallMethod(Koshien, 'position', 2, params => {
             const {receiver, args} = params;
 
-            if (!converter.isStringOrBlock(args[0])) return null;
+            if (!checkX(args[0])) return null;
+            if (!checkY(args[1])) return null;
 
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_coordinateOf', 'value');
-            converter.addTextInput(block, 'WHERE', args[0], '0:0');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_position', 'value');
+            converter.addNumberInput(block, 'X', 'math_number', args[0], 0);
+            converter.addNumberInput(block, 'Y', 'math_number', args[1], 0);
+            return block;
+        });
+
+        converter.registerCallMethod(Koshien, 'position_of_x', 1, params => {
+            const {receiver, args} = params;
+
+            if (!checkPosition(args[0])) return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_positionOf', 'value');
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             converter.addField(block, 'COORDINATE', 'x');
             return block;
         });
 
-        converter.registerCallMethod(Koshien, 'coordinate_of_y', 1, params => {
+        converter.registerCallMethod(Koshien, 'position_of_y', 1, params => {
             const {receiver, args} = params;
 
             if (!converter.isStringOrBlock(args[0])) return null;
 
-            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_coordinateOf', 'value');
-            converter.addTextInput(block, 'WHERE', args[0], '0:0');
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_positionOf', 'value');
+            converter.addTextInput(block, 'POSITION', args[0], '0:0');
             converter.addField(block, 'COORDINATE', 'y');
             return block;
         });

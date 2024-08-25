@@ -18,7 +18,7 @@ const OperatorsConverter = {
             }
         }
 
-        if (!this._isVariableBlock(receiver)) {
+        if (!this.isVariableBlockType(receiver)) {
             switch (name) {
             case '[]':
                 if (this._isStringOrBlock(receiver) &&

@@ -522,15 +522,15 @@ class RubyToBlocksConverter {
     }
 
     isBlock (block) {
-        return this._isBlock(block);
-    }
-
-    _isBlock (block) {
         try {
             return Object.prototype.hasOwnProperty.call(block, 'opcode');
         } catch (e) {
             return false;
         }
+    }
+
+    _isBlock (block) {
+        return this.isBlock(block);
     }
 
     _isStatementBlock (block) {
@@ -590,8 +590,16 @@ class RubyToBlocksConverter {
         return false;
     }
 
-    _isVariableBlock (block) {
+    isVariableBlockType (block) {
         return /_variable$/.test(this._getBlockType(block));
+    }
+
+    isVariableBlock (block) {
+        return this.isVariableBlockType(block) && block.opcode === 'data_variable';
+    }
+
+    isListBlock (block) {
+        return this.getBlockType(block) === 'value_variable' && block.opcode === 'data_listcontents';
     }
 
     _isRubyExpression (block) {
@@ -843,6 +851,19 @@ class RubyToBlocksConverter {
         return this._lookupOrCreateVariableOrList(name, Variable.LIST_TYPE);
     }
 
+    lookupVariableFromVariableBlock (block) {
+        if (!this.isVariableBlock(block)) return null;
+
+        return this._context.variables[block.fields.VARIABLE.value] ||
+            this._context.localVariables[block.fields.VARIABLE.value];
+    }
+
+    lookupListFromListBlock (block) {
+        if (!this.isListBlock(block)) return null;
+
+        return this._context.lists[block.fields.LIST.value];
+    }
+
     lookupOrCreateBroadcastMsg (name) {
         return this._lookupOrCreateBroadcastMsg(name);
     }
@@ -922,6 +943,20 @@ class RubyToBlocksConverter {
         return b;
     }
 
+    removeListBlock (block) {
+        if (!this.isListBlock(block)) {
+            return;
+        }
+
+        const previousBlockId = block.parent;
+        if (previousBlockId) {
+            const previousBlock = this._context.blocks[previousBlockId];
+            previousBlock.next = block.next;
+        }
+
+        delete this._context.blocks[block.id];
+    }
+
     _removeWaitBlocks (block) {
         if (!block || block === Opal.nil) {
             return null;
@@ -958,15 +993,23 @@ class RubyToBlocksConverter {
         return firstBlock;
     }
 
-    _getBlockType (block) {
-        if (this._isBlock(block)) {
+    getBlockType (block) {
+        if (this.isBlock(block)) {
             return this._context.blockTypes[block.id];
         }
         return 'primitive';
     }
 
+    _getBlockType (block) {
+        return this.getBlockType(block);
+    }
+
     _setBlockType (block, type) {
         this._context.blockTypes[block.id] = type;
+    }
+
+    changeBlock (block, opcode, blockType) {
+        return this._changeBlock(block, opcode, blockType);
     }
 
     _changeBlock (block, opcode, blockType) {

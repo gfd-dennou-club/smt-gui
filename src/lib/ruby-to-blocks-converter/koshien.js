@@ -75,9 +75,9 @@ const KoshienConverter = {
             converter.addTextInput(block, 'SRC', src, '0:0');
             converter.addTextInput(block, 'DST', dst, '0:0');
             converter.addField(block, 'EXCEPT_CELLS', converter.lookupListFromListBlock(exceptCells)?.name || ' ');
-            converter.removeListBlock(exceptCells);
+            converter.removeBlock(exceptCells);
             converter.addField(block, 'RESULT', converter.lookupListFromListBlock(result)?.name || ' ');
-            converter.removeListBlock(result);
+            converter.removeBlock(result);
             return block;
         });
 
@@ -118,7 +118,7 @@ const KoshienConverter = {
             const block = converter.changeRubyExpressionBlock(receiver, 'koshien_mapFrom', 'value');
             converter.addTextInput(block, 'POSITION', args[0], '0:0');
             converter.addField(block, 'MAP', converter.lookupVariableFromVariableBlock(args[1])?.name || ' ');
-            converter.removeListBlock(args[1]);
+            converter.removeBlock(args[1]);
             return block;
         });
 
@@ -140,7 +140,7 @@ const KoshienConverter = {
             converter.addTextInput(block, 'POSITION', cent, '0:0');
             converter.addTextInput(block, 'OBJECTS', objects, 'A B C D');
             converter.addField(block, 'RESULT', converter.lookupListFromListBlock(result)?.name || ' ');
-            converter.removeListBlock(result);
+            converter.removeBlock(result);
             return block;
         });
 

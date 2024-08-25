@@ -947,8 +947,8 @@ class RubyToBlocksConverter {
         return b;
     }
 
-    removeListBlock (block) {
-        if (!this.isListBlock(block)) {
+    removeBlock (block) {
+        if (this.isNil(block)) {
             return;
         }
 

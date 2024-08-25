@@ -117,21 +117,21 @@ const buildConfig = baseConfig.clone()
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         title: 'Smalruby',
-        originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
+        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
     }))
     .addPlugin(new HtmlWebpackPlugin({
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         filename: 'ja.html',
         title: 'スモウルビー',
-        originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
+        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
     }))
     .addPlugin(new HtmlWebpackPlugin({
         chunks: ['player'],
         filename: 'player.html',
         template: 'src/playground/index.ejs',
         title: 'Smalruby: Player Example',
-        originTrials: JSON.parse(fs.readFileSync('origin-trials.json'))
+        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [

@@ -154,7 +154,7 @@ class RubyTab extends React.Component {
                                 alt="ruby download"
                                 className={styles.img}
                             />
-                            
+
                         </button>
                     )}
                     </RubyDownloader>
@@ -189,7 +189,7 @@ RubyTab.propTypes = {
     updateRubyCodeTargetState: PropTypes.func,
     vm: PropTypes.instanceOf(VM).isRequired,
     projectTitle: PropTypes.string,
-    locale: PropTypes.string.isRequired
+    locale: PropTypes.string
 };
 
 const mapStateToProps = state => ({

@@ -73,7 +73,7 @@ const VariablesConverter = {
                 }
                 break;
             }
-        } else if (this._isVariableBlock(receiver)) {
+        } else if (this.isVariableBlockType(receiver)) {
             switch (name) {
             case 'push':
                 if (args.length === 1 &&

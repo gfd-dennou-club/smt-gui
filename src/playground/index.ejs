@@ -37,6 +37,7 @@
     </style>
   </head>
   <body>
+    <% if (htmlWebpackPlugin.options.pwa) { %>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
@@ -52,5 +53,25 @@
         console.log('Service Worker is not supported by browser.');
       }
     </script>
+    <% } else { %>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.getRegistration('./service-worker.js').then(function (registration) {
+            if (registration) {
+              console.log('found PWA worker registration', registration.scope);
+              registration.unregister().then(function (result) {
+                console.log('PWA worker unregister', result);
+              });
+            } else {
+              console.log('no PWA worker registration');
+            }
+          });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+    </script>
+    <% } %>
   </body>
 </html>

@@ -117,21 +117,24 @@ const buildConfig = baseConfig.clone()
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         title: 'Smalruby',
-        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
+        originTrials: JSON.parse(fs.readFileSync('origin-trials.json')),
+        pwa: process.env.NODE_ENV === 'production'
     }))
     .addPlugin(new HtmlWebpackPlugin({
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         filename: 'ja.html',
         title: 'スモウルビー',
-        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
+        originTrials: JSON.parse(fs.readFileSync('origin-trials.json')),
+        pwa: process.env.NODE_ENV === 'production'
     }))
     .addPlugin(new HtmlWebpackPlugin({
         chunks: ['player'],
         filename: 'player.html',
         template: 'src/playground/index.ejs',
         title: 'Smalruby: Player Example',
-        originTrials: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'origin-trials.json')))
+        originTrials: JSON.parse(fs.readFileSync('origin-trials.json')),
+        pwa: process.env.NODE_ENV === 'production'
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [
@@ -145,7 +148,9 @@ const buildConfig = baseConfig.clone()
                 context: 'src/examples'
             }
         ]
-    }))
+    }));
+
+const buildWithPwaConfig = buildConfig.clone()
     .addPlugin(
         new WorkboxPlugin.GenerateSW({
             disableDevLogs: !process.env.DEBUG,
@@ -188,5 +193,5 @@ const buildConfig = baseConfig.clone()
 const buildDist = process.env.NODE_ENV === 'production' || process.env.BUILD_MODE === 'dist';
 
 module.exports = buildDist ?
-    [buildConfig.get(), distConfig.get()] :
+    [buildWithPwaConfig.get(), distConfig.get()] :
     buildConfig.get();

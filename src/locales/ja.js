@@ -26,17 +26,17 @@ export default {
     "gui.kanirobo1.name": "かにロボ1",
     "gui.kanirobo1.description": "かにロボブロック (簡単)",
     "gui.kanirobo1v2.name": "かにロボ1v2",
-    "gui.kanirobo1v2.description": "かにロボブロック (簡単 v2)",
+    "gui.kanirobo1v2.description": "かにロボブロック (簡単 1v2)",
     "gui.kanirobo2.name": "かにロボ2",
     "gui.kanirobo2.description": "かにロボブロック (普通)",
     "gui.microcom.name": "マイコン (汎用)",
     "gui.microcom.description": "マイコン (汎用)．GPIO, PWM, ADC, I2C, UART",
-    "gui.mboard1.name": "MBoard1",
-    "gui.mboard1.description": "松江高専マイコンボード (簡単)．LED, スイッチ, ブザー, サーミスタ温度計",
+    "gui.mboard1.name": "Mboar1",
+    "gui.mboard1.description": "松江高専マイコンボード (Mboard1)．LED, スイッチ, ブザー, サーミスタ温度計",
     "gui.mboard2.name": "MBoard2",
-    "gui.mboard2.description": "松江高専マイコンボード (普通)．LED, スイッチ, ブザー, サーミスタ温度計",
+    "gui.mboard2.description": "松江高専マイコンボード (Mboard2)．LED, スイッチ, ブザー, サーミスタ温度計",
     "gui.mboard3.name": "MBoard3",
-    "gui.mboard3.description": "松江高専マイコンボード (共通)．液晶ディスプレイ，Wi-Fi，リアルタイムクロック(RTC) など",
+    "gui.mboard3.description": "松江高専マイコンボード (Mboard3)．液晶ディスプレイ，Wi-Fi，リアルタイムクロック(RTC) など",
     "gui.tools.name": "Tools",
     "gui.tools.description": "デバッグツール．出力など (シリアル通信)",
     "gui.m5stack.name": "M5stack",
@@ -55,14 +55,14 @@ export default {
     "mboard.sound_H": "シ",
     "mboard.sound_hiC": "高いド",
     // MBoard1
-    "mboard1.name": "簡単",
+    "mboard1.name": "MBoard1",
     "mboard1.led1": "LED 1[NUM1] 2[NUM2] 3[NUM3] 4[NUM4] 5[NUM5] 6[NUM6] 7[NUM7] 8[NUM8]",
     "mboard1.switch1": "スイッチ 1[SWITCH1] 2[SWITCH2] 3[SWITCH3] 4[SWITCH4]",
     "mboard1.sound1": "[SCALE]の音を鳴らす",
     "mboard1.sound2": "音を止める",
     "mboard1.temperature1": "サーミスタ温度計の温度",
     // MBoard
-    "mboard2.name": "普通",
+    "mboard2.name": "Mboard2",
     "mboard2.led0": "初期化: [TEXT1]",
     "mboard2.led1": "[TEXT1] を [NUM1] にする",
     "mboard2.switch0": "初期化: [TEXT1]",
@@ -74,7 +74,7 @@ export default {
     "mboard2.temperature2": "温度計測：サーミスタ温度計",
     "mboard2.temperature1": "サーミスタ温度計の温度",
     //
-    "mboard3.name": "共通",
+    "mboard3.name": "Mboard3",
     "mboard3.monitor": "モニターの[NUM]行目に[TEXT]と書く",
     "mboard3.date0": '年月日 時分秒',
     "mboard3.date1": '年-月-日',
@@ -99,7 +99,7 @@ export default {
     "mboard3.rtc_date": 'RTC : 時刻 [TEXT]',
     "mboard3.send": 'Wi-Fi データ送信: 送信先[TEXT1], ユーザ名[TEXT2], 時刻[TEXT3], [VAR1] [TEXT4], [VAR2]',
     //
-    "microcom.name": "汎用",
+    "microcom.name": "マイコン(汎用)",
     "microcom.gpio_output_init": "出力: GPIO[NUM1] を使う",
     "microcom.gpio_output": "出力: GPIO[NUM1] の値を [VALUE] にする",
     "microcom.gpio_input_init": "入力: GPIO[NUM1] を使う",
@@ -116,7 +116,7 @@ export default {
     "microcom.uart_write": "出力: UART-[TEXT1]: [TEXT2]",
     "microcom.uart_read": "入力: UART-[TEXT]",
     //
-    "kanirobo1.name": "かにロボ",
+    "kanirobo1.name": "かにロボ1",
     "kanirobo1.Menu1.forward": "前",
     "kanirobo1.Menu1.backward": "後ろ",
     "kanirobo1.menu2.right": "右",
@@ -125,7 +125,7 @@ export default {
     "kanirobo1.value0": "ライトセンサー[TEXT]の値",
     "kanirobo1.command9": "サーボモーター[TEXT]を[NUM]度にする",
     //
-    "kanirobo1v2.name": "かにロボ",
+    "kanirobo1v2.name": "かにロボ1v2",
     "kanirobo1v2.Menu1.forward": "前",
     "kanirobo1v2.Menu1.backward": "後ろ",
     "kanirobo1v2.menu2.right": "右",
@@ -133,8 +133,8 @@ export default {
     "kanirobo1v2.motor": "モーター[TEXT1]を[TEXT2]方向にセット. スピード[TEXT3]%",
     "kanirobo1v2.value0": "ライトセンサー[TEXT]の値",
     "kanirobo1v2.command9": "サーボモーター[TEXT]を[NUM]度にする",
-//
-    "kanirobo2.name": "蟹ロボ",
+    //
+    "kanirobo2.name": "かにロボ2",
     "kanirobo2.Menu1.forward": "前",
     "kanirobo2.Menu1.backward": "後ろ",
     "kanirobo2.Menu3.enable": "有効",
@@ -167,12 +167,13 @@ export default {
     "m5stack.m5lcd_write2": 'M5Stack モニター: 位置([POS1], [POS2]) を中心に半径 [SIZE] の [TYPE] を書く (色 [COLOR])',
     "m5stack.m5lcd_write3": 'M5Stack モニター: 位置([POS1], [POS2]) から文字サイズ[SIZE] で文字列 [MESS] を書く (色 [COLOR])',
     //
+    "sensor.name": "センサー",
     "sensor.temp": '温度',
     "sensor.humi": '湿度',
     "sensor.co2": 'CO2',
     "sensor.scd30_status": 'SCD30 : データ取得可能?',
     "sensor.scd30": 'SCD30 [TYPE]',
     //
-    "tools.name": "デバッグ",
+    "tools.name": "Tools",
     "tools.puts": "デバッグ出力 [TEXT]"
 };

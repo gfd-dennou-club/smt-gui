@@ -121,16 +121,17 @@ export default {
     "kanirobo1.Menu1.backward": "うしろ",
     "kanirobo1.menu2.right": "みぎ",
     "kanirobo1.menu2.left": "ひだり",
-    "kanirobo1.motor": "もーたー[TEXT1]を[TEXT2]ほうこうにせっと. スピード[TEXT3]パーセント",
+    "kanirobo1.motor": "もーたー[TEXT1]を[TEXT2]ほうこうにせっと. すぴーど[TEXT3]ぱーせんと",
     "kanirobo1.value0": "らいとせんさー[TEXT]のあたい",
     "kanirobo1.command9": "さーぼもーたー[TEXT]を[NUM]どにする",
 //
-    "kanirobo1v2.name": "かにろぼ(ふつう)", 
+    "kanirobo1v2.name": "かにろぼ(かんたん)", 
     "kanirobo1v2.Menu1.forward": "まえ",
     "kanirobo1v2.Menu1.backward": "うしろ",
     "kanirobo1v2.menu2.right": "みぎ",
-    "kanirobo1v2.menu2.left": "ひだり",        
-    "kanirobo1v2.motor": "もーたー[TEXT1]を[TEXT2]ほうこうにせっと. スピード[TEXT3]パーセント",
+    "kanirobo1v2.menu2.left": "ひだり", 
+    "kanirobo1v2.menu4.first": "ひだり1",       
+    "kanirobo1v2.motor": "もーたー[TEXT1]を[TEXT2]ほうこうにせっと. すぴーど[TEXT3]ぱーせんと",
     "kanirobo1v2.value0": "らいとせんさー[TEXT]のあたい",
     "kanirobo1v2.command9": "さーぼもーたー[TEXT]を[NUM]どにする",
     //
@@ -173,6 +174,6 @@ export default {
     "sensor.scd30_status": 'SCD30 : データ しゅとくした？',
     "sensor.scd30": 'SCD30 [TYPE]',
     //
-    "tools.name": "デバッグ",
+    "tools.name": "Tools",
     "tools.puts": "ひょうじ [TEXT]"
 };

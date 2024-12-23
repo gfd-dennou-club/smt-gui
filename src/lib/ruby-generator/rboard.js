@@ -90,27 +90,27 @@ export default function (Generator) {
     };
     
     // メニューについては Ruby 側でも定義が必要のようだ
-    Generator.rboard_menu_menu1 = function (block) {
+    Generator.rboard_ruby_to_block1 = function (block) {
         const menu1 = Generator.getFieldValue(block, 'menu1') || null;
         return [menu1, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu2 = function (block) {
+    Generator.rboard_ruby_to_block2 = function (block) {
         const menu2 = Generator.getFieldValue(block, 'menu2') || null;
         return [menu2, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu3 = function (block) {
+    Generator.rboard_ruby_to_block3 = function (block) {
         const menu3 = Generator.getFieldValue(block, 'menu3') || null;
         return [menu3, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu4 = function (block) {
+    Generator.rboard_ruby_to_block4 = function (block) {
         const menu4 = Generator.getFieldValue(block, 'menu4') || null;
         return [menu4, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu5 = function (block) {
+    Generator.rboard_ruby_to_block5 = function (block) {
         const menu5 = Generator.getFieldValue(block, 'menu5') || null;
         return [menu5, Generator.ORDER_ATOMIC];
     };

@@ -89,15 +89,15 @@ export default function (Generator) {
     };
 
     
-    // メニューについては Ruby 側でも定義が必要のようだ
-    Generator.mboard1_menu_menu1 = function (block) {
-        const menu1 = Generator.getFieldValue(block, 'menu1') || null;
-        return [menu1, Generator.ORDER_ATOMIC];
+    // // メニューについては Ruby 側でも定義が必要のようだ
+    Generator.mboard1_menu_soundMenu = function (block) {
+        const soundMenu = Generator.getFieldValue(block, 'soundMenu') || null;
+        return [soundMenu, Generator.ORDER_ATOMIC];//soundMenuに変更
     };
-    Generator.mboard1_menu_menu2 = function (block) {
-        const menu2 = Generator.getFieldValue(block, 'menu2') || null;
-        return [menu2, Generator.ORDER_ATOMIC];
-    };
+    Generator.mboard1_menu_ledSwMenu = function (block) {
+        const ledSwMenu = Generator.getFieldValue(block, 'ledSwMenu') || null;
+        return [ledSwMenu, Generator.ORDER_ATOMIC];
+    };//LedSwMenuに変更
 
     return Generator;
 }

@@ -66,7 +66,7 @@ export default function (Generator) {
     Generator.rboard_i2c_read = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
         const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || 1;
-	const num3 = Generator.valueToCode(block, 'NUM3', Generator.ORDER_NONE) || null;
+	    const num3 = Generator.valueToCode(block, 'NUM3', Generator.ORDER_NONE) || null;
         return [`i2c.read( 0x${num1}, ${num2}, 0x${num3} )`, Generator.ORDER_ATOMIC];
     };
 
@@ -90,29 +90,29 @@ export default function (Generator) {
     };
     
     // メニューについては Ruby 側でも定義が必要のようだ
-    Generator.rboard_menu_menu1 = function (block) {
-        const menu1 = Generator.getFieldValue(block, 'menu1') || null;
-        return [menu1, Generator.ORDER_ATOMIC];
+    Generator.rboard_menu_pin = function (block) {
+        const menu_pin = Generator.getFieldValue(block, 'pinMenu') || null;
+        return [menu_pin, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu2 = function (block) {
-        const menu2 = Generator.getFieldValue(block, 'menu2') || null;
-        return [menu2, Generator.ORDER_ATOMIC];
+    Generator.rboard_menu_onoff = function (block) {
+        const menu_onoff = Generator.getFieldValue(block, 'onoffMenu') || null;
+        return [menu_onoff, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu3 = function (block) {
-        const menu3 = Generator.getFieldValue(block, 'menu3') || null;
-        return [menu3, Generator.ORDER_ATOMIC];
+    Generator.rboard_menu_led = function (block) {
+        const menu_led = Generator.getFieldValue(block, 'ledMenu') || null;
+        return [menu_led, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu4 = function (block) {
-        const menu4 = Generator.getFieldValue(block, 'menu4') || null;
-        return [menu4, Generator.ORDER_ATOMIC];
+    Generator.rboard_menu_switch = function (block) {
+        const menu_switch = Generator.getFieldValue(block, 'switchMenu') || null;
+        return [menu_switch, Generator.ORDER_ATOMIC];
     };
 
-    Generator.rboard_menu_menu5 = function (block) {
-        const menu5 = Generator.getFieldValue(block, 'menu5') || null;
-        return [menu5, Generator.ORDER_ATOMIC];
+    Generator.rboard_menu_adc = function (block) {
+        const menu_adc = Generator.getFieldValue(block, 'adcMenu') || null;
+        return [menu_adc, Generator.ORDER_ATOMIC];
     };
 
     return Generator;

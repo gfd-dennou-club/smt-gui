@@ -12,6 +12,8 @@ import microcom1 from './smt/microcom1.png';
 import microcom2 from './smt/microcom2.png';
 import microcom3 from './smt/microcom3.png';
 import menu3InsetIconURL from './smt/microcom-small.png';
+import rboard from './smt/rboard.png'
+import menu4InsetIconURL from './smt/rboard-small.png';
 
 const extensions = [
 /*
@@ -212,6 +214,26 @@ const extensions = [
                 defaultMessage="Sensor (peripherals)"
                 description="Description for the 'sensor' extension"
                 id="gui.sensor.description"
+            />
+        ),
+        featured: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="RBoard"
+                description="Name for the 'RBoard' extension"
+                id="gui.rboard.name"
+            />
+        ),
+        extensionId: 'rboard',
+        iconURL: rboard,
+        insetIconURL: menu4InsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="RBoard Blocks"
+                description="Description for the 'RBoard' extension"
+                id="gui.rboard.description"
             />
         ),
         featured: true

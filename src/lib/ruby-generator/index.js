@@ -40,6 +40,7 @@ import Kanirobo2Blocks from './kanirobo2.js';
 import ToolsBlocks from './tools.js';
 import M5stackBlocks from './m5stack.js';
 import SensorBlocks from './sensor.js';
+import RboardBlocks from './rboard.js';
 
 const SCALAR_TYPE = '';
 const LIST_TYPE = 'list';
@@ -482,5 +483,6 @@ Kanirobo2Blocks(RubyGenerator);
 ToolsBlocks(RubyGenerator);
 M5stackBlocks(RubyGenerator);
 SensorBlocks(RubyGenerator);
+RboardBlocks(RubyGenerator);
 
 export default RubyGenerator;

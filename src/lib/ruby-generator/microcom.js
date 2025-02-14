@@ -6,34 +6,37 @@
 export default function (Generator) {
     Generator.microcom_gpio_output_init = function (block){
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return `led${num1} = GPIO.new( ${num1}, GPIO::OUT )\n`;
+        return `gpio${num1} = GPIO.new( ${num1}, GPIO::OUT )\n`;
     };
 
     Generator.microcom_gpio_output = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
         const value = Generator.getFieldValue(block, 'VALUE', Generator.ORDER_NONE);
-        return `led${num1}.write(${value})\n`;
+        return `gpio${num1}.write( ${value} )\n`;
     };
 
     Generator.microcom_gpio_input_init = function (block){
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return `sw${num1} = GPIO.new( ${num1}, GPIO::IN, GPIO::PULL_UP )\n`;
+        return `gpio${num1} = GPIO.new( ${num1}, GPIO::IN, GPIO::PULL_UP )\n`;
     };
 
     Generator.microcom_gpio_input = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return [`sw${num1}.read`, Generator.ORDER_ATOMIC];
+        return [`gpio${num1}.read`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_pwm_init = function (block){
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return `pwm${num1} = PWM.new( ${num1} )\n`;
+        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || null;
+        const num3 = Generator.valueToCode(block, 'NUM3', Generator.ORDER_NONE) || null;
+        const num4 = Generator.valueToCode(block, 'NUM4', Generator.ORDER_NONE) || null;
+        return `pwm${num1} = PWM.new( ${num1}, timer:${num2}, channel:${num3}, frequency:${num4} )\n`;
     };
 
     Generator.microcom_pwm_duty = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
         const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE) || null;
-        return `pwm${num1}.duty( ( ${value} % 1024 ).to_i )\n`;
+        return `pwm${num1}.duty( ( ${value} % 101 ).to_i )\n`;
     };
 
     Generator.microcom_pwm_frequency = function (block) {
@@ -42,14 +45,20 @@ export default function (Generator) {
         return `pwm${num1}.freq( ${value}.to_i )\n`;
     };
 
+    Generator.microcom_pwm_pulse = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE) || null;
+        return `pwm${num1}.pulse_width_us( ${value}.to_i )\n`;
+    };
+    
     Generator.microcom_adc_init = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return `adc${num1} = ADC.new( ${num1} , ADC::ATTEN_11DB, ADC::WIDTH_12BIT )\n`;
+        return `adc${num1} = ADC.new( ${num1} )\n`;
     };
 
     Generator.microcom_adc_volt = function (block) {
-        const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE) || null;
-        return [`adc${value}.read`, Generator.ORDER_ATOMIC];
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        return [`adc${num1}.read_raw`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_i2c_init = function (block) {

@@ -33,13 +33,13 @@ export default function (Generator) {
                `motor${text1}.write(${text2})\n` +
                `sleep( 0.01 )\n`;
     };
-    Generator.kanirobo1v2_value0 = function (block) {
+    Generator.kanirobo1v2_value_luxsensor = function (block) {
 	Generator.prepares_[`lux`] = Generator.kanirobo1v2_lux_init(null);
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
 	return [`lux${text}.read_raw`, Generator.ORDER_ATOMIC];
     };
 
-    Generator.kanirobo1v2_command9 = function (block) {
+    Generator.kanirobo1v2_set_servo = function (block) {
 	Generator.prepares_[`servo`] = Generator.kanirobo1v2_servo_init(null);
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
         const num  = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE)  || 0;

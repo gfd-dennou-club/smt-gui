@@ -17,7 +17,7 @@ export default function (Generator) {
 
     Generator.microcom_gpio_input_init = function (block){
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        return `gpio${num1} = GPIO.new( ${num1}, GPIO::IN, GPIO::PULL_UP )\n`;
+        return `gpio${num1} = GPIO.new( ${num1}, GPIO::IN | GPIO::PULL_UP )\n`;
     };
 
     Generator.microcom_gpio_input = function (block) {

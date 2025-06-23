@@ -11,7 +11,7 @@ export default function (Generator) {
 
     Generator.microcom_gpio_output = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        const value = Generator.getFieldValue(block, 'VALUE', Generator.ORDER_NONE);
+        const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE);
         return `gpio${num1}.write( ${value} )\n`;
     };
 

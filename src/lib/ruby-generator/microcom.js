@@ -11,7 +11,7 @@ export default function (Generator) {
 
     Generator.microcom_gpio_output = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
-        const value = Generator.getFieldValue(block, 'VALUE', Generator.ORDER_NONE);
+        const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE);
         return `gpio${num1}.write( ${value} )\n`;
     };
 
@@ -62,22 +62,35 @@ export default function (Generator) {
     };
 
     Generator.microcom_i2c_init = function (block) {
-        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || 23;
-        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || 22;
-        return `i2c = I2C.new( ${num1}, ${num2} )\n`;
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || 8;
+        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || 7;
+        return `i2c = I2C.new( scl_pin: ${num1}, sda_pin: ${num2} )\n`;
     };
 
     Generator.microcom_i2c_write = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
         const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || null;
         const num3 = Generator.valueToCode(block, 'NUM3', Generator.ORDER_NONE) || null;
-        return `i2c.writeto( 0x${num1}, [0x${num2}, 0x${num3}] )\n`;
+        return `i2c.write( 0x${num1}, [0x${num2}, 0x${num3}] )\n`;
+    };
+
+    Generator.microcom_i2c_write_2 = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || null;
+        return `i2c.write( 0x${num1}, 0x${num2} )\n`;
     };
 
     Generator.microcom_i2c_read = function (block) {
         const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
         const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || 1;
-        return [`i2c.readfrom( 0x${num1}, ${num2} )`, Generator.ORDER_ATOMIC];
+        const num3 = Generator.valueToCode(block, 'NUM3', Generator.ORDER_NONE) || null;
+        return [`i2c.read( 0x${num1}, ${num2}, ${num3} )`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_i2c_read_2 = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || 1;
+        return [`i2c.read( 0x${num1}, ${num2} )`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_uart_init = function (block) {
@@ -95,6 +108,27 @@ export default function (Generator) {
     Generator.microcom_uart_read = function (block) {
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
         return [`uart${text}.gets()`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_ms_sleep = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || 1;
+        return `sleep_ms( ${num1} )\n`;
+    };
+
+    Generator.microcom_array_get = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        const num2 = Generator.valueToCode(block, 'NUM2', Generator.ORDER_NONE) || null;
+        return [`${num1}[ ${num2} ]`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_ord = function (block) {
+        const num1 = Generator.valueToCode(block, 'NUM1', Generator.ORDER_NONE) || null;
+        return [`${num1}.ord()`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_puts = function (block) {
+        const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
+        return `puts( ${text} )\n`;
     };
 
     // メニューについては Ruby 側でも定義が必要のようだ

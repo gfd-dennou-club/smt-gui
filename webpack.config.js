@@ -128,6 +128,7 @@ const buildConfig = baseConfig.clone()
         }
     })
     .addPlugin(new HtmlWebpackPlugin({
+        ...commonHtmlWebpackPluginOptions,
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         title: 'Smalruby',
@@ -135,6 +136,7 @@ const buildConfig = baseConfig.clone()
         pwa: process.env.NODE_ENV === 'production'
     }))
     .addPlugin(new HtmlWebpackPlugin({
+        ...commonHtmlWebpackPluginOptions,
         chunks: ['gui'],
         template: 'src/playground/index.ejs',
         filename: 'ja.html',
@@ -143,6 +145,7 @@ const buildConfig = baseConfig.clone()
         pwa: process.env.NODE_ENV === 'production'
     }))
     .addPlugin(new HtmlWebpackPlugin({
+        ...commonHtmlWebpackPluginOptions,
         chunks: ['player'],
         filename: 'player.html',
         template: 'src/playground/index.ejs',

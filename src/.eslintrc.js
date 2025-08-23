@@ -21,10 +21,6 @@ module.exports = {
         'react/jsx-no-literals': 'error',
         'no-confusing-arrow': ['error', {
             allowParens: true
-        }],
-        'no-warning-comments': [0, {
-            terms: ['todo'],
-            location: 'start'
         }]
     },
     overrides: [

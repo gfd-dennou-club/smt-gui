@@ -408,6 +408,15 @@ class SeleniumHelper {
             throw await enhanceError(outerError, cause);
         }
     }
+
+    urlFor (path) {
+        switch (path) {
+        case '/':
+            return pathModule.resolve(__dirname, '../../build/index.html');
+        default:
+            throw new Error(`Invalid path: ${path}`);
+        }
+    }
 }
 
 export default SeleniumHelper;

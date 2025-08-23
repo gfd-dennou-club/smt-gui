@@ -10,7 +10,7 @@ import costume1 from '!raw-loader!./7499cf6ec438d0c7af6f896bc6adc294.svg?';
 const defaultProject = translator => {
     let _TextEncoder;
     if (typeof TextEncoder === 'undefined') {
-        _TextEncoder = require('text-encoding').TextEncoder;
+        _TextEncoder = require('fastestsmallesttextencoderdecoder').TextEncoder;
     } else {
         _TextEncoder = TextEncoder;
     }

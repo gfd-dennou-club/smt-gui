@@ -8,8 +8,41 @@ import {
 import {injectExtensionBlockTheme, injectExtensionCategoryTheme} from '../../../src/lib/themes/blockHelpers';
 import {detectTheme, persistTheme} from '../../../src/lib/themes/themePersistance';
 
-jest.mock('../../../src/lib/themes/default');
-jest.mock('../../../src/lib/themes/dark');
+jest.mock('../../../src/lib/themes/default', () => ({
+    blockColors: {
+        motion: {
+            primary: '#111111',
+            secondary: '#222222',
+            tertiary: '#333333'
+        },
+        pen: {
+            primary: '#121212',
+            secondary: '#232323',
+            tertiary: '#343434'
+        },
+        text: '#444444',
+        workspace: '#555555'
+    }
+}));
+
+jest.mock('../../../src/lib/themes/dark', () => ({
+    blockColors: {
+        motion: {
+            primary: '#AAAAAA'
+        },
+        pen: {
+            primary: '#FFFFFF',
+            secondary: '#EEEEEE',
+            tertiary: '#DDDDDD'
+        },
+        text: '#BBBBBB'
+    },
+    extensions: {
+        pen: {
+            blockIconURI: 'darkPenIcon'
+        }
+    }
+}));
 
 describe('themes', () => {
     let serializeToString;

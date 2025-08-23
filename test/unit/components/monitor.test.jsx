@@ -4,8 +4,23 @@ import DefaultMonitor from '../../../src/components/monitor/default-monitor';
 import Monitor from '../../../src/components/monitor/monitor';
 import {DARK_THEME, DEFAULT_THEME} from '../../../src/lib/themes';
 
-jest.mock('../../../src/lib/themes/default');
-jest.mock('../../../src/lib/themes/dark');
+jest.mock('../../../src/lib/themes/default', () => ({
+    blockColors: {
+        motion: {
+            primary: '#111111'
+        },
+        text: '#444444'
+    }
+}));
+
+jest.mock('../../../src/lib/themes/dark', () => ({
+    blockColors: {
+        motion: {
+            primary: '#AAAAAA'
+        },
+        text: '#BBBBBB'
+    }
+}));
 
 describe('Monitor Component', () => {
     test('it selects the correct colors based on default theme', () => {

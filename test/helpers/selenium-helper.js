@@ -5,7 +5,6 @@ jest.setTimeout(95000); // eslint-disable-line no-undef
 import bindAll from 'lodash.bindall';
 import webdriver from 'selenium-webdriver';
 import pathModule from 'path';
-const fs = require('fs');
 
 const {Button, By, until} = webdriver;
 
@@ -73,7 +72,7 @@ class SeleniumHelper {
             'getLogs',
             'loadUri',
             'rightClickText',
-            'takeScreenshot'
+            'urlFor'
         ]);
 
         this.Key = webdriver.Key; // map Key constants, for sending special keys
@@ -266,8 +265,13 @@ class SeleniumHelper {
         const outerError = new Error(`loadUri failed with arguments:\n\turi: ${uri}`);
         try {
             await this.setTitle(`loadUri ${uri}`);
+            // TODO: The height is set artificially high to fix this test:
+            // 'Loading with locale shows correct translation for string length block parameter'
+            // which fails because the block is offscreen.
+            // We should set this back to 1024x768 once we find a good way to fix that test.
+            // Using `scrollIntoView` didn't seem to do the trick.
             const WINDOW_WIDTH = 1024;
-            const WINDOW_HEIGHT = 768;
+            const WINDOW_HEIGHT = 960;
             await this.driver
                 .get(`file://${uri}`);
             await this.driver
@@ -405,18 +409,17 @@ class SeleniumHelper {
         }
     }
 
-    async takeScreenshot (path) {
-        const image = await this.driver.takeScreenshot();
-        fs.writeFileSync(path, image, 'base64');
-    }
-
+    /**
+     * Generate a URL for the given path.
+     * @param {string} path The path to generate a URL for.
+     * @returns {string} The URL.
+     */
     urlFor (path) {
-        switch (path) {
-        case '/':
-            return pathModule.resolve(__dirname, '../../build/index.html');
-        default:
-            throw new Error(`Invalid path: ${path}`);
+        const baseUri = pathModule.resolve(__dirname, '../../build/index.html');
+        if (path === '/') {
+            return baseUri;
         }
+        return `${baseUri}${path}`;
     }
 }
 

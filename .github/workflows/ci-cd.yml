@@ -1,8 +1,10 @@
 name: CI/CD
 
 on:
-    workflow_dispatch:
-    push:
+    pull_request: # Runs whenever a pull request is created or updated (including from another fork)
+    push: # Runs whenever a commit is pushed to the repository...
+        branches: [main, master, develop, hotfix/*] # ...on any of these branches
+    workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 concurrency:
     group: "${{ github.workflow }} @ ${{ github.head_ref || github.ref }}"
     cancel-in-progress: true
@@ -14,7 +16,7 @@ permissions:
     pull-requests: write # comment on released pull requests
 
 jobs:
-    setup:
+    ci-cd:
         runs-on: ubuntu-latest
         env:
             DETECT_CHROMEDRIVER_VERSION: "true"
@@ -40,214 +42,75 @@ jobs:
               run: npm run setup-scratch-vm
             - name: Lint
               run: npm run test:lint
-            - name: Cache node_modules
-              id: cache-nodemodules
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Cache src/generated
-              id: cache-generated
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    src/generated
-                key: ${{ runner.os }}-generated-${{ hashFiles('package-lock.json') }}
-            - name: Cache static/microbit
-              id: cache-static
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    static/microbit
-                key: ${{ runner.os }}-microbit-${{ hashFiles('package-lock.json') }}
-    test-unit:
-        needs: setup
-        runs-on: ubuntu-latest
-        env:
-            JEST_JUNIT_OUTPUT_NAME: unit-results.xml
-            JEST_JUNIT_OUTPUT_DIR: test-results/unit
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Cache NPM dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
             - name: Run Unit Tests
+              env:
+                  JEST_JUNIT_OUTPUT_NAME: unit-results.xml
+                  JEST_JUNIT_OUTPUT_DIR: test-results/unit
               run: npm run test:unit -- --reporters="default" --reporters="jest-junit" --coverage --coverageReporters=text --coverageReporters=lcov --maxWorkers="2"
-            - name: Store Unit Test Results
-              uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
-              with:
-                name: unit-test-output
-                path: ./test-results/*
-    build:
-        needs: [setup, test-unit]
-        env:
-            NODE_OPTIONS: --max-old-space-size=4000
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - uses: actions/setup-node@26961cf329f22f6837d5f54c3efd76b480300ace # v4
-              with:
-                cache: "npm"
-                node-version-file: ".nvmrc"
-            - name: Retrieve node_modules
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve src/generated
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    src/generated
-                key: ${{ runner.os }}-generated-${{ hashFiles('package-lock.json') }}
-            - name: Retireve static/microbit
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    static/microbit
-                key: ${{ runner.os }}-microbit-${{ hashFiles('package-lock.json') }}
             - name: Run Build
               env:
+                NODE_OPTIONS: --max-old-space-size=4000
                 NODE_ENV: production
               run: npm run build
-            - name: Cache Build Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./build
-                key: ${{ runner.os }}-build-${{ github.sha }}
-            - name: Cache Dist Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./dist
-                key: ${{ runner.os }}-dist-${{ github.sha }}
             - name: Store Build Output
-              uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+              uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
               with:
                 name: build-output
                 path: ./build
             - name: Store Dist Output
-              uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+              uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
               with:
                 name: dist-output
                 path: ./dist
-    test-integration:
-        needs: build
-        runs-on: ubuntu-latest
-        env:
-            JEST_JUNIT_OUTPUT_NAME: results.txt
-            JEST_JUNIT_OUTPUT_DIR: test-results/integration
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Retrieve npm dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve Build
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./build
-                key: ${{ runner.os }}-build-${{ github.sha }}
             - run: |
                 for F in chrome chromium chromedriver; do
                     which $F && $F --version || echo Not found: $F
                 done
             - name: Run Integration Tests
+              env:
+                  JEST_JUNIT_OUTPUT_NAME: integration-results.xml
+                  JEST_JUNIT_OUTPUT_DIR: test-results/integration
               run: npm run test:integration -- --reporters="default" --reporters="jest-junit"
-            - name: Store Integration Test Results
-              uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3
+            - name: Store Test Results
+              if: always() # Even if tests fail
+              uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
               with:
-                name: integration-test-output
-                path: ./test-results/*
-    deploy-gh-pages:
-        needs: [test-integration, test-unit]
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/hotfix/'))
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Retrieve npm dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve Build Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./build
-                key: ${{ runner.os }}-build-${{ github.sha }}
+                name: test-output
+                path: ./test-results/* # Both unit and integration test results
+            - run: |
+                if [[ ${{ contains(github.ref, 'hotfix') }} == 'true' ]]; then
+                sed -e "s|hotfix/REPLACE|${{ github.ref_name }}|" --in-place release.config.js
+                fi
             - name: Deploy playground to GitHub Pages
-              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+              if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 publish_dir: ./build
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
-    deploy-gh-pages-smalruby-app:
-        needs: [test-integration, test-unit]
-        if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/hotfix/'))
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Retrieve npm dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve Build Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./build
-                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Deploy playground to Smalruby.app GitHub Pages
-              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+              if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
               with:
                 deploy_key: ${{ secrets.SMALRUBY_APP_DEPLOY_KEY }}
                 publish_dir: ./build
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
                 cname: smalruby.app
                 external_repository: smalruby/smalruby.app
-    deploy-gh-pages-branch:
-        needs: [test-integration, test-unit]
-        if: |
-          (!(
-            github.ref == 'refs/heads/master' ||
-            github.ref == 'refs/heads/develop' ||
-            startsWith(github.ref, 'refs/heads/hotfix/') ||
-            startsWith(github.ref, 'refs/heads/dependabot/') ||
-            startsWith(github.ref, 'refs/heads/renovate/')
-          ))
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-            - name: Retrieve npm dependencies
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    node_modules
-                key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-            - name: Retrieve Build Directory
-              uses: actions/cache@e12d46a63a90f2fae62d114769bbf2a179198b5c # v3
-              with:
-                path:
-                    ./build
-                key: ${{ runner.os }}-build-${{ github.sha }}
             - name: Set branch name
               id: branch
-              run: echo "::set-output name=BRANCH_NAME::${GITHUB_REF##*/}"
-            - name: Deploy playground to GitHub Pages
-              uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
+              run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+            - name: Deploy playground to GitHub Pages for branch
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main' ||
+                  startsWith(github.ref, 'refs/heads/hotfix/') ||
+                  startsWith(github.ref, 'refs/heads/dependabot/') ||
+                  startsWith(github.ref, 'refs/heads/renovate/')
+                ))
+              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 publish_dir: ./build

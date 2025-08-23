@@ -15,7 +15,6 @@ const {
     getLogs,
     loadUri,
     rightClickText,
-    takeScreenshot,
     scope
     /* eslint-enable no-unused-vars */
 } = seleniumHelper;

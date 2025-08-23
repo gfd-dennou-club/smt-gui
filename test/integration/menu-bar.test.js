@@ -86,7 +86,8 @@ describe('Menu bar settings', () => {
         // Change the project by deleting a sprite
         await rightClickText('Sprite1', scope.spriteTile);
         await findByText('delete', scope.contextMenu);
-        await clickText('delete', scope.contextMenu);
+        await clickText('delete', scope.spriteTile);
+        await clickText('yes', scope.modal);
 
         await clickXpath(FILE_MENU_XPATH);
         await clickText('Load from your computer');
@@ -95,6 +96,82 @@ describe('Menu bar settings', () => {
         await driver.switchTo().alert()
             .accept();
         await findByText('project1-sprite', scope.spriteTile);
+    });
+
+    test('Theme picker shows themes', async () => {
+        await loadUri(uri);
+        await clickXpath(SETTINGS_MENU_XPATH);
+        await clickText('Color Mode', scope.menuBar);
+
+        expect(await (await findByText('Original', scope.menuBar)).isDisplayed()).toBe(true);
+        expect(await (await findByText('High Contrast', scope.menuBar)).isDisplayed()).toBe(true);
+    });
+
+    test('Theme picker switches to high contrast', async () => {
+        await loadUri(uri);
+        await clickXpath(SETTINGS_MENU_XPATH);
+        await clickText('Color Mode', scope.menuBar);
+        await clickText('High Contrast', scope.menuBar);
+
+        // There is a tiny delay for the color theme to be applied to the categories.
+        await driver.wait(async () => {
+            const motionCategoryDiv = await findByXpath(
+                '//div[contains(@class, "scratchCategoryMenuItem") and ' +
+                'contains(@class, "scratchCategoryId-motion")]/*[1]');
+            const color = await motionCategoryDiv.getCssValue('background-color');
+
+            // Documentation for getCssValue says it depends on how the browser
+            // returns the value. Locally I am seeing 'rgba(128, 181, 255, 1)',
+            // but this is a bit flexible just in case.
+            return /128,\s?181,\s?255/.test(color) || color.includes('80B5FF');
+        }, 5000, 'Motion category color does not match high contrast theme');
+    });
+
+    test('Settings menu switches between submenus', async () => {
+        await loadUri(uri);
+        await clickXpath(SETTINGS_MENU_XPATH);
+
+        // Language and theme options not visible yet
+        expect(await (await findByText('High Contrast', scope.menuBar)).isDisplayed()).toBe(false);
+        expect(await (await findByText('Esperanto', scope.menuBar)).isDisplayed()).toBe(false);
+
+        await clickText('Color Mode', scope.menuBar);
+
+        // Only theme options visible
+        expect(await (await findByText('High Contrast', scope.menuBar)).isDisplayed()).toBe(true);
+        expect(await (await findByText('Esperanto', scope.menuBar)).isDisplayed()).toBe(false);
+
+        await clickText('Language', scope.menuBar);
+
+        // Only language options visible
+        expect(await (await findByText('High Contrast', scope.menuBar)).isDisplayed()).toBe(false);
+        expect(await (await findByText('Esperanto', scope.menuBar)).isDisplayed()).toBe(true);
+    });
+
+    test('Menu labels hidden when width is equal to 1024', async () => {
+        await loadUri(uri);
+        await driver.manage()
+            .window()
+            .setSize(1024, 768);
+
+        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        for (const menu of collapsibleMenus) {
+            const settingsMenu = await findByText(menu, scope.menuBar);
+            expect(await settingsMenu.isDisplayed()).toBe(false);
+        }
+    });
+
+    test('Menu labels shown when width is greater than 1024', async () => {
+        await loadUri(uri);
+        await driver.manage()
+            .window()
+            .setSize(1200, 768);
+
+        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        for (const menu of collapsibleMenus) {
+            const settingsMenu = await findByText(menu, scope.menuBar);
+            expect(await settingsMenu.isDisplayed()).toBe(true);
+        }
     });
 
     test('Theme picker shows themes', async () => {

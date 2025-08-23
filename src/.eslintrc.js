@@ -13,6 +13,7 @@ module.exports = {
         'react/forbid-prop-types': 'off',
         'react/no-unknown-property': 'off',
         // END: these caused trouble after upgrading eslint-plugin-react from 7.24.0 to 7.33.2
+        'no-warning-comments': 'off',
         'import/no-mutable-exports': 'error',
         'import/no-commonjs': 'error',
         'import/no-amd': 'error',

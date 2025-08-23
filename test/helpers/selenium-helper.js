@@ -5,7 +5,6 @@ jest.setTimeout(95000); // eslint-disable-line no-undef
 import bindAll from 'lodash.bindall';
 import webdriver from 'selenium-webdriver';
 import pathModule from 'path';
-const fs = require('fs');
 
 const {Button, By, until} = webdriver;
 
@@ -72,7 +71,8 @@ class SeleniumHelper {
             'getSauceDriver',
             'getLogs',
             'loadUri',
-            'rightClickText'
+            'rightClickText',
+            'urlFor'
         ]);
 
         this.Key = webdriver.Key; // map Key constants, for sending special keys
@@ -409,13 +409,17 @@ class SeleniumHelper {
         }
     }
 
+    /**
+     * Generate a URL for the given path.
+     * @param {string} path The path to generate a URL for.
+     * @returns {string} The URL.
+     */
     urlFor (path) {
-        switch (path) {
-        case '/':
-            return pathModule.resolve(__dirname, '../../build/index.html');
-        default:
-            throw new Error(`Invalid path: ${path}`);
+        const baseUri = pathModule.resolve(__dirname, '../../build/index.html');
+        if (path === '/') {
+            return baseUri;
         }
+        return `${baseUri}${path}`;
     }
 }
 

@@ -3,7 +3,7 @@ name: CI/CD
 on:
     pull_request: # Runs whenever a pull request is created or updated (including from another fork)
     push: # Runs whenever a commit is pushed to the repository...
-        branches: [master, develop, hotfix/*] # ...on any of these branches
+        branches: [main, master, develop, hotfix/*] # ...on any of these branches
     workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 concurrency:
     group: "${{ github.workflow }} @ ${{ github.head_ref || github.ref }}"
@@ -68,7 +68,7 @@ jobs:
                 done
             - name: Run Integration Tests
               env:
-                  JEST_JUNIT_OUTPUT_NAME: results.txt
+                  JEST_JUNIT_OUTPUT_NAME: integration-results.xml
                   JEST_JUNIT_OUTPUT_DIR: test-results/integration
               run: npm run test:integration -- --reporters="default" --reporters="jest-junit"
             - name: Store Test Results
@@ -78,7 +78,7 @@ jobs:
                 name: test-output
                 path: ./test-results/* # Both unit and integration test results
             - run: |
-                if [[ ${{contains(github.ref, 'hotfix')}}  ]]; then
+                if [[ ${{ contains(github.ref, 'hotfix') }} == 'true' ]]; then
                 sed -e "s|hotfix/REPLACE|${{ github.ref_name }}|" --in-place release.config.js
                 fi
             - name: Deploy playground to GitHub Pages
@@ -99,7 +99,7 @@ jobs:
                 external_repository: smalruby/smalruby.app
             - name: Set branch name
               id: branch
-              run: echo "::set-output name=BRANCH_NAME::${GITHUB_REF##*/}"
+              run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
             - name: Deploy playground to GitHub Pages for branch
               if: |
                 (!(

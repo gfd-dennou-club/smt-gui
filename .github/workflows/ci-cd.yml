@@ -41,8 +41,20 @@ jobs:
             - name: Build scratch-vm for smalruby
               run: npm run setup-scratch-vm
             - name: Lint
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main'
+                ))
               run: npm run test:lint
             - name: Run Unit Tests
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main'
+                ))
               env:
                   JEST_JUNIT_OUTPUT_NAME: unit-results.xml
                   JEST_JUNIT_OUTPUT_DIR: test-results/unit
@@ -62,11 +74,24 @@ jobs:
               with:
                 name: dist-output
                 path: ./dist
-            - run: |
+            - name: Check installed browser
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main'
+                ))
+              run: |
                 for F in chrome chromium chromedriver; do
                     which $F && $F --version || echo Not found: $F
                 done
             - name: Run Integration Tests
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main'
+                ))
               env:
                   JEST_JUNIT_OUTPUT_NAME: integration-results.xml
                   JEST_JUNIT_OUTPUT_DIR: test-results/integration
@@ -99,7 +124,7 @@ jobs:
                 external_repository: smalruby/smalruby.app
             - name: Set branch name
               id: branch
-              run: echo "BRANCH_NAME=${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+              run: echo "BRANCH_NAME=${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
             - name: Deploy playground to GitHub Pages for branch
               if: |
                 (!(

@@ -59,5 +59,8 @@ export default {
     'gui.smalruby3.blockDisplayModal.selectNone': 'すべて選択解除',
     'gui.smalruby3.blockDisplayModal.alwaysVisible': '常に表示',
     'gui.smalruby3.blockDisplayModal.extensions': '拡張機能',
+    'gui.smalruby3.blockDisplayModal.categoriesTitle': 'カテゴリ:',
+    'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': '常に表示:',
+    'gui.smalruby3.blockDisplayModal.blocksSubtitle': 'ブロック',
     'gui.menuBar.blockDisplay': 'ブロック表示...'
 };

@@ -2,8 +2,11 @@
 @import "../../css/units.css";
 
 .modal-content {
-    width: 480px;
+    width: 900px;
+    max-width: 90vw;
     line-height: 1.75;
+    height: 600px;
+    max-height: 80vh;
 }
 
 .header {
@@ -12,12 +15,32 @@
 
 .body {
     background: $ui-white;
+    padding: 0;
+    display: flex;
+    height: 100%;
+}
+
+.leftPane {
+    width: 300px;
     padding: 1rem;
+    background: $ui-tertiary;
+    border-right: 1px solid hsla(0, 0%, 0%, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.rightPane {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .controls {
     display: flex;
     gap: 0.5rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
 }
 
@@ -67,16 +90,44 @@
     background: #ff3742;
 }
 
+.sectionTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsla(0, 0%, 0%, 0.8);
+    margin-bottom: 0.75rem;
+}
+
 .categorySection {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
     margin-bottom: 1rem;
 }
 
 .categoryItem {
     display: flex;
     align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.categoryItem:hover {
+    background: hsla(0, 0%, 0%, 0.05);
+}
+
+.selectedCategory {
+    background: #4c97ff;
+    color: white;
+}
+
+.selectedCategory:hover {
+    background: #4280d7;
+}
+
+.selectedCategory .categoryName {
+    color: white;
 }
 
 .categoryLabel {
@@ -106,12 +157,104 @@
 
 .alwaysVisibleSection {
     margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
-.sectionDivider {
-    border-top: 1px solid hsla(0, 0%, 0%, 0.1);
-    margin-bottom: 0.75rem;
+.blockListHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
 }
+
+.blockListTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: hsla(0, 0%, 0%, 0.9);
+}
+
+.blockListSubtitle {
+    font-weight: 400;
+    color: hsla(0, 0%, 0%, 0.6);
+}
+
+.navigationButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.navButton {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid hsla(0, 0%, 0%, 0.2);
+    border-radius: 0.25rem;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.1s ease;
+}
+
+.navButton:hover:not(.disabled) {
+    background: #f0f0f0;
+    border-color: hsla(0, 0%, 0%, 0.3);
+}
+
+.navButton:active:not(.disabled) {
+    background: #e0e0e0;
+}
+
+.navButton.disabled {
+    color: hsla(0, 0%, 0%, 0.3);
+    cursor: not-allowed;
+    background: #f8f8f8;
+}
+
+.blockList {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.blockItem {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.05);
+}
+
+.blockItem:last-child {
+    border-bottom: none;
+}
+
+.blockLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+}
+
+.blockCheckbox {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.blockName {
+    font-size: 0.875rem;
+    color: hsla(0, 0%, 0%, 0.9);
+    line-height: 1.4;
+}
+
 
 .alwaysVisibleText {
     color: hsla(0, 0%, 0%, 0.6);

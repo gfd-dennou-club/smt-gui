@@ -56,5 +56,8 @@ export default {
     'gui.smalruby3.blockDisplayModal.selectNone': 'Select None',
     'gui.smalruby3.blockDisplayModal.alwaysVisible': 'Always visible',
     'gui.smalruby3.blockDisplayModal.extensions': 'Extensions',
+    'gui.smalruby3.blockDisplayModal.categoriesTitle': 'Categories:',
+    'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': 'Always Visible:',
+    'gui.smalruby3.blockDisplayModal.blocksSubtitle': ' Blocks',
     'gui.menuBar.blockDisplay': 'Block Display...'
 };

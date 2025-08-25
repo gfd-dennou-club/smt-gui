@@ -30,7 +30,7 @@ const messages = defineMessages({
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
         id: 'gui.smalruby3.blockDisplayModal.alwaysVisible'
-    },
+    }
 });
 
 // Define block categories with their IDs and ScratchBlocks.Msg keys
@@ -50,12 +50,136 @@ const ALWAYS_VISIBLE_CATEGORIES = [
     {id: 'extensions', messageId: 'gui.smalruby3.blockDisplayModal.extensions'}
 ];
 
+// Define blocks for each category based on make-toolbox-xml.js
+const CATEGORY_BLOCKS = {
+    motion: [
+        'motion_movesteps',
+        'motion_turnright',
+        'motion_turnleft',
+        'motion_goto',
+        'motion_gotoxy',
+        'motion_glideto',
+        'motion_glidesecstoxy',
+        'motion_pointindirection',
+        'motion_pointtowards',
+        'motion_changexby',
+        'motion_setx',
+        'motion_changeyby',
+        'motion_sety',
+        'motion_ifonedgebounce',
+        'motion_setrotationstyle'
+    ],
+    looks: [
+        'looks_sayforsecs',
+        'looks_say',
+        'looks_thinkforsecs',
+        'looks_think',
+        'looks_switchbackdropto',
+        'looks_switchbackdroptoandwait',
+        'looks_nextbackdrop',
+        'looks_switchcostumeto',
+        'looks_nextcostume',
+        'looks_changesizeby',
+        'looks_setsizeto',
+        'looks_changeeffectby',
+        'looks_seteffectto',
+        'looks_cleargraphiceffects',
+        'looks_show',
+        'looks_hide',
+        'looks_gotofrontback',
+        'looks_goforwardbackwardlayers'
+    ],
+    sound: [
+        'sound_playuntildone',
+        'sound_play',
+        'sound_stopallsounds',
+        'sound_changeeffectby',
+        'sound_seteffectto',
+        'sound_cleareffects',
+        'sound_changevolumeby',
+        'sound_setvolumeto'
+    ],
+    event: [
+        'event_whenflagclicked',
+        'event_whenkeypressed',
+        'event_whenthisspriteclicked',
+        'event_whenbackdropswitchesto',
+        'event_whengreaterthan',
+        'event_whenbroadcastreceived',
+        'event_broadcast',
+        'event_broadcastandwait'
+    ],
+    control: [
+        'control_wait',
+        'control_repeat',
+        'control_forever',
+        'control_if',
+        'control_if_else',
+        'control_wait_until',
+        'control_repeat_until',
+        'control_stop',
+        'control_start_as_clone',
+        'control_create_clone_of',
+        'control_delete_this_clone'
+    ],
+    sensing: [
+        'sensing_touchingobject',
+        'sensing_touchingcolor',
+        'sensing_coloristouchingcolor',
+        'sensing_distanceto',
+        'sensing_askandwait',
+        'sensing_answer',
+        'sensing_keypressed',
+        'sensing_mousedown',
+        'sensing_mousex',
+        'sensing_mousey',
+        'sensing_setdragmode',
+        'sensing_loudness',
+        'sensing_timer',
+        'sensing_resettimer',
+        'sensing_of',
+        'sensing_current',
+        'sensing_dayssince2000',
+        'sensing_username'
+    ],
+    operator: [
+        'operator_add',
+        'operator_subtract',
+        'operator_multiply',
+        'operator_divide',
+        'operator_random',
+        'operator_gt',
+        'operator_lt',
+        'operator_equals',
+        'operator_and',
+        'operator_or',
+        'operator_not',
+        'operator_join',
+        'operator_letter_of',
+        'operator_length',
+        'operator_contains',
+        'operator_mod',
+        'operator_round',
+        'operator_mathop'
+    ]
+};
+
+// Convert block type to ScratchBlocks.Msg key
+const getBlockMessageKey = blockType => blockType.toUpperCase();
+
 class BlockDisplayModal extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'handleCategoryChange'
+            'handleCategoryChange',
+            'handleCategorySelect',
+            'handlePrevious',
+            'handleNext'
         ]);
+        
+        this.state = {
+            selectedCategoryIndex: 0
+        };
         
         // Initialize ScratchBlocks if not already done
         if (!this.ScratchBlocks && props.vm) {
@@ -68,6 +192,25 @@ class BlockDisplayModal extends React.Component {
         const isChecked = event.target.checked;
         this.props.onCategoryChange(categoryId, isChecked);
     }
+    
+    handleCategorySelect (event) {
+        const categoryIndex = parseInt(event.currentTarget.getAttribute('data-category-index'), 10);
+        this.setState({selectedCategoryIndex: categoryIndex});
+    }
+    
+    handlePrevious () {
+        const {selectedCategoryIndex} = this.state;
+        if (selectedCategoryIndex > 0) {
+            this.setState({selectedCategoryIndex: selectedCategoryIndex - 1});
+        }
+    }
+    
+    handleNext () {
+        const {selectedCategoryIndex} = this.state;
+        if (selectedCategoryIndex < BLOCK_CATEGORIES.length - 1) {
+            this.setState({selectedCategoryIndex: selectedCategoryIndex + 1});
+        }
+    }
 
     render () {
         const {
@@ -78,6 +221,10 @@ class BlockDisplayModal extends React.Component {
             onSelectNone
         } = this.props;
         
+        const {selectedCategoryIndex} = this.state;
+        const selectedCategory = BLOCK_CATEGORIES[selectedCategoryIndex];
+        const categoryBlocks = CATEGORY_BLOCKS[selectedCategory.id] || [];
+        
         return (
             <Modal
                 className={styles.modalContent}
@@ -87,83 +234,163 @@ class BlockDisplayModal extends React.Component {
                 onRequestClose={onRequestClose}
             >
                 <Box className={styles.body}>
-                    
-                    <Box className={styles.controls}>
-                        <button
-                            className={classNames(
-                                styles.controlButton,
-                                styles.selectAllButton
-                            )}
-                            onClick={onSelectAll}
-                        >
-                            <FormattedMessage {...messages.selectAll} />
-                        </button>
-                        <button
-                            className={classNames(
-                                styles.controlButton,
-                                styles.selectNoneButton
-                            )}
-                            onClick={onSelectNone}
-                        >
-                            <FormattedMessage {...messages.selectNone} />
-                        </button>
-                    </Box>
-
-                    <Box className={styles.categorySection}>
-                        {BLOCK_CATEGORIES.map(category => (
-                            <div
-                                key={category.id}
-                                className={styles.categoryItem}
-                            >
-                                <label className={styles.categoryLabel}>
-                                    <input
-                                        type="checkbox"
-                                        className={styles.checkbox}
-                                        data-category={category.id}
-                                        checked={selectedCategories.includes(category.id)}
-                                        onChange={this.handleCategoryChange}
-                                    />
-                                    <span className={styles.categoryName}>
-                                        {this.ScratchBlocks && this.ScratchBlocks.Msg && this.ScratchBlocks.Msg[category.messageKey] 
-                                            ? this.ScratchBlocks.Msg[category.messageKey] 
-                                            : category.messageKey}
-                                    </span>
-                                </label>
+                    <Box className={styles.leftPane}>
+                        <Box className={styles.categorySection}>
+                            <div className={styles.sectionTitle}>
+                                <FormattedMessage
+                                    defaultMessage="Categories:"
+                                    description="Title for block categories section"
+                                    id="gui.smalruby3.blockDisplayModal.categoriesTitle"
+                                />
                             </div>
-                        ))}
-                    </Box>
-
-                    <Box className={styles.alwaysVisibleSection}>
-                        <div className={styles.sectionDivider} />
-                        {ALWAYS_VISIBLE_CATEGORIES.map(category => (
-                            <div
-                                key={category.id}
-                                className={styles.categoryItem}
-                            >
-                                <label className={styles.categoryLabel}>
-                                    <input
-                                        type="checkbox"
-                                        className={styles.checkbox}
-                                        checked
-                                        disabled
-                                    />
-                                    <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
-                                        {category.messageKey ? (
-                                            this.ScratchBlocks && this.ScratchBlocks.Msg && this.ScratchBlocks.Msg[category.messageKey] 
-                                                ? this.ScratchBlocks.Msg[category.messageKey] 
-                                                : category.messageKey
-                                        ) : (
-                                            intl.formatMessage({id: category.messageId})
-                                        )}
-                                        <span className={styles.alwaysVisibleLabel}>
-                                            {'('}{intl.formatMessage(messages.alwaysVisible)}{')'}
+                            {BLOCK_CATEGORIES.map((category, index) => (
+                                <div
+                                    key={category.id}
+                                    className={classNames(styles.categoryItem, {
+                                        [styles.selectedCategory]: selectedCategoryIndex === index
+                                    })}
+                                    data-category-index={index}
+                                    onClick={this.handleCategorySelect}
+                                >
+                                    <label className={styles.categoryLabel}>
+                                        <input
+                                            type="checkbox"
+                                            className={styles.checkbox}
+                                            data-category={category.id}
+                                            checked={selectedCategories.includes(category.id)}
+                                            onChange={this.handleCategoryChange}
+                                        />
+                                        <span className={styles.categoryName}>
+                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                this.ScratchBlocks.Msg[category.messageKey] ?
+                                                this.ScratchBlocks.Msg[category.messageKey] :
+                                                category.messageKey}
                                         </span>
-                                    </span>
-                                </label>
-                            </div>
-                        ))}
-                    </Box>
+                                    </label>
+                                </div>
+                            ))}
+                        </Box>
+                        
+                        <Box className={styles.controls}>
+                            <button
+                                className={classNames(
+                                    styles.controlButton,
+                                    styles.selectAllButton
+                                )}
+                                onClick={onSelectAll}
+                            >
+                                <FormattedMessage {...messages.selectAll} />
+                            </button>
+                            <button
+                                className={classNames(
+                                    styles.controlButton,
+                                    styles.selectNoneButton
+                                )}
+                                onClick={onSelectNone}
+                            >
+                                <FormattedMessage {...messages.selectNone} />
+                            </button>
+                        </Box>
 
+                        <Box className={styles.alwaysVisibleSection}>
+                            <div className={styles.sectionTitle}>
+                                <FormattedMessage
+                                    defaultMessage="Always Visible:"
+                                    description="Title for always visible categories section"
+                                    id="gui.smalruby3.blockDisplayModal.alwaysVisibleTitle"
+                                />
+                            </div>
+                            {ALWAYS_VISIBLE_CATEGORIES.map(category => (
+                                <div
+                                    key={category.id}
+                                    className={styles.categoryItem}
+                                >
+                                    <label className={styles.categoryLabel}>
+                                        <input
+                                            type="checkbox"
+                                            className={styles.checkbox}
+                                            checked
+                                            disabled
+                                        />
+                                        <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
+                                            {category.messageKey ?
+                                                (this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                    this.ScratchBlocks.Msg[category.messageKey] ?
+                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                    category.messageKey) :
+                                                intl.formatMessage({id: category.messageId})}
+                                        </span>
+                                    </label>
+                                </div>
+                            ))}
+                        </Box>
+                    </Box>
+                    
+                    <Box className={styles.rightPane}>
+                        <div className={styles.blockListHeader}>
+                            <div className={styles.blockListTitle}>
+                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                    this.ScratchBlocks.Msg[selectedCategory.messageKey] ?
+                                    this.ScratchBlocks.Msg[selectedCategory.messageKey] :
+                                    selectedCategory.messageKey}
+                                <span className={styles.blockListSubtitle}>
+                                    <FormattedMessage
+                                        defaultMessage=" Blocks"
+                                        description="Subtitle for blocks list"
+                                        id="gui.smalruby3.blockDisplayModal.blocksSubtitle"
+                                    />
+                                </span>
+                            </div>
+                            <div className={styles.navigationButtons}>
+                                <button
+                                    className={classNames(styles.navButton, {
+                                        [styles.disabled]: selectedCategoryIndex === 0
+                                    })}
+                                    onClick={this.handlePrevious}
+                                    disabled={selectedCategoryIndex === 0}
+                                >
+                                    {'←'}
+                                </button>
+                                <button
+                                    className={classNames(styles.navButton, {
+                                        [styles.disabled]: selectedCategoryIndex === BLOCK_CATEGORIES.length - 1
+                                    })}
+                                    onClick={this.handleNext}
+                                    disabled={selectedCategoryIndex === BLOCK_CATEGORIES.length - 1}
+                                >
+                                    {'→'}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <Box className={styles.blockList}>
+                            {categoryBlocks.map(blockType => {
+                                const messageKey = getBlockMessageKey(blockType);
+                                const blockName = this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                    this.ScratchBlocks.Msg[messageKey] ?
+                                    this.ScratchBlocks.Msg[messageKey] :
+                                    blockType;
+                                
+                                return (
+                                    <div
+                                        key={blockType}
+                                        className={styles.blockItem}
+                                    >
+                                        <label className={styles.blockLabel}>
+                                            <input
+                                                type="checkbox"
+                                                defaultChecked
+                                                className={styles.blockCheckbox}
+                                            />
+                                            <span className={styles.blockName}>
+                                                {blockName}
+                                            </span>
+                                        </label>
+                                    </div>
+                                );
+                            })}
+                        </Box>
+                    </Box>
                 </Box>
             </Modal>
         );

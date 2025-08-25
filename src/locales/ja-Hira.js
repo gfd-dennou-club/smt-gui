@@ -58,5 +58,8 @@ export default {
     'gui.smalruby3.blockDisplayModal.selectNone': 'すべてせんたくかいじょ',
     'gui.smalruby3.blockDisplayModal.alwaysVisible': 'つねにひょうじ',
     'gui.smalruby3.blockDisplayModal.extensions': 'かくちょうきのう',
+    'gui.smalruby3.blockDisplayModal.categoriesTitle': 'カテゴリ:',
+    'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': 'つねにひょうじ:',
+    'gui.smalruby3.blockDisplayModal.blocksSubtitle': 'ブロック',
     'gui.menuBar.blockDisplay': 'ブロックひょうじ...'
 };

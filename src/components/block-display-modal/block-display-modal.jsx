@@ -38,10 +38,10 @@ const BLOCK_CATEGORIES = [
     {id: 'motion', messageKey: 'CATEGORY_MOTION'},
     {id: 'looks', messageKey: 'CATEGORY_LOOKS'},
     {id: 'sound', messageKey: 'CATEGORY_SOUND'},
-    {id: 'event', messageKey: 'CATEGORY_EVENTS'},
+    {id: 'events', messageKey: 'CATEGORY_EVENTS'},
     {id: 'control', messageKey: 'CATEGORY_CONTROL'},
     {id: 'sensing', messageKey: 'CATEGORY_SENSING'},
-    {id: 'operator', messageKey: 'CATEGORY_OPERATORS'}
+    {id: 'operators', messageKey: 'CATEGORY_OPERATORS'}
 ];
 
 const ALWAYS_VISIBLE_CATEGORIES = [
@@ -99,7 +99,7 @@ const CATEGORY_BLOCKS = {
         'sound_changevolumeby',
         'sound_setvolumeto'
     ],
-    event: [
+    events: [
         'event_whenflagclicked',
         'event_whenkeypressed',
         'event_whenthisspriteclicked',
@@ -142,7 +142,7 @@ const CATEGORY_BLOCKS = {
         'sensing_dayssince2000',
         'sensing_username'
     ],
-    operator: [
+    operators: [
         'operator_add',
         'operator_subtract',
         'operator_multiply',
@@ -436,7 +436,6 @@ class BlockDisplayModal extends React.Component {
 BlockDisplayModal.propTypes = {
     intl: intlShape.isRequired,
     onRequestClose: PropTypes.func.isRequired,
-    selectedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
     selectedBlocks: PropTypes.object.isRequired,
     onCategoryChange: PropTypes.func.isRequired,
     onBlockChange: PropTypes.func.isRequired,

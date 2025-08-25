@@ -761,7 +761,7 @@ const parseOnlyBlocks = function (onlyBlocks) {
  */
 const shouldIncludeBlock = function (blockType, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return true;
-    
+
     return allowedPatterns.some(pattern =>
         blockType === pattern || blockType.startsWith(pattern)
     );
@@ -776,29 +776,28 @@ const shouldIncludeBlock = function (blockType, allowedPatterns) {
  */
 const filterBlocksInCategory = function (categoryXML, allowedPatterns, categoryId) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
-    
+
     // Parse the XML to extract and filter block elements
     const blockRegex = /<block[^>]*type="([^"]+)"[^>]*(?:\/>|>.*?<\/block>)/gs;
     const matches = categoryXML.match(blockRegex) || [];
-    
+
     const filteredBlocks = matches.filter(blockXML => {
         const typeMatch = blockXML.match(/type="([^"]+)"/);
         if (!typeMatch) return false;
-        
+
         const blockType = typeMatch[1];
         return shouldIncludeBlock(blockType, allowedPatterns);
     });
-    
+
     if (filteredBlocks.length === 0) {
-        console.error(`No blocks found for only_blocks filter in category: ${categoryId}`);
         return '';
     }
-    
+
     // Reconstruct the category XML with filtered blocks
     const categoryHeader = categoryXML.match(/<category[^>]*>/)[0];
     const categoryFooter = '</category>';
     const blockContent = filteredBlocks.join('\n        ');
-    
+
     return `${categoryHeader}\n        ${blockContent}\n        ${categorySeparator}\n    ${categoryFooter}`;
 };
 
@@ -841,7 +840,7 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         }
         // return `undefined`
     };
-    
+
     // Generate categories and apply filtering (except for variables, myBlocks, and extensions)
     let motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
     let looksXML = moveCategory('looks') ||
@@ -851,11 +850,11 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     let controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, colors.control);
     let sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId, colors.sensing);
     let operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId, colors.operators);
-    
+
     // Variables and myBlocks are always included (exception categories)
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId, colors.data);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId, colors.more);
-    
+
     // Apply filtering to core categories if only_blocks is specified
     if (allowedPatterns.length > 0) {
         motionXML = filterBlocksInCategory(motionXML, allowedPatterns, 'motion');
@@ -869,14 +868,14 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
 
     // Build the final XML, only including non-empty categories
     const everything = [xmlOpen];
-    
+
     // Helper function to add category if it has content
     const addCategoryIfNotEmpty = categoryXML => {
         if (categoryXML && categoryXML.trim() !== '') {
             everything.push(categoryXML, gap);
         }
     };
-    
+
     // Add core categories (only if they have blocks after filtering)
     addCategoryIfNotEmpty(motionXML);
     addCategoryIfNotEmpty(looksXML);
@@ -885,11 +884,11 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     addCategoryIfNotEmpty(controlXML);
     addCategoryIfNotEmpty(sensingXML);
     addCategoryIfNotEmpty(operatorsXML);
-    
+
     // Variables and myBlocks are always included (exception categories)
     addCategoryIfNotEmpty(variablesXML);
     addCategoryIfNotEmpty(myBlocksXML);
-    
+
     // Extension categories are always included (exception categories)
     for (const extensionCategory of categoriesXML) {
         addCategoryIfNotEmpty(extensionCategory.xml);

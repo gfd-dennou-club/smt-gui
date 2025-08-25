@@ -4,7 +4,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import {
-    setSelectedCategories,
     setSelectedBlocks,
     closeBlockDisplayModal
 } from '../reducers/block-display.js';
@@ -30,7 +29,7 @@ const CATEGORY_BLOCKS = {
         'sound_playuntildone', 'sound_play', 'sound_stopallsounds', 'sound_changeeffectby',
         'sound_seteffectto', 'sound_cleareffects', 'sound_changevolumeby', 'sound_setvolumeto'
     ],
-    event: [
+    events: [
         'event_whenflagclicked', 'event_whenkeypressed', 'event_whenthisspriteclicked',
         'event_whenbackdropswitchesto', 'event_whengreaterthan', 'event_whenbroadcastreceived',
         'event_broadcast', 'event_broadcastandwait'
@@ -47,7 +46,7 @@ const CATEGORY_BLOCKS = {
         'sensing_loudness', 'sensing_timer', 'sensing_resettimer', 'sensing_of',
         'sensing_current', 'sensing_dayssince2000', 'sensing_username'
     ],
-    operator: [
+    operators: [
         'operator_add', 'operator_subtract', 'operator_multiply', 'operator_divide',
         'operator_random', 'operator_gt', 'operator_lt', 'operator_equals', 'operator_and',
         'operator_or', 'operator_not', 'operator_join', 'operator_letter_of',
@@ -60,7 +59,7 @@ class BlockDisplayModal extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'handleCategoryChange',
+            'handleCategoryToggle',
             'handleBlockChange',
             'handleSelectAll',
             'handleSelectNone',
@@ -68,32 +67,22 @@ class BlockDisplayModal extends React.Component {
         ]);
     }
 
-    handleCategoryChange (categoryId, isSelected) {
-        const currentCategories = [...this.props.selectedCategories];
+    handleCategoryToggle (categoryId, isSelected) {
         const currentBlocks = {...this.props.selectedBlocks};
         
         if (isSelected) {
-            // Add category and all its blocks
-            if (!currentCategories.includes(categoryId)) {
-                currentCategories.push(categoryId);
-            }
+            // Select all blocks in this category
             currentBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
         } else {
-            // Remove category and all its blocks
-            if (currentCategories.includes(categoryId)) {
-                const index = currentCategories.indexOf(categoryId);
-                currentCategories.splice(index, 1);
-            }
+            // Deselect all blocks in this category
             currentBlocks[categoryId] = [];
         }
         
-        this.props.onSetSelectedCategories(currentCategories);
         this.props.onSetSelectedBlocks(currentBlocks);
     }
 
     handleBlockChange (categoryId, blockId, isSelected) {
         const currentBlocks = {...this.props.selectedBlocks};
-        const currentCategories = [...this.props.selectedCategories];
         
         // Update the specific block
         if (!currentBlocks[categoryId]) {
@@ -107,34 +96,10 @@ class BlockDisplayModal extends React.Component {
             currentBlocks[categoryId].splice(index, 1);
         }
         
-        // Update category state based on block states
-        
-        const allBlocksInCategory = CATEGORY_BLOCKS[categoryId];
-        const selectedBlocksInCategory = currentBlocks[categoryId];
-        
-        if (selectedBlocksInCategory.length === 0) {
-            // No blocks selected - remove category
-            if (currentCategories.includes(categoryId)) {
-                const index = currentCategories.indexOf(categoryId);
-                currentCategories.splice(index, 1);
-            }
-        } else if (selectedBlocksInCategory.length === allBlocksInCategory.length) {
-            // All blocks selected - add category
-            if (!currentCategories.includes(categoryId)) {
-                currentCategories.push(categoryId);
-            }
-        } else if (!currentCategories.includes(categoryId)) {
-            // Some blocks selected - category should be in indeterminate state (still in selectedCategories)
-            currentCategories.push(categoryId);
-        }
-        
-        this.props.onSetSelectedCategories(currentCategories);
         this.props.onSetSelectedBlocks(currentBlocks);
     }
 
     handleSelectAll () {
-        const allCategories = ['motion', 'looks', 'sound', 'event', 'control', 'sensing', 'operator'];
-        this.props.onSetSelectedCategories(allCategories);
         this.props.onSetSelectedBlocks(CATEGORY_BLOCKS);
     }
 
@@ -143,12 +108,11 @@ class BlockDisplayModal extends React.Component {
             motion: [],
             looks: [],
             sound: [],
-            event: [],
+            events: [],
             control: [],
             sensing: [],
-            operator: []
+            operators: []
         };
-        this.props.onSetSelectedCategories([]);
         this.props.onSetSelectedBlocks(emptyBlocks);
     }
 
@@ -159,9 +123,8 @@ class BlockDisplayModal extends React.Component {
     render () {
         return (
             <BlockDisplayModalComponent
-                selectedCategories={this.props.selectedCategories}
                 selectedBlocks={this.props.selectedBlocks}
-                onCategoryChange={this.handleCategoryChange}
+                onCategoryChange={this.handleCategoryToggle}
                 onBlockChange={this.handleBlockChange}
                 onSelectAll={this.handleSelectAll}
                 onSelectNone={this.handleSelectNone}
@@ -173,21 +136,17 @@ class BlockDisplayModal extends React.Component {
 }
 
 BlockDisplayModal.propTypes = {
-    selectedCategories: PropTypes.arrayOf(PropTypes.string),
     selectedBlocks: PropTypes.object,
-    onSetSelectedCategories: PropTypes.func.isRequired,
     onSetSelectedBlocks: PropTypes.func.isRequired,
     onRequestClose: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-    selectedCategories: state.scratchGui.blockDisplay.selectedCategories,
     selectedBlocks: state.scratchGui.blockDisplay.selectedBlocks,
     vm: state.scratchGui.vm
 });
 
 const mapDispatchToProps = dispatch => ({
-    onSetSelectedCategories: categories => dispatch(setSelectedCategories(categories)),
     onSetSelectedBlocks: blocks => dispatch(setSelectedBlocks(blocks)),
     onRequestClose: () => dispatch(closeBlockDisplayModal())
 });

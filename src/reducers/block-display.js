@@ -1,9 +1,7 @@
-const SET_SELECTED_CATEGORIES = 'scratch-gui/block-display/SET_SELECTED_CATEGORIES';
 const SET_SELECTED_BLOCKS = 'scratch-gui/block-display/SET_SELECTED_BLOCKS';
 const SET_MODAL_VISIBLE = 'scratch-gui/block-display/SET_MODAL_VISIBLE';
 
 const initialState = {
-    selectedCategories: ['motion', 'looks', 'sound', 'event', 'control', 'sensing', 'operator'],
     selectedBlocks: {
         motion: [
             'motion_movesteps', 'motion_turnright', 'motion_turnleft', 'motion_goto', 'motion_gotoxy',
@@ -22,7 +20,7 @@ const initialState = {
             'sound_playuntildone', 'sound_play', 'sound_stopallsounds', 'sound_changeeffectby',
             'sound_seteffectto', 'sound_cleareffects', 'sound_changevolumeby', 'sound_setvolumeto'
         ],
-        event: [
+        events: [
             'event_whenflagclicked', 'event_whenkeypressed', 'event_whenthisspriteclicked',
             'event_whenbackdropswitchesto', 'event_whengreaterthan', 'event_whenbroadcastreceived',
             'event_broadcast', 'event_broadcastandwait'
@@ -39,7 +37,7 @@ const initialState = {
             'sensing_loudness', 'sensing_timer', 'sensing_resettimer', 'sensing_of',
             'sensing_current', 'sensing_dayssince2000', 'sensing_username'
         ],
-        operator: [
+        operators: [
             'operator_add', 'operator_subtract', 'operator_multiply', 'operator_divide',
             'operator_random', 'operator_gt', 'operator_lt', 'operator_equals', 'operator_and',
             'operator_or', 'operator_not', 'operator_join', 'operator_letter_of',
@@ -53,10 +51,6 @@ const initialState = {
 const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
-    case SET_SELECTED_CATEGORIES:
-        return Object.assign({}, state, {
-            selectedCategories: action.categories
-        });
     case SET_SELECTED_BLOCKS:
         return Object.assign({}, state, {
             selectedBlocks: action.blocks
@@ -68,13 +62,6 @@ const reducer = function (state, action) {
     default:
         return state;
     }
-};
-
-const setSelectedCategories = function (categories) {
-    return {
-        type: SET_SELECTED_CATEGORIES,
-        categories: categories
-    };
 };
 
 const setSelectedBlocks = function (blocks) {
@@ -102,7 +89,6 @@ const closeBlockDisplayModal = function () {
 export {
     reducer as default,
     initialState,
-    setSelectedCategories,
     setSelectedBlocks,
     openBlockDisplayModal,
     closeBlockDisplayModal

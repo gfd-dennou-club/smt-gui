@@ -50,5 +50,11 @@ export default {
     'smalrubotS1.positionsMenu.right': 'right',
     'smalrubotS1.positionsMenu.touch': 'touch',
     'smalrubotS1.positionsMenu.light': 'light',
-    'smalrubotS1.positionsMenu.sound': 'sound'
+    'smalrubotS1.positionsMenu.sound': 'sound',
+    'gui.smalruby3.blockDisplayModal.title': 'Block Display Settings',
+    'gui.smalruby3.blockDisplayModal.selectAll': 'Select All',
+    'gui.smalruby3.blockDisplayModal.selectNone': 'Select None',
+    'gui.smalruby3.blockDisplayModal.alwaysVisible': 'Always visible',
+    'gui.smalruby3.blockDisplayModal.extensions': 'Extensions',
+    'gui.menuBar.blockDisplay': 'Block Display...'
 };

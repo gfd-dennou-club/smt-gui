@@ -52,5 +52,11 @@ export default {
     'smalrubotS1.positionsMenu.right': 'みぎ',
     'smalrubotS1.positionsMenu.touch': 'タッチ',
     'smalrubotS1.positionsMenu.light': 'ひかり',
-    'smalrubotS1.positionsMenu.sound': 'おと'
+    'smalrubotS1.positionsMenu.sound': 'おと',
+    'gui.smalruby3.blockDisplayModal.title': 'ブロックひょうじせってい',
+    'gui.smalruby3.blockDisplayModal.selectAll': 'すべてせんたく',
+    'gui.smalruby3.blockDisplayModal.selectNone': 'すべてせんたくかいじょ',
+    'gui.smalruby3.blockDisplayModal.alwaysVisible': 'つねにひょうじ',
+    'gui.smalruby3.blockDisplayModal.extensions': 'かくちょうきのう',
+    'gui.menuBar.blockDisplay': 'ブロックひょうじ...'
 };

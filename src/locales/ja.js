@@ -53,5 +53,11 @@ export default {
     'smalrubotS1.positionsMenu.right': '右',
     'smalrubotS1.positionsMenu.touch': 'タッチ',
     'smalrubotS1.positionsMenu.light': '光',
-    'smalrubotS1.positionsMenu.sound': '音'
+    'smalrubotS1.positionsMenu.sound': '音',
+    'gui.smalruby3.blockDisplayModal.title': 'ブロック表示設定',
+    'gui.smalruby3.blockDisplayModal.selectAll': 'すべて選択',
+    'gui.smalruby3.blockDisplayModal.selectNone': 'すべて選択解除',
+    'gui.smalruby3.blockDisplayModal.alwaysVisible': '常に表示',
+    'gui.smalruby3.blockDisplayModal.extensions': '拡張機能',
+    'gui.menuBar.blockDisplay': 'ブロック表示...'
 };

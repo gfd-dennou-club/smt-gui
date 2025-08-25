@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
+import VMScratchBlocks from '../../lib/blocks';
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
@@ -13,40 +14,40 @@ const messages = defineMessages({
     title: {
         defaultMessage: 'Block Display Settings',
         description: 'Title for the block display settings modal',
-        id: 'gui.blockDisplayModal.title'
+        id: 'gui.smalruby3.blockDisplayModal.title'
     },
     selectAll: {
         defaultMessage: 'Select All',
         description: 'Button text to select all block categories',
-        id: 'gui.blockDisplayModal.selectAll'
+        id: 'gui.smalruby3.blockDisplayModal.selectAll'
     },
     selectNone: {
         defaultMessage: 'Select None',
         description: 'Button text to deselect all block categories',
-        id: 'gui.blockDisplayModal.selectNone'
+        id: 'gui.smalruby3.blockDisplayModal.selectNone'
     },
     alwaysVisible: {
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
-        id: 'gui.blockDisplayModal.alwaysVisible'
-    }
+        id: 'gui.smalruby3.blockDisplayModal.alwaysVisible'
+    },
 });
 
-// Define block categories with their IDs and names
+// Define block categories with their IDs and ScratchBlocks.Msg keys
 const BLOCK_CATEGORIES = [
-    {id: 'motion', name: 'Motion'},
-    {id: 'looks', name: 'Looks'},
-    {id: 'sound', name: 'Sound'},
-    {id: 'event', name: 'Events'},
-    {id: 'control', name: 'Control'},
-    {id: 'sensing', name: 'Sensing'},
-    {id: 'operator', name: 'Operators'}
+    {id: 'motion', messageKey: 'CATEGORY_MOTION'},
+    {id: 'looks', messageKey: 'CATEGORY_LOOKS'},
+    {id: 'sound', messageKey: 'CATEGORY_SOUND'},
+    {id: 'event', messageKey: 'CATEGORY_EVENTS'},
+    {id: 'control', messageKey: 'CATEGORY_CONTROL'},
+    {id: 'sensing', messageKey: 'CATEGORY_SENSING'},
+    {id: 'operator', messageKey: 'CATEGORY_OPERATORS'}
 ];
 
 const ALWAYS_VISIBLE_CATEGORIES = [
-    {id: 'variables', name: 'Variables'},
-    {id: 'myBlocks', name: 'My Blocks'},
-    {id: 'extensions', name: 'Extensions'}
+    {id: 'variables', messageKey: 'CATEGORY_VARIABLES'},
+    {id: 'myBlocks', messageKey: 'CATEGORY_MYBLOCKS'},
+    {id: 'extensions', messageId: 'gui.smalruby3.blockDisplayModal.extensions'}
 ];
 
 class BlockDisplayModal extends React.Component {
@@ -55,6 +56,11 @@ class BlockDisplayModal extends React.Component {
         bindAll(this, [
             'handleCategoryChange'
         ]);
+        
+        // Initialize ScratchBlocks if not already done
+        if (!this.ScratchBlocks && props.vm) {
+            this.ScratchBlocks = VMScratchBlocks(props.vm, false);
+        }
     }
 
     handleCategoryChange (event) {
@@ -118,7 +124,9 @@ class BlockDisplayModal extends React.Component {
                                         onChange={this.handleCategoryChange}
                                     />
                                     <span className={styles.categoryName}>
-                                        {category.name}
+                                        {this.ScratchBlocks && this.ScratchBlocks.Msg && this.ScratchBlocks.Msg[category.messageKey] 
+                                            ? this.ScratchBlocks.Msg[category.messageKey] 
+                                            : category.messageKey}
                                     </span>
                                 </label>
                             </div>
@@ -140,7 +148,13 @@ class BlockDisplayModal extends React.Component {
                                         disabled
                                     />
                                     <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
-                                        {category.name}
+                                        {category.messageKey ? (
+                                            this.ScratchBlocks && this.ScratchBlocks.Msg && this.ScratchBlocks.Msg[category.messageKey] 
+                                                ? this.ScratchBlocks.Msg[category.messageKey] 
+                                                : category.messageKey
+                                        ) : (
+                                            intl.formatMessage({id: category.messageId})
+                                        )}
                                         <span className={styles.alwaysVisibleLabel}>
                                             {'('}{intl.formatMessage(messages.alwaysVisible)}{')'}
                                         </span>
@@ -162,7 +176,8 @@ BlockDisplayModal.propTypes = {
     selectedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
     onCategoryChange: PropTypes.func.isRequired,
     onSelectAll: PropTypes.func.isRequired,
-    onSelectNone: PropTypes.func.isRequired
+    onSelectNone: PropTypes.func.isRequired,
+    vm: PropTypes.object
 };
 
 export default injectIntl(BlockDisplayModal);

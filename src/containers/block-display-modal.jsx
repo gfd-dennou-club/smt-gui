@@ -68,7 +68,8 @@ BlockDisplayModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    selectedCategories: state.scratchGui.blockDisplay.selectedCategories
+    selectedCategories: state.scratchGui.blockDisplay.selectedCategories,
+    vm: state.scratchGui.vm
 });
 
 const mapDispatchToProps = dispatch => ({

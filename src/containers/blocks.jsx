@@ -361,9 +361,15 @@ class Blocks extends React.Component {
                 this.props.theme
             );
             
-            // Parse only_blocks URL parameter
+            // Parse only_blocks URL parameter - URL parameter takes priority over GUI settings
             const queryParams = queryString.parse(location.search);
-            const onlyBlocks = queryParams.only_blocks;
+            let onlyBlocks = queryParams.only_blocks;
+            
+            // If no URL parameter, use GUI settings to generate only_blocks equivalent
+            if (!onlyBlocks && this.props.selectedCategories && this.props.selectedCategories.length > 0) {
+                // Convert selected categories to only_blocks format (category prefixes)
+                onlyBlocks = this.props.selectedCategories.map(category => `${category}_`).join(',');
+            }
             
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
                 targetCostumes[targetCostumes.length - 1].name,
@@ -648,6 +654,7 @@ class Blocks extends React.Component {
 }
 
 Blocks.propTypes = {
+    selectedCategories: PropTypes.arrayOf(PropTypes.string),
     anyModalVisible: PropTypes.bool,
     canUseCloud: PropTypes.bool,
     customProceduresVisible: PropTypes.bool,
@@ -715,6 +722,7 @@ const mapStateToProps = state => ({
     isRtl: state.locales.isRtl,
     locale: state.locales.locale,
     messages: state.locales.messages,
+    selectedCategories: state.scratchGui.blockDisplay.selectedCategories,
     toolboxXML: state.scratchGui.toolbox.toolboxXML,
     customProceduresVisible: state.scratchGui.customProcedures.active,
     workspaceMetrics: state.scratchGui.workspaceMetrics,

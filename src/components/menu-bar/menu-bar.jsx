@@ -30,6 +30,7 @@ import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
 import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
+import {openBlockDisplayModal} from '../../reducers/block-display';
 import {setPlayer} from '../../reducers/mode';
 import {
     isTimeTravel220022BC,
@@ -433,6 +434,7 @@ class MenuBar extends React.Component {
                             isRtl={this.props.isRtl}
                             onRequestClose={this.props.onRequestCloseSettings}
                             onRequestOpen={this.props.onClickSettings}
+                            onOpenBlockDisplayModal={this.props.onOpenBlockDisplayModal}
                             settingsMenuOpen={this.props.settingsMenuOpen}
                         />)}
                         {(this.props.canManageFiles) && (
@@ -915,6 +917,7 @@ MenuBar.propTypes = {
     onOpenRegistration: PropTypes.func,
     onOpenTipLibrary: PropTypes.func,
     onOpenDebugModal: PropTypes.func,
+    onOpenBlockDisplayModal: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseAbout: PropTypes.func,
     onRequestCloseAccount: PropTypes.func,
@@ -980,6 +983,7 @@ const mapDispatchToProps = dispatch => ({
     autoUpdateProject: () => dispatch(autoUpdateProject()),
     onOpenTipLibrary: () => dispatch(openTipsLibrary()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
+    onOpenBlockDisplayModal: () => dispatch(openBlockDisplayModal()),
     onClickAccount: () => dispatch(openAccountMenu()),
     onRequestCloseAccount: () => dispatch(closeAccountMenu()),
     onClickFile: () => dispatch(openFileMenu()),

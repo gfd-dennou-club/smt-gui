@@ -273,29 +273,29 @@ class BlockDisplayModal extends React.Component {
                                         className={classNames(styles.categoryItem, {
                                             [styles.selectedCategory]: selectedCategoryIndex === index
                                         })}
-                                        data-category-index={index}
-                                        onClick={this.handleCategorySelect}
                                     >
-                                        <label className={styles.categoryLabel}>
-                                            <input
-                                                type="checkbox"
-                                                className={styles.checkbox}
-                                                data-category={category.id}
-                                                checked={checkboxState.checked}
-                                                ref={checkbox => {
-                                                    if (checkbox) {
-                                                        checkbox.indeterminate = checkboxState.indeterminate;
-                                                    }
-                                                }}
-                                                onChange={this.handleCategoryChange}
-                                            />
-                                            <span className={styles.categoryName}>
-                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                    this.ScratchBlocks.Msg[category.messageKey] ?
-                                                    this.ScratchBlocks.Msg[category.messageKey] :
-                                                    category.messageKey}
-                                            </span>
-                                        </label>
+                                        <input
+                                            type="checkbox"
+                                            className={styles.checkbox}
+                                            data-category={category.id}
+                                            checked={checkboxState.checked}
+                                            ref={checkbox => {
+                                                if (checkbox) {
+                                                    checkbox.indeterminate = checkboxState.indeterminate;
+                                                }
+                                            }}
+                                            onChange={this.handleCategoryChange}
+                                        />
+                                        <span
+                                            className={styles.categoryName}
+                                            data-category-index={index}
+                                            onClick={this.handleCategorySelect}
+                                        >
+                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                this.ScratchBlocks.Msg[category.messageKey] ?
+                                                this.ScratchBlocks.Msg[category.messageKey] :
+                                                category.messageKey}
+                                        </span>
                                     </div>
                                 );
                             })}

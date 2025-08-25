@@ -107,9 +107,9 @@
 .categoryItem {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-    cursor: pointer;
     transition: background-color 0.1s ease;
 }
 
@@ -153,6 +153,10 @@
 .categoryName {
     font-size: 0.875rem;
     color: hsla(0, 0%, 0%, 0.9);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    flex: 1;
 }
 
 .alwaysVisibleSection {

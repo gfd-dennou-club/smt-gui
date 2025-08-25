@@ -748,7 +748,9 @@ const xmlClose = '</xml>';
  */
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
-    return onlyBlocks.split(',').map(pattern => pattern.trim()).filter(pattern => pattern.length > 0);
+    return onlyBlocks.split(',')
+        .map(pattern => pattern.trim())
+        .filter(pattern => pattern.length > 0);
 };
 
 /**
@@ -760,16 +762,15 @@ const parseOnlyBlocks = function (onlyBlocks) {
 const shouldIncludeBlock = function (blockType, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return true;
     
-    return allowedPatterns.some(pattern => {
-        // Exact match or prefix match
-        return blockType === pattern || blockType.startsWith(pattern);
-    });
+    return allowedPatterns.some(pattern =>
+        blockType === pattern || blockType.startsWith(pattern)
+    );
 };
 
 /**
  * Filters block XML content based on only_blocks patterns
  * @param {string} categoryXML - The category XML containing blocks
- * @param {Array.<string>} allowedPatterns - Array of allowed patterns  
+ * @param {Array.<string>} allowedPatterns - Array of allowed patterns
  * @param {string} categoryId - The category ID for logging
  * @returns {string} - Filtered category XML
  */
@@ -870,7 +871,7 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     const everything = [xmlOpen];
     
     // Helper function to add category if it has content
-    const addCategoryIfNotEmpty = (categoryXML) => {
+    const addCategoryIfNotEmpty = categoryXML => {
         if (categoryXML && categoryXML.trim() !== '') {
             everything.push(categoryXML, gap);
         }

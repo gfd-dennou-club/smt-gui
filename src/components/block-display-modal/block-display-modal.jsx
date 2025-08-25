@@ -172,6 +172,7 @@ class BlockDisplayModal extends React.Component {
         super(props);
         bindAll(this, [
             'handleCategoryChange',
+            'handleBlockChange',
             'handleCategorySelect',
             'handlePrevious',
             'handleNext'
@@ -193,6 +194,13 @@ class BlockDisplayModal extends React.Component {
         this.props.onCategoryChange(categoryId, isChecked);
     }
     
+    handleBlockChange (event) {
+        const blockId = event.target.getAttribute('data-block');
+        const categoryId = event.target.getAttribute('data-category');
+        const isChecked = event.target.checked;
+        this.props.onBlockChange(categoryId, blockId, isChecked);
+    }
+    
     handleCategorySelect (event) {
         const categoryIndex = parseInt(event.currentTarget.getAttribute('data-category-index'), 10);
         this.setState({selectedCategoryIndex: categoryIndex});
@@ -211,12 +219,26 @@ class BlockDisplayModal extends React.Component {
             this.setState({selectedCategoryIndex: selectedCategoryIndex + 1});
         }
     }
+    
+    getCategoryCheckboxState (categoryId) {
+        const {selectedBlocks} = this.props;
+        const allBlocksInCategory = CATEGORY_BLOCKS[categoryId] || [];
+        const selectedBlocksInCategory = selectedBlocks[categoryId] || [];
+        
+        if (selectedBlocksInCategory.length === 0) {
+            return {checked: false, indeterminate: false};
+        }
+        if (selectedBlocksInCategory.length === allBlocksInCategory.length) {
+            return {checked: true, indeterminate: false};
+        }
+        return {checked: false, indeterminate: true};
+    }
 
     render () {
         const {
             intl,
             onRequestClose,
-            selectedCategories,
+            selectedBlocks,
             onSelectAll,
             onSelectNone
         } = this.props;
@@ -243,32 +265,40 @@ class BlockDisplayModal extends React.Component {
                                     id="gui.smalruby3.blockDisplayModal.categoriesTitle"
                                 />
                             </div>
-                            {BLOCK_CATEGORIES.map((category, index) => (
-                                <div
-                                    key={category.id}
-                                    className={classNames(styles.categoryItem, {
-                                        [styles.selectedCategory]: selectedCategoryIndex === index
-                                    })}
-                                    data-category-index={index}
-                                    onClick={this.handleCategorySelect}
-                                >
-                                    <label className={styles.categoryLabel}>
-                                        <input
-                                            type="checkbox"
-                                            className={styles.checkbox}
-                                            data-category={category.id}
-                                            checked={selectedCategories.includes(category.id)}
-                                            onChange={this.handleCategoryChange}
-                                        />
-                                        <span className={styles.categoryName}>
-                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                this.ScratchBlocks.Msg[category.messageKey] ?
-                                                this.ScratchBlocks.Msg[category.messageKey] :
-                                                category.messageKey}
-                                        </span>
-                                    </label>
-                                </div>
-                            ))}
+                            {BLOCK_CATEGORIES.map((category, index) => {
+                                const checkboxState = this.getCategoryCheckboxState(category.id);
+                                return (
+                                    <div
+                                        key={category.id}
+                                        className={classNames(styles.categoryItem, {
+                                            [styles.selectedCategory]: selectedCategoryIndex === index
+                                        })}
+                                        data-category-index={index}
+                                        onClick={this.handleCategorySelect}
+                                    >
+                                        <label className={styles.categoryLabel}>
+                                            <input
+                                                type="checkbox"
+                                                className={styles.checkbox}
+                                                data-category={category.id}
+                                                checked={checkboxState.checked}
+                                                ref={checkbox => {
+                                                    if (checkbox) {
+                                                        checkbox.indeterminate = checkboxState.indeterminate;
+                                                    }
+                                                }}
+                                                onChange={this.handleCategoryChange}
+                                            />
+                                            <span className={styles.categoryName}>
+                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                    this.ScratchBlocks.Msg[category.messageKey] ?
+                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                    category.messageKey}
+                                            </span>
+                                        </label>
+                                    </div>
+                                );
+                            })}
                         </Box>
                         
                         <Box className={styles.controls}>
@@ -371,6 +401,9 @@ class BlockDisplayModal extends React.Component {
                                     this.ScratchBlocks.Msg[messageKey] :
                                     blockType;
                                 
+                                const selectedBlocksInCategory = selectedBlocks[selectedCategory.id] || [];
+                                const isBlockSelected = selectedBlocksInCategory.includes(blockType);
+                                
                                 return (
                                     <div
                                         key={blockType}
@@ -379,8 +412,11 @@ class BlockDisplayModal extends React.Component {
                                         <label className={styles.blockLabel}>
                                             <input
                                                 type="checkbox"
-                                                defaultChecked
+                                                checked={isBlockSelected}
                                                 className={styles.blockCheckbox}
+                                                data-block={blockType}
+                                                data-category={selectedCategory.id}
+                                                onChange={this.handleBlockChange}
                                             />
                                             <span className={styles.blockName}>
                                                 {blockName}
@@ -401,7 +437,9 @@ BlockDisplayModal.propTypes = {
     intl: intlShape.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     selectedCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedBlocks: PropTypes.object.isRequired,
     onCategoryChange: PropTypes.func.isRequired,
+    onBlockChange: PropTypes.func.isRequired,
     onSelectAll: PropTypes.func.isRequired,
     onSelectNone: PropTypes.func.isRequired,
     vm: PropTypes.object

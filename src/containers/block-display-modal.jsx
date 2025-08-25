@@ -5,16 +5,63 @@ import {connect} from 'react-redux';
 
 import {
     setSelectedCategories,
+    setSelectedBlocks,
     closeBlockDisplayModal
 } from '../reducers/block-display.js';
 
 import BlockDisplayModalComponent from '../components/block-display-modal/block-display-modal.jsx';
+
+// Define block categories with their IDs and blocks
+const CATEGORY_BLOCKS = {
+    motion: [
+        'motion_movesteps', 'motion_turnright', 'motion_turnleft', 'motion_goto', 'motion_gotoxy',
+        'motion_glideto', 'motion_glidesecstoxy', 'motion_pointindirection', 'motion_pointtowards',
+        'motion_changexby', 'motion_setx', 'motion_changeyby', 'motion_sety', 'motion_ifonedgebounce',
+        'motion_setrotationstyle'
+    ],
+    looks: [
+        'looks_sayforsecs', 'looks_say', 'looks_thinkforsecs', 'looks_think', 'looks_switchbackdropto',
+        'looks_switchbackdroptoandwait', 'looks_nextbackdrop', 'looks_switchcostumeto',
+        'looks_nextcostume', 'looks_changesizeby', 'looks_setsizeto', 'looks_changeeffectby',
+        'looks_seteffectto', 'looks_cleargraphiceffects', 'looks_show', 'looks_hide',
+        'looks_gotofrontback', 'looks_goforwardbackwardlayers'
+    ],
+    sound: [
+        'sound_playuntildone', 'sound_play', 'sound_stopallsounds', 'sound_changeeffectby',
+        'sound_seteffectto', 'sound_cleareffects', 'sound_changevolumeby', 'sound_setvolumeto'
+    ],
+    event: [
+        'event_whenflagclicked', 'event_whenkeypressed', 'event_whenthisspriteclicked',
+        'event_whenbackdropswitchesto', 'event_whengreaterthan', 'event_whenbroadcastreceived',
+        'event_broadcast', 'event_broadcastandwait'
+    ],
+    control: [
+        'control_wait', 'control_repeat', 'control_forever', 'control_if', 'control_if_else',
+        'control_wait_until', 'control_repeat_until', 'control_stop', 'control_start_as_clone',
+        'control_create_clone_of', 'control_delete_this_clone'
+    ],
+    sensing: [
+        'sensing_touchingobject', 'sensing_touchingcolor', 'sensing_coloristouchingcolor',
+        'sensing_distanceto', 'sensing_askandwait', 'sensing_answer', 'sensing_keypressed',
+        'sensing_mousedown', 'sensing_mousex', 'sensing_mousey', 'sensing_setdragmode',
+        'sensing_loudness', 'sensing_timer', 'sensing_resettimer', 'sensing_of',
+        'sensing_current', 'sensing_dayssince2000', 'sensing_username'
+    ],
+    operator: [
+        'operator_add', 'operator_subtract', 'operator_multiply', 'operator_divide',
+        'operator_random', 'operator_gt', 'operator_lt', 'operator_equals', 'operator_and',
+        'operator_or', 'operator_not', 'operator_join', 'operator_letter_of',
+        'operator_length', 'operator_contains', 'operator_mod', 'operator_round',
+        'operator_mathop'
+    ]
+};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
             'handleCategoryChange',
+            'handleBlockChange',
             'handleSelectAll',
             'handleSelectNone',
             'handleClose'
@@ -23,24 +70,86 @@ class BlockDisplayModal extends React.Component {
 
     handleCategoryChange (categoryId, isSelected) {
         const currentCategories = [...this.props.selectedCategories];
+        const currentBlocks = {...this.props.selectedBlocks};
         
-        if (isSelected && !currentCategories.includes(categoryId)) {
-            currentCategories.push(categoryId);
-        } else if (!isSelected && currentCategories.includes(categoryId)) {
-            const index = currentCategories.indexOf(categoryId);
-            currentCategories.splice(index, 1);
+        if (isSelected) {
+            // Add category and all its blocks
+            if (!currentCategories.includes(categoryId)) {
+                currentCategories.push(categoryId);
+            }
+            currentBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
+        } else {
+            // Remove category and all its blocks
+            if (currentCategories.includes(categoryId)) {
+                const index = currentCategories.indexOf(categoryId);
+                currentCategories.splice(index, 1);
+            }
+            currentBlocks[categoryId] = [];
         }
         
         this.props.onSetSelectedCategories(currentCategories);
+        this.props.onSetSelectedBlocks(currentBlocks);
+    }
+
+    handleBlockChange (categoryId, blockId, isSelected) {
+        const currentBlocks = {...this.props.selectedBlocks};
+        const currentCategories = [...this.props.selectedCategories];
+        
+        // Update the specific block
+        if (!currentBlocks[categoryId]) {
+            currentBlocks[categoryId] = [];
+        }
+        
+        if (isSelected && !currentBlocks[categoryId].includes(blockId)) {
+            currentBlocks[categoryId].push(blockId);
+        } else if (!isSelected && currentBlocks[categoryId].includes(blockId)) {
+            const index = currentBlocks[categoryId].indexOf(blockId);
+            currentBlocks[categoryId].splice(index, 1);
+        }
+        
+        // Update category state based on block states
+        
+        const allBlocksInCategory = CATEGORY_BLOCKS[categoryId];
+        const selectedBlocksInCategory = currentBlocks[categoryId];
+        
+        if (selectedBlocksInCategory.length === 0) {
+            // No blocks selected - remove category
+            if (currentCategories.includes(categoryId)) {
+                const index = currentCategories.indexOf(categoryId);
+                currentCategories.splice(index, 1);
+            }
+        } else if (selectedBlocksInCategory.length === allBlocksInCategory.length) {
+            // All blocks selected - add category
+            if (!currentCategories.includes(categoryId)) {
+                currentCategories.push(categoryId);
+            }
+        } else if (!currentCategories.includes(categoryId)) {
+            // Some blocks selected - category should be in indeterminate state (still in selectedCategories)
+            currentCategories.push(categoryId);
+        }
+        
+        this.props.onSetSelectedCategories(currentCategories);
+        this.props.onSetSelectedBlocks(currentBlocks);
     }
 
     handleSelectAll () {
         const allCategories = ['motion', 'looks', 'sound', 'event', 'control', 'sensing', 'operator'];
         this.props.onSetSelectedCategories(allCategories);
+        this.props.onSetSelectedBlocks(CATEGORY_BLOCKS);
     }
 
     handleSelectNone () {
+        const emptyBlocks = {
+            motion: [],
+            looks: [],
+            sound: [],
+            event: [],
+            control: [],
+            sensing: [],
+            operator: []
+        };
         this.props.onSetSelectedCategories([]);
+        this.props.onSetSelectedBlocks(emptyBlocks);
     }
 
     handleClose () {
@@ -51,7 +160,9 @@ class BlockDisplayModal extends React.Component {
         return (
             <BlockDisplayModalComponent
                 selectedCategories={this.props.selectedCategories}
+                selectedBlocks={this.props.selectedBlocks}
                 onCategoryChange={this.handleCategoryChange}
+                onBlockChange={this.handleBlockChange}
                 onSelectAll={this.handleSelectAll}
                 onSelectNone={this.handleSelectNone}
                 onRequestClose={this.handleClose}
@@ -63,17 +174,21 @@ class BlockDisplayModal extends React.Component {
 
 BlockDisplayModal.propTypes = {
     selectedCategories: PropTypes.arrayOf(PropTypes.string),
+    selectedBlocks: PropTypes.object,
     onSetSelectedCategories: PropTypes.func.isRequired,
+    onSetSelectedBlocks: PropTypes.func.isRequired,
     onRequestClose: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     selectedCategories: state.scratchGui.blockDisplay.selectedCategories,
+    selectedBlocks: state.scratchGui.blockDisplay.selectedBlocks,
     vm: state.scratchGui.vm
 });
 
 const mapDispatchToProps = dispatch => ({
     onSetSelectedCategories: categories => dispatch(setSelectedCategories(categories)),
+    onSetSelectedBlocks: blocks => dispatch(setSelectedBlocks(blocks)),
     onRequestClose: () => dispatch(closeBlockDisplayModal())
 });
 

@@ -1,11 +1,10 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactModal from 'react-modal';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 
-import Box from '../box/box.jsx';
-import Modal from '../../containers/modal.jsx';
 
 import styles from './block-display-modal.css';
 
@@ -69,18 +68,15 @@ class BlockDisplayModal extends React.Component {
             onRequestClose,
             selectedCategories,
             onSelectAll,
-            onSelectNone,
-            ...props
+            onSelectNone
         } = this.props;
         
         return (
-            <Modal
-                className={styles.modalContent}
-                contentLabel={intl.formatMessage(messages.title)}
-                headerClassName={styles.hiddenHeader}
-                id="blockDisplayModal"
+            <ReactModal
+                isOpen
                 onRequestClose={onRequestClose}
-                {...props}
+                className={styles.blockDisplayModalContainer}
+                overlayClassName={styles.blockDisplayModalOverlay}
             >
                 <div className={styles.modalHeader}>
                     <div className={styles.headerTitle}>
@@ -93,9 +89,9 @@ class BlockDisplayModal extends React.Component {
                         {'×'}
                     </button>
                 </div>
-                <Box className={styles.body}>
+                <div className={styles.modalContent}>
                     
-                    <Box className={styles.controls}>
+                    <div className={styles.controls}>
                         <button
                             className={classNames(
                                 styles.controlButton,
@@ -114,9 +110,9 @@ class BlockDisplayModal extends React.Component {
                         >
                             <FormattedMessage {...messages.selectNone} />
                         </button>
-                    </Box>
+                    </div>
 
-                    <Box className={styles.categorySection}>
+                    <div className={styles.categorySection}>
                         {BLOCK_CATEGORIES.map(category => (
                             <div
                                 key={category.id}
@@ -136,9 +132,9 @@ class BlockDisplayModal extends React.Component {
                                 </label>
                             </div>
                         ))}
-                    </Box>
+                    </div>
 
-                    <Box className={styles.alwaysVisibleSection}>
+                    <div className={styles.alwaysVisibleSection}>
                         <div className={styles.sectionDivider} />
                         {ALWAYS_VISIBLE_CATEGORIES.map(category => (
                             <div
@@ -161,10 +157,10 @@ class BlockDisplayModal extends React.Component {
                                 </label>
                             </div>
                         ))}
-                    </Box>
+                    </div>
 
-                </Box>
-            </Modal>
+                </div>
+            </ReactModal>
         );
     }
 }

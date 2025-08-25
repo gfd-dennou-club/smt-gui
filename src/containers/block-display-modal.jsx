@@ -35,7 +35,7 @@ class BlockDisplayModal extends React.Component {
     }
 
     handleSelectAll () {
-        const allCategories = ['motion', 'looks', 'sound', 'events', 'control', 'sensing', 'operators'];
+        const allCategories = ['motion', 'looks', 'sound', 'event', 'control', 'sensing', 'operator'];
         this.props.onSetSelectedCategories(allCategories);
     }
 

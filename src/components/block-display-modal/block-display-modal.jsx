@@ -42,10 +42,10 @@ const BLOCK_CATEGORIES = [
     {id: 'motion', name: 'Motion'},
     {id: 'looks', name: 'Looks'},
     {id: 'sound', name: 'Sound'},
-    {id: 'events', name: 'Events'},
+    {id: 'event', name: 'Events'},
     {id: 'control', name: 'Control'},
     {id: 'sensing', name: 'Sensing'},
-    {id: 'operators', name: 'Operators'}
+    {id: 'operator', name: 'Operators'}
 ];
 
 const ALWAYS_VISIBLE_CATEGORIES = [

@@ -742,6 +742,66 @@ const xmlOpen = '<xml style="display: none">';
 const xmlClose = '</xml>';
 
 /**
+ * Parses the only_blocks parameter and returns allowed block patterns
+ * @param {?string} onlyBlocks - The only_blocks URL parameter value
+ * @returns {Array.<string>} - Array of allowed block patterns
+ */
+const parseOnlyBlocks = function (onlyBlocks) {
+    if (!onlyBlocks) return [];
+    return onlyBlocks.split(',').map(pattern => pattern.trim()).filter(pattern => pattern.length > 0);
+};
+
+/**
+ * Checks if a block type should be included based on only_blocks patterns
+ * @param {string} blockType - The block type to check
+ * @param {Array.<string>} allowedPatterns - Array of allowed patterns
+ * @returns {boolean} - Whether the block should be included
+ */
+const shouldIncludeBlock = function (blockType, allowedPatterns) {
+    if (!allowedPatterns || allowedPatterns.length === 0) return true;
+    
+    return allowedPatterns.some(pattern => {
+        // Exact match or prefix match
+        return blockType === pattern || blockType.startsWith(pattern);
+    });
+};
+
+/**
+ * Filters block XML content based on only_blocks patterns
+ * @param {string} categoryXML - The category XML containing blocks
+ * @param {Array.<string>} allowedPatterns - Array of allowed patterns  
+ * @param {string} categoryId - The category ID for logging
+ * @returns {string} - Filtered category XML
+ */
+const filterBlocksInCategory = function (categoryXML, allowedPatterns, categoryId) {
+    if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
+    
+    // Parse the XML to extract and filter block elements
+    const blockRegex = /<block[^>]*type="([^"]+)"[^>]*(?:\/>|>.*?<\/block>)/gs;
+    const matches = categoryXML.match(blockRegex) || [];
+    
+    const filteredBlocks = matches.filter(blockXML => {
+        const typeMatch = blockXML.match(/type="([^"]+)"/);
+        if (!typeMatch) return false;
+        
+        const blockType = typeMatch[1];
+        return shouldIncludeBlock(blockType, allowedPatterns);
+    });
+    
+    if (filteredBlocks.length === 0) {
+        console.error(`No blocks found for only_blocks filter in category: ${categoryId}`);
+        return '';
+    }
+    
+    // Reconstruct the category XML with filtered blocks
+    const categoryHeader = categoryXML.match(/<category[^>]*>/)[0];
+    const categoryFooter = '</category>';
+    const blockContent = filteredBlocks.join('\n        ');
+    
+    return `${categoryHeader}\n        ${blockContent}\n        ${categorySeparator}\n    ${categoryFooter}`;
+};
+
+/**
  * @param {!boolean} isInitialSetup - Whether the toolbox is for initial setup. If the mode is "initial setup",
  * blocks with localized default parameters (e.g. ask and wait) should not be loaded. (LLK/scratch-gui#5445)
  * @param {?boolean} isStage - Whether the toolbox is for a stage-type target. This is always set to true
@@ -755,16 +815,20 @@ const xmlClose = '</xml>';
  * @param {?string} backdropName - The name of the default selected backdrop dropdown.
  * @param {?string} soundName -  The name of the default selected sound dropdown.
  * @param {?object} colors - The colors for the theme.
+ * @param {?string} onlyBlocks - The only_blocks URL parameter for filtering blocks.
  * @returns {string} - a ScratchBlocks-style XML document for the contents of the toolbox.
  */
 const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categoriesXML = [],
-    costumeName = '', backdropName = '', soundName = '', colors = defaultColors) {
+    costumeName = '', backdropName = '', soundName = '', colors = defaultColors, onlyBlocks = null) {
     isStage = isInitialSetup || isStage;
     const gap = [categorySeparator];
 
     costumeName = xmlEscape(costumeName);
     backdropName = xmlEscape(backdropName);
     soundName = xmlEscape(soundName);
+
+    // Parse only_blocks parameter
+    const allowedPatterns = parseOnlyBlocks(onlyBlocks);
 
     categoriesXML = categoriesXML.slice();
     const moveCategory = categoryId => {
@@ -776,32 +840,63 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         }
         // return `undefined`
     };
-    const motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
-    const looksXML = moveCategory('looks') ||
+    
+    // Generate categories and apply filtering (except for variables, myBlocks, and extensions)
+    let motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
+    let looksXML = moveCategory('looks') ||
         looks(isInitialSetup, isStage, targetId, costumeName, backdropName, colors.looks);
-    const soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName, colors.sounds);
-    const eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId, colors.event);
-    const controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, colors.control);
-    const sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId, colors.sensing);
-    const operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId, colors.operators);
+    let soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName, colors.sounds);
+    let eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId, colors.event);
+    let controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, colors.control);
+    let sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId, colors.sensing);
+    let operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId, colors.operators);
+    
+    // Variables and myBlocks are always included (exception categories)
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId, colors.data);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId, colors.more);
+    
+    // Apply filtering to core categories if only_blocks is specified
+    if (allowedPatterns.length > 0) {
+        motionXML = filterBlocksInCategory(motionXML, allowedPatterns, 'motion');
+        looksXML = filterBlocksInCategory(looksXML, allowedPatterns, 'looks');
+        soundXML = filterBlocksInCategory(soundXML, allowedPatterns, 'sound');
+        eventsXML = filterBlocksInCategory(eventsXML, allowedPatterns, 'events');
+        controlXML = filterBlocksInCategory(controlXML, allowedPatterns, 'control');
+        sensingXML = filterBlocksInCategory(sensingXML, allowedPatterns, 'sensing');
+        operatorsXML = filterBlocksInCategory(operatorsXML, allowedPatterns, 'operators');
+    }
 
-    const everything = [
-        xmlOpen,
-        motionXML, gap,
-        looksXML, gap,
-        soundXML, gap,
-        eventsXML, gap,
-        controlXML, gap,
-        sensingXML, gap,
-        operatorsXML, gap,
-        variablesXML, gap,
-        myBlocksXML
-    ];
-
+    // Build the final XML, only including non-empty categories
+    const everything = [xmlOpen];
+    
+    // Helper function to add category if it has content
+    const addCategoryIfNotEmpty = (categoryXML) => {
+        if (categoryXML && categoryXML.trim() !== '') {
+            everything.push(categoryXML, gap);
+        }
+    };
+    
+    // Add core categories (only if they have blocks after filtering)
+    addCategoryIfNotEmpty(motionXML);
+    addCategoryIfNotEmpty(looksXML);
+    addCategoryIfNotEmpty(soundXML);
+    addCategoryIfNotEmpty(eventsXML);
+    addCategoryIfNotEmpty(controlXML);
+    addCategoryIfNotEmpty(sensingXML);
+    addCategoryIfNotEmpty(operatorsXML);
+    
+    // Variables and myBlocks are always included (exception categories)
+    addCategoryIfNotEmpty(variablesXML);
+    addCategoryIfNotEmpty(myBlocksXML);
+    
+    // Extension categories are always included (exception categories)
     for (const extensionCategory of categoriesXML) {
-        everything.push(gap, extensionCategory.xml);
+        addCategoryIfNotEmpty(extensionCategory.xml);
+    }
+
+    // Remove the last gap if it exists
+    if (everything.length > 1 && everything[everything.length - 1] === gap[0]) {
+        everything.pop();
     }
 
     everything.push(xmlClose);

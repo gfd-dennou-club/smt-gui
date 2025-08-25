@@ -25,11 +25,6 @@ const messages = defineMessages({
         description: 'Button text to deselect all block categories',
         id: 'gui.blockDisplayModal.selectNone'
     },
-    close: {
-        defaultMessage: 'Close',
-        description: 'Button text to close the modal',
-        id: 'gui.blockDisplayModal.close'
-    },
     alwaysVisible: {
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
@@ -82,16 +77,23 @@ class BlockDisplayModal extends React.Component {
             <Modal
                 className={styles.modalContent}
                 contentLabel={intl.formatMessage(messages.title)}
+                headerClassName={styles.hiddenHeader}
                 id="blockDisplayModal"
                 onRequestClose={onRequestClose}
                 {...props}
             >
+                <div className={styles.modalHeader}>
+                    <div className={styles.headerTitle}>
+                        <FormattedMessage {...messages.title} />
+                    </div>
+                    <button
+                        className={styles.closeButton}
+                        onClick={onRequestClose}
+                    >
+                        {'×'}
+                    </button>
+                </div>
                 <Box className={styles.body}>
-                    <Box className={styles.header}>
-                        <div className={styles.title}>
-                            <FormattedMessage {...messages.title} />
-                        </div>
-                    </Box>
                     
                     <Box className={styles.controls}>
                         <button
@@ -161,14 +163,6 @@ class BlockDisplayModal extends React.Component {
                         ))}
                     </Box>
 
-                    <Box className={styles.footer}>
-                        <button
-                            className={styles.closeButton}
-                            onClick={onRequestClose}
-                        >
-                            <FormattedMessage {...messages.close} />
-                        </button>
-                    </Box>
                 </Box>
             </Modal>
         );

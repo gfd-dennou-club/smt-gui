@@ -1,8 +1,19 @@
 const UPDATE_TOOLBOX = 'scratch-gui/toolbox/UPDATE_TOOLBOX';
 import makeToolboxXML from '../lib/make-toolbox-xml';
+import queryString from 'query-string';
+
+const getInitialToolboxXML = () => {
+    try {
+        const queryParams = queryString.parse(location.search);
+        const onlyBlocks = queryParams.only_blocks;
+        return makeToolboxXML(true, true, null, [], '', '', '', null, onlyBlocks);
+    } catch {
+        return makeToolboxXML(true);
+    }
+};
 
 const initialState = {
-    toolboxXML: makeToolboxXML(true)
+    toolboxXML: getInitialToolboxXML()
 };
 
 const reducer = function (state, action) {

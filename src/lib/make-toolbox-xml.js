@@ -847,7 +847,7 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     let looksXML = moveCategory('looks') ||
         looks(isInitialSetup, isStage, targetId, costumeName, backdropName, colors.looks);
     let soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName, colors.sounds);
-    let eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId, colors.event);
+    let eventsXML = moveCategory('events') || events(isInitialSetup, isStage, targetId, colors.event);
     let controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, colors.control);
     let sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId, colors.sensing);
     let operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId, colors.operators);

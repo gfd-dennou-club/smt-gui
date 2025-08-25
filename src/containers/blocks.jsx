@@ -375,9 +375,14 @@ class Blocks extends React.Component {
             let onlyBlocks = queryParams.only_blocks;
             
             // If no URL parameter, use GUI settings to generate only_blocks equivalent
-            if (!onlyBlocks && this.props.selectedCategories && this.props.selectedCategories.length > 0) {
-                // Convert selected categories to only_blocks format (category prefixes)
-                onlyBlocks = this.props.selectedCategories.map(category => `${category}_`).join(',');
+            if (!onlyBlocks && this.props.selectedCategories) {
+                if (this.props.selectedCategories.length === 0) {
+                    // If no categories selected, show only variables and myBlocks (empty blocks)
+                    onlyBlocks = 'variables_,myBlocks_';
+                } else {
+                    // Convert selected categories to only_blocks format (category prefixes)
+                    onlyBlocks = this.props.selectedCategories.map(category => `${category}_`).join(',');
+                }
             }
             
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,

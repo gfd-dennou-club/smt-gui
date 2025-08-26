@@ -2,7 +2,7 @@
 @import "../../css/units.css";
 
 .modal-content {
-    width: 900px;
+    width: 500px;
     height: 600px;
     line-height: 1.75;
 }
@@ -19,7 +19,7 @@
 }
 
 .leftPane {
-    width: 300px;
+    width: 180px;
     padding: 1rem;
     background: $ui-tertiary;
     border-right: 1px solid hsla(0, 0%, 0%, 0.1);

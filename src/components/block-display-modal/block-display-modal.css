@@ -3,10 +3,8 @@
 
 .modal-content {
     width: 900px;
-    max-width: 90vw;
-    line-height: 1.75;
     height: 600px;
-    max-height: 80vh;
+    line-height: 1.75;
 }
 
 .header {
@@ -283,22 +281,3 @@
     flex-direction: row-reverse;
 }
 
-/* Responsive design */
-@media only screen and (max-width: 576px) {
-    .modal-content {
-        width: 90vw;
-        max-width: 400px;
-    }
-    
-    .body {
-        padding: 0.75rem;
-    }
-    
-    .controls {
-        flex-direction: column;
-    }
-    
-    .controlButton {
-        width: 100%;
-    }
-}

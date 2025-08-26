@@ -20,6 +20,7 @@
 
 .leftPane {
     width: 180px;
+    height: calc(560px - 4px * 2 - 50px);
     padding: 1rem;
     background: $ui-tertiary;
     border-right: 1px solid hsla(0, 0%, 0%, 0.1);
@@ -29,6 +30,7 @@
 
 .rightPane {
     flex: 1;
+    height: calc(560px - 4px * 2 - 50px);
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -222,8 +224,6 @@
     flex: 1;
     overflow-y: auto;
     padding-right: 0.5rem;
-    max-height: calc(100% - 100px);
-    min-height: 200px;
 }
 
 .blockItem {
@@ -280,4 +280,3 @@
 [dir="rtl"] .categoryLabel {
     flex-direction: row-reverse;
 }
-

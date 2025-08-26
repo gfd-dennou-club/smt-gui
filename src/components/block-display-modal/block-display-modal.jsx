@@ -16,16 +16,6 @@ const messages = defineMessages({
         description: 'Title for the block display settings modal',
         id: 'gui.smalruby3.blockDisplayModal.title'
     },
-    selectAll: {
-        defaultMessage: 'Select All',
-        description: 'Button text to select all block categories',
-        id: 'gui.smalruby3.blockDisplayModal.selectAll'
-    },
-    selectNone: {
-        defaultMessage: 'Select None',
-        description: 'Button text to deselect all block categories',
-        id: 'gui.smalruby3.blockDisplayModal.selectNone'
-    },
     alwaysVisible: {
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
@@ -238,9 +228,7 @@ class BlockDisplayModal extends React.Component {
         const {
             intl,
             onRequestClose,
-            selectedBlocks,
-            onSelectAll,
-            onSelectNone
+            selectedBlocks
         } = this.props;
         
         const {selectedCategoryIndex} = this.state;
@@ -299,27 +287,6 @@ class BlockDisplayModal extends React.Component {
                                     </div>
                                 );
                             })}
-                        </Box>
-                        
-                        <Box className={styles.controls}>
-                            <button
-                                className={classNames(
-                                    styles.controlButton,
-                                    styles.selectAllButton
-                                )}
-                                onClick={onSelectAll}
-                            >
-                                <FormattedMessage {...messages.selectAll} />
-                            </button>
-                            <button
-                                className={classNames(
-                                    styles.controlButton,
-                                    styles.selectNoneButton
-                                )}
-                                onClick={onSelectNone}
-                            >
-                                <FormattedMessage {...messages.selectNone} />
-                            </button>
                         </Box>
 
                         <Box className={styles.alwaysVisibleSection}>
@@ -439,8 +406,6 @@ BlockDisplayModal.propTypes = {
     selectedBlocks: PropTypes.object.isRequired,
     onCategoryChange: PropTypes.func.isRequired,
     onBlockChange: PropTypes.func.isRequired,
-    onSelectAll: PropTypes.func.isRequired,
-    onSelectNone: PropTypes.func.isRequired,
     vm: PropTypes.object
 };
 

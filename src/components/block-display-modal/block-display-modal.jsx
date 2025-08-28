@@ -181,6 +181,15 @@ class BlockDisplayModal extends React.Component {
     handleCategoryChange (event) {
         const categoryId = event.target.getAttribute('data-category');
         const isChecked = event.target.checked;
+        
+        // Find the category index for the clicked category
+        const categoryIndex = BLOCK_CATEGORIES.findIndex(category => category.id === categoryId);
+        
+        // Update the selected category to sync the right pane
+        if (categoryIndex !== -1) {
+            this.setState({selectedCategoryIndex: categoryIndex});
+        }
+        
         this.props.onCategoryChange(categoryId, isChecked);
     }
     

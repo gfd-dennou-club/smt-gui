@@ -119,16 +119,16 @@
 }
 
 .selectedCategory {
-    background: #4c97ff;
-    color: white;
+    background: #E9EEF2;
+    color: black;
 }
 
 .selectedCategory:hover {
-    background: #4280d7;
+    background: #E9EEF2;
 }
 
 .selectedCategory .categoryName {
-    color: white;
+    color: black;
 }
 
 .categoryLabel {
@@ -144,11 +144,151 @@
     width: 1rem;
     height: 1rem;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+    position: relative;
+    transition: all 0.2s ease;
 }
 
 .checkbox:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+.checkbox:checked::after {
+    content: "✓";
+    position: absolute;
+    top: -3px;
+    left: 0px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox:indeterminate::after {
+    content: "−";
+    position: absolute;
+    top: -1px;
+    left: 3px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Category-specific checkbox colors */
+.categoryItem[data-category="motion"] .checkbox:checked,
+.categoryItem[data-category="motion"] .checkbox:indeterminate {
+    background-color: rgb(76, 151, 255);
+    border-color: rgb(51, 115, 204);
+}
+
+.categoryItem[data-category="looks"] .checkbox:checked,
+.categoryItem[data-category="looks"] .checkbox:indeterminate {
+    background-color: rgb(153, 102, 255);
+    border-color: rgb(119, 77, 203);
+}
+
+.categoryItem[data-category="sound"] .checkbox:checked,
+.categoryItem[data-category="sound"] .checkbox:indeterminate {
+    background-color: rgb(207, 99, 207);
+    border-color: rgb(189, 66, 189);
+}
+
+.categoryItem[data-category="events"] .checkbox:checked,
+.categoryItem[data-category="events"] .checkbox:indeterminate {
+    background-color: rgb(255, 191, 0);
+    border-color: rgb(204, 153, 0);
+}
+
+.categoryItem[data-category="control"] .checkbox:checked,
+.categoryItem[data-category="control"] .checkbox:indeterminate {
+    background-color: rgb(255, 171, 25);
+    border-color: rgb(207, 139, 23);
+}
+
+.categoryItem[data-category="sensing"] .checkbox:checked,
+.categoryItem[data-category="sensing"] .checkbox:indeterminate {
+    background-color: rgb(92, 177, 214);
+    border-color: rgb(46, 142, 184);
+}
+
+.categoryItem[data-category="operators"] .checkbox:checked,
+.categoryItem[data-category="operators"] .checkbox:indeterminate {
+    background-color: rgb(15, 189, 140);
+    border-color: rgb(11, 142, 105);
+}
+
+.categoryItem[data-category="variables"] .checkbox:checked,
+.categoryItem[data-category="variables"] .checkbox:indeterminate {
+    background-color: rgb(255, 140, 26);
+    border-color: rgb(219, 110, 0);
+}
+
+.categoryItem[data-category="myBlocks"] .checkbox:checked,
+.categoryItem[data-category="myBlocks"] .checkbox:indeterminate {
+    background-color: rgb(255, 102, 128);
+    border-color: rgb(255, 51, 85);
+}
+
+.categoryItem[data-category="extensions"] .checkbox:checked,
+.categoryItem[data-category="extensions"] .checkbox:indeterminate {
+    background-color: #0FBD8C;
+    border-color: #0B8E69;
+}
+
+/* Block checkbox category-specific colors */
+.blockCheckbox[data-category="motion"]:checked {
+    background-color: rgb(76, 151, 255);
+    border-color: rgb(51, 115, 204);
+}
+
+.blockCheckbox[data-category="looks"]:checked {
+    background-color: rgb(153, 102, 255);
+    border-color: rgb(119, 77, 203);
+}
+
+.blockCheckbox[data-category="sound"]:checked {
+    background-color: rgb(207, 99, 207);
+    border-color: rgb(189, 66, 189);
+}
+
+.blockCheckbox[data-category="events"]:checked {
+    background-color: rgb(255, 191, 0);
+    border-color: rgb(204, 153, 0);
+}
+
+.blockCheckbox[data-category="control"]:checked {
+    background-color: rgb(255, 171, 25);
+    border-color: rgb(207, 139, 23);
+}
+
+.blockCheckbox[data-category="sensing"]:checked {
+    background-color: rgb(92, 177, 214);
+    border-color: rgb(46, 142, 184);
+}
+
+.blockCheckbox[data-category="operators"]:checked {
+    background-color: rgb(15, 189, 140);
+    border-color: rgb(11, 142, 105);
+}
+
+.blockCheckbox[data-category="variables"]:checked {
+    background-color: rgb(255, 140, 26);
+    border-color: rgb(219, 110, 0);
+}
+
+.blockCheckbox[data-category="myBlocks"]:checked {
+    background-color: rgb(255, 102, 128);
+    border-color: rgb(255, 51, 85);
+}
+
+.blockCheckbox[data-category="extensions"]:checked {
+    background-color: #0FBD8C;
+    border-color: #0B8E69;
 }
 
 .categoryName {
@@ -252,6 +392,24 @@
     height: 1rem;
     cursor: pointer;
     flex-shrink: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.blockCheckbox:checked::after {
+    content: "✓";
+    position: absolute;
+    top: -3px;
+    left: 0px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .blockName {

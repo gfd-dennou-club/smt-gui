@@ -261,6 +261,7 @@ class BlockDisplayModal extends React.Component {
                                         className={classNames(styles.categoryItem, {
                                             [styles.selectedCategory]: selectedCategoryIndex === index
                                         })}
+                                        data-category={category.id}
                                     >
                                         <input
                                             type="checkbox"

@@ -173,7 +173,8 @@ const getBlockMessageKey = blockType => {
         'control_repeat_until': 'CONTROL_REPEATUNTIL', 
         'control_start_as_clone': 'CONTROL_STARTASCLONE',
         'control_create_clone_of': 'CONTROL_CREATECLONEOF',
-        'control_delete_this_clone': 'CONTROL_DELETETHISCLONE'
+        'control_delete_this_clone': 'CONTROL_DELETETHISCLONE',
+        'control_stop': 'CONTROL_STOP_ALL'  // Use "すべてを止める" instead of empty space
     };
     
     if (controlBlockMappings[blockType]) {

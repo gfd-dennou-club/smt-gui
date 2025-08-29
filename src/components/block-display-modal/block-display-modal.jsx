@@ -155,7 +155,13 @@ const CATEGORY_BLOCKS = {
 };
 
 // Convert block type to ScratchBlocks.Msg key
-const getBlockMessageKey = blockType => blockType.toUpperCase();
+const getBlockMessageKey = blockType => {
+    // Handle typo in scratch-l10n: SOUND_SETEFFECTTO should be SOUND_SETEFFECTO
+    if (blockType === 'sound_seteffectto') {
+        return 'SOUND_SETEFFECTO';
+    }
+    return blockType.toUpperCase();
+};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {

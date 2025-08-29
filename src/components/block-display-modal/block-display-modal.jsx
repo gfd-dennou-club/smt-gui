@@ -163,6 +163,10 @@ const getBlockMessageKey = blockType => {
     
     // Handle operator blocks: operator_ -> OPERATORS_ (plural)
     if (blockType.startsWith('operator_')) {
+        // Special case: operator_letter_of -> OPERATORS_LETTEROF (no underscore)
+        if (blockType === 'operator_letter_of') {
+            return 'OPERATORS_LETTEROF';
+        }
         return blockType.replace('operator_', 'OPERATORS_').toUpperCase();
     }
     

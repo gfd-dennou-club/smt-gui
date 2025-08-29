@@ -160,6 +160,26 @@ const getBlockMessageKey = blockType => {
     if (blockType === 'sound_seteffectto') {
         return 'SOUND_SETEFFECTO';
     }
+    
+    // Handle operator blocks: operator_ -> OPERATORS_ (plural)
+    if (blockType.startsWith('operator_')) {
+        return blockType.replace('operator_', 'OPERATORS_').toUpperCase();
+    }
+    
+    // Handle control blocks with different naming patterns
+    const controlBlockMappings = {
+        'control_if_else': 'CONTROL_IF',
+        'control_wait_until': 'CONTROL_WAITUNTIL',
+        'control_repeat_until': 'CONTROL_REPEATUNTIL', 
+        'control_start_as_clone': 'CONTROL_STARTASCLONE',
+        'control_create_clone_of': 'CONTROL_CREATECLONEOF',
+        'control_delete_this_clone': 'CONTROL_DELETETHISCLONE'
+    };
+    
+    if (controlBlockMappings[blockType]) {
+        return controlBlockMappings[blockType];
+    }
+    
     return blockType.toUpperCase();
 };
 

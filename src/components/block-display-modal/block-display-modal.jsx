@@ -154,39 +154,6 @@ const CATEGORY_BLOCKS = {
     ]
 };
 
-// Convert block type to ScratchBlocks.Msg key
-const getBlockMessageKey = blockType => {
-    // Handle typo in scratch-l10n: SOUND_SETEFFECTTO should be SOUND_SETEFFECTO
-    if (blockType === 'sound_seteffectto') {
-        return 'SOUND_SETEFFECTO';
-    }
-    
-    // Handle operator blocks: operator_ -> OPERATORS_ (plural)
-    if (blockType.startsWith('operator_')) {
-        // Special case: operator_letter_of -> OPERATORS_LETTEROF (no underscore)
-        if (blockType === 'operator_letter_of') {
-            return 'OPERATORS_LETTEROF';
-        }
-        return blockType.replace('operator_', 'OPERATORS_').toUpperCase();
-    }
-    
-    // Handle control blocks with different naming patterns
-    const controlBlockMappings = {
-        'control_if_else': 'CONTROL_IF',
-        'control_wait_until': 'CONTROL_WAITUNTIL',
-        'control_repeat_until': 'CONTROL_REPEATUNTIL', 
-        'control_start_as_clone': 'CONTROL_STARTASCLONE',
-        'control_create_clone_of': 'CONTROL_CREATECLONEOF',
-        'control_delete_this_clone': 'CONTROL_DELETETHISCLONE',
-        'control_stop': 'CONTROL_STOP_ALL'  // Use "すべてを止める" instead of empty space
-    };
-    
-    if (controlBlockMappings[blockType]) {
-        return controlBlockMappings[blockType];
-    }
-    
-    return blockType.toUpperCase();
-};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {
@@ -403,12 +370,7 @@ class BlockDisplayModal extends React.Component {
                         
                         <Box className={styles.blockList}>
                             {categoryBlocks.map(blockType => {
-                                const messageKey = getBlockMessageKey(blockType);
-                                const blockName = this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                    this.ScratchBlocks.Msg[messageKey] ?
-                                    this.ScratchBlocks.Msg[messageKey] :
-                                    blockType;
-                                
+                                const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
                                 const selectedBlocksInCategory = selectedBlocks[selectedCategory.id] || [];
                                 const isBlockSelected = selectedBlocksInCategory.includes(blockType);
                                 
@@ -427,7 +389,7 @@ class BlockDisplayModal extends React.Component {
                                                 onChange={this.handleBlockChange}
                                             />
                                             <span className={styles.blockName}>
-                                                {blockName}
+                                                {intl.formatMessage({id: messageId, defaultMessage: blockType})}
                                             </span>
                                         </label>
                                     </div>

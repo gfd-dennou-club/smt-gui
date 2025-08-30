@@ -161,9 +161,7 @@ class BlockDisplayModal extends React.Component {
         bindAll(this, [
             'handleCategoryChange',
             'handleBlockChange',
-            'handleCategorySelect',
-            'handlePrevious',
-            'handleNext'
+            'handleCategorySelect'
         ]);
         
         this.state = {
@@ -203,19 +201,6 @@ class BlockDisplayModal extends React.Component {
         this.setState({selectedCategoryIndex: categoryIndex});
     }
     
-    handlePrevious () {
-        const {selectedCategoryIndex} = this.state;
-        if (selectedCategoryIndex > 0) {
-            this.setState({selectedCategoryIndex: selectedCategoryIndex - 1});
-        }
-    }
-    
-    handleNext () {
-        const {selectedCategoryIndex} = this.state;
-        if (selectedCategoryIndex < BLOCK_CATEGORIES.length - 1) {
-            this.setState({selectedCategoryIndex: selectedCategoryIndex + 1});
-        }
-    }
     
     getCategoryCheckboxState (categoryId) {
         const {selectedBlocks} = this.props;
@@ -239,8 +224,6 @@ class BlockDisplayModal extends React.Component {
         } = this.props;
         
         const {selectedCategoryIndex} = this.state;
-        const selectedCategory = BLOCK_CATEGORIES[selectedCategoryIndex];
-        const categoryBlocks = CATEGORY_BLOCKS[selectedCategory.id] || [];
         
         return (
             <Modal
@@ -332,66 +315,43 @@ class BlockDisplayModal extends React.Component {
                     </Box>
                     
                     <Box className={styles.rightPane}>
-                        <div className={styles.blockListHeader}>
-                            <div className={styles.blockListTitle}>
-                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                    this.ScratchBlocks.Msg[selectedCategory.messageKey] ?
-                                    this.ScratchBlocks.Msg[selectedCategory.messageKey] :
-                                    selectedCategory.messageKey}
-                                <span className={styles.blockListSubtitle}>
-                                    <FormattedMessage
-                                        defaultMessage=" Blocks"
-                                        description="Subtitle for blocks list"
-                                        id="gui.smalruby3.blockDisplayModal.blocksSubtitle"
-                                    />
-                                </span>
-                            </div>
-                            <div className={styles.navigationButtons}>
-                                <button
-                                    className={classNames(styles.navButton, {
-                                        [styles.disabled]: selectedCategoryIndex === 0
-                                    })}
-                                    onClick={this.handlePrevious}
-                                    disabled={selectedCategoryIndex === 0}
-                                >
-                                    {'←'}
-                                </button>
-                                <button
-                                    className={classNames(styles.navButton, {
-                                        [styles.disabled]: selectedCategoryIndex === BLOCK_CATEGORIES.length - 1
-                                    })}
-                                    onClick={this.handleNext}
-                                    disabled={selectedCategoryIndex === BLOCK_CATEGORIES.length - 1}
-                                >
-                                    {'→'}
-                                </button>
-                            </div>
-                        </div>
-                        
                         <Box className={styles.blockList}>
-                            {categoryBlocks.map(blockType => {
-                                const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
-                                const selectedBlocksInCategory = selectedBlocks[selectedCategory.id] || [];
-                                const isBlockSelected = selectedBlocksInCategory.includes(blockType);
-                                
+                            {BLOCK_CATEGORIES.map((category, categoryIndex) => {
+                                const categoryBlocks = CATEGORY_BLOCKS[category.id] || [];
                                 return (
-                                    <div
-                                        key={blockType}
-                                        className={styles.blockItem}
-                                    >
-                                        <label className={styles.blockLabel}>
-                                            <input
-                                                type="checkbox"
-                                                checked={isBlockSelected}
-                                                className={styles.blockCheckbox}
-                                                data-block={blockType}
-                                                data-category={selectedCategory.id}
-                                                onChange={this.handleBlockChange}
-                                            />
-                                            <span className={styles.blockName}>
-                                                {intl.formatMessage({id: messageId, defaultMessage: blockType})}
-                                            </span>
-                                        </label>
+                                    <div key={category.id} className={styles.categorySection} data-category-index={categoryIndex}>
+                                        <div className={styles.categoryHeader}>
+                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                this.ScratchBlocks.Msg[category.messageKey] ?
+                                                this.ScratchBlocks.Msg[category.messageKey] :
+                                                category.messageKey}
+                                        </div>
+                                        {categoryBlocks.map(blockType => {
+                                            const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
+                                            const selectedBlocksInCategory = selectedBlocks[category.id] || [];
+                                            const isBlockSelected = selectedBlocksInCategory.includes(blockType);
+                                            
+                                            return (
+                                                <div
+                                                    key={blockType}
+                                                    className={styles.blockItem}
+                                                >
+                                                    <label className={styles.blockLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isBlockSelected}
+                                                            className={styles.blockCheckbox}
+                                                            data-block={blockType}
+                                                            data-category={category.id}
+                                                            onChange={this.handleBlockChange}
+                                                        />
+                                                        <span className={styles.blockName}>
+                                                            {intl.formatMessage({id: messageId, defaultMessage: blockType})}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 );
                             })}

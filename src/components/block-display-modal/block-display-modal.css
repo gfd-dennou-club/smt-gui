@@ -365,6 +365,18 @@
     flex: 1;
     overflow-y: auto;
     padding-right: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.categoryHeader {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #ddd;
 }
 
 .blockItem {

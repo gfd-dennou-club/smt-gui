@@ -216,32 +216,26 @@ class BlockDisplayModal extends React.Component {
         
         const blockListContainer = this.blockListRef;
         const containerTop = blockListContainer.scrollTop;
-        const containerHeight = blockListContainer.clientHeight;
         
-        // Find the category section that is most visible in the viewport
-        const categorySections = blockListContainer.querySelectorAll('[data-category-index]');
-        let maxVisibleArea = 0;
-        let mostVisibleCategoryIndex = 0;
+        // Find the category header that is closest to the top of the viewport
+        const categoryHeaders = blockListContainer.querySelectorAll(`.${styles.categoryHeader}`);
+        let activeCategoryIndex = 0;
+        let minDistanceFromTop = Infinity;
         
-        categorySections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionBottom = sectionTop + sectionHeight;
+        categoryHeaders.forEach((header, index) => {
+            const headerTop = header.offsetTop;
+            const distanceFromTop = Math.abs(headerTop - containerTop);
             
-            // Calculate visible area of this section
-            const visibleTop = Math.max(containerTop, sectionTop);
-            const visibleBottom = Math.min(containerTop + containerHeight, sectionBottom);
-            const visibleArea = Math.max(0, visibleBottom - visibleTop);
-            
-            if (visibleArea > maxVisibleArea) {
-                maxVisibleArea = visibleArea;
-                mostVisibleCategoryIndex = index;
+            // If the header is at or just past the top, and closer than previous candidates
+            if (headerTop <= containerTop + 50 && distanceFromTop < minDistanceFromTop) {
+                minDistanceFromTop = distanceFromTop;
+                activeCategoryIndex = index;
             }
         });
         
         // Update the selected category index if it changed
-        if (this.state.selectedCategoryIndex !== mostVisibleCategoryIndex) {
-            this.setState({selectedCategoryIndex: mostVisibleCategoryIndex});
+        if (this.state.selectedCategoryIndex !== activeCategoryIndex) {
+            this.setState({selectedCategoryIndex: activeCategoryIndex});
         }
     }
     

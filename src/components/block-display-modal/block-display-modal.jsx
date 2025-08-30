@@ -240,15 +240,17 @@ class BlockDisplayModal extends React.Component {
         if (!this.blockListRef) return;
         
         const blockListContainer = this.blockListRef;
-        const categorySections = blockListContainer.querySelectorAll('[data-category-index]');
+        const categoryHeaders = blockListContainer.querySelectorAll(`.${styles.categoryHeader}`);
         
-        if (categorySections[categoryIndex]) {
-            const targetSection = categorySections[categoryIndex];
-            const sectionTop = targetSection.offsetTop;
+        if (categoryHeaders[categoryIndex]) {
+            const targetHeader = categoryHeaders[categoryIndex];
+            const headerTop = targetHeader.offsetTop;
             
-            // Scroll smoothly to the top of the target category section
+            // Scroll to position that matches the detection timing (200px offset for better alignment)
+            const scrollPosition = headerTop - 200;
+            
             blockListContainer.scrollTo({
-                top: sectionTop,
+                top: Math.max(0, scrollPosition),
                 behavior: 'smooth'
             });
         }

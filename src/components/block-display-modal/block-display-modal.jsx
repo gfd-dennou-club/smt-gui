@@ -161,7 +161,8 @@ class BlockDisplayModal extends React.Component {
         bindAll(this, [
             'handleCategoryChange',
             'handleBlockChange',
-            'handleCategorySelect'
+            'handleCategorySelect',
+            'handleBlockListScroll'
         ]);
         
         this.state = {
@@ -172,6 +173,9 @@ class BlockDisplayModal extends React.Component {
         if (!this.ScratchBlocks && props.vm) {
             this.ScratchBlocks = VMScratchBlocks(props.vm, false);
         }
+        
+        // Ref for the block list container
+        this.blockListRef = React.createRef();
     }
 
     handleCategoryChange (event) {
@@ -199,6 +203,40 @@ class BlockDisplayModal extends React.Component {
     handleCategorySelect (event) {
         const categoryIndex = parseInt(event.currentTarget.getAttribute('data-category-index'), 10);
         this.setState({selectedCategoryIndex: categoryIndex});
+    }
+    
+    handleBlockListScroll () {
+        if (!this.blockListRef.current) return;
+        
+        const blockListContainer = this.blockListRef.current;
+        const containerTop = blockListContainer.scrollTop;
+        const containerHeight = blockListContainer.clientHeight;
+        
+        // Find the category section that is most visible in the viewport
+        const categorySections = blockListContainer.querySelectorAll('[data-category-index]');
+        let maxVisibleArea = 0;
+        let mostVisibleCategoryIndex = 0;
+        
+        categorySections.forEach((section, index) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionBottom = sectionTop + sectionHeight;
+            
+            // Calculate visible area of this section
+            const visibleTop = Math.max(containerTop, sectionTop);
+            const visibleBottom = Math.min(containerTop + containerHeight, sectionBottom);
+            const visibleArea = Math.max(0, visibleBottom - visibleTop);
+            
+            if (visibleArea > maxVisibleArea) {
+                maxVisibleArea = visibleArea;
+                mostVisibleCategoryIndex = index;
+            }
+        });
+        
+        // Update the selected category index if it changed
+        if (this.state.selectedCategoryIndex !== mostVisibleCategoryIndex) {
+            this.setState({selectedCategoryIndex: mostVisibleCategoryIndex});
+        }
     }
     
     
@@ -315,11 +353,19 @@ class BlockDisplayModal extends React.Component {
                     </Box>
                     
                     <Box className={styles.rightPane}>
-                        <Box className={styles.blockList}>
+                        <Box
+                            className={styles.blockList}
+                            ref={this.blockListRef}
+                            onScroll={this.handleBlockListScroll}
+                        >
                             {BLOCK_CATEGORIES.map((category, categoryIndex) => {
                                 const categoryBlocks = CATEGORY_BLOCKS[category.id] || [];
                                 return (
-                                    <div key={category.id} className={styles.categorySection} data-category-index={categoryIndex}>
+                                    <div
+                                        key={category.id}
+                                        className={styles.categorySection}
+                                        data-category-index={categoryIndex}
+                                    >
                                         <div className={styles.categoryHeader}>
                                             {this.ScratchBlocks && this.ScratchBlocks.Msg &&
                                                 this.ScratchBlocks.Msg[category.messageKey] ?
@@ -346,7 +392,10 @@ class BlockDisplayModal extends React.Component {
                                                             onChange={this.handleBlockChange}
                                                         />
                                                         <span className={styles.blockName}>
-                                                            {intl.formatMessage({id: messageId, defaultMessage: blockType})}
+                                                            {intl.formatMessage({
+                                                                id: messageId,
+                                                                defaultMessage: blockType
+                                                            })}
                                                         </span>
                                                     </label>
                                                 </div>

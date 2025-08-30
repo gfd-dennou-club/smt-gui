@@ -162,7 +162,8 @@ class BlockDisplayModal extends React.Component {
             'handleCategoryChange',
             'handleBlockChange',
             'handleCategorySelect',
-            'handleBlockListScroll'
+            'handleBlockListScroll',
+            'scrollToCategorySection'
         ]);
         
         this.state = {
@@ -188,6 +189,8 @@ class BlockDisplayModal extends React.Component {
         // Update the selected category to sync the right pane
         if (categoryIndex !== -1) {
             this.setState({selectedCategoryIndex: categoryIndex});
+            // Scroll to the corresponding category section
+            this.scrollToCategorySection(categoryIndex);
         }
         
         this.props.onCategoryChange(categoryId, isChecked);
@@ -203,6 +206,8 @@ class BlockDisplayModal extends React.Component {
     handleCategorySelect (event) {
         const categoryIndex = parseInt(event.currentTarget.getAttribute('data-category-index'), 10);
         this.setState({selectedCategoryIndex: categoryIndex});
+        // Scroll to the corresponding category section
+        this.scrollToCategorySection(categoryIndex);
     }
     
     handleBlockListScroll () {
@@ -236,6 +241,24 @@ class BlockDisplayModal extends React.Component {
         // Update the selected category index if it changed
         if (this.state.selectedCategoryIndex !== mostVisibleCategoryIndex) {
             this.setState({selectedCategoryIndex: mostVisibleCategoryIndex});
+        }
+    }
+    
+    scrollToCategorySection (categoryIndex) {
+        if (!this.blockListRef.current) return;
+        
+        const blockListContainer = this.blockListRef.current;
+        const categorySections = blockListContainer.querySelectorAll('[data-category-index]');
+        
+        if (categorySections[categoryIndex]) {
+            const targetSection = categorySections[categoryIndex];
+            const sectionTop = targetSection.offsetTop;
+            
+            // Scroll smoothly to the top of the target category section
+            blockListContainer.scrollTo({
+                top: sectionTop,
+                behavior: 'smooth'
+            });
         }
     }
     

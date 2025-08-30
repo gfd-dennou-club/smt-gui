@@ -246,8 +246,8 @@ class BlockDisplayModal extends React.Component {
             const targetHeader = categoryHeaders[categoryIndex];
             const headerTop = targetHeader.offsetTop;
             
-            // Scroll to position that matches the detection timing (200px offset for better alignment)
-            const scrollPosition = headerTop - 200;
+            // Scroll to position that exactly matches the detection timing (180px offset)
+            const scrollPosition = headerTop - 180;
             
             blockListContainer.scrollTo({
                 top: Math.max(0, scrollPosition),

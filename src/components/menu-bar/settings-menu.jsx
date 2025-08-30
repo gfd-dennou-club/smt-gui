@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl';
 import LanguageMenu from './language-menu.jsx';
 import MenuBarMenu from './menu-bar-menu.jsx';
 import ThemeMenu from './theme-menu.jsx';
-import {MenuSection} from '../menu/menu.jsx';
+import {MenuSection, MenuItem} from '../menu/menu.jsx';
 
 import menuBarStyles from './menu-bar.css';
 import styles from './settings-menu.css';
@@ -20,6 +20,7 @@ const SettingsMenu = ({
     isRtl,
     onRequestClose,
     onRequestOpen,
+    onOpenBlockDisplayModal,
     settingsMenuOpen
 }) => (
     <div
@@ -48,6 +49,13 @@ const SettingsMenu = ({
             <MenuSection>
                 {canChangeLanguage && <LanguageMenu onRequestCloseSettings={onRequestClose} />}
                 {canChangeTheme && <ThemeMenu onRequestCloseSettings={onRequestClose} />}
+                <MenuItem onClick={onOpenBlockDisplayModal}>
+                    <FormattedMessage
+                        defaultMessage="Block Display..."
+                        description="Block display settings menu item"
+                        id="gui.menuBar.blockDisplay"
+                    />
+                </MenuItem>
             </MenuSection>
         </MenuBarMenu>
     </div>
@@ -59,6 +67,7 @@ SettingsMenu.propTypes = {
     isRtl: PropTypes.bool,
     onRequestClose: PropTypes.func,
     onRequestOpen: PropTypes.func,
+    onOpenBlockDisplayModal: PropTypes.func,
     settingsMenuOpen: PropTypes.bool
 };
 

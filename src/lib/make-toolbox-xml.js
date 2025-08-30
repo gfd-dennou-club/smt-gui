@@ -1,9 +1,14 @@
 import ScratchBlocks from 'scratch-blocks';
 import {defaultColors} from './themes';
+import {CATEGORY_BLOCKS} from '../components/block-display-modal/block-display-modal.jsx';
 
 const categorySeparator = '<sep gap="36"/>';
 
 const blockSeparator = '<sep gap="36"/>'; // At default scale, about 28px
+
+// Calculate total number of default blocks once at module load time
+// Add 2 for variables_ and myBlocks_ which are not in CATEGORY_BLOCKS
+const TOTAL_DEFAULT_BLOCKS = Object.values(CATEGORY_BLOCKS).reduce((total, blocks) => total + blocks.length, 0) + 2;
 
 /* eslint-disable no-unused-vars */
 const motion = function (isInitialSetup, isStage, targetId, colors) {
@@ -761,7 +766,7 @@ const parseOnlyBlocks = function (onlyBlocks) {
  */
 const shouldIncludeBlock = function (blockType, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return true;
-    
+
     return allowedPatterns.some(pattern =>
         blockType === pattern || blockType.startsWith(pattern)
     );
@@ -771,34 +776,33 @@ const shouldIncludeBlock = function (blockType, allowedPatterns) {
  * Filters block XML content based on only_blocks patterns
  * @param {string} categoryXML - The category XML containing blocks
  * @param {Array.<string>} allowedPatterns - Array of allowed patterns
- * @param {string} categoryId - The category ID for logging
  * @returns {string} - Filtered category XML
  */
-const filterBlocksInCategory = function (categoryXML, allowedPatterns, categoryId) {
+// eslint-disable-next-line no-unused-vars
+const filterBlocks = function (categoryXML, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
-    
+
     // Parse the XML to extract and filter block elements
     const blockRegex = /<block[^>]*type="([^"]+)"[^>]*(?:\/>|>.*?<\/block>)/gs;
     const matches = categoryXML.match(blockRegex) || [];
-    
+
     const filteredBlocks = matches.filter(blockXML => {
         const typeMatch = blockXML.match(/type="([^"]+)"/);
         if (!typeMatch) return false;
-        
+
         const blockType = typeMatch[1];
         return shouldIncludeBlock(blockType, allowedPatterns);
     });
-    
+
     if (filteredBlocks.length === 0) {
-        console.error(`No blocks found for only_blocks filter in category: ${categoryId}`);
         return '';
     }
-    
+
     // Reconstruct the category XML with filtered blocks
     const categoryHeader = categoryXML.match(/<category[^>]*>/)[0];
     const categoryFooter = '</category>';
     const blockContent = filteredBlocks.join('\n        ');
-    
+
     return `${categoryHeader}\n        ${blockContent}\n        ${categorySeparator}\n    ${categoryFooter}`;
 };
 
@@ -841,42 +845,45 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
         }
         // return `undefined`
     };
-    
+
     // Generate categories and apply filtering (except for variables, myBlocks, and extensions)
     let motionXML = moveCategory('motion') || motion(isInitialSetup, isStage, targetId, colors.motion);
     let looksXML = moveCategory('looks') ||
         looks(isInitialSetup, isStage, targetId, costumeName, backdropName, colors.looks);
     let soundXML = moveCategory('sound') || sound(isInitialSetup, isStage, targetId, soundName, colors.sounds);
-    let eventsXML = moveCategory('event') || events(isInitialSetup, isStage, targetId, colors.event);
+    let eventsXML = moveCategory('events') || events(isInitialSetup, isStage, targetId, colors.event);
     let controlXML = moveCategory('control') || control(isInitialSetup, isStage, targetId, colors.control);
     let sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId, colors.sensing);
     let operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId, colors.operators);
-    
+
     // Variables and myBlocks are always included (exception categories)
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId, colors.data);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId, colors.more);
-    
-    // Apply filtering to core categories if only_blocks is specified
-    if (allowedPatterns.length > 0) {
-        motionXML = filterBlocksInCategory(motionXML, allowedPatterns, 'motion');
-        looksXML = filterBlocksInCategory(looksXML, allowedPatterns, 'looks');
-        soundXML = filterBlocksInCategory(soundXML, allowedPatterns, 'sound');
-        eventsXML = filterBlocksInCategory(eventsXML, allowedPatterns, 'events');
-        controlXML = filterBlocksInCategory(controlXML, allowedPatterns, 'control');
-        sensingXML = filterBlocksInCategory(sensingXML, allowedPatterns, 'sensing');
-        operatorsXML = filterBlocksInCategory(operatorsXML, allowedPatterns, 'operators');
+
+    // Check if this is the default all blocks state (no filtering intended)
+    const isDefaultAllBlocks = allowedPatterns.length >= TOTAL_DEFAULT_BLOCKS;
+
+    // Apply filtering to core categories if not default all blocks
+    if (allowedPatterns.length > 0 && !isDefaultAllBlocks) {
+        motionXML = filterBlocks(motionXML, allowedPatterns);
+        looksXML = filterBlocks(looksXML, allowedPatterns);
+        soundXML = filterBlocks(soundXML, allowedPatterns);
+        eventsXML = filterBlocks(eventsXML, allowedPatterns);
+        controlXML = filterBlocks(controlXML, allowedPatterns);
+        sensingXML = filterBlocks(sensingXML, allowedPatterns);
+        operatorsXML = filterBlocks(operatorsXML, allowedPatterns);
     }
 
     // Build the final XML, only including non-empty categories
     const everything = [xmlOpen];
-    
+
     // Helper function to add category if it has content
     const addCategoryIfNotEmpty = categoryXML => {
         if (categoryXML && categoryXML.trim() !== '') {
             everything.push(categoryXML, gap);
         }
     };
-    
+
     // Add core categories (only if they have blocks after filtering)
     addCategoryIfNotEmpty(motionXML);
     addCategoryIfNotEmpty(looksXML);
@@ -885,11 +892,11 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     addCategoryIfNotEmpty(controlXML);
     addCategoryIfNotEmpty(sensingXML);
     addCategoryIfNotEmpty(operatorsXML);
-    
+
     // Variables and myBlocks are always included (exception categories)
     addCategoryIfNotEmpty(variablesXML);
     addCategoryIfNotEmpty(myBlocksXML);
-    
+
     // Extension categories are always included (exception categories)
     for (const extensionCategory of categoriesXML) {
         addCategoryIfNotEmpty(extensionCategory.xml);

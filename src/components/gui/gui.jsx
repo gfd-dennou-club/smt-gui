@@ -31,6 +31,7 @@ import Alerts from '../../containers/alerts.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
+import BlockDisplayModal from '../../containers/block-display-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -82,6 +83,7 @@ const GUIComponent = props => {
         canShare,
         canUseCloud,
         children,
+        blockDisplayModalVisible,
         connectionModalVisible,
         costumeLibraryVisible,
         costumesTabVisible,
@@ -216,6 +218,9 @@ const GUIComponent = props => {
                     isOpen={debugModalVisible}
                     onClose={onRequestCloseDebugModal}
                 />}
+                {blockDisplayModalVisible ? (
+                    <BlockDisplayModal />
+                ) : null}
                 {backdropLibraryVisible ? (
                     <BackdropLibrary
                         vm={vm}
@@ -427,6 +432,7 @@ GUIComponent.propTypes = {
     canUseCloud: PropTypes.bool,
     cardsVisible: PropTypes.bool,
     children: PropTypes.node,
+    blockDisplayModalVisible: PropTypes.bool,
     costumeLibraryVisible: PropTypes.bool,
     costumesTabVisible: PropTypes.bool,
     debugModalVisible: PropTypes.bool,
@@ -501,6 +507,7 @@ GUIComponent.defaultProps = {
 const mapStateToProps = state => ({
     // This is the button's mode, as opposed to the actual current state
     blocksId: state.scratchGui.timeTravel.year.toString(),
+    blockDisplayModalVisible: state.scratchGui.blockDisplay.modalVisible,
     stageSizeMode: state.scratchGui.stageSize.stageSize,
     theme: state.scratchGui.theme.theme
 });

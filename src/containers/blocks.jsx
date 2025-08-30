@@ -155,13 +155,22 @@ class Blocks extends React.Component {
             this.props.customProceduresVisible !== nextProps.customProceduresVisible ||
             this.props.locale !== nextProps.locale ||
             this.props.anyModalVisible !== nextProps.anyModalVisible ||
-            this.props.stageSize !== nextProps.stageSize
+            this.props.stageSize !== nextProps.stageSize ||
+            this.props.selectedBlocks !== nextProps.selectedBlocks
         );
     }
     componentDidUpdate (prevProps) {
         // If any modals are open, call hideChaff to close z-indexed field editors
         if (this.props.anyModalVisible && !prevProps.anyModalVisible) {
             this.ScratchBlocks.hideChaff();
+        }
+
+        // If selectedBlocks changed, update toolbox
+        if (this.props.selectedBlocks !== prevProps.selectedBlocks) {
+            const toolboxXML = this.getToolboxXML();
+            if (toolboxXML) {
+                this.props.updateToolboxState(toolboxXML);
+            }
         }
 
         // Only rerender the toolbox when the blocks are visible and the xml is
@@ -360,11 +369,28 @@ class Blocks extends React.Component {
                 this.props.vm.runtime.getBlocksXML(target),
                 this.props.theme
             );
-            
-            // Parse only_blocks URL parameter
+
+            // Parse only_blocks URL parameter - URL parameter takes priority over GUI settings
             const queryParams = queryString.parse(location.search);
-            const onlyBlocks = queryParams.only_blocks;
-            
+            let onlyBlocks = queryParams.only_blocks;
+
+            // If no URL parameter, use GUI settings to generate only_blocks equivalent
+            if (!onlyBlocks && this.props.selectedBlocks) {
+                // Convert selectedBlocks to onlyBlocks format (individual block IDs)
+                const selectedBlockIds = [];
+                Object.values(this.props.selectedBlocks).forEach(categoryBlocks => {
+                    selectedBlockIds.push(...categoryBlocks);
+                });
+
+                // Always include variables and myBlocks (they're always visible)
+                selectedBlockIds.push('variables_', 'myBlocks_');
+
+                if (selectedBlockIds.length > 0) {
+                    onlyBlocks = selectedBlockIds.join(',');
+                }
+
+            }
+
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
@@ -648,6 +674,7 @@ class Blocks extends React.Component {
 }
 
 Blocks.propTypes = {
+    selectedBlocks: PropTypes.object,
     anyModalVisible: PropTypes.bool,
     canUseCloud: PropTypes.bool,
     customProceduresVisible: PropTypes.bool,
@@ -715,6 +742,7 @@ const mapStateToProps = state => ({
     isRtl: state.locales.isRtl,
     locale: state.locales.locale,
     messages: state.locales.messages,
+    selectedBlocks: state.scratchGui.blockDisplay.selectedBlocks,
     toolboxXML: state.scratchGui.toolbox.toolboxXML,
     customProceduresVisible: state.scratchGui.customProcedures.active,
     workspaceMetrics: state.scratchGui.workspaceMetrics,

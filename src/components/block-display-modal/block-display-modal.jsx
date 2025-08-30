@@ -41,7 +41,7 @@ const ALWAYS_VISIBLE_CATEGORIES = [
 ];
 
 // Define blocks for each category based on make-toolbox-xml.js
-const CATEGORY_BLOCKS = {
+export const CATEGORY_BLOCKS = {
     motion: [
         'motion_movesteps',
         'motion_turnright',
@@ -166,16 +166,16 @@ class BlockDisplayModal extends React.Component {
             'scrollToCategorySection',
             'setBlockListRef'
         ]);
-        
+
         this.state = {
             selectedCategoryIndex: 0
         };
-        
+
         // Initialize ScratchBlocks if not already done
         if (!this.ScratchBlocks && props.vm) {
             this.ScratchBlocks = VMScratchBlocks(props.vm, false);
         }
-        
+
         // Ref for the block list container
         this.blockListRef = null;
     }
@@ -183,45 +183,45 @@ class BlockDisplayModal extends React.Component {
     handleCategoryChange (event) {
         const categoryId = event.target.getAttribute('data-category');
         const isChecked = event.target.checked;
-        
+
         // Find the category index for the clicked category
         const categoryIndex = BLOCK_CATEGORIES.findIndex(category => category.id === categoryId);
-        
+
         // Update the selected category to sync the right pane
         if (categoryIndex !== -1) {
             this.setState({selectedCategoryIndex: categoryIndex});
             // Scroll to the corresponding category section
             this.scrollToCategorySection(categoryIndex);
         }
-        
+
         this.props.onCategoryChange(categoryId, isChecked);
     }
-    
+
     handleBlockChange (event) {
         const blockId = event.target.getAttribute('data-block');
         const categoryId = event.target.getAttribute('data-category');
         const isChecked = event.target.checked;
         this.props.onBlockChange(categoryId, blockId, isChecked);
     }
-    
+
     handleCategorySelect (event) {
         const categoryIndex = parseInt(event.currentTarget.getAttribute('data-category-index'), 10);
         this.setState({selectedCategoryIndex: categoryIndex});
         // Scroll to the corresponding category section
         this.scrollToCategorySection(categoryIndex);
     }
-    
+
     handleBlockListScroll () {
         if (!this.blockListRef) return;
-        
+
         const blockListContainer = this.blockListRef;
         const containerTop = blockListContainer.scrollTop;
-        
+
         // Find the category header that has passed the top of the viewport
         const categoryHeaders = blockListContainer.querySelectorAll(`.${styles.categoryHeader}`);
-        
+
         let activeCategoryIndex = 0;
-        
+
         categoryHeaders.forEach((header, index) => {
             const headerTop = header.offsetTop;
             // If this header is approaching or at the top of the viewport
@@ -229,43 +229,43 @@ class BlockDisplayModal extends React.Component {
                 activeCategoryIndex = index;
             }
         });
-        
+
         // Update the selected category index if it changed
         if (this.state.selectedCategoryIndex !== activeCategoryIndex) {
             this.setState({selectedCategoryIndex: activeCategoryIndex});
         }
     }
-    
+
     scrollToCategorySection (categoryIndex) {
         if (!this.blockListRef) return;
-        
+
         const blockListContainer = this.blockListRef;
         const categoryHeaders = blockListContainer.querySelectorAll(`.${styles.categoryHeader}`);
-        
+
         if (categoryHeaders[categoryIndex]) {
             const targetHeader = categoryHeaders[categoryIndex];
             const headerTop = targetHeader.offsetTop;
-            
+
             // Scroll to position that exactly matches the detection timing (180px offset)
             const scrollPosition = headerTop - 180;
-            
+
             blockListContainer.scrollTo({
                 top: Math.max(0, scrollPosition),
                 behavior: 'smooth'
             });
         }
     }
-    
+
     setBlockListRef (ref) {
         this.blockListRef = ref;
     }
-    
-    
+
+
     getCategoryCheckboxState (categoryId) {
         const {selectedBlocks} = this.props;
         const allBlocksInCategory = CATEGORY_BLOCKS[categoryId] || [];
         const selectedBlocksInCategory = selectedBlocks[categoryId] || [];
-        
+
         if (selectedBlocksInCategory.length === 0) {
             return {checked: false, indeterminate: false};
         }
@@ -281,9 +281,9 @@ class BlockDisplayModal extends React.Component {
             onRequestClose,
             selectedBlocks
         } = this.props;
-        
+
         const {selectedCategoryIndex} = this.state;
-        
+
         return (
             <Modal
                 className={styles.modalContent}
@@ -372,7 +372,7 @@ class BlockDisplayModal extends React.Component {
                             ))}
                         </Box>
                     </Box>
-                    
+
                     <Box className={styles.rightPane}>
                         <Box
                             className={styles.blockList}
@@ -397,7 +397,7 @@ class BlockDisplayModal extends React.Component {
                                             const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
                                             const selectedBlocksInCategory = selectedBlocks[category.id] || [];
                                             const isBlockSelected = selectedBlocksInCategory.includes(blockType);
-                                            
+
                                             return (
                                                 <div
                                                     key={blockType}

@@ -1,9 +1,14 @@
 import ScratchBlocks from 'scratch-blocks';
 import {defaultColors} from './themes';
+import {CATEGORY_BLOCKS} from '../components/block-display-modal/block-display-modal.jsx';
 
 const categorySeparator = '<sep gap="36"/>';
 
 const blockSeparator = '<sep gap="36"/>'; // At default scale, about 28px
+
+// Calculate total number of default blocks once at module load time
+// Add 2 for variables_ and myBlocks_ which are not in CATEGORY_BLOCKS
+const TOTAL_DEFAULT_BLOCKS = Object.values(CATEGORY_BLOCKS).reduce((total, blocks) => total + blocks.length, 0) + 2;
 
 /* eslint-disable no-unused-vars */
 const motion = function (isInitialSetup, isStage, targetId, colors) {
@@ -855,8 +860,11 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId, colors.data);
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId, colors.more);
 
-    // Apply filtering to core categories if only_blocks is specified
-    if (allowedPatterns.length > 0) {
+    // Check if this is the default all blocks state (no filtering intended)
+    const isDefaultAllBlocks = allowedPatterns.length >= TOTAL_DEFAULT_BLOCKS;
+
+    // Apply filtering to core categories if not default all blocks
+    if (allowedPatterns.length > 0 && !isDefaultAllBlocks) {
         motionXML = filterBlocks(motionXML, allowedPatterns);
         looksXML = filterBlocks(looksXML, allowedPatterns);
         soundXML = filterBlocks(soundXML, allowedPatterns);

@@ -41,7 +41,6 @@ const enhanceError = async (outerError, cause, driver) => {
     if (driver) {
         const url = await driver.getCurrentUrl();
         const title = await driver.getTitle();
-        const pageSource = await driver.getPageSource();
         const browserLogEntries = await driver.manage()
             .logs()
             .get('browser');
@@ -49,7 +48,6 @@ const enhanceError = async (outerError, cause, driver) => {
         outerError.message += `\nBrowser URL: ${url}`;
         outerError.message += `\nBrowser title: ${title}`;
         outerError.message += `\nBrowser logs:\n*****\n${browserLogText}\n*****\n`;
-        outerError.message += `\nBrowser page source:\n*****\n${pageSource}\n*****\n`;
     }
     return outerError;
 };

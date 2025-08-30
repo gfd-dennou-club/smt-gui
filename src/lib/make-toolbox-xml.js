@@ -771,9 +771,10 @@ const shouldIncludeBlock = function (blockType, allowedPatterns) {
  * Filters block XML content based on only_blocks patterns
  * @param {string} categoryXML - The category XML containing blocks
  * @param {Array.<string>} allowedPatterns - Array of allowed patterns
- * @param {string} categoryId - The category ID for logging
+ * @param {string} categoryId - The category ID for logging (currently unused)
  * @returns {string} - Filtered category XML
  */
+// eslint-disable-next-line no-unused-vars
 const filterBlocksInCategory = function (categoryXML, allowedPatterns, categoryId) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
 

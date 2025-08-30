@@ -67,8 +67,8 @@ export default {
     // Block Display Modal - Block Messages
     // Motion blocks
     'gui.smalruby3.blockDisplayModal.motion_movesteps': '(10) 歩動かす',
-    'gui.smalruby3.blockDisplayModal.motion_turnright': '(15) 度右に回す',
-    'gui.smalruby3.blockDisplayModal.motion_turnleft': '(15) 度左に回す',
+    'gui.smalruby3.blockDisplayModal.motion_turnright': '↻ (15) 度回す',
+    'gui.smalruby3.blockDisplayModal.motion_turnleft': '↺ (15) 度回す',
     'gui.smalruby3.blockDisplayModal.motion_goto': '(どこかの場所▼) へ行く',
     'gui.smalruby3.blockDisplayModal.motion_gotoxy': 'x座標を (0) 、y座標を (0) にする',
     'gui.smalruby3.blockDisplayModal.motion_glideto': '(1) 秒で (どこかの場所▼) へ滑るように移動する',
@@ -113,7 +113,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.sound_setvolumeto': '音量を (100) ％にする',
 
     // Event blocks
-    'gui.smalruby3.blockDisplayModal.event_whenflagclicked': '緑の旗が押されたとき',
+    'gui.smalruby3.blockDisplayModal.event_whenflagclicked': '🏁 が押されたとき',
     'gui.smalruby3.blockDisplayModal.event_whenkeypressed': '[スペース▼] キーが押されたとき',
     'gui.smalruby3.blockDisplayModal.event_whenthisspriteclicked': 'このスプライトが押されたとき',
     'gui.smalruby3.blockDisplayModal.event_whenbackdropswitchesto': '背景が [背景1] になったとき',
@@ -137,8 +137,8 @@ export default {
 
     // Sensing blocks
     'gui.smalruby3.blockDisplayModal.sensing_touchingobject': '(マウスのポインター▼) に触れた',
-    'gui.smalruby3.blockDisplayModal.sensing_touchingcolor': '色に触れた',
-    'gui.smalruby3.blockDisplayModal.sensing_coloristouchingcolor': '色が色に触れた',
+    'gui.smalruby3.blockDisplayModal.sensing_touchingcolor': '色 🎨 に触れた',
+    'gui.smalruby3.blockDisplayModal.sensing_coloristouchingcolor': '色 🎨 が色 🎨 に触れた',
     'gui.smalruby3.blockDisplayModal.sensing_distanceto': '(マウスのポインター▼) までの距離',
     'gui.smalruby3.blockDisplayModal.sensing_askandwait': '(あなたの名前は何ですか？) と聞いて待つ',
     'gui.smalruby3.blockDisplayModal.sensing_answer': '答え',

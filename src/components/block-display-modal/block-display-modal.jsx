@@ -217,18 +217,15 @@ class BlockDisplayModal extends React.Component {
         const blockListContainer = this.blockListRef;
         const containerTop = blockListContainer.scrollTop;
         
-        // Find the category header that is closest to the top of the viewport
+        // Find the category header that has passed the top of the viewport
         const categoryHeaders = blockListContainer.querySelectorAll(`.${styles.categoryHeader}`);
+        
         let activeCategoryIndex = 0;
-        let minDistanceFromTop = Infinity;
         
         categoryHeaders.forEach((header, index) => {
             const headerTop = header.offsetTop;
-            const distanceFromTop = Math.abs(headerTop - containerTop);
-            
-            // If the header is at or just past the top, and closer than previous candidates
-            if (headerTop <= containerTop + 50 && distanceFromTop < minDistanceFromTop) {
-                minDistanceFromTop = distanceFromTop;
+            // If this header is approaching or at the top of the viewport
+            if (headerTop <= containerTop + 180) {
                 activeCategoryIndex = index;
             }
         });

@@ -163,7 +163,8 @@ class BlockDisplayModal extends React.Component {
             'handleBlockChange',
             'handleCategorySelect',
             'handleBlockListScroll',
-            'scrollToCategorySection'
+            'scrollToCategorySection',
+            'setBlockListRef'
         ]);
         
         this.state = {
@@ -176,7 +177,7 @@ class BlockDisplayModal extends React.Component {
         }
         
         // Ref for the block list container
-        this.blockListRef = React.createRef();
+        this.blockListRef = null;
     }
 
     handleCategoryChange (event) {
@@ -211,9 +212,9 @@ class BlockDisplayModal extends React.Component {
     }
     
     handleBlockListScroll () {
-        if (!this.blockListRef.current) return;
+        if (!this.blockListRef) return;
         
-        const blockListContainer = this.blockListRef.current;
+        const blockListContainer = this.blockListRef;
         const containerTop = blockListContainer.scrollTop;
         const containerHeight = blockListContainer.clientHeight;
         
@@ -245,9 +246,9 @@ class BlockDisplayModal extends React.Component {
     }
     
     scrollToCategorySection (categoryIndex) {
-        if (!this.blockListRef.current) return;
+        if (!this.blockListRef) return;
         
-        const blockListContainer = this.blockListRef.current;
+        const blockListContainer = this.blockListRef;
         const categorySections = blockListContainer.querySelectorAll('[data-category-index]');
         
         if (categorySections[categoryIndex]) {
@@ -260,6 +261,10 @@ class BlockDisplayModal extends React.Component {
                 behavior: 'smooth'
             });
         }
+    }
+    
+    setBlockListRef (ref) {
+        this.blockListRef = ref;
     }
     
     
@@ -378,7 +383,7 @@ class BlockDisplayModal extends React.Component {
                     <Box className={styles.rightPane}>
                         <Box
                             className={styles.blockList}
-                            ref={this.blockListRef}
+                            componentRef={this.setBlockListRef}
                             onScroll={this.handleBlockListScroll}
                         >
                             {BLOCK_CATEGORIES.map((category, categoryIndex) => {

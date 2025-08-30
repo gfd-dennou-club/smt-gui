@@ -7,6 +7,7 @@ import VMScratchBlocks from '../../lib/blocks';
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
+import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
 
 import styles from './block-display-modal.css';
 
@@ -289,6 +290,7 @@ class BlockDisplayModal extends React.Component {
                 className={styles.modalContent}
                 contentLabel={intl.formatMessage(messages.title)}
                 headerClassName={styles.header}
+                headerImage={blockDisplayIcon}
                 id="blockDisplayModal"
                 onRequestClose={onRequestClose}
             >

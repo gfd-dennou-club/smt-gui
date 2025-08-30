@@ -13,6 +13,7 @@ import styles from './settings-menu.css';
 
 import dropdownCaret from './dropdown-caret.svg';
 import settingsIcon from './icon--settings.svg';
+import blockDisplayIcon from './block-display-icon.svg';
 
 const SettingsMenu = ({
     canChangeLanguage,
@@ -50,11 +51,17 @@ const SettingsMenu = ({
                 {canChangeLanguage && <LanguageMenu onRequestCloseSettings={onRequestClose} />}
                 {canChangeTheme && <ThemeMenu onRequestCloseSettings={onRequestClose} />}
                 <MenuItem onClick={onOpenBlockDisplayModal}>
-                    <FormattedMessage
-                        defaultMessage="Block Display..."
-                        description="Block display settings menu item"
-                        id="gui.menuBar.blockDisplay"
-                    />
+                    <div className={styles.option}>
+                        <img
+                            className={styles.icon}
+                            src={blockDisplayIcon}
+                        />
+                        <FormattedMessage
+                            defaultMessage="Block Display..."
+                            description="Block display settings menu item"
+                            id="gui.menuBar.blockDisplay"
+                        />
+                    </div>
                 </MenuItem>
             </MenuSection>
         </MenuBarMenu>

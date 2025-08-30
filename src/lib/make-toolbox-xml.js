@@ -771,11 +771,10 @@ const shouldIncludeBlock = function (blockType, allowedPatterns) {
  * Filters block XML content based on only_blocks patterns
  * @param {string} categoryXML - The category XML containing blocks
  * @param {Array.<string>} allowedPatterns - Array of allowed patterns
- * @param {string} categoryId - The category ID for logging (currently unused)
  * @returns {string} - Filtered category XML
  */
 // eslint-disable-next-line no-unused-vars
-const filterBlocksInCategory = function (categoryXML, allowedPatterns, categoryId) {
+const filterBlocks = function (categoryXML, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
 
     // Parse the XML to extract and filter block elements
@@ -858,13 +857,13 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
 
     // Apply filtering to core categories if only_blocks is specified
     if (allowedPatterns.length > 0) {
-        motionXML = filterBlocksInCategory(motionXML, allowedPatterns, 'motion');
-        looksXML = filterBlocksInCategory(looksXML, allowedPatterns, 'looks');
-        soundXML = filterBlocksInCategory(soundXML, allowedPatterns, 'sound');
-        eventsXML = filterBlocksInCategory(eventsXML, allowedPatterns, 'events');
-        controlXML = filterBlocksInCategory(controlXML, allowedPatterns, 'control');
-        sensingXML = filterBlocksInCategory(sensingXML, allowedPatterns, 'sensing');
-        operatorsXML = filterBlocksInCategory(operatorsXML, allowedPatterns, 'operators');
+        motionXML = filterBlocks(motionXML, allowedPatterns);
+        looksXML = filterBlocks(looksXML, allowedPatterns);
+        soundXML = filterBlocks(soundXML, allowedPatterns);
+        eventsXML = filterBlocks(eventsXML, allowedPatterns);
+        controlXML = filterBlocks(controlXML, allowedPatterns);
+        sensingXML = filterBlocks(sensingXML, allowedPatterns);
+        operatorsXML = filterBlocks(operatorsXML, allowedPatterns);
     }
 
     // Build the final XML, only including non-empty categories

@@ -629,6 +629,7 @@ class Blocks extends React.Component {
             updateMetrics: updateMetricsProp,
             useCatBlocks,
             workspaceMetrics,
+            selectedBlocks,
             ...props
         } = this.props;
         /* eslint-enable no-unused-vars */

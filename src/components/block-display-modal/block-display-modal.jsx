@@ -261,6 +261,41 @@ class BlockDisplayModal extends React.Component {
         this.blockListRef = ref;
     }
 
+    generateOnlyBlocksUrl () {
+        const {selectedBlocks} = this.props;
+        const currentUrl = typeof window === 'undefined' ? '' : window.location.href;
+        
+        // Parse current URL to preserve hash
+        let baseUrl;
+        let hash;
+        try {
+            const url = new URL(currentUrl);
+            baseUrl = `${url.protocol}//${url.host}${url.pathname}`;
+            hash = url.hash;
+        } catch (e) {
+            return currentUrl;
+        }
+
+        // Generate only_blocks parameter from selected blocks
+        const onlyBlocksList = [];
+        Object.keys(selectedBlocks).forEach(categoryId => {
+            const blocksInCategory = selectedBlocks[categoryId] || [];
+            blocksInCategory.forEach(blockId => {
+                onlyBlocksList.push(blockId);
+            });
+        });
+
+        if (onlyBlocksList.length === 0) {
+            return currentUrl;
+        }
+
+        // Create new URL with only_blocks parameter using period separator
+        const onlyBlocksParam = onlyBlocksList.join('.');
+        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(onlyBlocksParam)}${hash}`;
+        
+        return newUrl;
+    }
+
 
     getCategoryCheckboxState (categoryId) {
         const {selectedBlocks} = this.props;
@@ -438,7 +473,7 @@ class BlockDisplayModal extends React.Component {
                         <input
                             className={styles.urlInput}
                             type="text"
-                            value={typeof window === 'undefined' ? '' : window.location.href}
+                            value={this.generateOnlyBlocksUrl()}
                             readOnly
                         />
                     </Box>

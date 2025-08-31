@@ -753,7 +753,8 @@ const xmlClose = '</xml>';
  */
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
-    return onlyBlocks.split(',')
+    // Support both comma (,) and period (.) as separators
+    return onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);
 };

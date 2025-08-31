@@ -92,4 +92,45 @@ describe('Block Display Modal', () => {
         const logs = await getLogs();
         expect(logs).toEqual([]);
     });
+
+    test('URL input field is displayed in block display modal', async () => {
+        await loadUri(uri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Click Settings menu
+        await clickXpath(SETTINGS_MENU_XPATH);
+
+        // Click Block Display Settings menu item
+        await clickText('Block Display...', scope.menuBar);
+
+        // Wait for modal to render
+        await driver.sleep(1000);
+
+        // Verify URL label exists
+        await findByText('URL:', scope.modal);
+
+        // Verify URL input field exists
+        const urlInput = await findByXpath('//input[@type="text"][contains(@class, "block-display-modal_urlInput")]');
+        expect(urlInput).toBeTruthy();
+
+        // Verify URL input field is read-only
+        const isReadOnly = await urlInput.getAttribute('readonly');
+        expect(isReadOnly).not.toBeNull();
+
+        // Verify URL input field contains current page URL
+        const urlValue = await urlInput.getAttribute('value');
+        expect(urlValue).toContain('index.html');
+
+        // Close the modal using ESC key
+        await driver.actions().sendKeys("\uE00C").perform();
+
+        // Wait for modal to close
+        await driver.sleep(300);
+
+        // Verify modal is closed
+        await notExistsByXpath('//div[contains(@class, "block-display-modal_blockItem")]');
+
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
 });

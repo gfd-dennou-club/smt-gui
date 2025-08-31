@@ -101,6 +101,9 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_hide': '隠す',
     'gui.smalruby3.blockDisplayModal.looks_gotofrontback': '[最前面▼] へ移動する',
     'gui.smalruby3.blockDisplayModal.looks_goforwardbackwardlayers': '(1) 層 [手前に出す▼]',
+    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'コスチュームの (番号▼)',
+    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': '背景の (番号▼)',
+    'gui.smalruby3.blockDisplayModal.looks_size': '大きさ',
 
     // Sound blocks
     'gui.smalruby3.blockDisplayModal.sound_playuntildone': '終わるまで (Meow▼) の音を鳴らす',

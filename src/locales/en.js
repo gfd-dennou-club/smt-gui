@@ -98,6 +98,9 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_hide': 'hide',
     'gui.smalruby3.blockDisplayModal.looks_gotofrontback': 'go to [front ▼] layer',
     'gui.smalruby3.blockDisplayModal.looks_goforwardbackwardlayers': 'go [forward ▼] (1) layers',
+    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'costume [number ▼]',
+    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': 'backdrop [number ▼]',
+    'gui.smalruby3.blockDisplayModal.looks_size': 'size',
 
     // Sound blocks
     'gui.smalruby3.blockDisplayModal.sound_playuntildone': 'play sound (Meow ▼) until done',

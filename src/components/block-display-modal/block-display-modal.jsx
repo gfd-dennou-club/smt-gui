@@ -65,11 +65,10 @@ export const CATEGORY_BLOCKS = {
         'looks_say',
         'looks_thinkforsecs',
         'looks_think',
-        'looks_switchbackdropto',
-        'looks_switchbackdroptoandwait',
-        'looks_nextbackdrop',
         'looks_switchcostumeto',
         'looks_nextcostume',
+        'looks_switchbackdropto',
+        'looks_nextbackdrop',
         'looks_changesizeby',
         'looks_setsizeto',
         'looks_changeeffectby',
@@ -78,7 +77,12 @@ export const CATEGORY_BLOCKS = {
         'looks_show',
         'looks_hide',
         'looks_gotofrontback',
-        'looks_goforwardbackwardlayers'
+        'looks_goforwardbackwardlayers',
+        'looks_costumenumbername',
+        'looks_backdropnumbername',
+        'looks_size',
+        // for Stage
+        'looks_switchbackdroptoandwait'
     ],
     sound: [
         'sound_playuntildone',
@@ -162,12 +166,12 @@ export const CATEGORY_BLOCKS = {
  */
 export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
     const selectedBlocks = {};
-    
+
     // Always initialize each category
     Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
         selectedBlocks[categoryId] = [];
     });
-    
+
     // If no onlyBlocks parameter provided (null/undefined), select all blocks (default behavior)
     if (onlyBlocks === null || typeof onlyBlocks === 'undefined') {
         Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
@@ -175,20 +179,20 @@ export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
         });
         return selectedBlocks;
     }
-    
+
     // If empty string provided, return empty selections
     if (!onlyBlocks) return selectedBlocks;
-    
+
     // Parse only_blocks parameter
     const patterns = onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);
-    
+
     // Process patterns to determine which blocks should be initially selected
     patterns.forEach(pattern => {
         Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
             const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
-            
+
             // Check if pattern matches category prefix (e.g., "motion_" matches motion category)
             if (pattern.endsWith('_') && pattern === `${categoryId}_`) {
                 // Select all blocks in this category
@@ -201,7 +205,7 @@ export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
             }
         });
     });
-    
+
     return selectedBlocks;
 };
 
@@ -313,7 +317,7 @@ class BlockDisplayModal extends React.Component {
     generateOnlyBlocksUrl () {
         const {selectedBlocks} = this.props;
         const currentUrl = typeof window === 'undefined' ? '' : window.location.href;
-        
+
         // Parse current URL to preserve hash
         let baseUrl;
         let hash;
@@ -341,7 +345,7 @@ class BlockDisplayModal extends React.Component {
         // Create new URL with only_blocks parameter using period separator
         const onlyBlocksParam = onlyBlocksList.join('.');
         const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(onlyBlocksParam)}${hash}`;
-        
+
         return newUrl;
     }
 

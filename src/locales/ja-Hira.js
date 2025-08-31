@@ -100,8 +100,8 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_hide': 'かくす',
     'gui.smalruby3.blockDisplayModal.looks_gotofrontback': '[さいぜんめん▼] へいどうする',
     'gui.smalruby3.blockDisplayModal.looks_goforwardbackwardlayers': '(1) そう [てまえにだす▼]',
-    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'コスチュームの (ばんごう▼)',
-    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': 'はいけいの (ばんごう▼)',
+    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'コスチュームの [ばんごう▼]',
+    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': 'はいけいの [ばんごう▼]',
     'gui.smalruby3.blockDisplayModal.looks_size': 'おおきさ',
 
     // Sound blocks

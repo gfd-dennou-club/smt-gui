@@ -3,7 +3,7 @@
 
 .modal-content {
     width: 500px;
-    height: 560px;
+    height: 625px;
     line-height: 1.75;
 }
 
@@ -15,7 +15,14 @@
     background: $ui-white;
     padding: 0;
     display: flex;
+    flex-direction: column;
     height: 100%;
+}
+
+.topSection {
+    display: flex;
+    flex: 1;
+    min-height: 0;
 }
 
 .leftPane {
@@ -442,6 +449,43 @@
     margin-left: 0.25rem;
 }
 
+
+/* URL pane styles */
+.urlPane {
+    width: 100%;
+    height: 65px;
+    padding: 1rem;
+    background: #F9F9F9;
+    border-top: 1px solid hsla(0, 0%, 0%, 0.1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.urlLabel {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsla(0, 0%, 0%, 0.8);
+    flex-shrink: 0;
+}
+
+.urlInput {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-family: monospace;
+    background: white;
+    color: hsla(0, 0%, 0%, 0.9);
+}
+
+.urlInput:focus {
+    outline: none;
+    border-color: #4c97ff;
+    box-shadow: 0 0 0 2px rgba(76, 151, 255, 0.2);
+}
 
 /* RTL support */
 [dir="rtl"] .controls {

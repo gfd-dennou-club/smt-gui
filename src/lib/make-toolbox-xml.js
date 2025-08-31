@@ -782,28 +782,67 @@ const shouldIncludeBlock = function (blockType, allowedPatterns) {
 const filterBlocks = function (categoryXML, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
 
-    // Parse the XML to extract and filter block elements
-    const blockRegex = /<block[^>]*type="([^"]+)"[^>]*(?:\/>|>.*?<\/block>)/gs;
-    const matches = categoryXML.match(blockRegex) || [];
+    // Extract both block and separator elements while preserving order
+    const elementRegex = /(?:<block[^>]*type="[^"]+"[^>]*(?:\/>|>.*?<\/block>)|<sep[^>]*\/>)/gs;
+    const elements = categoryXML.match(elementRegex) || [];
 
-    const filteredBlocks = matches.filter(blockXML => {
-        const typeMatch = blockXML.match(/type="([^"]+)"/);
-        if (!typeMatch) return false;
+    const filteredElements = [];
+    
+    for (const element of elements) {
+        if (element.includes('<sep')) {
+            // Keep separator elements
+            filteredElements.push(element);
+        } else if (element.includes('<block')) {
+            // Filter block elements based on allowed patterns
+            const typeMatch = element.match(/type="([^"]+)"/);
+            if (typeMatch) {
+                const blockType = typeMatch[1];
+                if (shouldIncludeBlock(blockType, allowedPatterns)) {
+                    filteredElements.push(element);
+                }
+            }
+        }
+    }
 
-        const blockType = typeMatch[1];
-        return shouldIncludeBlock(blockType, allowedPatterns);
-    });
+    // Remove consecutive separators, keeping only one
+    const consolidatedElements = [];
+    let lastWasSeparator = false;
+    
+    for (const element of filteredElements) {
+        const isSeparator = element.includes('<sep');
+        if (isSeparator) {
+            if (!lastWasSeparator) {
+                consolidatedElements.push(element);
+            }
+            lastWasSeparator = true;
+        } else {
+            consolidatedElements.push(element);
+            lastWasSeparator = false;
+        }
+    }
 
-    if (filteredBlocks.length === 0) {
+    // Remove separator at the beginning or end
+    while (consolidatedElements.length > 0 && consolidatedElements[0].includes('<sep')) {
+        consolidatedElements.shift();
+    }
+    while (consolidatedElements.length > 0 && consolidatedElements[consolidatedElements.length - 1].includes('<sep')) {
+        consolidatedElements.pop();
+    }
+
+    if (consolidatedElements.length === 0) {
         return '';
     }
 
-    // Reconstruct the category XML with filtered blocks
+    // Reconstruct the category XML with filtered elements
     const categoryHeader = categoryXML.match(/<category[^>]*>/)[0];
     const categoryFooter = '</category>';
-    const blockContent = filteredBlocks.join('\n        ');
+    const blockContent = consolidatedElements.join('\n        ');
+    
+    // Only add category separator if the original XML had separators
+    const hasSeparators = consolidatedElements.some(el => el.includes('<sep'));
+    const categorySeparatorLine = hasSeparators ? `\n        ${categorySeparator}` : '';
 
-    return `${categoryHeader}\n        ${blockContent}\n        ${categorySeparator}\n    ${categoryFooter}`;
+    return `${categoryHeader}\n        ${blockContent}${categorySeparatorLine}\n    ${categoryFooter}`;
 };
 
 /**
@@ -912,3 +951,4 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
 };
 
 export default makeToolboxXML;
+export {filterBlocks};

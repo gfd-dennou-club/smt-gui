@@ -266,4 +266,31 @@ describe('Block Display Modal', () => {
         const logs = await getLogs();
         expect(logs).toEqual([]);
     });
+
+    test('should not show looks_sayforsecs when only looks_say is selected (exact match)', async () => {
+        // Test with URL parameter that specifies only looks_say block
+        const testUri = uri + '?only_blocks=looks_say';
+        await loadUri(testUri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Go to Code tab to check block visibility
+        await clickText('Code');
+        await driver.sleep(1000);
+
+        // Click on Looks category to expand it
+        await clickText('Looks');
+        await driver.sleep(1000);
+
+        // looks_say should be visible (it was specified in only_blocks)
+        const sayBlockExists = await textExists('say', scope.blocksTab);
+        expect(sayBlockExists).toBeTruthy();
+
+        // looks_sayforsecs should NOT be visible (exact match required, not prefix match)
+        // This verifies that the prefix matching issue has been fixed
+        const sayForSecsExists = await textExists('say for', scope.blocksTab);
+        expect(sayForSecsExists).toBeFalsy();
+
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
 });

@@ -768,9 +768,14 @@ const parseOnlyBlocks = function (onlyBlocks) {
 const shouldIncludeBlock = function (blockType, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return true;
 
-    return allowedPatterns.some(pattern =>
-        blockType === pattern || blockType.startsWith(pattern)
-    );
+    return allowedPatterns.some(pattern => {
+        // Check if pattern is a category prefix (ends with underscore)
+        if (pattern.endsWith('_')) {
+            return blockType.startsWith(pattern);
+        }
+        // Otherwise, require exact match
+        return blockType === pattern;
+    });
 };
 
 /**

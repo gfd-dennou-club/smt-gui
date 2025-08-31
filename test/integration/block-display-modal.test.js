@@ -133,4 +133,40 @@ describe('Block Display Modal', () => {
         const logs = await getLogs();
         expect(logs).toEqual([]);
     });
+
+    test('URL input field shows generated only_blocks URL when blocks are selected', async () => {
+        await loadUri(uri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Click Settings menu
+        await clickXpath(SETTINGS_MENU_XPATH);
+
+        // Click Block Display Settings menu item
+        await clickText('Block Display...', scope.menuBar);
+
+        // Wait for modal to render
+        await driver.sleep(1000);
+
+        // Select a block by clicking its checkbox
+        const motionCheckbox = await findByXpath('//input[@type="checkbox"][@data-block="motion_movesteps"]');
+        await motionCheckbox.click();
+
+        // Wait for URL to update
+        await driver.sleep(500);
+
+        // Verify URL input field contains only_blocks parameter with period separator
+        const urlInput = await findByXpath('//input[@type="text"][contains(@class, "block-display-modal_urlInput")]');
+        const urlValue = await urlInput.getAttribute('value');
+        expect(urlValue).toContain('only_blocks=');
+        expect(urlValue).toContain('motion_movesteps');
+
+        // Close the modal using ESC key
+        await driver.actions().sendKeys("\uE00C").perform();
+
+        // Wait for modal to close
+        await driver.sleep(300);
+
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
 });

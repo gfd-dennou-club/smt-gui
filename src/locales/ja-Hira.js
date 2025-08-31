@@ -87,7 +87,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_thinkforsecs': '(うーん...) と (2) びょうかんがえる',
     'gui.smalruby3.blockDisplayModal.looks_think': '(うーん...) とかんがえる',
     'gui.smalruby3.blockDisplayModal.looks_switchbackdropto': 'はいけいを (はいけい1) にする',
-    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': 'はいけいを (はいけい1) にしてまつ',
+    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '【すてーじ】はいけいを (はいけい1) にしてまつ',
     'gui.smalruby3.blockDisplayModal.looks_nextbackdrop': 'つぎのはいけいにする',
     'gui.smalruby3.blockDisplayModal.looks_switchcostumeto': 'コスチュームを (コスチューム1▼) にする',
     'gui.smalruby3.blockDisplayModal.looks_nextcostume': 'つぎのコスチュームにする',

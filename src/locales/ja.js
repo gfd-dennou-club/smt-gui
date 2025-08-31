@@ -88,7 +88,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_thinkforsecs': '(うーん...) と (2) 秒考える',
     'gui.smalruby3.blockDisplayModal.looks_think': '(うーん...) と考える',
     'gui.smalruby3.blockDisplayModal.looks_switchbackdropto': '背景を (背景1) にする',
-    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '背景を (背景1) にして待つ',
+    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '【ステージ】背景を (背景1) にして待つ',
     'gui.smalruby3.blockDisplayModal.looks_nextbackdrop': '次の背景にする',
     'gui.smalruby3.blockDisplayModal.looks_switchcostumeto': 'コスチュームを (コスチューム1▼) にする',
     'gui.smalruby3.blockDisplayModal.looks_nextcostume': '次のコスチュームにする',

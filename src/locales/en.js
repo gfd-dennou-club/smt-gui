@@ -85,7 +85,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_thinkforsecs': 'think (Hmm...) for (2) seconds',
     'gui.smalruby3.blockDisplayModal.looks_think': 'think (Hmm...)',
     'gui.smalruby3.blockDisplayModal.looks_switchbackdropto': 'switch backdrop to (backdrop1 ▼)',
-    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': 'switch backdrop to (backdrop1 ▼) and wait',
+    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '[Stage]  switch backdrop to (backdrop1 ▼) and wait',
     'gui.smalruby3.blockDisplayModal.looks_nextbackdrop': 'next backdrop',
     'gui.smalruby3.blockDisplayModal.looks_switchcostumeto': 'switch costume to (costume1 ▼)',
     'gui.smalruby3.blockDisplayModal.looks_nextcostume': 'next costume',

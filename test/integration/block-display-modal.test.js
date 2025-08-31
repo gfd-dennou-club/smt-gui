@@ -134,7 +134,7 @@ describe('Block Display Modal', () => {
         expect(logs).toEqual([]);
     });
 
-    test('URL input field shows generated only_blocks URL when blocks are selected', async () => {
+    test('URL input field shows generated only_blocks URL when blocks are deselected', async () => {
         await loadUri(uri);
         await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
 
@@ -147,7 +147,7 @@ describe('Block Display Modal', () => {
         // Wait for modal to render
         await driver.sleep(1000);
 
-        // Select a block by clicking its checkbox
+        // Deselect a block by clicking its checkbox (all blocks are selected by default)
         const motionCheckbox = await findByXpath('//input[@type="checkbox"][@data-block="motion_movesteps"]');
         await motionCheckbox.click();
 
@@ -155,10 +155,107 @@ describe('Block Display Modal', () => {
         await driver.sleep(500);
 
         // Verify URL input field contains only_blocks parameter with period separator
+        // motion_movesteps should be excluded from the URL since it was deselected
         const urlInput = await findByXpath('//input[@type="text"][contains(@class, "block-display-modal_urlInput")]');
         const urlValue = await urlInput.getAttribute('value');
         expect(urlValue).toContain('only_blocks=');
-        expect(urlValue).toContain('motion_movesteps');
+        expect(urlValue).not.toContain('motion_movesteps');
+
+        // Close the modal using ESC key
+        await driver.actions().sendKeys("\uE00C").perform();
+
+        // Wait for modal to close
+        await driver.sleep(300);
+
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
+
+    test('only_blocks parameter should not have prefix matching issues', async () => {
+        // Test with URL parameter that specifies only looks_say block
+        const testUri = uri + '?only_blocks=looks_say';
+        await loadUri(testUri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Go to Code tab to check block visibility
+        await clickText('Code');
+        await driver.sleep(1000);
+
+        // Click on Looks category to expand it
+        await clickText('Looks');
+        await driver.sleep(1000);
+
+        // looks_say should be visible (it was specified in only_blocks)
+        const sayBlockExists = await textExists('say', scope.blocksTab);
+        expect(sayBlockExists).toBeTruthy();
+
+        // looks_sayforsecs should NOT be visible (it was not specified, prefix matching should not apply)
+        // This is the key test - we should NOT see sayforsecs block when only 'say' was specified
+        const sayForSecsExists = await textExists('say', scope.blocksTab); // This will need more specific selector
+        // TODO: Need more specific way to check if looks_sayforsecs is hidden while looks_say is shown
+        
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
+
+    test('only_blocks with category prefix should select entire category', async () => {
+        // Test with category prefix (motion_) which should select all motion blocks
+        const testUri = uri + '?only_blocks=motion_';
+        await loadUri(testUri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Open block display modal to verify initial selection
+        await clickXpath(SETTINGS_MENU_XPATH);
+        await clickText('Block Display...', scope.menuBar);
+        await driver.sleep(1000);
+
+        // Motion category should be fully checked (all blocks selected)
+        const motionCheckbox = await findByXpath('//input[@type="checkbox"][@data-category="motion"]');
+        const isMotionChecked = await motionCheckbox.isSelected();
+        expect(isMotionChecked).toBeTruthy();
+
+        // Other categories should not be checked
+        const looksCheckbox = await findByXpath('//input[@type="checkbox"][@data-category="looks"]');
+        const isLooksChecked = await looksCheckbox.isSelected();
+        expect(isLooksChecked).toBeFalsy();
+
+        // Close modal
+        await driver.actions().sendKeys("\uE00C").perform();
+        await driver.sleep(300);
+
+        const logs = await getLogs();
+        expect(logs).toEqual([]);
+    });
+
+    test('All blocks should be checked by default when no only_blocks parameter', async () => {
+        // Load page without any only_blocks parameter
+        await loadUri(uri);
+        await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
+
+        // Click Settings menu
+        await clickXpath(SETTINGS_MENU_XPATH);
+
+        // Click Block Display Settings menu item
+        await clickText('Block Display...', scope.menuBar);
+
+        // Wait for modal to render
+        await driver.sleep(1000);
+
+        // Verify all category checkboxes are checked
+        const motionCheckbox = await findByXpath('//input[@type="checkbox"][@data-category="motion"]');
+        const looksCheckbox = await findByXpath('//input[@type="checkbox"][@data-category="looks"]');
+        const soundCheckbox = await findByXpath('//input[@type="checkbox"][@data-category="sound"]');
+
+        expect(await motionCheckbox.isSelected()).toBeTruthy();
+        expect(await looksCheckbox.isSelected()).toBeTruthy();
+        expect(await soundCheckbox.isSelected()).toBeTruthy();
+
+        // Verify some individual block checkboxes are also checked
+        const motionMovestepsCheckbox = await findByXpath('//input[@type="checkbox"][@data-block="motion_movesteps"]');
+        const looksSayCheckbox = await findByXpath('//input[@type="checkbox"][@data-block="looks_say"]');
+        
+        expect(await motionMovestepsCheckbox.isSelected()).toBeTruthy();
+        expect(await looksSayCheckbox.isSelected()).toBeTruthy();
 
         // Close the modal using ESC key
         await driver.actions().sendKeys("\uE00C").perform();

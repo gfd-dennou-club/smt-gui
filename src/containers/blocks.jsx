@@ -382,13 +382,13 @@ class Blocks extends React.Component {
                     selectedBlockIds.push(...categoryBlocks);
                 });
 
-                // Always include variables and myBlocks (they're always visible)
-                selectedBlockIds.push('variables_', 'myBlocks_');
-
+                // Only generate onlyBlocks if some blocks are selected
+                // If no blocks are selected (empty arrays), show all blocks (no filtering)
                 if (selectedBlockIds.length > 0) {
+                    // Always include variables and myBlocks (they're always visible)
+                    selectedBlockIds.push('variables_', 'myBlocks_');
                     onlyBlocks = selectedBlockIds.join(',');
                 }
-
             }
 
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,

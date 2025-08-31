@@ -155,6 +155,55 @@ export const CATEGORY_BLOCKS = {
     ]
 };
 
+/**
+ * Initialize block selection from only_blocks parameter
+ * @param {string} onlyBlocks - The only_blocks parameter value
+ * @returns {object} - Selected blocks object with categories initialized based on only_blocks
+ */
+export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
+    const selectedBlocks = {};
+    
+    // Always initialize each category
+    Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+        selectedBlocks[categoryId] = [];
+    });
+    
+    // If no onlyBlocks parameter provided (null/undefined), select all blocks (default behavior)
+    if (onlyBlocks === null || typeof onlyBlocks === 'undefined') {
+        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+            selectedBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
+        });
+        return selectedBlocks;
+    }
+    
+    // If empty string provided, return empty selections
+    if (!onlyBlocks) return selectedBlocks;
+    
+    // Parse only_blocks parameter
+    const patterns = onlyBlocks.split(/[,.]/)
+        .map(pattern => pattern.trim())
+        .filter(pattern => pattern.length > 0);
+    
+    // Process patterns to determine which blocks should be initially selected
+    patterns.forEach(pattern => {
+        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+            const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
+            
+            // Check if pattern matches category prefix (e.g., "motion_" matches motion category)
+            if (pattern.endsWith('_') && pattern === `${categoryId}_`) {
+                // Select all blocks in this category
+                selectedBlocks[categoryId] = [...categoryBlocks];
+            } else if (categoryBlocks.includes(pattern)) {
+                // Select specific block if it exists in this category
+                if (!selectedBlocks[categoryId].includes(pattern)) {
+                    selectedBlocks[categoryId].push(pattern);
+                }
+            }
+        });
+    });
+    
+    return selectedBlocks;
+};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {

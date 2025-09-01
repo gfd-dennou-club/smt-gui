@@ -23,7 +23,8 @@ const CATEGORY_BLOCKS = {
         'looks_switchbackdroptoandwait', 'looks_nextbackdrop', 'looks_switchcostumeto',
         'looks_nextcostume', 'looks_changesizeby', 'looks_setsizeto', 'looks_changeeffectby',
         'looks_seteffectto', 'looks_cleargraphiceffects', 'looks_show', 'looks_hide',
-        'looks_gotofrontback', 'looks_goforwardbackwardlayers'
+        'looks_gotofrontback', 'looks_goforwardbackwardlayers', 'looks_costumenumbername',
+        'looks_backdropnumbername', 'looks_size'
     ],
     sound: [
         'sound_playuntildone', 'sound_play', 'sound_stopallsounds', 'sound_changeeffectby',

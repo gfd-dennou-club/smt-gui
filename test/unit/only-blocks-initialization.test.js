@@ -2,7 +2,7 @@
  * @fileoverview Test for only_blocks parameter initialization logic
  */
 
-import {CATEGORY_BLOCKS, initializeBlockSelectionFromOnlyBlocks} from '../../src/components/block-display-modal/block-display-modal.jsx';
+import {CATEGORY_BLOCKS, initializeBlockSelectionFromOnlyBlocks} from '../../src/lib/block-utils.js';
 
 describe('only_blocks parameter initialization', () => {
     test('should initialize with all blocks selected when no only_blocks parameter (default behavior)', () => {

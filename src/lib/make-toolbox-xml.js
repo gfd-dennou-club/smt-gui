@@ -1,6 +1,6 @@
 import ScratchBlocks from 'scratch-blocks';
 import {defaultColors} from './themes';
-import {CATEGORY_BLOCKS} from '../components/block-display-modal/block-display-modal.jsx';
+import {CATEGORY_BLOCKS, parseHexFormatToSelectedBlocks} from './block-utils';
 
 const categorySeparator = '<sep gap="36"/>';
 
@@ -751,54 +751,21 @@ const xmlClose = '</xml>';
  * @param {?string} onlyBlocks - The only_blocks URL parameter value
  * @returns {Array.<string>} - Array of allowed block patterns
  */
+// Helper functions imported from block-utils.js
+
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
     
     // Check if hex format (starts with '0')
     if (onlyBlocks.startsWith('0') && onlyBlocks.length > 1) {
-        // Use the same parsing logic from block-display-modal.jsx
-        const selectedBlocks = {};
-        
-        // Always initialize each category
-        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
-            selectedBlocks[categoryId] = [];
-        });
-        
-        // Parse hex format
-        const hexData = onlyBlocks.slice(1);
-        
-        // Convert hex to binary (reverse bit order within each hex digit for proper bit indexing)
-        let binaryString = '';
-        for (let i = 0; i < hexData.length; i++) {
-            const hexDigit = hexData[i];
-            const decimal = parseInt(hexDigit, 16);
-            const binary = decimal.toString(2).padStart(4, '0');
-            // Reverse the binary string to match bit ordering (LSB first)
-            const reversedBinary = binary.split('')
-                .reverse()
-                .join('');
-            binaryString += reversedBinary;
-        }
-        
-        // Generate ordered list of all blocks
-        const blockOrder = [];
-        const categoryOrder = ['motion', 'looks', 'sound', 'events', 'control', 'sensing', 'operators'];
-        
-        categoryOrder.forEach(categoryId => {
-            const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
-            blockOrder.push(...categoryBlocks);
-        });
-        
-        // Map binary bits to block selections
+        // Parse hex format and convert to allowed patterns
+        const selectedBlocks = parseHexFormatToSelectedBlocks(onlyBlocks);
         const allowedPatterns = [];
-        for (let i = 0; i < Math.min(binaryString.length, blockOrder.length); i++) {
-            const bit = binaryString[i];
-            const blockId = blockOrder[i];
-            
-            if (bit === '1') {
-                allowedPatterns.push(blockId);
-            }
-        }
+        
+        Object.keys(selectedBlocks).forEach(categoryId => {
+            const blocksInCategory = selectedBlocks[categoryId] || [];
+            allowedPatterns.push(...blocksInCategory);
+        });
         
         return allowedPatterns;
     }

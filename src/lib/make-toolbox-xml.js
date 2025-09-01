@@ -753,7 +753,57 @@ const xmlClose = '</xml>';
  */
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
-    // Support both comma (,) and period (.) as separators
+    
+    // Check if hex format (starts with '0')
+    if (onlyBlocks.startsWith('0') && onlyBlocks.length > 1) {
+        // Use the same parsing logic from block-display-modal.jsx
+        const selectedBlocks = {};
+        
+        // Always initialize each category
+        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+            selectedBlocks[categoryId] = [];
+        });
+        
+        // Parse hex format
+        const hexData = onlyBlocks.slice(1);
+        
+        // Convert hex to binary (reverse bit order within each hex digit for proper bit indexing)
+        let binaryString = '';
+        for (let i = 0; i < hexData.length; i++) {
+            const hexDigit = hexData[i];
+            const decimal = parseInt(hexDigit, 16);
+            const binary = decimal.toString(2).padStart(4, '0');
+            // Reverse the binary string to match bit ordering (LSB first)
+            const reversedBinary = binary.split('')
+                .reverse()
+                .join('');
+            binaryString += reversedBinary;
+        }
+        
+        // Generate ordered list of all blocks
+        const blockOrder = [];
+        const categoryOrder = ['motion', 'looks', 'sound', 'events', 'control', 'sensing', 'operators'];
+        
+        categoryOrder.forEach(categoryId => {
+            const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
+            blockOrder.push(...categoryBlocks);
+        });
+        
+        // Map binary bits to block selections
+        const allowedPatterns = [];
+        for (let i = 0; i < Math.min(binaryString.length, blockOrder.length); i++) {
+            const bit = binaryString[i];
+            const blockId = blockOrder[i];
+            
+            if (bit === '1') {
+                allowedPatterns.push(blockId);
+            }
+        }
+        
+        return allowedPatterns;
+    }
+    
+    // Support both comma (,) and period (.) as separators (legacy format)
     return onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);

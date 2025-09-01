@@ -130,5 +130,23 @@ describe('only_blocks parameter initialization', () => {
             expect(result.motion).toEqual(['motion_movesteps']);
             expect(result.looks).toEqual(['looks_say']);
         });
+
+        test('should parse motion_setx only with failing test first', () => {
+            // Create a hex that should give motion_setx only + all other categories
+            // This test is designed to fail first (RED) to demonstrate the bug
+            // Expected: motion_setx + all other categories
+            // Actual (bug): some categories empty
+            const result = initializeBlockSelectionFromOnlyBlocks('00048ffffffffffffffffffff7');
+            
+            // This should fail initially due to the bug - motion should only have motion_setx
+            // but other categories should have all blocks
+            expect(result.motion).toEqual(['motion_setx']);
+            expect(result.looks.length).toBeGreaterThan(0); // Should not be empty
+            expect(result.sound.length).toBeGreaterThan(0); // Should not be empty
+            expect(result.events.length).toBeGreaterThan(0); // Should not be empty
+            expect(result.control.length).toBeGreaterThan(0); // Should not be empty
+            expect(result.sensing.length).toBeGreaterThan(0); // Should not be empty
+            expect(result.operators.length).toBeGreaterThan(0); // Should not be empty
+        });
     });
 });

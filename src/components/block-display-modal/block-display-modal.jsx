@@ -8,6 +8,7 @@ import VMScratchBlocks from '../../lib/blocks';
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
+import copyIcon from '../sound-editor/icon--copy.svg';
 
 import styles from './block-display-modal.css';
 
@@ -218,11 +219,13 @@ class BlockDisplayModal extends React.Component {
             'handleCategorySelect',
             'handleBlockListScroll',
             'scrollToCategorySection',
-            'setBlockListRef'
+            'setBlockListRef',
+            'handleCopyClick'
         ]);
 
         this.state = {
-            selectedCategoryIndex: 0
+            selectedCategoryIndex: 0,
+            copyButtonState: 'normal' // 'normal' | 'copying' | 'copied'
         };
 
         // Initialize ScratchBlocks if not already done
@@ -349,6 +352,40 @@ class BlockDisplayModal extends React.Component {
         return newUrl;
     }
 
+    async handleCopyClick () {
+        const url = this.generateOnlyBlocksUrl();
+        
+        try {
+            this.setState({copyButtonState: 'copying'});
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(url);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+            
+            this.setState({copyButtonState: 'copied'});
+            
+            // Reset button state after 2 seconds
+            setTimeout(() => {
+                this.setState({copyButtonState: 'normal'});
+            }, 2000);
+        } catch (error) {
+            // Handle copy failure
+            console.warn('Failed to copy URL to clipboard:', error);
+            this.setState({copyButtonState: 'normal'});
+        }
+    }
 
     getCategoryCheckboxState (categoryId) {
         const {selectedBlocks} = this.props;
@@ -523,12 +560,32 @@ class BlockDisplayModal extends React.Component {
                         <div className={styles.urlLabel}>
                             {'URL:'}
                         </div>
-                        <input
-                            className={styles.urlInput}
-                            type="text"
-                            value={this.generateOnlyBlocksUrl()}
-                            readOnly
-                        />
+                        <div className={styles.urlInputContainer}>
+                            <input
+                                className={styles.urlInput}
+                                type="text"
+                                value={this.generateOnlyBlocksUrl()}
+                                readOnly
+                            />
+                            <button
+                                className={classNames(styles.copyButton, {
+                                    [styles.copied]: this.state.copyButtonState === 'copied'
+                                })}
+                                onClick={this.handleCopyClick}
+                                disabled={this.state.copyButtonState === 'copying'}
+                                title={this.state.copyButtonState === 'copied' ? 'Copied!' : 'Copy URL'}
+                            >
+                                {this.state.copyButtonState === 'copied' ? (
+                                    <span>{'✓'}</span>
+                                ) : (
+                                    <img
+                                        className={styles.copyIcon}
+                                        src={copyIcon}
+                                        alt="Copy"
+                                    />
+                                )}
+                            </button>
+                        </div>
                     </Box>
                 </Box>
             </Modal>

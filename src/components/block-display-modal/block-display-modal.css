@@ -487,6 +487,50 @@
     box-shadow: 0 0 0 2px rgba(76, 151, 255, 0.2);
 }
 
+.urlInputContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    position: relative;
+}
+
+.copyButton {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.copyButton:hover {
+    background: #f5f5f5;
+    border-color: #4c97ff;
+}
+
+.copyButton:active {
+    transform: scale(0.95);
+}
+
+.copyButton.copied {
+    background: #4caf50;
+    border-color: #4caf50;
+    color: white;
+}
+
+.copyIcon {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
 /* RTL support */
 [dir="rtl"] .controls {
     flex-direction: row-reverse;

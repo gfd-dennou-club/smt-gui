@@ -21,6 +21,8 @@ import {
 import {
     closeFileMenu
 } from '../reducers/menus';
+import {setSelectedBlocks} from '../reducers/block-display';
+import {initializeBlockSelectionFromOnlyBlocks} from './block-utils';
 
 const messages = defineMessages({
     loadError: {
@@ -46,6 +48,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
             bindAll(this, [
                 'createFileObjects',
                 'getProjectTitleFromFilename',
+                'updateSelectedBlocksFromStageComments',
                 'handleFinishedLoadingUpload',
                 'handleStartSelectingFileUpload',
                 'handleChange',
@@ -142,6 +145,31 @@ const SBFileUploaderHOC = function (WrappedComponent) {
             if (!matches) return '';
             return matches[1].substring(0, 100); // truncate project title to max 100 chars
         }
+
+        
+        // Extract only_blocks setting from Stage comments and update selectedBlocks
+        updateSelectedBlocksFromStageComments () {
+            try {
+                const stage = this.props.vm.runtime.getTargetForStage();
+                if (!stage || !stage.comments) return;
+                
+                // Search through Stage comments for only_blocks pattern
+                for (const commentId in stage.comments) {
+                    const comment = stage.comments[commentId];
+                    if (comment && comment.text) {
+                        const match = comment.text.match(/only_blocks=([^\s\n]+)/);
+                        if (match) {
+                            const onlyBlocksValue = match[1];
+                            const selectedBlocks = initializeBlockSelectionFromOnlyBlocks(onlyBlocksValue);
+                            this.props.setSelectedBlocks(selectedBlocks);
+                            break;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Failed to update selectedBlocks from Stage comments:', error);
+            }
+        }
         // step 6: attached as a handler on our FileReader object; called when
         // file upload raw data is available in the reader
         onload () {
@@ -155,6 +183,14 @@ const SBFileUploaderHOC = function (WrappedComponent) {
                             const uploadedProjectTitle = this.getProjectTitleFromFilename(filename);
                             this.props.onSetProjectTitle(uploadedProjectTitle);
                         }
+                        
+                        // Update selectedBlocks from Stage comments to reflect in block-display-modal
+                        setTimeout(() => {
+                            this.updateSelectedBlocksFromStageComments();
+                            // Trigger toolbox update to apply Stage comment only_blocks settings
+                            this.props.vm.refreshWorkspace();
+                        }, 100);
+                        
                         loadingSuccess = true;
                     })
                     .catch(error => {
@@ -221,9 +257,14 @@ const SBFileUploaderHOC = function (WrappedComponent) {
         onSetProjectTitle: PropTypes.func,
         projectChanged: PropTypes.bool,
         requestProjectUpload: PropTypes.func,
+        setSelectedBlocks: PropTypes.func,
         userOwnsProject: PropTypes.bool,
         vm: PropTypes.shape({
-            loadProject: PropTypes.func
+            loadProject: PropTypes.func,
+            refreshWorkspace: PropTypes.func,
+            runtime: PropTypes.shape({
+                getTargetForStage: PropTypes.func
+            })
         })
     };
     const mapStateToProps = (state, ownProps) => {
@@ -252,6 +293,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
         // show project loading screen
         onLoadingStarted: () => dispatch(openLoadingProject()),
         onSetProjectTitle: title => dispatch(setProjectTitle(title)),
+        setSelectedBlocks: blocks => dispatch(setSelectedBlocks(blocks)),
         // step 4: transition the project state so we're ready to handle the new
         // project data. When this is done, the project state transition will be
         // noticed by componentDidUpdate()

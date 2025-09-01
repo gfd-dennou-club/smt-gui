@@ -353,6 +353,30 @@ class Blocks extends React.Component {
     onVisualReport (data) {
         this.workspace.reportValue(data.id, data.value);
     }
+    
+    // Extract only_blocks setting from Stage comments
+    extractOnlyBlocksFromStageComments () {
+        try {
+            const stage = this.props.vm.runtime.getTargetForStage();
+            if (!stage || !stage.comments) return null;
+            
+            // Search through Stage comments for only_blocks pattern
+            for (const commentId in stage.comments) {
+                const comment = stage.comments[commentId];
+                if (comment && comment.text) {
+                    const match = comment.text.match(/only_blocks=([^\s\n]+)/);
+                    if (match) {
+                        return match[1];
+                    }
+                }
+            }
+            return null;
+        } catch (error) {
+            console.warn('Failed to extract only_blocks from Stage comments:', error);
+            return null;
+        }
+    }
+
     getToolboxXML () {
         // Use try/catch because this requires digging pretty deep into the VM
         // Code inside intentionally ignores several error situations (no stage, etc.)
@@ -370,9 +394,14 @@ class Blocks extends React.Component {
                 this.props.theme
             );
 
-            // Parse only_blocks URL parameter - URL parameter takes priority over GUI settings
-            const queryParams = queryString.parse(location.search);
-            let onlyBlocks = queryParams.only_blocks;
+            // Check for only_blocks setting in Stage comments first (highest priority)
+            let onlyBlocks = this.extractOnlyBlocksFromStageComments();
+
+            // If no Stage comment setting, check URL parameter
+            if (!onlyBlocks) {
+                const queryParams = queryString.parse(location.search);
+                onlyBlocks = queryParams.only_blocks;
+            }
 
             // If no URL parameter, use GUI settings to generate only_blocks equivalent
             if (!onlyBlocks && this.props.selectedBlocks) {

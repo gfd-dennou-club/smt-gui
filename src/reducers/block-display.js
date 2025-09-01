@@ -1,5 +1,5 @@
 import queryString from 'query-string';
-import {initializeBlockSelectionFromOnlyBlocks} from '../components/block-display-modal/block-display-modal.jsx';
+import {initializeBlockSelectionFromOnlyBlocks} from '../lib/block-utils';
 
 const SET_SELECTED_BLOCKS = 'scratch-gui/block-display/SET_SELECTED_BLOCKS';
 const SET_MODAL_VISIBLE = 'scratch-gui/block-display/SET_MODAL_VISIBLE';

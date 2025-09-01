@@ -1,6 +1,6 @@
 import ScratchBlocks from 'scratch-blocks';
 import {defaultColors} from './themes';
-import {CATEGORY_BLOCKS} from '../components/block-display-modal/block-display-modal.jsx';
+import {CATEGORY_BLOCKS, parseHexFormatToSelectedBlocks} from './block-utils';
 
 const categorySeparator = '<sep gap="36"/>';
 
@@ -751,9 +751,26 @@ const xmlClose = '</xml>';
  * @param {?string} onlyBlocks - The only_blocks URL parameter value
  * @returns {Array.<string>} - Array of allowed block patterns
  */
+// Helper functions imported from block-utils.js
+
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
-    // Support both comma (,) and period (.) as separators
+    
+    // Check if hex format (starts with '0')
+    if (onlyBlocks.startsWith('0') && onlyBlocks.length > 1) {
+        // Parse hex format and convert to allowed patterns
+        const selectedBlocks = parseHexFormatToSelectedBlocks(onlyBlocks);
+        const allowedPatterns = [];
+        
+        Object.keys(selectedBlocks).forEach(categoryId => {
+            const blocksInCategory = selectedBlocks[categoryId] || [];
+            allowedPatterns.push(...blocksInCategory);
+        });
+        
+        return allowedPatterns;
+    }
+    
+    // Support both comma (,) and period (.) as separators (legacy format)
     return onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);

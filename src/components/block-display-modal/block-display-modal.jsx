@@ -4,6 +4,7 @@ import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import VMScratchBlocks from '../../lib/blocks';
+import {CATEGORY_BLOCKS, generateBlockOrder} from '../../lib/block-utils';
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
@@ -42,173 +43,10 @@ const ALWAYS_VISIBLE_CATEGORIES = [
     {id: 'extensions', messageId: 'gui.smalruby3.blockDisplayModal.extensions'}
 ];
 
-// Define blocks for each category based on make-toolbox-xml.js
-export const CATEGORY_BLOCKS = {
-    motion: [
-        'motion_movesteps',
-        'motion_turnright',
-        'motion_turnleft',
-        'motion_goto',
-        'motion_gotoxy',
-        'motion_glideto',
-        'motion_glidesecstoxy',
-        'motion_pointindirection',
-        'motion_pointtowards',
-        'motion_changexby',
-        'motion_setx',
-        'motion_changeyby',
-        'motion_sety',
-        'motion_ifonedgebounce',
-        'motion_setrotationstyle'
-    ],
-    looks: [
-        'looks_sayforsecs',
-        'looks_say',
-        'looks_thinkforsecs',
-        'looks_think',
-        'looks_switchcostumeto',
-        'looks_nextcostume',
-        'looks_switchbackdropto',
-        'looks_nextbackdrop',
-        'looks_changesizeby',
-        'looks_setsizeto',
-        'looks_changeeffectby',
-        'looks_seteffectto',
-        'looks_cleargraphiceffects',
-        'looks_show',
-        'looks_hide',
-        'looks_gotofrontback',
-        'looks_goforwardbackwardlayers',
-        'looks_costumenumbername',
-        'looks_backdropnumbername',
-        'looks_size',
-        // for Stage
-        'looks_switchbackdroptoandwait'
-    ],
-    sound: [
-        'sound_playuntildone',
-        'sound_play',
-        'sound_stopallsounds',
-        'sound_changeeffectby',
-        'sound_seteffectto',
-        'sound_cleareffects',
-        'sound_changevolumeby',
-        'sound_setvolumeto'
-    ],
-    events: [
-        'event_whenflagclicked',
-        'event_whenkeypressed',
-        'event_whenthisspriteclicked',
-        'event_whenbackdropswitchesto',
-        'event_whengreaterthan',
-        'event_whenbroadcastreceived',
-        'event_broadcast',
-        'event_broadcastandwait'
-    ],
-    control: [
-        'control_wait',
-        'control_repeat',
-        'control_forever',
-        'control_if',
-        'control_if_else',
-        'control_wait_until',
-        'control_repeat_until',
-        'control_stop',
-        'control_start_as_clone',
-        'control_create_clone_of',
-        'control_delete_this_clone'
-    ],
-    sensing: [
-        'sensing_touchingobject',
-        'sensing_touchingcolor',
-        'sensing_coloristouchingcolor',
-        'sensing_distanceto',
-        'sensing_askandwait',
-        'sensing_answer',
-        'sensing_keypressed',
-        'sensing_mousedown',
-        'sensing_mousex',
-        'sensing_mousey',
-        'sensing_setdragmode',
-        'sensing_loudness',
-        'sensing_timer',
-        'sensing_resettimer',
-        'sensing_of',
-        'sensing_current',
-        'sensing_dayssince2000',
-        'sensing_username'
-    ],
-    operators: [
-        'operator_add',
-        'operator_subtract',
-        'operator_multiply',
-        'operator_divide',
-        'operator_random',
-        'operator_gt',
-        'operator_lt',
-        'operator_equals',
-        'operator_and',
-        'operator_or',
-        'operator_not',
-        'operator_join',
-        'operator_letter_of',
-        'operator_length',
-        'operator_contains',
-        'operator_mod',
-        'operator_round',
-        'operator_mathop'
-    ]
-};
+// CATEGORY_BLOCKS imported from block-utils.js
 
-/**
- * Initialize block selection from only_blocks parameter
- * @param {string} onlyBlocks - The only_blocks parameter value
- * @returns {object} - Selected blocks object with categories initialized based on only_blocks
- */
-export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
-    const selectedBlocks = {};
+// Helper functions imported from make-toolbox-xml.js
 
-    // Always initialize each category
-    Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
-        selectedBlocks[categoryId] = [];
-    });
-
-    // If no onlyBlocks parameter provided (null/undefined), select all blocks (default behavior)
-    if (onlyBlocks === null || typeof onlyBlocks === 'undefined') {
-        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
-            selectedBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
-        });
-        return selectedBlocks;
-    }
-
-    // If empty string provided, return empty selections
-    if (!onlyBlocks) return selectedBlocks;
-
-    // Parse only_blocks parameter
-    const patterns = onlyBlocks.split(/[,.]/)
-        .map(pattern => pattern.trim())
-        .filter(pattern => pattern.length > 0);
-
-    // Process patterns to determine which blocks should be initially selected
-    patterns.forEach(pattern => {
-        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
-            const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
-
-            // Check if pattern matches category prefix (e.g., "motion_" matches motion category)
-            if (pattern.endsWith('_') && pattern === `${categoryId}_`) {
-                // Select all blocks in this category
-                selectedBlocks[categoryId] = [...categoryBlocks];
-            } else if (categoryBlocks.includes(pattern)) {
-                // Select specific block if it exists in this category
-                if (!selectedBlocks[categoryId].includes(pattern)) {
-                    selectedBlocks[categoryId].push(pattern);
-                }
-            }
-        });
-    });
-
-    return selectedBlocks;
-};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {
@@ -332,22 +170,45 @@ class BlockDisplayModal extends React.Component {
             return currentUrl;
         }
 
-        // Generate only_blocks parameter from selected blocks
-        const onlyBlocksList = [];
-        Object.keys(selectedBlocks).forEach(categoryId => {
-            const blocksInCategory = selectedBlocks[categoryId] || [];
-            blocksInCategory.forEach(blockId => {
-                onlyBlocksList.push(blockId);
+        // Get the ordered list of all blocks
+        const blockOrder = generateBlockOrder();
+        
+        // Create binary string representing block selection
+        let binaryString = '';
+        blockOrder.forEach(blockId => {
+            // Check if this block is selected in any category
+            let isSelected = false;
+            Object.keys(selectedBlocks).forEach(categoryId => {
+                const blocksInCategory = selectedBlocks[categoryId] || [];
+                if (blocksInCategory.includes(blockId)) {
+                    isSelected = true;
+                }
             });
+            binaryString += isSelected ? '1' : '0';
         });
 
-        if (onlyBlocksList.length === 0) {
-            return currentUrl;
+        // Convert binary to hex with proper bit ordering
+        let hexString = '';
+        // Process in chunks of 4 bits (1 hex digit each)
+        for (let i = 0; i < binaryString.length; i += 4) {
+            const chunk = binaryString.slice(i, i + 4);
+            // Pad chunk to 4 bits if needed
+            const paddedChunk = chunk.padEnd(4, '0');
+            // Reverse bits for proper ordering (LSB first)
+            const reversedChunk = paddedChunk.split('')
+                .reverse()
+                .join('');
+            // Convert to decimal then hex
+            const decimal = parseInt(reversedChunk, 2);
+            const hex = decimal.toString(16);
+            hexString += hex;
         }
 
-        // Create new URL with only_blocks parameter using period separator
-        const onlyBlocksParam = onlyBlocksList.join('.');
-        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(onlyBlocksParam)}${hash}`;
+        // Add leading '0' identifier for hex format
+        const hexParam = `0${hexString}`;
+
+        // Create new URL with only_blocks parameter using hex format
+        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(hexParam)}${hash}`;
 
         return newUrl;
     }

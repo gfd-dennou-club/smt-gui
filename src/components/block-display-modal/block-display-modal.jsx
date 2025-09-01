@@ -8,7 +8,7 @@ import VMScratchBlocks from '../../lib/blocks';
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
-import copyIcon from '../sound-editor/icon--copy.svg';
+import copyIcon from './icon--clipboard-copy.svg';
 
 import styles from './block-display-modal.css';
 

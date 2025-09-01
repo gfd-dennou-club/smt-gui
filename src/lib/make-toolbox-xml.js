@@ -753,7 +753,8 @@ const xmlClose = '</xml>';
  */
 const parseOnlyBlocks = function (onlyBlocks) {
     if (!onlyBlocks) return [];
-    return onlyBlocks.split(',')
+    // Support both comma (,) and period (.) as separators
+    return onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);
 };
@@ -767,9 +768,25 @@ const parseOnlyBlocks = function (onlyBlocks) {
 const shouldIncludeBlock = function (blockType, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return true;
 
-    return allowedPatterns.some(pattern =>
-        blockType === pattern || blockType.startsWith(pattern)
-    );
+    return allowedPatterns.some(pattern => {
+        // Check if pattern is a category prefix (ends with underscore)
+        if (pattern.endsWith('_')) {
+            return blockType.startsWith(pattern);
+        }
+        // Otherwise, require exact match
+        return blockType === pattern;
+    });
+};
+
+/**
+ * Hides a category completely when no blocks are selected
+ * @param {string} categoryXML - The XML string for a category (unused)
+ * @returns {string} - Empty string to hide the category
+ */
+// eslint-disable-next-line no-unused-vars
+const filterAllBlocks = function (categoryXML) {
+    // When no blocks are selected, return empty string to hide the entire category
+    return '';
 };
 
 /**
@@ -783,7 +800,11 @@ const filterBlocks = function (categoryXML, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
 
     // Extract both block and separator elements while preserving order
-    const elementRegex = /(?:<block[^>]*type="[^"]+"[^>]*(?:\/>|>.*?<\/block>)|<sep[^>]*\/>)/gs;
+    // Improved regex for better inline/normal block syntax matching
+    const inlineBlock = '<block[^>]*type="[^"]+"[^>]*\\/>';
+    const normalBlock = '<block[^>]*type="[^"]+"[^>]*>[\\s\\S]*?<\\/block>';
+    const separator = '<sep[^>]*\\/>';
+    const elementRegex = new RegExp(`(?:${inlineBlock}|${normalBlock}|${separator})`, 'g');
     const elements = categoryXML.match(elementRegex) || [];
 
     const filteredElements = [];
@@ -860,10 +881,12 @@ const filterBlocks = function (categoryXML, allowedPatterns) {
  * @param {?string} soundName -  The name of the default selected sound dropdown.
  * @param {?object} colors - The colors for the theme.
  * @param {?string} onlyBlocks - The only_blocks URL parameter for filtering blocks.
+ * @param {boolean} isOnlyBlocksSpecified - Whether the only_blocks parameter was explicitly provided.
  * @returns {string} - a ScratchBlocks-style XML document for the contents of the toolbox.
  */
 const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categoriesXML = [],
-    costumeName = '', backdropName = '', soundName = '', colors = defaultColors, onlyBlocks = null) {
+    costumeName = '', backdropName = '', soundName = '', colors = defaultColors, onlyBlocks = null,
+    isOnlyBlocksSpecified = false) {
     isStage = isInitialSetup || isStage;
     const gap = [categorySeparator];
 
@@ -902,15 +925,26 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
     // Check if this is the default all blocks state (no filtering intended)
     const isDefaultAllBlocks = allowedPatterns.length >= TOTAL_DEFAULT_BLOCKS;
 
-    // Apply filtering to core categories if not default all blocks
-    if (allowedPatterns.length > 0 && !isDefaultAllBlocks) {
-        motionXML = filterBlocks(motionXML, allowedPatterns);
-        looksXML = filterBlocks(looksXML, allowedPatterns);
-        soundXML = filterBlocks(soundXML, allowedPatterns);
-        eventsXML = filterBlocks(eventsXML, allowedPatterns);
-        controlXML = filterBlocks(controlXML, allowedPatterns);
-        sensingXML = filterBlocks(sensingXML, allowedPatterns);
-        operatorsXML = filterBlocks(operatorsXML, allowedPatterns);
+    // Apply filtering to core categories if only_blocks parameter is provided and not default all blocks
+    if (isOnlyBlocksSpecified && !isDefaultAllBlocks) {
+        // Special case: when allowedPatterns is empty, hide all blocks
+        if (allowedPatterns.length === 0) {
+            motionXML = filterAllBlocks(motionXML);
+            looksXML = filterAllBlocks(looksXML);
+            soundXML = filterAllBlocks(soundXML);
+            eventsXML = filterAllBlocks(eventsXML);
+            controlXML = filterAllBlocks(controlXML);
+            sensingXML = filterAllBlocks(sensingXML);
+            operatorsXML = filterAllBlocks(operatorsXML);
+        } else {
+            motionXML = filterBlocks(motionXML, allowedPatterns);
+            looksXML = filterBlocks(looksXML, allowedPatterns);
+            soundXML = filterBlocks(soundXML, allowedPatterns);
+            eventsXML = filterBlocks(eventsXML, allowedPatterns);
+            controlXML = filterBlocks(controlXML, allowedPatterns);
+            sensingXML = filterBlocks(sensingXML, allowedPatterns);
+            operatorsXML = filterBlocks(operatorsXML, allowedPatterns);
+        }
     }
 
     // Build the final XML, only including non-empty categories

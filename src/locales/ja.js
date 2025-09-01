@@ -88,7 +88,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_thinkforsecs': '(うーん...) と (2) 秒考える',
     'gui.smalruby3.blockDisplayModal.looks_think': '(うーん...) と考える',
     'gui.smalruby3.blockDisplayModal.looks_switchbackdropto': '背景を (背景1) にする',
-    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '背景を (背景1) にして待つ',
+    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '【ステージ】背景を (背景1) にして待つ',
     'gui.smalruby3.blockDisplayModal.looks_nextbackdrop': '次の背景にする',
     'gui.smalruby3.blockDisplayModal.looks_switchcostumeto': 'コスチュームを (コスチューム1▼) にする',
     'gui.smalruby3.blockDisplayModal.looks_nextcostume': '次のコスチュームにする',
@@ -101,6 +101,9 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_hide': '隠す',
     'gui.smalruby3.blockDisplayModal.looks_gotofrontback': '[最前面▼] へ移動する',
     'gui.smalruby3.blockDisplayModal.looks_goforwardbackwardlayers': '(1) 層 [手前に出す▼]',
+    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'コスチュームの [番号▼]',
+    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': '背景の [番号▼]',
+    'gui.smalruby3.blockDisplayModal.looks_size': '大きさ',
 
     // Sound blocks
     'gui.smalruby3.blockDisplayModal.sound_playuntildone': '終わるまで (Meow▼) の音を鳴らす',

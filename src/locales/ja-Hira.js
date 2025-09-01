@@ -87,7 +87,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_thinkforsecs': '(うーん...) と (2) びょうかんがえる',
     'gui.smalruby3.blockDisplayModal.looks_think': '(うーん...) とかんがえる',
     'gui.smalruby3.blockDisplayModal.looks_switchbackdropto': 'はいけいを (はいけい1) にする',
-    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': 'はいけいを (はいけい1) にしてまつ',
+    'gui.smalruby3.blockDisplayModal.looks_switchbackdroptoandwait': '【すてーじ】はいけいを (はいけい1) にしてまつ',
     'gui.smalruby3.blockDisplayModal.looks_nextbackdrop': 'つぎのはいけいにする',
     'gui.smalruby3.blockDisplayModal.looks_switchcostumeto': 'コスチュームを (コスチューム1▼) にする',
     'gui.smalruby3.blockDisplayModal.looks_nextcostume': 'つぎのコスチュームにする',
@@ -100,6 +100,9 @@ export default {
     'gui.smalruby3.blockDisplayModal.looks_hide': 'かくす',
     'gui.smalruby3.blockDisplayModal.looks_gotofrontback': '[さいぜんめん▼] へいどうする',
     'gui.smalruby3.blockDisplayModal.looks_goforwardbackwardlayers': '(1) そう [てまえにだす▼]',
+    'gui.smalruby3.blockDisplayModal.looks_costumenumbername': 'コスチュームの [ばんごう▼]',
+    'gui.smalruby3.blockDisplayModal.looks_backdropnumbername': 'はいけいの [ばんごう▼]',
+    'gui.smalruby3.blockDisplayModal.looks_size': 'おおきさ',
 
     // Sound blocks
     'gui.smalruby3.blockDisplayModal.sound_playuntildone': 'おわるまで (Meow▼) のおとをならす',

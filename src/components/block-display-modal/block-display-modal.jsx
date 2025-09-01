@@ -8,6 +8,7 @@ import VMScratchBlocks from '../../lib/blocks';
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
+import copyIcon from './icon--clipboard-copy.svg';
 
 import styles from './block-display-modal.css';
 
@@ -65,11 +66,10 @@ export const CATEGORY_BLOCKS = {
         'looks_say',
         'looks_thinkforsecs',
         'looks_think',
-        'looks_switchbackdropto',
-        'looks_switchbackdroptoandwait',
-        'looks_nextbackdrop',
         'looks_switchcostumeto',
         'looks_nextcostume',
+        'looks_switchbackdropto',
+        'looks_nextbackdrop',
         'looks_changesizeby',
         'looks_setsizeto',
         'looks_changeeffectby',
@@ -78,7 +78,12 @@ export const CATEGORY_BLOCKS = {
         'looks_show',
         'looks_hide',
         'looks_gotofrontback',
-        'looks_goforwardbackwardlayers'
+        'looks_goforwardbackwardlayers',
+        'looks_costumenumbername',
+        'looks_backdropnumbername',
+        'looks_size',
+        // for Stage
+        'looks_switchbackdroptoandwait'
     ],
     sound: [
         'sound_playuntildone',
@@ -155,6 +160,55 @@ export const CATEGORY_BLOCKS = {
     ]
 };
 
+/**
+ * Initialize block selection from only_blocks parameter
+ * @param {string} onlyBlocks - The only_blocks parameter value
+ * @returns {object} - Selected blocks object with categories initialized based on only_blocks
+ */
+export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
+    const selectedBlocks = {};
+
+    // Always initialize each category
+    Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+        selectedBlocks[categoryId] = [];
+    });
+
+    // If no onlyBlocks parameter provided (null/undefined), select all blocks (default behavior)
+    if (onlyBlocks === null || typeof onlyBlocks === 'undefined') {
+        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+            selectedBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
+        });
+        return selectedBlocks;
+    }
+
+    // If empty string provided, return empty selections
+    if (!onlyBlocks) return selectedBlocks;
+
+    // Parse only_blocks parameter
+    const patterns = onlyBlocks.split(/[,.]/)
+        .map(pattern => pattern.trim())
+        .filter(pattern => pattern.length > 0);
+
+    // Process patterns to determine which blocks should be initially selected
+    patterns.forEach(pattern => {
+        Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+            const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
+
+            // Check if pattern matches category prefix (e.g., "motion_" matches motion category)
+            if (pattern.endsWith('_') && pattern === `${categoryId}_`) {
+                // Select all blocks in this category
+                selectedBlocks[categoryId] = [...categoryBlocks];
+            } else if (categoryBlocks.includes(pattern)) {
+                // Select specific block if it exists in this category
+                if (!selectedBlocks[categoryId].includes(pattern)) {
+                    selectedBlocks[categoryId].push(pattern);
+                }
+            }
+        });
+    });
+
+    return selectedBlocks;
+};
 
 class BlockDisplayModal extends React.Component {
     constructor (props) {
@@ -165,11 +219,13 @@ class BlockDisplayModal extends React.Component {
             'handleCategorySelect',
             'handleBlockListScroll',
             'scrollToCategorySection',
-            'setBlockListRef'
+            'setBlockListRef',
+            'handleCopyClick'
         ]);
 
         this.state = {
-            selectedCategoryIndex: 0
+            selectedCategoryIndex: 0,
+            copyButtonState: 'normal' // 'normal' | 'copying' | 'copied'
         };
 
         // Initialize ScratchBlocks if not already done
@@ -261,6 +317,75 @@ class BlockDisplayModal extends React.Component {
         this.blockListRef = ref;
     }
 
+    generateOnlyBlocksUrl () {
+        const {selectedBlocks} = this.props;
+        const currentUrl = typeof window === 'undefined' ? '' : window.location.href;
+
+        // Parse current URL to preserve hash
+        let baseUrl;
+        let hash;
+        try {
+            const url = new URL(currentUrl);
+            baseUrl = `${url.protocol}//${url.host}${url.pathname}`;
+            hash = url.hash;
+        } catch (e) {
+            return currentUrl;
+        }
+
+        // Generate only_blocks parameter from selected blocks
+        const onlyBlocksList = [];
+        Object.keys(selectedBlocks).forEach(categoryId => {
+            const blocksInCategory = selectedBlocks[categoryId] || [];
+            blocksInCategory.forEach(blockId => {
+                onlyBlocksList.push(blockId);
+            });
+        });
+
+        if (onlyBlocksList.length === 0) {
+            return currentUrl;
+        }
+
+        // Create new URL with only_blocks parameter using period separator
+        const onlyBlocksParam = onlyBlocksList.join('.');
+        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(onlyBlocksParam)}${hash}`;
+
+        return newUrl;
+    }
+
+    async handleCopyClick () {
+        const url = this.generateOnlyBlocksUrl();
+        
+        try {
+            this.setState({copyButtonState: 'copying'});
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(url);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+            
+            this.setState({copyButtonState: 'copied'});
+            
+            // Reset button state after 2 seconds
+            setTimeout(() => {
+                this.setState({copyButtonState: 'normal'});
+            }, 2000);
+        } catch (error) {
+            // Handle copy failure
+            console.warn('Failed to copy URL to clipboard:', error);
+            this.setState({copyButtonState: 'normal'});
+        }
+    }
 
     getCategoryCheckboxState (categoryId) {
         const {selectedBlocks} = this.props;
@@ -295,139 +420,172 @@ class BlockDisplayModal extends React.Component {
                 onRequestClose={onRequestClose}
             >
                 <Box className={styles.body}>
-                    <Box className={styles.leftPane}>
-                        <Box className={styles.categorySection}>
-                            <div className={styles.sectionTitle}>
-                                <FormattedMessage
-                                    defaultMessage="Categories:"
-                                    description="Title for block categories section"
-                                    id="gui.smalruby3.blockDisplayModal.categoriesTitle"
-                                />
-                            </div>
-                            {BLOCK_CATEGORIES.map((category, index) => {
-                                const checkboxState = this.getCategoryCheckboxState(category.id);
-                                return (
-                                    <div
-                                        key={category.id}
-                                        className={classNames(styles.categoryItem, {
-                                            [styles.selectedCategory]: selectedCategoryIndex === index
-                                        })}
-                                        data-category={category.id}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className={styles.checkbox}
+                    <Box className={styles.topSection}>
+                        <Box className={styles.leftPane}>
+                            <Box className={styles.categorySection}>
+                                <div className={styles.sectionTitle}>
+                                    <FormattedMessage
+                                        defaultMessage="Categories:"
+                                        description="Title for block categories section"
+                                        id="gui.smalruby3.blockDisplayModal.categoriesTitle"
+                                    />
+                                </div>
+                                {BLOCK_CATEGORIES.map((category, index) => {
+                                    const checkboxState = this.getCategoryCheckboxState(category.id);
+                                    return (
+                                        <div
+                                            key={category.id}
+                                            className={classNames(styles.categoryItem, {
+                                                [styles.selectedCategory]: selectedCategoryIndex === index
+                                            })}
                                             data-category={category.id}
-                                            checked={checkboxState.checked}
-                                            ref={checkbox => {
-                                                if (checkbox) {
-                                                    checkbox.indeterminate = checkboxState.indeterminate;
-                                                }
-                                            }}
-                                            onChange={this.handleCategoryChange}
-                                        />
-                                        <span
-                                            className={styles.categoryName}
-                                            data-category-index={index}
-                                            onClick={this.handleCategorySelect}
                                         >
-                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                this.ScratchBlocks.Msg[category.messageKey] ?
-                                                this.ScratchBlocks.Msg[category.messageKey] :
-                                                category.messageKey}
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </Box>
-
-                        <Box className={styles.alwaysVisibleSection}>
-                            <div className={styles.sectionTitle}>
-                                <FormattedMessage
-                                    defaultMessage="Always Visible:"
-                                    description="Title for always visible categories section"
-                                    id="gui.smalruby3.blockDisplayModal.alwaysVisibleTitle"
-                                />
-                            </div>
-                            {ALWAYS_VISIBLE_CATEGORIES.map(category => (
-                                <div
-                                    key={category.id}
-                                    className={styles.categoryItem}
-                                >
-                                    <label className={styles.categoryLabel}>
-                                        <input
-                                            type="checkbox"
-                                            className={styles.checkbox}
-                                            checked
-                                            disabled
-                                        />
-                                        <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
-                                            {category.messageKey ?
-                                                (this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                            <input
+                                                type="checkbox"
+                                                className={styles.checkbox}
+                                                data-category={category.id}
+                                                checked={checkboxState.checked}
+                                                ref={checkbox => {
+                                                    if (checkbox) {
+                                                        checkbox.indeterminate = checkboxState.indeterminate;
+                                                    }
+                                                }}
+                                                onChange={this.handleCategoryChange}
+                                            />
+                                            <span
+                                                className={styles.categoryName}
+                                                data-category-index={index}
+                                                onClick={this.handleCategorySelect}
+                                            >
+                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
                                                     this.ScratchBlocks.Msg[category.messageKey] ?
                                                     this.ScratchBlocks.Msg[category.messageKey] :
-                                                    category.messageKey) :
-                                                intl.formatMessage({id: category.messageId})}
-                                        </span>
-                                    </label>
-                                </div>
-                            ))}
-                        </Box>
-                    </Box>
+                                                    category.messageKey}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </Box>
 
-                    <Box className={styles.rightPane}>
-                        <Box
-                            className={styles.blockList}
-                            componentRef={this.setBlockListRef}
-                            onScroll={this.handleBlockListScroll}
-                        >
-                            {BLOCK_CATEGORIES.map((category, categoryIndex) => {
-                                const categoryBlocks = CATEGORY_BLOCKS[category.id] || [];
-                                return (
+                            <Box className={styles.alwaysVisibleSection}>
+                                <div className={styles.sectionTitle}>
+                                    <FormattedMessage
+                                        defaultMessage="Always Visible:"
+                                        description="Title for always visible categories section"
+                                        id="gui.smalruby3.blockDisplayModal.alwaysVisibleTitle"
+                                    />
+                                </div>
+                                {ALWAYS_VISIBLE_CATEGORIES.map(category => (
                                     <div
                                         key={category.id}
-                                        className={styles.categorySection}
-                                        data-category-index={categoryIndex}
+                                        className={styles.categoryItem}
                                     >
-                                        <div className={styles.categoryHeader}>
-                                            {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                this.ScratchBlocks.Msg[category.messageKey] ?
-                                                this.ScratchBlocks.Msg[category.messageKey] :
-                                                category.messageKey}
-                                        </div>
-                                        {categoryBlocks.map(blockType => {
-                                            const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
-                                            const selectedBlocksInCategory = selectedBlocks[category.id] || [];
-                                            const isBlockSelected = selectedBlocksInCategory.includes(blockType);
-
-                                            return (
-                                                <div
-                                                    key={blockType}
-                                                    className={styles.blockItem}
-                                                >
-                                                    <label className={styles.blockLabel}>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={isBlockSelected}
-                                                            className={styles.blockCheckbox}
-                                                            data-block={blockType}
-                                                            data-category={category.id}
-                                                            onChange={this.handleBlockChange}
-                                                        />
-                                                        <span className={styles.blockName}>
-                                                            {intl.formatMessage({
-                                                                id: messageId,
-                                                                defaultMessage: blockType
-                                                            })}
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            );
-                                        })}
+                                        <label className={styles.categoryLabel}>
+                                            <input
+                                                type="checkbox"
+                                                className={styles.checkbox}
+                                                checked
+                                                disabled
+                                            />
+                                            <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
+                                                {category.messageKey ?
+                                                    (this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                        this.ScratchBlocks.Msg[category.messageKey] ?
+                                                        this.ScratchBlocks.Msg[category.messageKey] :
+                                                        category.messageKey) :
+                                                    intl.formatMessage({id: category.messageId})}
+                                            </span>
+                                        </label>
                                     </div>
-                                );
-                            })}
+                                ))}
+                            </Box>
                         </Box>
+
+                        <Box className={styles.rightPane}>
+                            <Box
+                                className={styles.blockList}
+                                componentRef={this.setBlockListRef}
+                                onScroll={this.handleBlockListScroll}
+                            >
+                                {BLOCK_CATEGORIES.map((category, categoryIndex) => {
+                                    const categoryBlocks = CATEGORY_BLOCKS[category.id] || [];
+                                    return (
+                                        <div
+                                            key={category.id}
+                                            className={styles.categorySection}
+                                            data-category-index={categoryIndex}
+                                        >
+                                            <div className={styles.categoryHeader}>
+                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
+                                                    this.ScratchBlocks.Msg[category.messageKey] ?
+                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                    category.messageKey}
+                                            </div>
+                                            {categoryBlocks.map(blockType => {
+                                                const messageId = `gui.smalruby3.blockDisplayModal.${blockType}`;
+                                                const selectedBlocksInCategory = selectedBlocks[category.id] || [];
+                                                const isBlockSelected = selectedBlocksInCategory.includes(blockType);
+
+                                                return (
+                                                    <div
+                                                        key={blockType}
+                                                        className={styles.blockItem}
+                                                    >
+                                                        <label className={styles.blockLabel}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isBlockSelected}
+                                                                className={styles.blockCheckbox}
+                                                                data-block={blockType}
+                                                                data-category={category.id}
+                                                                onChange={this.handleBlockChange}
+                                                            />
+                                                            <span className={styles.blockName}>
+                                                                {intl.formatMessage({
+                                                                    id: messageId,
+                                                                    defaultMessage: blockType
+                                                                })}
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })}
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box className={styles.urlPane}>
+                        <div className={styles.urlLabel}>
+                            {'URL:'}
+                        </div>
+                        <div className={styles.urlInputContainer}>
+                            <input
+                                className={styles.urlInput}
+                                type="text"
+                                value={this.generateOnlyBlocksUrl()}
+                                readOnly
+                            />
+                            <button
+                                className={classNames(styles.copyButton, {
+                                    [styles.copied]: this.state.copyButtonState === 'copied'
+                                })}
+                                onClick={this.handleCopyClick}
+                                disabled={this.state.copyButtonState === 'copying'}
+                                title={this.state.copyButtonState === 'copied' ? 'Copied!' : 'Copy URL'}
+                            >
+                                {this.state.copyButtonState === 'copied' ? (
+                                    <span>{'✓'}</span>
+                                ) : (
+                                    <img
+                                        className={styles.copyIcon}
+                                        src={copyIcon}
+                                        alt="Copy"
+                                    />
+                                )}
+                            </button>
+                        </div>
                     </Box>
                 </Box>
             </Modal>

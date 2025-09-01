@@ -382,21 +382,23 @@ class Blocks extends React.Component {
                     selectedBlockIds.push(...categoryBlocks);
                 });
 
-                // Always include variables and myBlocks (they're always visible)
-                selectedBlockIds.push('variables_', 'myBlocks_');
-
+                // Only generate onlyBlocks if some blocks are selected
+                // If no blocks are selected (empty arrays), show all blocks (no filtering)
                 if (selectedBlockIds.length > 0) {
+                    // Always include variables and myBlocks (they're always visible)
+                    selectedBlockIds.push('variables_', 'myBlocks_');
                     onlyBlocks = selectedBlockIds.join(',');
                 }
-
             }
 
+            const isOnlyBlocksSpecified = this.props.selectedBlocks !== null;
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
                 targetSounds.length > 0 ? targetSounds[targetSounds.length - 1].name : '',
                 getColorsForTheme(this.props.theme),
-                onlyBlocks
+                onlyBlocks,
+                isOnlyBlocksSpecified
             );
         } catch {
             return null;
@@ -629,6 +631,7 @@ class Blocks extends React.Component {
             updateMetrics: updateMetricsProp,
             useCatBlocks,
             workspaceMetrics,
+            selectedBlocks,
             ...props
         } = this.props;
         /* eslint-enable no-unused-vars */

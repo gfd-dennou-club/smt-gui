@@ -789,7 +789,11 @@ const filterBlocks = function (categoryXML, allowedPatterns) {
     if (!allowedPatterns || allowedPatterns.length === 0) return categoryXML;
 
     // Extract both block and separator elements while preserving order
-    const elementRegex = /(?:<block[^>]*type="[^"]+"[^>]*(?:\/>|>.*?<\/block>)|<sep[^>]*\/>)/gs;
+    // Improved regex for better inline/normal block syntax matching
+    const inlineBlock = '<block[^>]*type="[^"]+"[^>]*\\/>';
+    const normalBlock = '<block[^>]*type="[^"]+"[^>]*>[\\s\\S]*?<\\/block>';
+    const separator = '<sep[^>]*\\/>';
+    const elementRegex = new RegExp(`(?:${inlineBlock}|${normalBlock}|${separator})`, 'g');
     const elements = categoryXML.match(elementRegex) || [];
 
     const filteredElements = [];

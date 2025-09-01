@@ -6,7 +6,8 @@ const getInitialToolboxXML = () => {
     try {
         const queryParams = queryString.parse(location.search);
         const onlyBlocks = queryParams.only_blocks;
-        return makeToolboxXML(true, true, null, [], '', '', '', null, onlyBlocks);
+        const isOnlyBlocksSpecified = onlyBlocks !== undefined;
+        return makeToolboxXML(true, true, null, [], '', '', '', null, onlyBlocks, isOnlyBlocksSpecified);
     } catch {
         return makeToolboxXML(true);
     }

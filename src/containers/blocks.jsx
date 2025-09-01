@@ -391,12 +391,14 @@ class Blocks extends React.Component {
                 }
             }
 
+            const isOnlyBlocksSpecified = this.props.selectedBlocks !== null;
             return makeToolboxXML(false, target.isStage, target.id, dynamicBlocksXML,
                 targetCostumes[targetCostumes.length - 1].name,
                 stageCostumes[stageCostumes.length - 1].name,
                 targetSounds.length > 0 ? targetSounds[targetSounds.length - 1].name : '',
                 getColorsForTheme(this.props.theme),
-                onlyBlocks
+                onlyBlocks,
+                isOnlyBlocksSpecified
             );
         } catch {
             return null;

@@ -76,4 +76,59 @@ describe('only_blocks parameter initialization', () => {
         expect(result.motion).toEqual(['motion_movesteps']);
         expect(result.looks).toEqual(['looks_say']);
     });
+
+    // Hex format tests (TDD - failing first)
+    describe('hex format parsing', () => {
+        test('should recognize hex format starting with 0', () => {
+            // Simple hex case: select first motion block only  
+            // First bit should be 1: hex 8 = 1000, but we want 0001 = 1
+            const result = initializeBlockSelectionFromOnlyBlocks('01000000000000000000000000000000');
+            expect(result.motion).toEqual(['motion_movesteps']);
+            expect(result.looks).toEqual([]);
+            expect(result.sound).toEqual([]);
+        });
+
+        test('should parse hex format for multiple categories', () => {
+            // Select first motion block (bit 0) and first looks block (bit 15)
+            // With reversed bit order: hex 1 = 1000 reversed sets bit 0
+            // Bit 15 is in 4th hex digit position 3: 1000 reversed = 0001, so need 8
+            const result = initializeBlockSelectionFromOnlyBlocks('01008000000000000000000000000000');
+            expect(result.motion).toEqual(['motion_movesteps']);
+            expect(result.looks).toEqual(['looks_sayforsecs']);
+            expect(result.sound).toEqual([]);
+        });
+
+        test('should handle all blocks selected in hex format', () => {
+            // All 1s in binary -> all blocks selected
+            const result = initializeBlockSelectionFromOnlyBlocks('0ffffffffffffffffffffffffffffffff');
+            expect(result.motion).toEqual(CATEGORY_BLOCKS.motion);
+            expect(result.looks).toEqual(CATEGORY_BLOCKS.looks);
+            expect(result.sound).toEqual(CATEGORY_BLOCKS.sound);
+            expect(result.events).toEqual(CATEGORY_BLOCKS.events);
+            expect(result.control).toEqual(CATEGORY_BLOCKS.control);
+            expect(result.sensing).toEqual(CATEGORY_BLOCKS.sensing);
+            expect(result.operators).toEqual(CATEGORY_BLOCKS.operators);
+        });
+
+        test('should handle empty selection in hex format', () => {
+            // All 0s after the leading 0 -> no blocks selected
+            const result = initializeBlockSelectionFromOnlyBlocks('00000000000000000000000000000000');
+            expect(result).toEqual({
+                motion: [],
+                looks: [],
+                sound: [],
+                events: [],
+                control: [],
+                sensing: [],
+                operators: []
+            });
+        });
+
+        test('should maintain backward compatibility - non-hex formats still work', () => {
+            // Existing comma format should still work
+            const result = initializeBlockSelectionFromOnlyBlocks('motion_movesteps,looks_say');
+            expect(result.motion).toEqual(['motion_movesteps']);
+            expect(result.looks).toEqual(['looks_say']);
+        });
+    });
 });

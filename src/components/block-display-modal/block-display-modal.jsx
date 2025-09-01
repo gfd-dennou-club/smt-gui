@@ -161,6 +161,69 @@ export const CATEGORY_BLOCKS = {
 };
 
 /**
+ * Generate ordered list of all blocks based on CATEGORY_BLOCKS definition
+ * @returns {Array} - Ordered array of all block IDs
+ */
+const generateBlockOrder = () => {
+    const blockOrder = [];
+    const categoryOrder = ['motion', 'looks', 'sound', 'events', 'control', 'sensing', 'operators'];
+    
+    categoryOrder.forEach(categoryId => {
+        const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
+        blockOrder.push(...categoryBlocks);
+    });
+    
+    return blockOrder;
+};
+
+/**
+ * Parse hex format only_blocks parameter
+ * @param {string} hexString - Hex string starting with '0'
+ * @param {object} selectedBlocks - Pre-initialized selectedBlocks object
+ * @returns {object} - Updated selectedBlocks object
+ */
+const parseHexFormat = (hexString, selectedBlocks) => {
+    // Remove the leading '0' identifier
+    const hexData = hexString.slice(1);
+    
+    // Convert hex to binary (reverse bit order within each hex digit for proper bit indexing)
+    let binaryString = '';
+    for (let i = 0; i < hexData.length; i++) {
+        const hexDigit = hexData[i];
+        const decimal = parseInt(hexDigit, 16);
+        const binary = decimal.toString(2).padStart(4, '0');
+        // Reverse the binary string to match bit ordering (LSB first)
+        const reversedBinary = binary.split('')
+            .reverse()
+            .join('');
+        binaryString += reversedBinary;
+    }
+    
+    // Get the ordered list of all blocks
+    const blockOrder = generateBlockOrder();
+    
+    // Map binary bits to block selections
+    for (let i = 0; i < Math.min(binaryString.length, blockOrder.length); i++) {
+        const bit = binaryString[i];
+        const blockId = blockOrder[i];
+        
+        if (bit === '1') {
+            // Find which category this block belongs to
+            Object.keys(CATEGORY_BLOCKS).forEach(categoryId => {
+                const categoryBlocks = CATEGORY_BLOCKS[categoryId] || [];
+                if (categoryBlocks.includes(blockId)) {
+                    if (!selectedBlocks[categoryId].includes(blockId)) {
+                        selectedBlocks[categoryId].push(blockId);
+                    }
+                }
+            });
+        }
+    }
+    
+    return selectedBlocks;
+};
+
+/**
  * Initialize block selection from only_blocks parameter
  * @param {string} onlyBlocks - The only_blocks parameter value
  * @returns {object} - Selected blocks object with categories initialized based on only_blocks
@@ -184,7 +247,12 @@ export const initializeBlockSelectionFromOnlyBlocks = onlyBlocks => {
     // If empty string provided, return empty selections
     if (!onlyBlocks) return selectedBlocks;
 
-    // Parse only_blocks parameter
+    // Check if hex format (starts with '0')
+    if (onlyBlocks.startsWith('0') && onlyBlocks.length > 1) {
+        return parseHexFormat(onlyBlocks, selectedBlocks);
+    }
+
+    // Parse only_blocks parameter (legacy format)
     const patterns = onlyBlocks.split(/[,.]/)
         .map(pattern => pattern.trim())
         .filter(pattern => pattern.length > 0);
@@ -332,22 +400,45 @@ class BlockDisplayModal extends React.Component {
             return currentUrl;
         }
 
-        // Generate only_blocks parameter from selected blocks
-        const onlyBlocksList = [];
-        Object.keys(selectedBlocks).forEach(categoryId => {
-            const blocksInCategory = selectedBlocks[categoryId] || [];
-            blocksInCategory.forEach(blockId => {
-                onlyBlocksList.push(blockId);
+        // Get the ordered list of all blocks
+        const blockOrder = generateBlockOrder();
+        
+        // Create binary string representing block selection
+        let binaryString = '';
+        blockOrder.forEach(blockId => {
+            // Check if this block is selected in any category
+            let isSelected = false;
+            Object.keys(selectedBlocks).forEach(categoryId => {
+                const blocksInCategory = selectedBlocks[categoryId] || [];
+                if (blocksInCategory.includes(blockId)) {
+                    isSelected = true;
+                }
             });
+            binaryString += isSelected ? '1' : '0';
         });
 
-        if (onlyBlocksList.length === 0) {
-            return currentUrl;
+        // Convert binary to hex with proper bit ordering
+        let hexString = '';
+        // Process in chunks of 4 bits (1 hex digit each)
+        for (let i = 0; i < binaryString.length; i += 4) {
+            const chunk = binaryString.slice(i, i + 4);
+            // Pad chunk to 4 bits if needed
+            const paddedChunk = chunk.padEnd(4, '0');
+            // Reverse bits for proper ordering (LSB first)
+            const reversedChunk = paddedChunk.split('')
+                .reverse()
+                .join('');
+            // Convert to decimal then hex
+            const decimal = parseInt(reversedChunk, 2);
+            const hex = decimal.toString(16);
+            hexString += hex;
         }
 
-        // Create new URL with only_blocks parameter using period separator
-        const onlyBlocksParam = onlyBlocksList.join('.');
-        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(onlyBlocksParam)}${hash}`;
+        // Add leading '0' identifier for hex format
+        const hexParam = `0${hexString}`;
+
+        // Create new URL with only_blocks parameter using hex format
+        const newUrl = `${baseUrl}?only_blocks=${encodeURIComponent(hexParam)}${hash}`;
 
         return newUrl;
     }

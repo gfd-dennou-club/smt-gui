@@ -458,68 +458,39 @@
     background: #F9F9F9;
     border-top: 1px solid hsla(0, 0%, 0%, 0.1);
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.urlButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.copyUrlButton {
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-.urlLabel {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: hsla(0, 0%, 0%, 0.8);
-    flex-shrink: 0;
-}
-
-.urlInput {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    font-family: monospace;
-    background: white;
-    color: hsla(0, 0%, 0%, 0.9);
-}
-
-.urlInput:focus {
-    outline: none;
-    border-color: #4c97ff;
-    box-shadow: 0 0 0 2px rgba(76, 151, 255, 0.2);
-}
-
-.urlInputContainer {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    position: relative;
-}
-
-.copyButton {
-    width: 2rem;
-    height: 2rem;
-    margin-left: 0.5rem;
-    padding: 0.25rem;
+    padding: 0.5rem 1rem;
     background: white;
     border: 1px solid #ccc;
     border-radius: 0.25rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: all 0.2s ease;
-    flex-shrink: 0;
+    font-size: 0.875rem;
 }
 
-.copyButton:hover {
+.copyUrlButton:hover {
     background: #f5f5f5;
     border-color: #4c97ff;
 }
 
-.copyButton:active {
+.copyUrlButton:active {
     transform: scale(0.95);
 }
 
-.copyButton.copied {
+.copyUrlButton.copied {
     background: #4caf50;
     border-color: #4caf50;
     color: white;
@@ -529,6 +500,11 @@
     width: 1rem;
     height: 1rem;
     fill: currentColor;
+}
+
+.buttonLabel {
+    font-weight: 500;
+    user-select: none;
 }
 
 /* RTL support */

@@ -418,33 +418,27 @@ class BlockDisplayModal extends React.Component {
                         </Box>
                     </Box>
                     <Box className={styles.urlPane}>
-                        <div className={styles.urlLabel}>
-                            {'URL:'}
-                        </div>
-                        <div className={styles.urlInputContainer}>
-                            <input
-                                className={styles.urlInput}
-                                type="text"
-                                value={this.generateOnlyBlocksUrl()}
-                                readOnly
-                            />
+                        <div className={styles.urlButtonContainer}>
                             <button
-                                className={classNames(styles.copyButton, {
+                                className={classNames(styles.copyUrlButton, {
                                     [styles.copied]: this.state.copyButtonState === 'copied'
                                 })}
                                 onClick={this.handleCopyClick}
                                 disabled={this.state.copyButtonState === 'copying'}
                                 title={this.state.copyButtonState === 'copied' ? 'Copied!' : 'Copy URL'}
                             >
-                                {this.state.copyButtonState === 'copied' ? (
-                                    <span>{'✓'}</span>
-                                ) : (
-                                    <img
-                                        className={styles.copyIcon}
-                                        src={copyIcon}
-                                        alt="Copy"
+                                <img
+                                    className={styles.copyIcon}
+                                    src={copyIcon}
+                                    alt="Copy"
+                                />
+                                <span className={styles.buttonLabel}>
+                                    <FormattedMessage
+                                        defaultMessage="Copy URL"
+                                        description="Label for copy URL button"
+                                        id="gui.smalruby3.blockDisplayModal.copyUrl"
                                     />
-                                )}
+                                </span>
                             </button>
                         </div>
                     </Box>

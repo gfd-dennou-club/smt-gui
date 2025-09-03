@@ -266,18 +266,37 @@ class BlockDisplayModal extends React.Component {
         if (!stage) return;
 
         const commentText = `only_blocks=${onlyBlocks}`;
-        const commentId = Blockly.utils.genUid();
-
-        stage.createComment(
-            commentId,
-            null,
-            commentText,
-            100,
-            100,
-            200,
-            100,
-            false
-        );
+        
+        // Check for existing only_blocks comment
+        const comments = stage.comments;
+        let existingComment = null;
+        
+        // Find the first comment containing 'only_blocks='
+        for (const commentId in comments) {
+            const comment = comments[commentId];
+            if (comment.text && comment.text.includes('only_blocks=')) {
+                existingComment = comment;
+                break;
+            }
+        }
+        
+        if (existingComment) {
+            // Update existing comment
+            existingComment.text = commentText;
+        } else {
+            // Create new comment
+            const commentId = Blockly.utils.genUid();
+            stage.createComment(
+                commentId,
+                null,
+                commentText,
+                100,
+                100,
+                200,
+                100,
+                false
+            );
+        }
 
         vm.emitWorkspaceUpdate();
         

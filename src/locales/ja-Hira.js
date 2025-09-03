@@ -62,6 +62,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': 'つねにひょうじ:',
     'gui.smalruby3.blockDisplayModal.blocksSubtitle': 'ブロック',
     'gui.smalruby3.blockDisplayModal.copyUrl': 'URLのこぴー',
+    'gui.smalruby3.blockDisplayModal.saveToFile': 'ふぁいるにせってい',
     'gui.menuBar.blockDisplay': 'ブロックひょうじ...',
 
     // Block Display Modal - Block Messages (Hiragana)

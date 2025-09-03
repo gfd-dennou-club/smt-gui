@@ -466,6 +466,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
 }
 
 .copyUrlButton {
@@ -496,7 +497,35 @@
     color: white;
 }
 
+.saveToFileButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #ff6680;
+    border: 1px solid #ff4757;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    color: white;
+}
+
+.saveToFileButton:hover {
+    background: #ff4757;
+}
+
+.saveToFileButton:active {
+    transform: scale(0.95);
+}
+
 .copyIcon {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
+.saveIcon {
     width: 1rem;
     height: 1rem;
     fill: currentColor;

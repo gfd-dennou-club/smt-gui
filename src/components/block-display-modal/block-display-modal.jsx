@@ -4,12 +4,14 @@ import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import VMScratchBlocks from '../../lib/blocks';
+import Blockly from 'scratch-blocks';
 import {CATEGORY_BLOCKS, generateBlockOrder} from '../../lib/block-utils';
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
 import copyIcon from './icon--clipboard-copy.svg';
+import fileIcon from '../menu-bar/icon--file.svg';
 
 import styles from './block-display-modal.css';
 
@@ -23,6 +25,11 @@ const messages = defineMessages({
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
         id: 'gui.smalruby3.blockDisplayModal.alwaysVisible'
+    },
+    saveToFile: {
+        defaultMessage: 'Save to File',
+        description: 'Label for save to file button',
+        id: 'gui.smalruby3.blockDisplayModal.saveToFile'
     }
 });
 
@@ -58,7 +65,8 @@ class BlockDisplayModal extends React.Component {
             'handleBlockListScroll',
             'scrollToCategorySection',
             'setBlockListRef',
-            'handleCopyClick'
+            'handleCopyClick',
+            'handleSaveToFile'
         ]);
 
         this.state = {
@@ -172,7 +180,7 @@ class BlockDisplayModal extends React.Component {
 
         // Get the ordered list of all blocks
         const blockOrder = generateBlockOrder();
-        
+
         // Create binary string representing block selection
         let binaryString = '';
         blockOrder.forEach(blockId => {
@@ -215,10 +223,10 @@ class BlockDisplayModal extends React.Component {
 
     async handleCopyClick () {
         const url = this.generateOnlyBlocksUrl();
-        
+
         try {
             this.setState({copyButtonState: 'copying'});
-            
+
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 await navigator.clipboard.writeText(url);
             } else {
@@ -234,9 +242,9 @@ class BlockDisplayModal extends React.Component {
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
             }
-            
+
             this.setState({copyButtonState: 'copied'});
-            
+
             // Reset button state after 2 seconds
             setTimeout(() => {
                 this.setState({copyButtonState: 'normal'});
@@ -246,6 +254,38 @@ class BlockDisplayModal extends React.Component {
             console.warn('Failed to copy URL to clipboard:', error);
             this.setState({copyButtonState: 'normal'});
         }
+    }
+
+    handleSaveToFile () {
+        const {vm} = this.props;
+        if (!vm) return;
+
+        // Generate the only_blocks parameter
+        const url = this.generateOnlyBlocksUrl();
+        const urlParams = new URLSearchParams(url.split('?')[1] || '');
+        const onlyBlocks = urlParams.get('only_blocks');
+
+        if (!onlyBlocks) return;
+
+        // Get the Stage target
+        const stage = vm.runtime.getTargetForStage();
+        if (!stage) return;
+
+        const commentText = `only_blocks=${onlyBlocks}`;
+        const commentId = Blockly.utils.genUid();
+
+        stage.createComment(
+            commentId,
+            null,
+            commentText,
+            100,
+            100,
+            200,
+            100,
+            false
+        );
+
+        vm.emitWorkspaceUpdate();
     }
 
     getCategoryCheckboxState (categoryId) {
@@ -437,6 +477,24 @@ class BlockDisplayModal extends React.Component {
                                         defaultMessage="Copy URL"
                                         description="Label for copy URL button"
                                         id="gui.smalruby3.blockDisplayModal.copyUrl"
+                                    />
+                                </span>
+                            </button>
+                            <button
+                                className={styles.saveToFileButton}
+                                onClick={this.handleSaveToFile}
+                                title="Save to File"
+                            >
+                                <img
+                                    className={styles.saveIcon}
+                                    src={fileIcon}
+                                    alt="File"
+                                />
+                                <span className={styles.buttonLabel}>
+                                    <FormattedMessage
+                                        defaultMessage="Save to File"
+                                        description="Label for save to file button"
+                                        id="gui.smalruby3.blockDisplayModal.saveToFile"
                                     />
                                 </span>
                             </button>

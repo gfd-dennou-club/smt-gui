@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
-import VMScratchBlocks from '../../lib/blocks';
+import Blockly from 'scratch-blocks';
 import {CATEGORY_BLOCKS, generateBlockOrder} from '../../lib/block-utils';
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import blockDisplayIcon from '../menu-bar/block-display-icon.svg';
 import copyIcon from './icon--clipboard-copy.svg';
+import fileIcon from '../menu-bar/icon--file.svg';
 
 import styles from './block-display-modal.css';
 
@@ -23,6 +24,11 @@ const messages = defineMessages({
         defaultMessage: 'Always visible',
         description: 'Label for categories that are always visible',
         id: 'gui.smalruby3.blockDisplayModal.alwaysVisible'
+    },
+    saveToFile: {
+        defaultMessage: 'Save to File',
+        description: 'Label for save to file button',
+        id: 'gui.smalruby3.blockDisplayModal.saveToFile'
     }
 });
 
@@ -58,18 +64,14 @@ class BlockDisplayModal extends React.Component {
             'handleBlockListScroll',
             'scrollToCategorySection',
             'setBlockListRef',
-            'handleCopyClick'
+            'handleCopyClick',
+            'handleSaveToFile'
         ]);
 
         this.state = {
             selectedCategoryIndex: 0,
             copyButtonState: 'normal' // 'normal' | 'copying' | 'copied'
         };
-
-        // Initialize ScratchBlocks if not already done
-        if (!this.ScratchBlocks && props.vm) {
-            this.ScratchBlocks = VMScratchBlocks(props.vm, false);
-        }
 
         // Ref for the block list container
         this.blockListRef = null;
@@ -172,7 +174,7 @@ class BlockDisplayModal extends React.Component {
 
         // Get the ordered list of all blocks
         const blockOrder = generateBlockOrder();
-        
+
         // Create binary string representing block selection
         let binaryString = '';
         blockOrder.forEach(blockId => {
@@ -215,10 +217,10 @@ class BlockDisplayModal extends React.Component {
 
     async handleCopyClick () {
         const url = this.generateOnlyBlocksUrl();
-        
+
         try {
             this.setState({copyButtonState: 'copying'});
-            
+
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 await navigator.clipboard.writeText(url);
             } else {
@@ -234,9 +236,9 @@ class BlockDisplayModal extends React.Component {
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
             }
-            
+
             this.setState({copyButtonState: 'copied'});
-            
+
             // Reset button state after 2 seconds
             setTimeout(() => {
                 this.setState({copyButtonState: 'normal'});
@@ -246,6 +248,60 @@ class BlockDisplayModal extends React.Component {
             console.warn('Failed to copy URL to clipboard:', error);
             this.setState({copyButtonState: 'normal'});
         }
+    }
+
+    handleSaveToFile () {
+        const {vm} = this.props;
+        if (!vm) return;
+
+        // Generate the only_blocks parameter
+        const url = this.generateOnlyBlocksUrl();
+        const urlParams = new URLSearchParams(url.split('?')[1] || '');
+        const onlyBlocks = urlParams.get('only_blocks');
+
+        if (!onlyBlocks) return;
+
+        // Get the Stage target
+        const stage = vm.runtime.getTargetForStage();
+        if (!stage) return;
+
+        const commentText = `only_blocks=${onlyBlocks}`;
+        
+        // Check for existing only_blocks comment
+        const comments = stage.comments;
+        let existingComment = null;
+        
+        // Find the first comment containing 'only_blocks='
+        for (const commentId in comments) {
+            const comment = comments[commentId];
+            if (comment.text && comment.text.includes('only_blocks=')) {
+                existingComment = comment;
+                break;
+            }
+        }
+        
+        if (existingComment) {
+            // Update existing comment
+            existingComment.text = commentText;
+        } else {
+            // Create new comment
+            const commentId = Blockly.utils.genUid();
+            stage.createComment(
+                commentId,
+                null,
+                commentText,
+                100,
+                100,
+                200,
+                100,
+                false
+            );
+        }
+
+        vm.emitWorkspaceUpdate();
+        
+        // Mark project as changed
+        this.props.onSetProjectChanged();
     }
 
     getCategoryCheckboxState (categoryId) {
@@ -266,7 +322,8 @@ class BlockDisplayModal extends React.Component {
         const {
             intl,
             onRequestClose,
-            selectedBlocks
+            selectedBlocks,
+            scratchBlocks
         } = this.props;
 
         const {selectedCategoryIndex} = this.state;
@@ -318,9 +375,9 @@ class BlockDisplayModal extends React.Component {
                                                 data-category-index={index}
                                                 onClick={this.handleCategorySelect}
                                             >
-                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                    this.ScratchBlocks.Msg[category.messageKey] ?
-                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                {scratchBlocks && scratchBlocks.Msg &&
+                                                    scratchBlocks.Msg[category.messageKey] ?
+                                                    scratchBlocks.Msg[category.messageKey] :
                                                     category.messageKey}
                                             </span>
                                         </div>
@@ -350,9 +407,9 @@ class BlockDisplayModal extends React.Component {
                                             />
                                             <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
                                                 {category.messageKey ?
-                                                    (this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                        this.ScratchBlocks.Msg[category.messageKey] ?
-                                                        this.ScratchBlocks.Msg[category.messageKey] :
+                                                    (scratchBlocks && scratchBlocks.Msg &&
+                                                        scratchBlocks.Msg[category.messageKey] ?
+                                                        scratchBlocks.Msg[category.messageKey] :
                                                         category.messageKey) :
                                                     intl.formatMessage({id: category.messageId})}
                                             </span>
@@ -377,9 +434,9 @@ class BlockDisplayModal extends React.Component {
                                             data-category-index={categoryIndex}
                                         >
                                             <div className={styles.categoryHeader}>
-                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                    this.ScratchBlocks.Msg[category.messageKey] ?
-                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                {scratchBlocks && scratchBlocks.Msg &&
+                                                    scratchBlocks.Msg[category.messageKey] ?
+                                                    scratchBlocks.Msg[category.messageKey] :
                                                     category.messageKey}
                                             </div>
                                             {categoryBlocks.map(blockType => {
@@ -418,33 +475,45 @@ class BlockDisplayModal extends React.Component {
                         </Box>
                     </Box>
                     <Box className={styles.urlPane}>
-                        <div className={styles.urlLabel}>
-                            {'URL:'}
-                        </div>
-                        <div className={styles.urlInputContainer}>
-                            <input
-                                className={styles.urlInput}
-                                type="text"
-                                value={this.generateOnlyBlocksUrl()}
-                                readOnly
-                            />
+                        <div className={styles.urlButtonContainer}>
                             <button
-                                className={classNames(styles.copyButton, {
+                                className={classNames(styles.copyUrlButton, {
                                     [styles.copied]: this.state.copyButtonState === 'copied'
                                 })}
                                 onClick={this.handleCopyClick}
                                 disabled={this.state.copyButtonState === 'copying'}
                                 title={this.state.copyButtonState === 'copied' ? 'Copied!' : 'Copy URL'}
                             >
-                                {this.state.copyButtonState === 'copied' ? (
-                                    <span>{'✓'}</span>
-                                ) : (
-                                    <img
-                                        className={styles.copyIcon}
-                                        src={copyIcon}
-                                        alt="Copy"
+                                <img
+                                    className={styles.copyIcon}
+                                    src={copyIcon}
+                                    alt="Copy"
+                                />
+                                <span className={styles.buttonLabel}>
+                                    <FormattedMessage
+                                        defaultMessage="Copy URL"
+                                        description="Label for copy URL button"
+                                        id="gui.smalruby3.blockDisplayModal.copyUrl"
                                     />
-                                )}
+                                </span>
+                            </button>
+                            <button
+                                className={styles.saveToFileButton}
+                                onClick={this.handleSaveToFile}
+                                title="Save to File"
+                            >
+                                <img
+                                    className={styles.saveIcon}
+                                    src={fileIcon}
+                                    alt="File"
+                                />
+                                <span className={styles.buttonLabel}>
+                                    <FormattedMessage
+                                        defaultMessage="Save to File"
+                                        description="Label for save to file button"
+                                        id="gui.smalruby3.blockDisplayModal.saveToFile"
+                                    />
+                                </span>
                             </button>
                         </div>
                     </Box>
@@ -458,8 +527,10 @@ BlockDisplayModal.propTypes = {
     intl: intlShape.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     selectedBlocks: PropTypes.object.isRequired,
+    scratchBlocks: PropTypes.object,
     onCategoryChange: PropTypes.func.isRequired,
     onBlockChange: PropTypes.func.isRequired,
+    onSetProjectChanged: PropTypes.func.isRequired,
     vm: PropTypes.object
 };
 

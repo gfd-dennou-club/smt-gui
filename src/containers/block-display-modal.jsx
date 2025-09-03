@@ -7,6 +7,7 @@ import {
     setSelectedBlocks,
     closeBlockDisplayModal
 } from '../reducers/block-display.js';
+import {setProjectChanged} from '../reducers/project-changed.js';
 
 import BlockDisplayModalComponent from '../components/block-display-modal/block-display-modal.jsx';
 
@@ -70,7 +71,7 @@ class BlockDisplayModal extends React.Component {
 
     handleCategoryToggle (categoryId, isSelected) {
         const currentBlocks = {...this.props.selectedBlocks};
-        
+
         if (isSelected) {
             // Select all blocks in this category
             currentBlocks[categoryId] = [...CATEGORY_BLOCKS[categoryId]];
@@ -78,25 +79,25 @@ class BlockDisplayModal extends React.Component {
             // Deselect all blocks in this category
             currentBlocks[categoryId] = [];
         }
-        
+
         this.props.onSetSelectedBlocks(currentBlocks);
     }
 
     handleBlockChange (categoryId, blockId, isSelected) {
         const currentBlocks = {...this.props.selectedBlocks};
-        
+
         // Update the specific block
         if (!currentBlocks[categoryId]) {
             currentBlocks[categoryId] = [];
         }
-        
+
         if (isSelected && !currentBlocks[categoryId].includes(blockId)) {
             currentBlocks[categoryId].push(blockId);
         } else if (!isSelected && currentBlocks[categoryId].includes(blockId)) {
             const index = currentBlocks[categoryId].indexOf(blockId);
             currentBlocks[categoryId].splice(index, 1);
         }
-        
+
         this.props.onSetSelectedBlocks(currentBlocks);
     }
 
@@ -138,18 +139,22 @@ class BlockDisplayModal extends React.Component {
 
 BlockDisplayModal.propTypes = {
     selectedBlocks: PropTypes.object,
+    scratchBlocks: PropTypes.object,
     onSetSelectedBlocks: PropTypes.func.isRequired,
-    onRequestClose: PropTypes.func.isRequired
+    onRequestClose: PropTypes.func.isRequired,
+    onSetProjectChanged: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
     selectedBlocks: state.scratchGui.blockDisplay.selectedBlocks,
+    scratchBlocks: state.scratchGui.blockDisplay.scratchBlocks,
     vm: state.scratchGui.vm
 });
 
 const mapDispatchToProps = dispatch => ({
     onSetSelectedBlocks: blocks => dispatch(setSelectedBlocks(blocks)),
-    onRequestClose: () => dispatch(closeBlockDisplayModal())
+    onRequestClose: () => dispatch(closeBlockDisplayModal()),
+    onSetProjectChanged: () => dispatch(setProjectChanged())
 });
 
 export default connect(

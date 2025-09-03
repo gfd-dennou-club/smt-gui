@@ -62,6 +62,8 @@ export default {
     'gui.smalruby3.blockDisplayModal.categoriesTitle': 'カテゴリ:',
     'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': '常に表示:',
     'gui.smalruby3.blockDisplayModal.blocksSubtitle': 'ブロック',
+    'gui.smalruby3.blockDisplayModal.copyUrl': 'URLのコピー',
+    'gui.smalruby3.blockDisplayModal.saveToFile': 'ファイルに設定',
     'gui.menuBar.blockDisplay': 'ブロック表示...',
 
     // Block Display Modal - Block Messages

@@ -8,6 +8,7 @@ const BlocksComponent = props => {
     const {
         containerRef,
         dragOver,
+        onSetScratchBlocks: _onSetScratchBlocks,
         ...componentProps
     } = props;
     return (
@@ -22,6 +23,7 @@ const BlocksComponent = props => {
 };
 BlocksComponent.propTypes = {
     containerRef: PropTypes.func,
-    dragOver: PropTypes.bool
+    dragOver: PropTypes.bool,
+    onSetScratchBlocks: PropTypes.func
 };
 export default BlocksComponent;

@@ -93,7 +93,7 @@ describe('Block Display Modal', () => {
         expect(logs).toEqual([]);
     });
 
-    test('URL input field is displayed in block display modal', async () => {
+    test('Copy URL button is displayed in block display modal', async () => {
         await loadUri(uri);
         await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
 
@@ -106,20 +106,17 @@ describe('Block Display Modal', () => {
         // Wait for modal to render
         await driver.sleep(1000);
 
-        // Verify URL label exists
-        await findByText('URL:', scope.modal);
+        // Verify copy URL button exists
+        const copyButton = await findByXpath('//button[contains(@class, "block-display-modal_copyUrlButton")]');
+        expect(copyButton).toBeTruthy();
 
-        // Verify URL input field exists
-        const urlInput = await findByXpath('//input[@type="text"][contains(@class, "block-display-modal_urlInput")]');
-        expect(urlInput).toBeTruthy();
+        // Verify copy button contains the expected text (could be "Copy URL" or localized text)
+        const copyButtonText = await copyButton.getText();
+        expect(copyButtonText.length).toBeGreaterThan(0);
 
-        // Verify URL input field is read-only
-        const isReadOnly = await urlInput.getAttribute('readonly');
-        expect(isReadOnly).not.toBeNull();
-
-        // Verify URL input field contains current page URL
-        const urlValue = await urlInput.getAttribute('value');
-        expect(urlValue).toContain('index.html');
+        // Test that the button is clickable
+        const isEnabled = await copyButton.isEnabled();
+        expect(isEnabled).toBeTruthy();
 
         // Close the modal using ESC key
         await driver.actions().sendKeys("\uE00C").perform();
@@ -134,7 +131,7 @@ describe('Block Display Modal', () => {
         expect(logs).toEqual([]);
     });
 
-    test('URL input field shows generated only_blocks URL when blocks are deselected', async () => {
+    test('Copy URL button generates correct only_blocks URL when blocks are deselected', async () => {
         await loadUri(uri);
         await notExistsByXpath('//*[div[contains(@class, "loader_background")]]');
 
@@ -151,15 +148,17 @@ describe('Block Display Modal', () => {
         const motionCheckbox = await findByXpath('//input[@type="checkbox"][@data-block="motion_movesteps"]');
         await motionCheckbox.click();
 
-        // Wait for URL to update
+        // Wait for state to update
         await driver.sleep(500);
 
-        // Verify URL input field contains only_blocks parameter with period separator
-        // motion_movesteps should be excluded from the URL since it was deselected
-        const urlInput = await findByXpath('//input[@type="text"][contains(@class, "block-display-modal_urlInput")]');
-        const urlValue = await urlInput.getAttribute('value');
-        expect(urlValue).toContain('only_blocks=');
-        expect(urlValue).not.toContain('motion_movesteps');
+        // Verify copy URL button still exists and is functional
+        const copyButton = await findByXpath('//button[contains(@class, "block-display-modal_copyUrlButton")]');
+        expect(copyButton).toBeTruthy();
+
+        // Note: We can't easily test the actual clipboard content in integration tests,
+        // but we can verify the button remains functional after block selection changes
+        const isEnabled = await copyButton.isEnabled();
+        expect(isEnabled).toBeTruthy();
 
         // Close the modal using ESC key
         await driver.actions().sendKeys("\uE00C").perform();

@@ -30,6 +30,7 @@ import {activateCustomProcedures, deactivateCustomProcedures} from '../reducers/
 import {setConnectionModalExtensionId} from '../reducers/connection-modal';
 import {updateMetrics} from '../reducers/workspace-metrics';
 import {isTimeTravel2020} from '../reducers/time-travel';
+import {setScratchBlocks} from '../reducers/block-display';
 
 import {
     activateTab,
@@ -145,6 +146,9 @@ class Blocks extends React.Component {
         if (this.props.isVisible) {
             this.setLocale();
         }
+        
+        // Store ScratchBlocks instance in Redux for sharing with other components
+        this.props.onSetScratchBlocks(this.ScratchBlocks);
     }
     shouldComponentUpdate (nextProps, nextState) {
         return (
@@ -737,6 +741,7 @@ Blocks.propTypes = {
     updateMetrics: PropTypes.func,
     updateToolboxState: PropTypes.func,
     useCatBlocks: PropTypes.bool,
+    onSetScratchBlocks: PropTypes.func.isRequired,
     vm: PropTypes.instanceOf(VM).isRequired,
     workspaceMetrics: PropTypes.shape({
         targets: PropTypes.objectOf(PropTypes.object)
@@ -803,6 +808,9 @@ const mapDispatchToProps = dispatch => ({
     },
     updateMetrics: metrics => {
         dispatch(updateMetrics(metrics));
+    },
+    onSetScratchBlocks: scratchBlocks => {
+        dispatch(setScratchBlocks(scratchBlocks));
     }
 });
 

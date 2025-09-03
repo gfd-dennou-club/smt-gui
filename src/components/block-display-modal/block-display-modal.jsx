@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import bindAll from 'lodash.bindall';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
-import VMScratchBlocks from '../../lib/blocks';
 import Blockly from 'scratch-blocks';
 import {CATEGORY_BLOCKS, generateBlockOrder} from '../../lib/block-utils';
 
@@ -73,11 +72,6 @@ class BlockDisplayModal extends React.Component {
             selectedCategoryIndex: 0,
             copyButtonState: 'normal' // 'normal' | 'copying' | 'copied'
         };
-
-        // Initialize ScratchBlocks if not already done
-        if (!this.ScratchBlocks && props.vm) {
-            this.ScratchBlocks = VMScratchBlocks(props.vm, false);
-        }
 
         // Ref for the block list container
         this.blockListRef = null;
@@ -306,7 +300,8 @@ class BlockDisplayModal extends React.Component {
         const {
             intl,
             onRequestClose,
-            selectedBlocks
+            selectedBlocks,
+            scratchBlocks
         } = this.props;
 
         const {selectedCategoryIndex} = this.state;
@@ -358,9 +353,9 @@ class BlockDisplayModal extends React.Component {
                                                 data-category-index={index}
                                                 onClick={this.handleCategorySelect}
                                             >
-                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                    this.ScratchBlocks.Msg[category.messageKey] ?
-                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                {scratchBlocks && scratchBlocks.Msg &&
+                                                    scratchBlocks.Msg[category.messageKey] ?
+                                                    scratchBlocks.Msg[category.messageKey] :
                                                     category.messageKey}
                                             </span>
                                         </div>
@@ -390,9 +385,9 @@ class BlockDisplayModal extends React.Component {
                                             />
                                             <span className={classNames(styles.categoryName, styles.alwaysVisibleText)}>
                                                 {category.messageKey ?
-                                                    (this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                        this.ScratchBlocks.Msg[category.messageKey] ?
-                                                        this.ScratchBlocks.Msg[category.messageKey] :
+                                                    (scratchBlocks && scratchBlocks.Msg &&
+                                                        scratchBlocks.Msg[category.messageKey] ?
+                                                        scratchBlocks.Msg[category.messageKey] :
                                                         category.messageKey) :
                                                     intl.formatMessage({id: category.messageId})}
                                             </span>
@@ -417,9 +412,9 @@ class BlockDisplayModal extends React.Component {
                                             data-category-index={categoryIndex}
                                         >
                                             <div className={styles.categoryHeader}>
-                                                {this.ScratchBlocks && this.ScratchBlocks.Msg &&
-                                                    this.ScratchBlocks.Msg[category.messageKey] ?
-                                                    this.ScratchBlocks.Msg[category.messageKey] :
+                                                {scratchBlocks && scratchBlocks.Msg &&
+                                                    scratchBlocks.Msg[category.messageKey] ?
+                                                    scratchBlocks.Msg[category.messageKey] :
                                                     category.messageKey}
                                             </div>
                                             {categoryBlocks.map(blockType => {
@@ -510,6 +505,7 @@ BlockDisplayModal.propTypes = {
     intl: intlShape.isRequired,
     onRequestClose: PropTypes.func.isRequired,
     selectedBlocks: PropTypes.object.isRequired,
+    scratchBlocks: PropTypes.object,
     onCategoryChange: PropTypes.func.isRequired,
     onBlockChange: PropTypes.func.isRequired,
     vm: PropTypes.object

@@ -133,6 +133,8 @@ const GUIComponent = props => {
         theme,
         tipsLibraryVisible,
         vm,
+        // Exclude Redux-related props from being passed to DOM
+        setSelectedBlocks,
         ...componentProps
     } = omit(props, 'dispatch');
     if (children) {

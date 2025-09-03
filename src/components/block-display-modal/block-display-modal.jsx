@@ -280,6 +280,9 @@ class BlockDisplayModal extends React.Component {
         );
 
         vm.emitWorkspaceUpdate();
+        
+        // Mark project as changed
+        this.props.onSetProjectChanged();
     }
 
     getCategoryCheckboxState (categoryId) {
@@ -508,6 +511,7 @@ BlockDisplayModal.propTypes = {
     scratchBlocks: PropTypes.object,
     onCategoryChange: PropTypes.func.isRequired,
     onBlockChange: PropTypes.func.isRequired,
+    onSetProjectChanged: PropTypes.func.isRequired,
     vm: PropTypes.object
 };
 

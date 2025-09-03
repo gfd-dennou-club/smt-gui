@@ -7,6 +7,7 @@ import {
     setSelectedBlocks,
     closeBlockDisplayModal
 } from '../reducers/block-display.js';
+import {setProjectChanged} from '../reducers/project-changed.js';
 
 import BlockDisplayModalComponent from '../components/block-display-modal/block-display-modal.jsx';
 
@@ -140,7 +141,8 @@ BlockDisplayModal.propTypes = {
     selectedBlocks: PropTypes.object,
     scratchBlocks: PropTypes.object,
     onSetSelectedBlocks: PropTypes.func.isRequired,
-    onRequestClose: PropTypes.func.isRequired
+    onRequestClose: PropTypes.func.isRequired,
+    onSetProjectChanged: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -151,7 +153,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onSetSelectedBlocks: blocks => dispatch(setSelectedBlocks(blocks)),
-    onRequestClose: () => dispatch(closeBlockDisplayModal())
+    onRequestClose: () => dispatch(closeBlockDisplayModal()),
+    onSetProjectChanged: () => dispatch(setProjectChanged())
 });
 
 export default connect(

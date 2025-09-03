@@ -8,7 +8,7 @@ const BlocksComponent = props => {
     const {
         containerRef,
         dragOver,
-        onSetScratchBlocks,
+        onSetScratchBlocks: _onSetScratchBlocks,
         ...componentProps
     } = props;
     return (

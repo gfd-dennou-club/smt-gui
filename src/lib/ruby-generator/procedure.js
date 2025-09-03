@@ -4,6 +4,17 @@
  * @return {RubyGenerator} same as param.
  */
 export default function (Generator) {
+    // Helper function to convert argument names to snake_case lowercase
+    const toSnakeCaseLowercase = function (name) {
+        return name
+            // Replace any sequence of non-alphanumeric characters except underscores with underscore
+            .replace(/[^a-zA-Z0-9_]+/g, '_')
+            // Convert camelCase to snake_case: insert underscore before uppercase letters
+            .replace(/([a-z])([A-Z])/g, '$1_$2')
+            // Convert to lowercase
+            .toLowerCase();
+    };
+
     Generator.procedures_definition = function (block) {
         block.isStatement = true;
         const customBlock = Generator.getInputTargetBlock(block, 'custom_block');
@@ -34,9 +45,9 @@ export default function (Generator) {
             }
         } else {
             for (let i = 0; i < paramNamesIdsAndDefaults[0].length; i++) {
-                // Escape identity and Change first letter to lower case.
+                // Convert argument name to snake_case lowercase
                 let paramName = Generator.escapeVariableName(paramNamesIdsAndDefaults[0][i]);
-                paramName = paramName.replace(/^[A-Z]/, firstLetter => firstLetter.toLowerCase());
+                paramName = toSnakeCaseLowercase(paramName);
                 args.push(paramName);
             }
         }
@@ -53,11 +64,13 @@ export default function (Generator) {
     };
 
     Generator.argument_reporter_boolean = function (block) {
-        return [Generator.escapeVariableName(Generator.getFieldValue(block, 'VALUE')), Generator.ORDER_ATOMIC];
+        const paramName = toSnakeCaseLowercase(Generator.escapeVariableName(Generator.getFieldValue(block, 'VALUE')));
+        return [paramName, Generator.ORDER_ATOMIC];
     };
 
     Generator.argument_reporter_string_number = function (block) {
-        return [Generator.escapeVariableName(Generator.getFieldValue(block, 'VALUE')), Generator.ORDER_ATOMIC];
+        const paramName = toSnakeCaseLowercase(Generator.escapeVariableName(Generator.getFieldValue(block, 'VALUE')));
+        return [paramName, Generator.ORDER_ATOMIC];
     };
 
     return Generator;

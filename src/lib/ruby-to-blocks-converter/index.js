@@ -810,6 +810,17 @@ class RubyToBlocksConverter {
         };
     }
 
+    // Helper function to convert argument names to snake_case lowercase
+    _toSnakeCaseLowercase (name) {
+        return name
+            // Replace any sequence of non-alphanumeric characters except underscores with underscore
+            .replace(/[^a-zA-Z0-9_]+/g, '_')
+            // Convert camelCase to snake_case: insert underscore before uppercase letters
+            .replace(/([a-z])([A-Z])/g, '$1_$2')
+            // Convert to lowercase
+            .toLowerCase();
+    }
+
     _lookupOrCreateVariableOrList (name, type) {
         name = name.toString();
         let scope;
@@ -1425,16 +1436,24 @@ class RubyToBlocksConverter {
     _onLvar (node) {
         this._checkNumChildren(node, 1);
 
-        const varName = node.children[0].toString();
-        if (Object.prototype.hasOwnProperty.call(this._context.localVariables, varName)) {
-            const variable = this._context.localVariables[varName];
+        const originalVarName = node.children[0].toString();
+        // Normalize variable name to snake_case lowercase for consistency
+        const normalizedVarName = this._toSnakeCaseLowercase(originalVarName);
+        
+        // Check both original and normalized names in local variables
+        let variable = this._context.localVariables[normalizedVarName];
+        if (!variable) {
+            variable = this._context.localVariables[originalVarName];
+        }
+        
+        if (variable) {
             const block = this._callConvertersHandler('onVar', 'local', variable);
             if (block) {
                 return block;
             }
         }
 
-        return varName;
+        return normalizedVarName;
     }
 
     _onVasgn (node, scope) {

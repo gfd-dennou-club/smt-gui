@@ -27,14 +27,17 @@ class RubyHelper {
         return this.driver.executeScript(`ace.edit('ruby-editor').setValue('${code}');`);
     }
 
-    async expectInterconvertBetweenCodeAndRuby (code) {
+    async expectInterconvertBetweenCodeAndRuby (inputCode, expectedCode = null) {
         await this.clickText('Ruby', '*[@role="tab"]');
-        await this.fillInRubyProgram(code);
+        await this.fillInRubyProgram(inputCode);
         await this.clickText('Code', '*[@role="tab"]');
         await this.clickXpath(EDIT_MENU_XPATH);
         await this.clickText('Generate Ruby from Code');
         await this.clickText('Ruby', '*[@role="tab"]');
-        expect(await this.currentRubyProgram()).toEqual(`${code}\n`);
+        
+        // If expectedCode is provided, use it; otherwise expect the same as input
+        const expected = expectedCode !== null ? expectedCode : inputCode;
+        expect(await this.currentRubyProgram()).toEqual(`${expected}\n`);
     }
 }
 

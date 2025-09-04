@@ -45,6 +45,11 @@ const messages = defineMessages({
         defaultMessage: '"{ SOURCE }" is the wrong instruction.',
         description: 'Error message for converting ruby to block when find the wrong instruction',
         id: 'gui.smalruby3.rubyToBlocksConverter.wrongInstruction'
+    },
+    cannotChangeVariableScope: {
+        defaultMessage: '"{ VARIABLE }", can\'t change variable scope',
+        description: 'Error message when trying to change variable scope from global to instance or vice versa',
+        id: 'gui.smalruby3.rubyToBlocksConverter.cannotChangeVariableScope'
     }
 });
 
@@ -846,7 +851,15 @@ class RubyToBlocksConverter {
             storeName = 'lists';
         }
         let variable = this._context[storeName][varName];
-        if (!variable) {
+        if (variable) {
+            // Check for variable scope change - only for global/instance variables
+            if ((scope === 'global' || scope === 'instance') && variable.scope !== scope) {
+                throw new RubyToBlocksConverterError(
+                    this._context.currentNode,
+                    `"${name}", can't change variable scope`
+                );
+            }
+        } else {
             variable = {
                 id: Blockly.utils.genUid(),
                 name: varName,

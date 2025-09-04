@@ -1,4 +1,5 @@
 import RubyToBlocksConverter from '../../../../src/lib/ruby-to-blocks-converter';
+import Variable from 'scratch-vm/src/engine/variable';
 import {
     convertAndExpectToEqualBlocks,
     convertAndExpectRubyBlockError,
@@ -719,6 +720,137 @@ describe('RubyToBlocksConverter/Variables', () => {
                 ];
                 convertAndExpectToEqualBlocks(converter, target, code, expected);
             });
+        });
+    });
+
+    describe('Variable Scope Validation', () => {
+        test('should error when changing global variable to instance variable', () => {
+            // Create a mock target with an existing global variable
+            const mockTarget = {
+                variables: {
+                    'global-id': {
+                        id: 'global-id',
+                        name: 'global_variable',
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: true // This makes variables global scope
+            };
+
+            // Try to use the same variable name as an instance variable - this should error
+            const code = '@global_variable = 0';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(1);
+            expect(converter.errors[0].text).toBe('"@global_variable", can\'t change variable scope');
+            expect(res).toBeFalsy();
+        });
+
+        test('should error when changing instance variable to global variable', () => {
+            // Create a mock target with an existing instance variable
+            const mockTarget = {
+                variables: {
+                    'instance-id': {
+                        id: 'instance-id', 
+                        name: 'instance_variable',
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: false // This makes variables instance scope
+            };
+
+            // Try to use the same variable name as a global variable - this should error
+            const code = '$instance_variable = 0';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(1);
+            expect(converter.errors[0].text).toBe('"$instance_variable", can\'t change variable scope');
+            expect(res).toBeFalsy();
+        });
+
+        test('should allow same scope variable reuse', () => {
+            // Create a mock target with an existing global variable
+            const mockTarget = {
+                variables: {
+                    'global-id': {
+                        id: 'global-id',
+                        name: 'global_variable',
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: true
+            };
+
+            // Use the same global variable again - this should work
+            const code = '$global_variable = 10';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(0);
+            expect(res).toBeTruthy();
+        });
+
+        test('should allow same instance scope variable reuse', () => {
+            // Create a mock target with an existing instance variable
+            const mockTarget = {
+                variables: {
+                    'instance-id': {
+                        id: 'instance-id',
+                        name: 'instance_variable', 
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: false
+            };
+
+            // Use the same instance variable again - this should work
+            const code = '@instance_variable = 10';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(0);
+            expect(res).toBeTruthy();
+        });
+
+        test('should error when reading variable with wrong scope', () => {
+            // Create a mock target with an existing global variable
+            const mockTarget = {
+                variables: {
+                    'global-id': {
+                        id: 'global-id',
+                        name: 'global_variable',
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: true
+            };
+
+            // Try to read it as an instance variable - this should error
+            const code = '@global_variable';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(1);
+            expect(converter.errors[0].text).toBe('"@global_variable", can\'t change variable scope');
+            expect(res).toBeFalsy();
+        });
+
+        test('should allow creating new variables with different names', () => {
+            // Create a mock target with an existing global variable
+            const mockTarget = {
+                variables: {
+                    'global-id': {
+                        id: 'global-id',
+                        name: 'existing_global',
+                        type: Variable.SCALAR_TYPE,
+                        value: 0
+                    }
+                },
+                isStage: true
+            };
+
+            // Create a new instance variable with different name - this should work
+            const code = '@new_instance_variable = 0';
+            const res = converter.targetCodeToBlocks(mockTarget, code);
+            expect(converter.errors).toHaveLength(0);
+            expect(res).toBeTruthy();
         });
     });
 });

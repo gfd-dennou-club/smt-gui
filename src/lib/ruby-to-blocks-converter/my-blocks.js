@@ -70,11 +70,13 @@ const MyBlocksConverter = {
                 opcode = 'argument_reporter_string_number';
                 blockType = 'value';
             }
+            // Use normalized variable name (should already be in snake_case lowercase)
+            const normalizedName = this._toSnakeCaseLowercase(variable.name);
             block = this._createBlock(opcode, blockType, {
                 fields: {
                     VALUE: {
                         name: 'VALUE',
-                        value: variable.name
+                        value: normalizedName
                     }
                 }
             });
@@ -107,9 +109,12 @@ const MyBlocksConverter = {
 
         this._context.localVariables = {};
         this._process(node.children[2]).forEach(n => {
-            n = n.toString();
-            procedure.argumentNames.push(n);
-            procedure.argumentVariables.push(this._lookupOrCreateVariable(n));
+            const originalName = n.toString();
+            // Convert argument name to snake_case lowercase
+            const normalizedName = this._toSnakeCaseLowercase(originalName);
+            
+            procedure.argumentNames.push(normalizedName);
+            procedure.argumentVariables.push(this._lookupOrCreateVariable(normalizedName));
             procedure.procCode.push('%s');
             procedure.argumentDefaults.push('');
             const inputId = Blockly.utils.genUid();
@@ -118,7 +123,7 @@ const MyBlocksConverter = {
                 fields: {
                     VALUE: {
                         name: 'VALUE',
-                        value: n
+                        value: normalizedName
                     }
                 },
                 shadow: true

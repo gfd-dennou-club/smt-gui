@@ -25,6 +25,30 @@ describe('Ruby Tab: My Blocks category blocks', () => {
         await driver.quit();
     });
 
+    test('Procedure arguments should be converted to snake_case lowercase', async () => {
+        await loadUri(urlFor('/'));
+
+        // Test case: ARG1 -> arg1 (most common case from the issue)
+        const codeWithUppercaseArg = dedent`
+            def self.procedure(aRG1)
+              move(aRG1)
+            end
+
+            procedure(10)
+        `;
+
+        // Expected: both method definition and usage should use lowercase snake_case
+        const expectedCodeWithLowercaseArg = dedent`
+            def self.procedure(a_rg1)
+              move(a_rg1)
+            end
+
+            procedure(10)
+        `;
+
+        await expectInterconvertBetweenCodeAndRuby(codeWithUppercaseArg, expectedCodeWithLowercaseArg);
+    });
+
     test('Ruby -> Code -> Ruby', async () => {
         await loadUri(urlFor('/'));
 

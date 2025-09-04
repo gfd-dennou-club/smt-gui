@@ -30,8 +30,8 @@ describe('Ruby Tab: My Blocks category blocks', () => {
 
         // Test case: ARG1 -> arg1 (most common case from the issue)
         const codeWithUppercaseArg = dedent`
-            def self.procedure(ARG1)
-              move(ARG1)
+            def self.procedure(aRG1)
+              move(aRG1)
             end
 
             procedure(10)
@@ -39,8 +39,8 @@ describe('Ruby Tab: My Blocks category blocks', () => {
 
         // Expected: both method definition and usage should use lowercase snake_case
         const expectedCodeWithLowercaseArg = dedent`
-            def self.procedure(arg1)
-              move(arg1)
+            def self.procedure(a_rg1)
+              move(a_rg1)
             end
 
             procedure(10)

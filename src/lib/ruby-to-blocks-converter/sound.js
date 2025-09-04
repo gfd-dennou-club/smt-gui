@@ -1,5 +1,6 @@
 /* global Opal */
 import _ from 'lodash';
+import {RubyToBlocksConverterError} from './errors';
 
 const Effect = [
     'PITCH',
@@ -18,6 +19,19 @@ const SoundConverter = {
             case 'play_until_done':
             case 'play':
                 if (args.length === 1 && this._isStringOrBlock(args[0])) {
+                    // Check if sound exists when string is specified and target has sounds
+                    if (this._isString(args[0]) && this._context.target &&
+                        this._context.target.sprite && this._context.target.sprite.sounds) {
+                        const soundName = args[0].toString();
+                        const soundExists = this._context.target.sprite.sounds.some(sound => sound.name === soundName);
+                        if (!soundExists) {
+                            throw new RubyToBlocksConverterError(
+                                args[0].node,
+                                `sound "${soundName}" does not exist`
+                            );
+                        }
+                    }
+
                     let opcode;
                     if (name === 'play_until_done') {
                         opcode = 'sound_playuntildone';

@@ -311,4 +311,66 @@ describe('RubyToBlocksConverter/Sound', () => {
     });
 
     expectNoArgsMethod('sound_volume', 'volume', 'value');
+
+    describe('sound existence check', () => {
+        let targetWithSounds;
+
+        beforeEach(() => {
+            // Mock target with sounds
+            targetWithSounds = {
+                sprite: {
+                    sounds: [
+                        { name: 'Meow' },
+                        { name: 'Pop' }
+                    ]
+                }
+            };
+        });
+
+        [
+            {
+                opcode: 'sound_playuntildone',
+                methodName: 'play_until_done'
+            },
+            {
+                opcode: 'sound_play',
+                methodName: 'play'
+            }
+        ].forEach(info => {
+            describe(`${info.opcode} with sound existence check`, () => {
+                test('existing sound should work', () => {
+                    code = `${info.methodName}("Meow")`;
+                    expected = [
+                        {
+                            opcode: info.opcode,
+                            inputs: [
+                                {
+                                    name: 'SOUND_MENU',
+                                    block: {
+                                        opcode: 'sound_sounds_menu',
+                                        fields: [
+                                            {
+                                                name: 'SOUND_MENU',
+                                                value: 'Meow'
+                                            }
+                                        ],
+                                        shadow: true
+                                    }
+                                }
+                            ]
+                        }
+                    ];
+                    convertAndExpectToEqualBlocks(converter, targetWithSounds, code, expected);
+                });
+
+                test('non-existing sound should throw error', () => {
+                    code = `${info.methodName}("NonExistentSound")`;
+                    const result = converter.targetCodeToBlocks(targetWithSounds, code);
+                    expect(result).toBeFalsy();
+                    expect(converter.errors).toHaveLength(1);
+                    expect(converter.errors[0].text).toContain('sound "NonExistentSound" does not exist');
+                });
+            });
+        });
+    });
 });

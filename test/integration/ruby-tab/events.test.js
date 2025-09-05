@@ -162,61 +162,45 @@ describe('Ruby Tab: Events category blocks', () => {
 
     const eventsStageRuby = dedent`
         when_flag_clicked do
-          switch_backdrop("backdrop1")
         end
 
         when_key_pressed("space") do
-          switch_backdrop("backdrop1")
         end
 
         when_key_pressed("any") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         when_key_pressed("a") do
         end
 
         when_clicked do
-          switch_backdrop("backdrop1")
         end
 
         when_clicked do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         when_backdrop_switches("backdrop1") do
-          switch_backdrop("backdrop1")
         end
 
         when_backdrop_switches("backdrop1") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         when_greater_than("loudness", 10) do
         end
 
         when_greater_than("loudness", 10) do
-          switch_backdrop("backdrop1")
         end
 
         when_greater_than("timer", x) do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         when_receive("message1") do
         end
 
         when_receive("message1") do
-          switch_backdrop("backdrop1")
         end
 
         when_receive("message1") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         broadcast("message1")
@@ -227,61 +211,45 @@ describe('Ruby Tab: Events category blocks', () => {
 
     const eventsStageOldRuby = dedent`
         self.when(:flag_clicked) do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:key_pressed, "space") do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:key_pressed, "any") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         self.when(:key_pressed, "a") do
         end
 
         self.when(:clicked) do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:clicked) do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         self.when(:backdrop_switches, "backdrop1") do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:backdrop_switches, "backdrop1") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         self.when(:greater_than, "loudness", 10) do
         end
 
         self.when(:greater_than, "loudness", 10) do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:greater_than, "timer", x) do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         self.when(:receive, "message1") do
         end
 
         self.when(:receive, "message1") do
-          switch_backdrop("backdrop1")
         end
 
         self.when(:receive, "message1") do
-          switch_backdrop("backdrop1")
-          next_backdrop
         end
 
         broadcast("message1")

@@ -160,6 +160,136 @@ describe('Ruby Tab: Events category blocks', () => {
         broadcast_and_wait(x)
     `;
 
+    const eventsStageRuby = dedent`
+        when_flag_clicked do
+          sleep(1)
+        end
+
+        when_key_pressed("space") do
+          sleep(1)
+        end
+
+        when_key_pressed("any") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        when_key_pressed("a") do
+        end
+
+        when_clicked do
+          sleep(1)
+        end
+
+        when_clicked do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        when_backdrop_switches("backdrop1") do
+          sleep(1)
+        end
+
+        when_backdrop_switches("backdrop1") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        when_greater_than("loudness", 10) do
+        end
+
+        when_greater_than("loudness", 10) do
+          sleep(1)
+        end
+
+        when_greater_than("timer", x) do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        when_receive("message1") do
+        end
+
+        when_receive("message1") do
+          sleep(1)
+        end
+
+        when_receive("message1") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        broadcast("message1")
+        broadcast(x)
+        broadcast_and_wait("message1")
+        broadcast_and_wait(x)
+    `;
+
+    const eventsStageOldRuby = dedent`
+        self.when(:flag_clicked) do
+          sleep(1)
+        end
+
+        self.when(:key_pressed, "space") do
+          sleep(1)
+        end
+
+        self.when(:key_pressed, "any") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        self.when(:key_pressed, "a") do
+        end
+
+        self.when(:clicked) do
+          sleep(1)
+        end
+
+        self.when(:clicked) do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        self.when(:backdrop_switches, "backdrop1") do
+          sleep(1)
+        end
+
+        self.when(:backdrop_switches, "backdrop1") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        self.when(:greater_than, "loudness", 10) do
+        end
+
+        self.when(:greater_than, "loudness", 10) do
+          sleep(1)
+        end
+
+        self.when(:greater_than, "timer", x) do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        self.when(:receive, "message1") do
+        end
+
+        self.when(:receive, "message1") do
+          sleep(1)
+        end
+
+        self.when(:receive, "message1") do
+          sleep(1)
+          ask("What's your name?")
+        end
+
+        broadcast("message1")
+        broadcast(x)
+        broadcast_and_wait("message1")
+        broadcast_and_wait(x)
+    `;
+
     describe('sprite', () => {
         test('Ruby -> Code -> Ruby', async () => {
             await loadUri(urlFor('/'));
@@ -184,7 +314,7 @@ describe('Ruby Tab: Events category blocks', () => {
             await loadUri(urlFor('/'));
             await clickXpath('//span[text()="Stage"]');
 
-            await expectInterconvertBetweenCodeAndRuby(eventsRuby);
+            await expectInterconvertBetweenCodeAndRuby(eventsStageRuby);
         });
 
         test('Ruby -> Code -> Ruby (backward compatibility) ', async () => {
@@ -192,12 +322,12 @@ describe('Ruby Tab: Events category blocks', () => {
             await clickXpath('//span[text()="Stage"]');
 
             await clickText('Ruby', '*[@role="tab"]');
-            await fillInRubyProgram(eventsOldRuby);
+            await fillInRubyProgram(eventsStageOldRuby);
             await clickText('Code', '*[@role="tab"]');
             await clickXpath(EDIT_MENU_XPATH);
             await clickText('Generate Ruby from Code');
             await clickText('Ruby', '*[@role="tab"]');
-            expect(await currentRubyProgram()).toEqual(`${eventsRuby}\n`);
+            expect(await currentRubyProgram()).toEqual(`${eventsStageRuby}\n`);
         });
     });
 });

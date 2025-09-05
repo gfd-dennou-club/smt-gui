@@ -28,6 +28,34 @@ const ForwardBackward = [
     'forward',
     'backward'
 ];
+
+/* eslint-disable no-invalid-this */
+const validateCostume = function (costumeName, args) {
+    if (this._context.target && this._context.target.getCostumes) {
+        const costumes = this._context.target.getCostumes();
+        const costumeExists = costumes.some(costume => costume.name === costumeName);
+        if (!costumeExists) {
+            throw new RubyToBlocksConverterError(
+                args[0].node,
+                `costume "${costumeName}" does not exist`
+            );
+        }
+    }
+};
+
+const validateBackdrop = function (backdropName, args) {
+    if (this.vm && this.vm.runtime && this.vm.runtime.getTargetForStage) {
+        const stage = this.vm.runtime.getTargetForStage();
+        const backdrops = stage.getCostumes();
+        const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
+        if (!backdropExists) {
+            throw new RubyToBlocksConverterError(
+                args[0].node,
+                `backdrop "${backdropName}" does not exist`
+            );
+        }
+    }
+};
 /* eslint-enable no-invalid-this */
 
 /**
@@ -63,56 +91,21 @@ const LooksConverter = {
                 break;
             case 'switch_costume':
                 if (args.length === 1 && this._isString(args[0])) {
-                    // Check if costume exists when string is specified and target has costumes
-                    if (this._context.target && this._context.target.getCostumes) {
-                        const costumeName = args[0].toString();
-                        const costumes = this._context.target.getCostumes();
-                        const costumeExists = costumes.some(costume => costume.name === costumeName);
-                        if (!costumeExists) {
-                            throw new RubyToBlocksConverterError(
-                                args[0].node,
-                                `costume "${costumeName}" does not exist`
-                            );
-                        }
-                    }
+                    validateCostume.call(this, args[0].toString(), args);
                     block = this._createBlock('looks_switchcostumeto', 'statement');
                     this._addInput(block, 'COSTUME', this._createFieldBlock('looks_costume', 'COSTUME', args[0]));
                 }
                 break;
             case 'switch_backdrop':
                 if (args.length === 1 && this._isString(args[0])) {
-                    // Check if backdrop exists on stage
-                    if (this.vm && this.vm.runtime && this.vm.runtime.getTargetForStage) {
-                        const backdropName = args[0].toString();
-                        const stage = this.vm.runtime.getTargetForStage();
-                        const backdrops = stage.getCostumes();
-                        const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
-                        if (!backdropExists) {
-                            throw new RubyToBlocksConverterError(
-                                args[0].node,
-                                `backdrop "${backdropName}" does not exist`
-                            );
-                        }
-                    }
+                    validateBackdrop.call(this, args[0].toString(), args);
                     block = this._createBlock('looks_switchbackdropto', 'statement');
                     this._addInput(block, 'BACKDROP', this._createFieldBlock('looks_backdrops', 'BACKDROP', args[0]));
                 }
                 break;
             case 'switch_backdrop_and_wait':
                 if (args.length === 1 && this._isString(args[0])) {
-                    // Check if backdrop exists on stage
-                    if (this.vm && this.vm.runtime && this.vm.runtime.getTargetForStage) {
-                        const backdropName = args[0].toString();
-                        const stage = this.vm.runtime.getTargetForStage();
-                        const backdrops = stage.getCostumes();
-                        const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
-                        if (!backdropExists) {
-                            throw new RubyToBlocksConverterError(
-                                args[0].node,
-                                `backdrop "${backdropName}" does not exist`
-                            );
-                        }
-                    }
+                    validateBackdrop.call(this, args[0].toString(), args);
                     block = this._createBlock('looks_switchbackdroptoandwait', 'statement');
                     this._addInput(block, 'BACKDROP', this._createFieldBlock('looks_backdrops', 'BACKDROP', args[0]));
                 }

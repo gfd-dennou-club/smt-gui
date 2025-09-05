@@ -1,5 +1,6 @@
 /* global Opal */
 import _ from 'lodash';
+import {RubyToBlocksConverterError} from './errors';
 
 const RotationStyle = [
     'left-right',
@@ -12,9 +13,13 @@ const RotationStyle = [
  */
 const MotionConverter = {
     // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
+    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
         let block;
         if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
+            // All Motion blocks are sprite-only
+            if (this._isStage()) {
+                throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+            }
             switch (name) {
             case 'move':
                 if (args.length === 1 && this._isNumberOrBlock(args[0])) {

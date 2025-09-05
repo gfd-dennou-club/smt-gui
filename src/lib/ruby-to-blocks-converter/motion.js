@@ -16,13 +16,13 @@ const MotionConverter = {
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
         let block;
         if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
-            // All Motion blocks are sprite-only
-            if (this._isStage()) {
-                throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
-            }
             switch (name) {
             case 'move':
                 if (args.length === 1 && this._isNumberOrBlock(args[0])) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_movesteps', 'statement');
                     this._addNumberInput(block, 'STEPS', 'math_number', args[0], 10);
                 }
@@ -30,6 +30,10 @@ const MotionConverter = {
             case 'turn_right':
             case 'turn_left':
                 if (args.length === 1 && this._isNumberOrBlock(args[0])) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock(
                         name === 'turn_right' ? 'motion_turnright' : 'motion_turnleft', 'statement'
                     );
@@ -39,10 +43,18 @@ const MotionConverter = {
             case 'go_to':
                 if (args.length === 1) {
                     if (this._isString(args[0])) {
+                        // All Motion blocks are sprite-only
+                        if (this._isStage()) {
+                            throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                        }
                         block = this._createBlock('motion_goto', 'statement');
                         this._addInput(block, 'TO', this._createFieldBlock('motion_goto_menu', 'TO', args[0]));
                     } else if (this._isArray(args[0]) && args[0].length === 2 &&
                                this._isNumberOrBlock(args[0].value[0]) && this._isNumberOrBlock(args[0].value[1])) {
+                        // All Motion blocks are sprite-only
+                        if (this._isStage()) {
+                            throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                        }
                         block = this._createBlock('motion_gotoxy', 'statement');
                         this._addNumberInput(block, 'X', 'math_number', args[0].value[0], 0);
                         this._addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
@@ -54,10 +66,18 @@ const MotionConverter = {
                     const secs = args[1].get('sym:secs');
                     if (this._isNumberOrBlock(secs)) {
                         if (this._isString(args[0])) {
+                            // All Motion blocks are sprite-only
+                            if (this._isStage()) {
+                                throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                            }
                             block = this._createBlock('motion_glideto', 'statement');
                             this._addInput(block, 'TO', this._createFieldBlock('motion_glideto_menu', 'TO', args[0]));
                         } else if (this._isArray(args[0]) && args[0].length === 2 &&
                                    this._isNumberOrBlock(args[0].value[0]) && this._isNumberOrBlock(args[0].value[1])) {
+                            // All Motion blocks are sprite-only
+                            if (this._isStage()) {
+                                throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                            }
                             block = this._createBlock('motion_glidesecstoxy', 'statement');
                             this._addNumberInput(block, 'X', 'math_number', args[0].value[0], 0);
                             this._addNumberInput(block, 'Y', 'math_number', args[0].value[1], 0);
@@ -70,12 +90,20 @@ const MotionConverter = {
                 break;
             case 'direction=':
                 if (args.length === 1 && this._isNumberOrBlock(args[0])) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_pointindirection', 'statement');
                     this._addNumberInput(block, 'DIRECTION', 'math_angle', args[0], 90);
                 }
                 break;
             case 'point_towards':
                 if (args.length === 1 && this._isString(args[0])) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_pointtowards', 'statement');
                     this._addInput(
                         block,
@@ -86,11 +114,19 @@ const MotionConverter = {
                 break;
             case 'bounce_if_on_edge':
                 if (args.length === 0) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_ifonedgebounce', 'statement');
                 }
                 break;
             case 'rotation_style=': {
                 if (args.length === 1 && this._isString(args[0]) && RotationStyle.indexOf(args[0].toString()) >= 0) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_setrotationstyle', 'statement');
                     this._addField(block, 'STYLE', args[0]);
                 }
@@ -99,6 +135,10 @@ const MotionConverter = {
             case 'x=':
             case 'y=':
                 if (args.length === 1 && this._isNumberOrBlock(args[0])) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     let xy;
                     if (name === 'x=') {
                         xy = 'x';
@@ -112,6 +152,10 @@ const MotionConverter = {
             case 'x':
             case 'y':
                 if (args.length === 0) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     let xy;
                     if (name === 'x') {
                         xy = 'x';
@@ -123,6 +167,10 @@ const MotionConverter = {
                 break;
             case 'direction':
                 if (args.length === 0) {
+                    // All Motion blocks are sprite-only
+                    if (this._isStage()) {
+                        throw new RubyToBlocksConverterError(node, 'Stage selected: no motion blocks');
+                    }
                     block = this._createBlock('motion_direction', 'value');
                 }
                 break;
@@ -139,6 +187,10 @@ const MotionConverter = {
             switch (lh.opcode) {
             case 'motion_xposition':
             case 'motion_yposition':
+                // All Motion blocks are sprite-only
+                if (this._isStage()) {
+                    throw new RubyToBlocksConverterError(lh.node, 'Stage selected: no motion blocks');
+                }
                 if (lh.opcode === 'motion_xposition') {
                     xy = 'x';
                 } else {

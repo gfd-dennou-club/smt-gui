@@ -31,29 +31,45 @@ const ForwardBackward = [
 
 /* eslint-disable no-invalid-this */
 const validateCostume = function (costumeName, args) {
-    if (this._context.target && this._context.target.getCostumes) {
-        const costumes = this._context.target.getCostumes();
-        const costumeExists = costumes.some(costume => costume.name === costumeName);
-        if (!costumeExists) {
-            throw new RubyToBlocksConverterError(
-                args[0].node,
-                `costume "${costumeName}" does not exist`
-            );
-        }
+    // Skip validation if no target context (e.g., in tests)
+    if (!this._context.target || !this._context.target.getCostumes) {
+        return;
+    }
+    
+    const costumes = this._context.target.getCostumes();
+    const costumeExists = costumes.some(costume => costume.name === costumeName);
+    if (!costumeExists) {
+        throw new RubyToBlocksConverterError(
+            args[0].node,
+            `costume "${costumeName}" does not exist`
+        );
     }
 };
 
 const validateBackdrop = function (backdropName, args) {
-    if (this.vm && this.vm.runtime && this.vm.runtime.getTargetForStage) {
-        const stage = this.vm.runtime.getTargetForStage();
-        const backdrops = stage.getCostumes();
-        const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
-        if (!backdropExists) {
-            throw new RubyToBlocksConverterError(
-                args[0].node,
-                `backdrop "${backdropName}" does not exist`
-            );
-        }
+    // Allow special backdrop values
+    const specialBackdrops = ['next backdrop', 'previous backdrop', 'random backdrop'];
+    if (specialBackdrops.includes(backdropName)) {
+        return;
+    }
+    
+    // Skip validation if no VM context (e.g., in tests)
+    if (!this.vm || !this.vm.runtime || !this.vm.runtime.getTargetForStage) {
+        return;
+    }
+    
+    const stage = this.vm.runtime.getTargetForStage();
+    if (!stage || !stage.getCostumes) {
+        return;
+    }
+    
+    const backdrops = stage.getCostumes();
+    const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
+    if (!backdropExists) {
+        throw new RubyToBlocksConverterError(
+            args[0].node,
+            `backdrop "${backdropName}" does not exist`
+        );
     }
 };
 /* eslint-enable no-invalid-this */

@@ -5,52 +5,140 @@ import _ from 'lodash';
  * Operators converter
  */
 const OperatorsConverter = {
+    register: function (converter) {
+        converter.registerCallMethod('self', 'rand', 1, params => {
+            const {args} = params;
+            if (!converter._isBlock(args[0]) || args[0].opcode !== 'ruby_range') return null;
+
+            return converter._changeBlock(args[0], 'operator_random', 'value');
+        });
+
+        converter.registerCallMethod('any', '[]', 1, params => {
+            const {receiver, args} = params;
+            if (converter.isVariableBlockType(receiver)) return null;
+            if (!converter._isStringOrBlock(receiver) || !converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._createBlock('operator_letter_of', 'value');
+            converter._addTextInput(block, 'STRING', receiver, 'apple');
+            let letter = args[0];
+            if (converter._isNumber(args[0]) && !_.isNumber(args[0]) && args[0].type === 'int') {
+                letter = letter.value + 1;
+            }
+            converter._addNumberInput(block, 'LETTER', 'math_number', letter, 1);
+            return block;
+        });
+
+        converter.registerCallMethod('any', 'length', 0, params => {
+            const {receiver} = params;
+            if (converter.isVariableBlockType(receiver)) return null;
+            if (!converter._isStringOrBlock(receiver)) return null;
+
+            const block = converter._createBlock('operator_length', 'value');
+            converter._addTextInput(block, 'STRING', receiver, 'apple');
+            return block;
+        });
+
+        converter.registerCallMethod('any', 'include?', 1, params => {
+            const {receiver, args} = params;
+            if (converter.isVariableBlockType(receiver) || !converter._isStringOrBlock(receiver)) return null;
+            if (!converter._isStringOrBlock(args[0])) return null;
+
+            const block = converter._createBlock('operator_contains', 'value');
+            converter._addTextInput(block, 'STRING1', receiver, 'apple');
+            converter._addTextInput(block, 'STRING2', args[0], 'a');
+            return block;
+        });
+
+        converter.registerCallMethod('any', '+', 1, params => {
+            const {receiver, args} = params;
+            let rh = args[0];
+            if (_.isArray(rh)) {
+                if (rh.length !== 1) return null;
+                rh = rh[0];
+            }
+
+            if (!converter._isNumberOrBlock(receiver) && !converter._isStringOrBlock(receiver)) return null;
+            if (!converter._isNumberOrBlock(rh) && !converter._isStringOrBlock(rh)) return null;
+
+            let block;
+            if (converter._isNumberOrBlock(receiver) && converter._isNumberOrBlock(rh)) {
+                block = converter._createBlock('operator_add', 'value');
+                converter._addNumberInput(block, 'NUM1', 'math_number', receiver, '');
+                converter._addNumberInput(block, 'NUM2', 'math_number', rh, '');
+            } else if (converter._isStringOrBlock(receiver) || converter._isStringOrBlock(rh)) {
+                block = converter._createBlock('operator_join', 'value');
+                converter._addTextInput(
+                    block, 'STRING1',
+                    converter._isNumber(receiver) ? receiver.toString() : receiver, 'apple'
+                );
+                converter._addTextInput(block, 'STRING2', converter._isNumber(rh) ? rh.toString() : rh, 'banana');
+            } else {
+                return null;
+            }
+            return block;
+        });
+
+        // Arithmetic operators: -, *, /, %
+        ['-', '*', '/', '%'].forEach(operator => {
+            converter.registerCallMethod('any', operator, 1, params => {
+                const {receiver, args} = params;
+                let rh = args[0];
+                if (_.isArray(rh)) {
+                    if (rh.length !== 1) return null;
+                    rh = rh[0];
+                }
+
+                if (!converter._isNumberOrBlock(receiver) || !converter._isNumberOrBlock(rh)) return null;
+
+                let opcode;
+                if (operator === '-') {
+                    opcode = 'operator_subtract';
+                } else if (operator === '*') {
+                    opcode = 'operator_multiply';
+                } else if (operator === '/') {
+                    opcode = 'operator_divide';
+                } else {
+                    opcode = 'operator_mod';
+                }
+
+                const block = converter._createBlock(opcode, 'value');
+                converter._addNumberInput(block, 'NUM1', 'math_number', receiver, '');
+                converter._addNumberInput(block, 'NUM2', 'math_number', rh, '');
+                return block;
+            });
+        });
+
+        // Comparison operators: >, <, ==
+        ['>', '<', '=='].forEach(operator => {
+            converter.registerCallMethod('any', operator, 1, params => {
+                const {receiver, args} = params;
+                let rh = args[0];
+                if (_.isArray(rh)) {
+                    if (rh.length !== 1) return null;
+                    rh = rh[0];
+                }
+
+                let opcode;
+                if (operator === '>') {
+                    opcode = 'operator_gt';
+                } else if (operator === '<') {
+                    opcode = 'operator_lt';
+                } else {
+                    opcode = 'operator_equals';
+                }
+
+                const block = converter._createBlock(opcode, 'value_boolean');
+                converter._addTextInput(block, 'OPERAND1', converter._isNumber(receiver) ? receiver.toString() : receiver, '');
+                converter._addTextInput(block, 'OPERAND2', converter._isNumber(rh) ? rh.toString() : rh, '50');
+                return block;
+            });
+        });
+    },
+
     // eslint-disable-next-line no-unused-vars
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
         let block;
-        if (this._isSelf(receiver) || receiver === Opal.nil) {
-            switch (name) {
-            case 'rand':
-                if (args.length === 1 && this._isBlock(args[0]) && args[0].opcode === 'ruby_range') {
-                    return this._changeBlock(args[0], 'operator_random', 'value');
-                }
-                break;
-            }
-        }
-
-        if (!this.isVariableBlockType(receiver)) {
-            switch (name) {
-            case '[]':
-                if (this._isStringOrBlock(receiver) &&
-                    args.length === 1 && this._isNumberOrBlock(args[0])) {
-                    block = this._createBlock('operator_letter_of', 'value');
-                    this._addTextInput(block, 'STRING', receiver, 'apple');
-                    let letter = args[0];
-                    if (this._isNumber(args[0]) && !_.isNumber(args[0]) && args[0].type === 'int') {
-                        letter = letter.value + 1;
-                    }
-                    this._addNumberInput(block, 'LETTER', 'math_number', letter, 1);
-                    return block;
-                }
-                break;
-            case 'length':
-                if (args.length === 0 && this._isStringOrBlock(receiver)) {
-                    block = this._createBlock('operator_length', 'value');
-                    this._addTextInput(block, 'STRING', receiver, 'apple');
-                    return block;
-                }
-                break;
-            case 'include?':
-                if (args.length === 1 &&
-                    this._isStringOrBlock(receiver) && this._isStringOrBlock(args[0])) {
-                    block = this._createBlock('operator_contains', 'value');
-                    this._addTextInput(block, 'STRING1', receiver, 'apple');
-                    this._addTextInput(block, 'STRING2', args[0], 'a');
-                    return block;
-                }
-                break;
-            }
-        }
+        // rand, [], length, include? have been moved to register pattern
 
         let rh;
         if (args.length === 1) {
@@ -62,59 +150,7 @@ const OperatorsConverter = {
         }
 
         switch (name) {
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-        case '%':
-            if (rh) {
-                if (this._isNumberOrBlock(receiver) && this._isNumberOrBlock(rh)) {
-                    let opcode;
-                    if (name === '+') {
-                        opcode = 'operator_add';
-                    } else if (name === '-') {
-                        opcode = 'operator_subtract';
-                    } else if (name === '*') {
-                        opcode = 'operator_multiply';
-                    } else if (name === '/') {
-                        opcode = 'operator_divide';
-                    } else {
-                        opcode = 'operator_mod';
-                    }
-                    block = this._createBlock(opcode, 'value');
-                    this._addNumberInput(block, 'NUM1', 'math_number', receiver, '');
-                    this._addNumberInput(block, 'NUM2', 'math_number', rh, '');
-                    return block;
-                } else if (name === '+' &&
-                           (this._isStringOrBlock(receiver) || this._isStringOrBlock(rh))) {
-                    block = this._createBlock('operator_join', 'value');
-                    this._addTextInput(
-                        block, 'STRING1',
-                        this._isNumber(receiver) ? receiver.toString() : receiver, 'apple'
-                    );
-                    this._addTextInput(block, 'STRING2', this._isNumber(rh) ? rh.toString() : rh, 'banana');
-                    return block;
-                }
-            }
-            break;
-        case '>':
-        case '<':
-        case '==':
-            if (rh) {
-                let opcode;
-                if (name === '>') {
-                    opcode = 'operator_gt';
-                } else if (name === '<') {
-                    opcode = 'operator_lt';
-                } else {
-                    opcode = 'operator_equals';
-                }
-                block = this._createBlock(opcode, 'value_boolean');
-                this._addTextInput(block, 'OPERAND1', this._isNumber(receiver) ? receiver.toString() : receiver, '');
-                this._addTextInput(block, 'OPERAND2', this._isNumber(rh) ? rh.toString() : rh, '50');
-                return block;
-            }
-            break;
+        // +, -, *, /, %, >, <, == have been moved to register pattern
         case '!':
             if (args.length === 0 && this._isFalseOrBooleanBlock(receiver)) {
                 block = this._createBlock('operator_not', 'value_boolean');

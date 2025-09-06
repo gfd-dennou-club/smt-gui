@@ -127,7 +127,8 @@ class RubyToBlocksConverter {
             SoundConverter,
             MusicConverter,
             PenConverter,
-            MakeyMakeyConverter
+            MakeyMakeyConverter,
+            OperatorsConverter
         ].forEach(x => x.register(this));
     }
 

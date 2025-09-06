@@ -5,57 +5,101 @@ import _ from 'lodash';
  * Pen converter
  */
 const PenConverter = {
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
-        let block;
-        if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
-            switch (name) {
-            case 'pen_clear':
-                if (args.length === 0) {
-                    block = this._createBlock('pen_clear', 'statement');
-                }
-                break;
-            case 'pen_stamp':
-                if (args.length === 0) {
-                    block = this._createBlock('pen_stamp', 'statement');
-                }
-                break;
-            case 'pen_down':
-                if (args.length === 0) {
-                    block = this._createBlock('pen_penDown', 'statement');
-                }
-                break;
-            case 'pen_up':
-                if (args.length === 0) {
-                    block = this._createBlock('pen_penUp', 'statement');
-                }
-                break;
-            case 'pen_color=':
-            case 'pen_saturation=':
-            case 'pen_brightness=':
-            case 'pen_transparency=':
-                if (args.length === 1 && this._isNumberOrBlock(args[0])) {
-                    block = this._createBlock('pen_setPenColorParamTo', 'statement');
-                    this._addFieldInput(
-                        block, 'COLOR_PARAM', 'pen_menu_colorParam', 'colorParam',
-                        name.replace('pen_', '').replace('=', ''), 'color'
-                    );
-                    this._addNumberInput(block, 'VALUE', 'math_number', args[0], 50);
-                } else if (name == 'pen_color=' && args.length === 1 && this._isColorOrBlock(args[0])) {
-                    block = this._createBlock('pen_setPenColorToColor', 'statement');
-                    this._addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#43066f');
-                }
-                break;
-            case 'pen_size=':
-                if (args.length === 1 && this._isNumberOrBlock(args[0])) {
-                    block = this._createBlock('pen_setPenSizeTo', 'statement');
-                    this._addNumberInput(block, 'SIZE', 'math_number', args[0], 1);
-                }
-                break;
+    register: function (converter) {
+        // pen_clear method
+        converter.registerCallMethod('self', 'pen_clear', 0, () => {
+            return converter.createBlock('pen_clear', 'statement');
+        });
+
+        // pen_stamp method
+        converter.registerCallMethod('self', 'pen_stamp', 0, () => {
+            return converter.createBlock('pen_stamp', 'statement');
+        });
+
+        // pen_down method
+        converter.registerCallMethod('self', 'pen_down', 0, () => {
+            return converter.createBlock('pen_penDown', 'statement');
+        });
+
+        // pen_up method
+        converter.registerCallMethod('self', 'pen_up', 0, () => {
+            return converter.createBlock('pen_penUp', 'statement');
+        });
+
+        // pen_color= method
+        converter.registerCallMethod('self', 'pen_color=', 1, params => {
+            const {args} = params;
+            
+            if (converter.isNumberOrBlock(args[0])) {
+                const block = converter.createBlock('pen_setPenColorParamTo', 'statement');
+                converter.addFieldInput(
+                    block, 'COLOR_PARAM', 'pen_menu_colorParam', 'colorParam',
+                    'color', 'color'
+                );
+                converter.addNumberInput(block, 'VALUE', 'math_number', args[0], 50);
+                return block;
+            } else if (converter._isColorOrBlock(args[0])) {
+                const block = converter.createBlock('pen_setPenColorToColor', 'statement');
+                converter.addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#43066f');
+                return block;
             }
-        }
-        return block;
+            return null;
+        });
+
+        // pen_saturation= method
+        converter.registerCallMethod('self', 'pen_saturation=', 1, params => {
+            const {args} = params;
+            if (!converter.isNumberOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('pen_setPenColorParamTo', 'statement');
+            converter.addFieldInput(
+                block, 'COLOR_PARAM', 'pen_menu_colorParam', 'colorParam',
+                'saturation', 'color'
+            );
+            converter.addNumberInput(block, 'VALUE', 'math_number', args[0], 50);
+            return block;
+        });
+
+        // pen_brightness= method
+        converter.registerCallMethod('self', 'pen_brightness=', 1, params => {
+            const {args} = params;
+            if (!converter.isNumberOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('pen_setPenColorParamTo', 'statement');
+            converter.addFieldInput(
+                block, 'COLOR_PARAM', 'pen_menu_colorParam', 'colorParam',
+                'brightness', 'color'
+            );
+            converter.addNumberInput(block, 'VALUE', 'math_number', args[0], 50);
+            return block;
+        });
+
+        // pen_transparency= method
+        converter.registerCallMethod('self', 'pen_transparency=', 1, params => {
+            const {args} = params;
+            if (!converter.isNumberOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('pen_setPenColorParamTo', 'statement');
+            converter.addFieldInput(
+                block, 'COLOR_PARAM', 'pen_menu_colorParam', 'colorParam',
+                'transparency', 'color'
+            );
+            converter.addNumberInput(block, 'VALUE', 'math_number', args[0], 50);
+            return block;
+        });
+
+        // pen_size= method
+        converter.registerCallMethod('self', 'pen_size=', 1, params => {
+            const {args} = params;
+            if (!converter.isNumberOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('pen_setPenSizeTo', 'statement');
+            converter.addNumberInput(block, 'SIZE', 'math_number', args[0], 1);
+            return block;
+        });
     },
 
+    // Keep onOpAsgn for += operators
     // eslint-disable-next-line no-unused-vars
     onOpAsgn: function (lh, operator, rh) {
         let block;

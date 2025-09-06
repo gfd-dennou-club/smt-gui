@@ -125,7 +125,8 @@ class RubyToBlocksConverter {
             BoostConverter,
             TranslateConverter,
             SoundConverter,
-            MusicConverter
+            MusicConverter,
+            PenConverter
         ].forEach(x => x.register(this));
     }
 
@@ -356,6 +357,8 @@ class RubyToBlocksConverter {
     }
 
     _getReceiverName (receiver) {
+        if (this._isSelf(receiver) || receiver === Opal.nil) {
+
         if (this._isSelf(receiver) || receiver === Opal.nil) {
             if (this._context.target && this._context.target.isStage) {
                 return 'stage';

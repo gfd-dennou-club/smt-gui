@@ -114,73 +114,74 @@ const VariablesConverter = {
             converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
             return block;
         });
-    },
 
-    // PARTIAL IMPLEMENTATION - Still needs work on list method calls
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
-        let block;
-        if (this.isVariableBlockType(receiver)) {
-            switch (name) {
-            case 'delete_at':
-                if (args.length === 1 &&
-                    this._isNumberOrBlock(args[0])) {
-                    block = this._changeBlock(receiver, 'data_deleteoflist', 'statement');
-                    this._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-                }
-                break;
-            case 'clear':
-                if (args.length === 0) {
-                    block = this._changeBlock(receiver, 'data_deletealloflist', 'statement');
-                }
-                break;
-            case 'insert':
-                if (args.length === 2 &&
-                    this._isNumberOrBlock(args[0]) &&
-                    (this._isStringOrBlock(args[1]) || this._isNumberOrBlock(args[1]))) {
-                    block = this._changeBlock(receiver, 'data_insertatlist', 'statement');
-                    this._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-                    this._addTextInput(block, 'ITEM', this._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
-                }
-                break;
-            case '[]=':
-                if (args.length === 2 &&
-                    this._isNumberOrBlock(args[0]) &&
-                    (this._isStringOrBlock(args[1]) || this._isNumberOrBlock(args[1]))) {
-                    block = this._changeBlock(receiver, 'data_replaceitemoflist', 'statement');
-                    this._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-                    this._addTextInput(block, 'ITEM', this._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
-                }
-                break;
-            case '[]':
-                if (args.length === 1 &&
-                    this._isNumberOrBlock(args[0])) {
-                    block = this._changeBlock(receiver, 'data_itemoflist', 'value');
-                    this._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-                }
-                break;
-            case 'index':
-                if (args.length === 1 &&
-                    (this._isStringOrBlock(args[0]) || this._isNumberOrBlock(args[0]))) {
-                    block = this._changeBlock(receiver, 'data_itemnumoflist', 'value');
-                    this._addTextInput(block, 'ITEM', this._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
-                }
-                break;
-            case 'length':
-                if (args.length === 0) {
-                    block = this._changeBlock(receiver, 'data_lengthoflist', 'value');
-                }
-                break;
-            case 'include?':
-                if (args.length === 1 &&
-                    (this._isStringOrBlock(args[0]) || this._isNumberOrBlock(args[0]))) {
-                    block = this._changeBlock(receiver, 'data_listcontainsitem', 'value');
-                    this._addTextInput(block, 'ITEM', this._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
-                }
-                break;
-            }
-        }
-        return block;
+        converter.registerCallMethod('variable', 'delete_at', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_deleteoflist', 'statement');
+            converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
+            return block;
+        });
+
+        converter.registerCallMethod('variable', 'clear', 0, params => {
+            const {receiver} = params;
+            return converter._changeBlock(receiver, 'data_deletealloflist', 'statement');
+        });
+
+        converter.registerCallMethod('variable', 'insert', 2, params => {
+            const {receiver, args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+            if (!converter._isStringOrBlock(args[1]) && !converter._isNumberOrBlock(args[1])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_insertatlist', 'statement');
+            converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
+            converter._addTextInput(block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
+            return block;
+        });
+
+        converter.registerCallMethod('variable', '[]=', 2, params => {
+            const {receiver, args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+            if (!converter._isStringOrBlock(args[1]) && !converter._isNumberOrBlock(args[1])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_replaceitemoflist', 'statement');
+            converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
+            converter._addTextInput(block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
+            return block;
+        });
+
+        converter.registerCallMethod('variable', '[]', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_itemoflist', 'value');
+            converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
+            return block;
+        });
+
+        converter.registerCallMethod('variable', 'index', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_itemnumoflist', 'value');
+            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            return block;
+        });
+
+        converter.registerCallMethod('variable', 'length', 0, params => {
+            const {receiver} = params;
+            return converter._changeBlock(receiver, 'data_lengthoflist', 'value');
+        });
+
+        converter.registerCallMethod('variable', 'include?', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_listcontainsitem', 'value');
+            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            return block;
+        });
     },
 
     // eslint-disable-next-line no-unused-vars

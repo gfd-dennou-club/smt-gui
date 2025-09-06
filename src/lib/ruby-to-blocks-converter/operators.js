@@ -48,37 +48,7 @@ const OperatorsConverter = {
             return block;
         });
 
-        converter.registerCallMethod('any', '+', 1, params => {
-            const {receiver, args} = params;
-            let rh = args[0];
-            if (_.isArray(rh)) {
-                if (rh.length !== 1) return null;
-                rh = rh[0];
-            }
-
-            if (!converter._isNumberOrBlock(receiver) && !converter._isStringOrBlock(receiver)) return null;
-            if (!converter._isNumberOrBlock(rh) && !converter._isStringOrBlock(rh)) return null;
-
-            let block;
-            if (converter._isNumberOrBlock(receiver) && converter._isNumberOrBlock(rh)) {
-                block = converter._createBlock('operator_add', 'value');
-                converter._addNumberInput(block, 'NUM1', 'math_number', receiver, '');
-                converter._addNumberInput(block, 'NUM2', 'math_number', rh, '');
-            } else if (converter._isStringOrBlock(receiver) || converter._isStringOrBlock(rh)) {
-                block = converter._createBlock('operator_join', 'value');
-                converter._addTextInput(
-                    block, 'STRING1',
-                    converter._isNumber(receiver) ? receiver.toString() : receiver, 'apple'
-                );
-                converter._addTextInput(block, 'STRING2', converter._isNumber(rh) ? rh.toString() : rh, 'banana');
-            } else {
-                return null;
-            }
-            return block;
-        });
-
-        // Arithmetic operators: -, *, /, %
-        ['-', '*', '/', '%'].forEach(operator => {
+        ['+', '-', '*', '/', '%'].forEach(operator => {
             converter.registerCallMethod('any', operator, 1, params => {
                 const {receiver, args} = params;
                 let rh = args[0];
@@ -90,7 +60,9 @@ const OperatorsConverter = {
                 if (!converter._isNumberOrBlock(receiver) || !converter._isNumberOrBlock(rh)) return null;
 
                 let opcode;
-                if (operator === '-') {
+                if (operator === '+') {
+                    opcode = 'operator_add';
+                } else if (operator === '-') {
                     opcode = 'operator_subtract';
                 } else if (operator === '*') {
                     opcode = 'operator_multiply';
@@ -105,6 +77,23 @@ const OperatorsConverter = {
                 converter._addNumberInput(block, 'NUM2', 'math_number', rh, '');
                 return block;
             });
+        });
+
+        converter.registerCallMethod('any', '+', 1, params => {
+            const {receiver, args} = params;
+            let rh = args[0];
+            if (_.isArray(rh)) {
+                if (rh.length !== 1) return null;
+                rh = rh[0];
+            }
+
+            if (!converter._isStringOrBlock(receiver)) return null;
+            if (!converter._isStringOrBlock(rh)) return null;
+
+            const block = converter._createBlock('operator_join', 'value');
+            converter._addTextInput(block, 'STRING1', converter._isNumber(receiver) ? receiver.toString () : receiver, 'apple');
+            converter._addTextInput(block, 'STRING2', converter._isNumber(rh) ? rh.toString() : rh, 'banana');
+            return block;
         });
 
         // Comparison operators: >, <, ==

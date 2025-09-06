@@ -124,7 +124,8 @@ class RubyToBlocksConverter {
             KoshienConverter,
             BoostConverter,
             TranslateConverter,
-            SoundConverter
+            SoundConverter,
+            MusicConverter
         ].forEach(x => x.register(this));
     }
 

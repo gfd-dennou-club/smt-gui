@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
@@ -21,10 +20,10 @@ const TranslateConverter = {
             return block;
         });
 
-        // language method  
-        converter.registerCallMethod('self', 'language', 0, params => {
-            return converter._createBlock('translate_getViewerLanguage', 'value');
-        });
+        // language method
+        converter.registerCallMethod('self', 'language', 0, () =>
+            converter._createBlock('translate_getViewerLanguage', 'value')
+        );
     }
 };
 

@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
@@ -7,29 +6,29 @@ import _ from 'lodash';
 const PenConverter = {
     register: function (converter) {
         // pen_clear method
-        converter.registerCallMethod('self', 'pen_clear', 0, () => {
-            return converter.createBlock('pen_clear', 'statement');
-        });
+        converter.registerCallMethod('self', 'pen_clear', 0, () =>
+            converter.createBlock('pen_clear', 'statement')
+        );
 
         // pen_stamp method
-        converter.registerCallMethod('self', 'pen_stamp', 0, () => {
-            return converter.createBlock('pen_stamp', 'statement');
-        });
+        converter.registerCallMethod('self', 'pen_stamp', 0, () =>
+            converter.createBlock('pen_stamp', 'statement')
+        );
 
         // pen_down method
-        converter.registerCallMethod('self', 'pen_down', 0, () => {
-            return converter.createBlock('pen_penDown', 'statement');
-        });
+        converter.registerCallMethod('self', 'pen_down', 0, () =>
+            converter.createBlock('pen_penDown', 'statement')
+        );
 
         // pen_up method
-        converter.registerCallMethod('self', 'pen_up', 0, () => {
-            return converter.createBlock('pen_penUp', 'statement');
-        });
+        converter.registerCallMethod('self', 'pen_up', 0, () =>
+            converter.createBlock('pen_penUp', 'statement')
+        );
 
         // pen_color= method
         converter.registerCallMethod('self', 'pen_color=', 1, params => {
             const {args} = params;
-            
+
             if (converter.isNumberOrBlock(args[0])) {
                 const block = converter.createBlock('pen_setPenColorParamTo', 'statement');
                 converter.addFieldInput(

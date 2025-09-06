@@ -1,4 +1,4 @@
-/* global Opal */
+/* global */
 import _ from 'lodash';
 
 /**
@@ -111,7 +111,9 @@ const VariablesConverter = {
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 
             const block = converter._changeBlock(receiver, 'data_addtolist', 'statement');
-            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            converter._addTextInput(
+                block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing'
+            );
             return block;
         });
 
@@ -136,7 +138,9 @@ const VariablesConverter = {
 
             const block = converter._changeBlock(receiver, 'data_insertatlist', 'statement');
             converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-            converter._addTextInput(block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
+            converter._addTextInput(
+                block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing'
+            );
             return block;
         });
 
@@ -147,7 +151,9 @@ const VariablesConverter = {
 
             const block = converter._changeBlock(receiver, 'data_replaceitemoflist', 'statement');
             converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-            converter._addTextInput(block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing');
+            converter._addTextInput(
+                block, 'ITEM', converter._isNumber(args[1]) ? args[1].toString() : args[1], 'thing'
+            );
             return block;
         });
 
@@ -165,7 +171,9 @@ const VariablesConverter = {
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 
             const block = converter._changeBlock(receiver, 'data_itemnumoflist', 'value');
-            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            converter._addTextInput(
+                block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing'
+            );
             return block;
         });
 
@@ -179,7 +187,9 @@ const VariablesConverter = {
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 
             const block = converter._changeBlock(receiver, 'data_listcontainsitem', 'value');
-            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            converter._addTextInput(
+                block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing'
+            );
             return block;
         });
     },

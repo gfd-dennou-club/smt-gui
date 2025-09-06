@@ -91,7 +91,9 @@ const OperatorsConverter = {
             if (!converter._isStringOrBlock(rh)) return null;
 
             const block = converter._createBlock('operator_join', 'value');
-            converter._addTextInput(block, 'STRING1', converter._isNumber(receiver) ? receiver.toString () : receiver, 'apple');
+            converter._addTextInput(
+                block, 'STRING1', converter._isNumber(receiver) ? receiver.toString() : receiver, 'apple'
+            );
             converter._addTextInput(block, 'STRING2', converter._isNumber(rh) ? rh.toString() : rh, 'banana');
             return block;
         });

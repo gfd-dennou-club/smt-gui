@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
@@ -153,7 +152,7 @@ const BoostConverter = {
         // when block handlers for boost events
         converter.registerCallMethodWithBlock('self', 'when', 2, 0, params => {
             const {args, rubyBlock} = params;
-            
+
             if (args[0].type !== 'sym' || !converter.isStringOrBlock(args[1])) return null;
 
             let block;

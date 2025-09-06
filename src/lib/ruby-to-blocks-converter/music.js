@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
@@ -10,7 +9,7 @@ const MusicConverter = {
         converter.registerCallMethod('self', 'play_drum', 1, params => {
             const {args} = params;
             if (!converter._isHash(args[0]) || args[0].size !== 2) return null;
-            
+
             const drum = args[0].get('sym:drum');
             const beats = args[0].get('sym:beats');
             if (!converter.isNumberOrBlock(drum) || !converter.isNumberOrBlock(beats)) return null;
@@ -75,9 +74,9 @@ const MusicConverter = {
         });
 
         // tempo method
-        converter.registerCallMethod('self', 'tempo', 0, () => {
-            return converter.createBlock('music_getTempo', 'value');
-        });
+        converter.registerCallMethod('self', 'tempo', 0, () =>
+            converter.createBlock('music_getTempo', 'value')
+        );
     },
 
     // Keep onOpAsgn for tempo+= operator

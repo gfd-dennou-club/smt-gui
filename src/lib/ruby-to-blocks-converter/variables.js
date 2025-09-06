@@ -5,83 +5,123 @@ import _ from 'lodash';
  * Variables converter
  */
 const VariablesConverter = {
+    register: function (converter) {
+        converter.registerCallMethod('self', 'show_variable', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const variable = converter._lookupOrCreateVariable(args[0]);
+            if (variable.scope !== 'local') {
+                return converter._createBlock('data_showvariable', 'statement', {
+                    fields: {
+                        VARIABLE: {
+                            name: 'VARIABLE',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerCallMethod('self', 'hide_variable', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const variable = converter._lookupOrCreateVariable(args[0]);
+            if (variable.scope !== 'local') {
+                return converter._createBlock('data_hidevariable', 'statement', {
+                    fields: {
+                        VARIABLE: {
+                            name: 'VARIABLE',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerCallMethod('self', 'list', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const variable = converter._lookupOrCreateList(args[0]);
+            if (variable.scope !== 'local') {
+                return converter._createBlock('data_listcontents', 'value_variable', {
+                    fields: {
+                        LIST: {
+                            name: 'LIST',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerCallMethod('self', 'show_list', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const variable = converter._lookupOrCreateList(args[0]);
+            if (variable.scope !== 'local') {
+                return converter._createBlock('data_showlist', 'statement', {
+                    fields: {
+                        LIST: {
+                            name: 'LIST',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerCallMethod('self', 'hide_list', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const variable = converter._lookupOrCreateList(args[0]);
+            if (variable.scope !== 'local') {
+                return converter._createBlock('data_hidelist', 'statement', {
+                    fields: {
+                        LIST: {
+                            name: 'LIST',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerCallMethod('variable', 'push', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._changeBlock(receiver, 'data_addtolist', 'statement');
+            converter._addTextInput(block, 'ITEM', converter._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
+            return block;
+        });
+    },
+
+    // PARTIAL IMPLEMENTATION - Still needs work on list method calls
     // eslint-disable-next-line no-unused-vars
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
         let block;
-        if (this._isSelf(receiver) || receiver === Opal.nil) {
+        if (this.isVariableBlockType(receiver)) {
             switch (name) {
-            case 'show_variable':
-            case 'hide_variable':
-                if (args.length === 1 && this._isString(args[0])) {
-                    let opcode;
-                    switch (name) {
-                    case 'show_variable':
-                        opcode = 'data_showvariable';
-                        break;
-                    case 'hide_variable':
-                        opcode = 'data_hidevariable';
-                        break;
-                    }
-                    const variable = this._lookupOrCreateVariable(args[0]);
-                    if (variable.scope !== 'local') {
-                        block = this._createBlock(opcode, 'statement', {
-                            fields: {
-                                VARIABLE: {
-                                    name: 'VARIABLE',
-                                    id: variable.id,
-                                    value: variable.name,
-                                    variableType: variable.type
-                                }
-                            }
-                        });
-                    }
-                }
-                break;
-            case 'list':
-            case 'show_list':
-            case 'hide_list':
-                if (args.length === 1 && this._isString(args[0])) {
-                    let opcode;
-                    let blockType;
-                    switch (name) {
-                    case 'list':
-                        opcode = 'data_listcontents';
-                        blockType = 'value_variable';
-                        break;
-                    case 'show_list':
-                        opcode = 'data_showlist';
-                        blockType = 'statement';
-                        break;
-                    case 'hide_list':
-                        opcode = 'data_hidelist';
-                        blockType = 'statement';
-                        break;
-                    }
-                    const variable = this._lookupOrCreateList(args[0]);
-                    if (variable.scope !== 'local') {
-                        block = this._createBlock(opcode, blockType, {
-                            fields: {
-                                LIST: {
-                                    name: 'LIST',
-                                    id: variable.id,
-                                    value: variable.name,
-                                    variableType: variable.type
-                                }
-                            }
-                        });
-                    }
-                }
-                break;
-            }
-        } else if (this.isVariableBlockType(receiver)) {
-            switch (name) {
-            case 'push':
-                if (args.length === 1 &&
-                    (this._isStringOrBlock(args[0]) || this._isNumberOrBlock(args[0]))) {
-                    block = this._changeBlock(receiver, 'data_addtolist', 'statement');
-                    this._addTextInput(block, 'ITEM', this._isNumber(args[0]) ? args[0].toString() : args[0], 'thing');
-                }
-                break;
             case 'delete_at':
                 if (args.length === 1 &&
                     this._isNumberOrBlock(args[0])) {

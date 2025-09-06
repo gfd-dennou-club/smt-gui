@@ -358,12 +358,14 @@ class RubyToBlocksConverter {
 
     _getReceiverName (receiver) {
         if (this._isSelf(receiver) || receiver === Opal.nil) {
-
-        if (this._isSelf(receiver) || receiver === Opal.nil) {
             if (this._context.target && this._context.target.isStage) {
                 return 'stage';
             }
             return 'sprite';
+        }
+
+        if (this.isVariableBlockType(receiver)) {
+            return 'variable';
         }
 
         if (this._isBlock(receiver) && receiver.opcode === 'ruby_expression') {

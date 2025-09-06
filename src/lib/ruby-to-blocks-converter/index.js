@@ -112,6 +112,7 @@ class RubyToBlocksConverter {
         this.reset();
 
         [
+            VariablesConverter,
             EventConverter,
             ControlConverter,
             MicroBitConverter,
@@ -120,7 +121,10 @@ class RubyToBlocksConverter {
             Wedo2Converter,
             MicrobitMoreConverter,
             MeshConverter,
-            KoshienConverter
+            KoshienConverter,
+            BoostConverter,
+            TranslateConverter,
+            SoundConverter
         ].forEach(x => x.register(this));
     }
 
@@ -1456,13 +1460,13 @@ class RubyToBlocksConverter {
         const originalVarName = node.children[0].toString();
         // Normalize variable name to snake_case lowercase for consistency
         const normalizedVarName = this._toSnakeCaseLowercase(originalVarName);
-        
+
         // Check both original and normalized names in local variables
         let variable = this._context.localVariables[normalizedVarName];
         if (!variable) {
             variable = this._context.localVariables[originalVarName];
         }
-        
+
         if (variable) {
             const block = this._callConvertersHandler('onVar', 'local', variable);
             if (block) {

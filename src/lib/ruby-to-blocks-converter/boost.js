@@ -15,7 +15,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             converter.addNumberInput(block, 'DURATION', 'math_number', args[1], 1);
             return block;
@@ -30,7 +30,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             return block;
         });
@@ -44,7 +44,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             converter.addNumberInput(block, 'ROTATION', 'math_number', args[1], 1);
             return block;
@@ -59,7 +59,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             return block;
         });
@@ -73,7 +73,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             converter.addNumberInput(block, 'POWER', 'math_number', args[1], 100);
             return block;
@@ -88,12 +88,12 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_ID', 'MOTOR_ID', args[0])
             );
             converter.addInput(
                 block,
                 'MOTOR_DIRECTION',
-                converter.createFieldBlock('boost_menu_MOTOR_DIRECTION', 'MOTOR_DIRECTION', args[1])
+                converter._createFieldBlock('boost_menu_MOTOR_DIRECTION', 'MOTOR_DIRECTION', args[1])
             );
             return block;
         });
@@ -107,7 +107,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'MOTOR_REPORTER_ID',
-                converter.createFieldBlock('boost_menu_MOTOR_REPORTER_ID', 'MOTOR_REPORTER_ID', args[0])
+                converter._createFieldBlock('boost_menu_MOTOR_REPORTER_ID', 'MOTOR_REPORTER_ID', args[0])
             );
             return block;
         });
@@ -121,7 +121,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'COLOR',
-                converter.createFieldBlock('boost_menu_COLOR', 'COLOR', args[0])
+                converter._createFieldBlock('boost_menu_COLOR', 'COLOR', args[0])
             );
             return block;
         });
@@ -135,7 +135,7 @@ const BoostConverter = {
             converter.addInput(
                 block,
                 'TILT_DIRECTION',
-                converter.createFieldBlock('boost_menu_TILT_DIRECTION', 'TILT_DIRECTION', args[0])
+                converter._createFieldBlock('boost_menu_TILT_DIRECTION', 'TILT_DIRECTION', args[0])
             );
             return block;
         });
@@ -163,7 +163,7 @@ const BoostConverter = {
                 converter.addInput(
                     block,
                     'COLOR',
-                    converter.createFieldBlock('boost_menu_COLOR', 'COLOR', args[1])
+                    converter._createFieldBlock('boost_menu_COLOR', 'COLOR', args[1])
                 );
                 converter.setParent(rubyBlock, block);
                 break;
@@ -172,7 +172,7 @@ const BoostConverter = {
                 converter.addInput(
                     block,
                     'TILT_DIRECTION_ANY',
-                    converter.createFieldBlock('boost_menu_TILT_DIRECTION_ANY', 'TILT_DIRECTION_ANY', args[1])
+                    converter._createFieldBlock('boost_menu_TILT_DIRECTION_ANY', 'TILT_DIRECTION_ANY', args[1])
                 );
                 converter.setParent(rubyBlock, block);
                 break;

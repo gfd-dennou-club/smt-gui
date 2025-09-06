@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
@@ -128,7 +127,9 @@ const OperatorsConverter = {
                 }
 
                 const block = converter._createBlock(opcode, 'value_boolean');
-                converter._addTextInput(block, 'OPERAND1', converter._isNumber(receiver) ? receiver.toString() : receiver, '');
+                converter._addTextInput(
+                    block, 'OPERAND1', converter._isNumber(receiver) ? receiver.toString() : receiver, ''
+                );
                 converter._addTextInput(block, 'OPERAND2', converter._isNumber(rh) ? rh.toString() : rh, '50');
                 return block;
             });

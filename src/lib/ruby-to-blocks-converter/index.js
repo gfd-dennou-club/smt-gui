@@ -126,7 +126,8 @@ class RubyToBlocksConverter {
             TranslateConverter,
             SoundConverter,
             MusicConverter,
-            PenConverter
+            PenConverter,
+            MakeyMakeyConverter
         ].forEach(x => x.register(this));
     }
 
@@ -373,7 +374,7 @@ class RubyToBlocksConverter {
             return textBlock.fields.TEXT.value;
         }
 
-        return null;
+        return 'any';
     }
 
     createBlock (opcode, type, attributes = {}) {

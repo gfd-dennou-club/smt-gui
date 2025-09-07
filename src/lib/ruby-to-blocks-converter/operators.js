@@ -1,5 +1,8 @@
 import _ from 'lodash';
 
+const Math = '::Math';
+const MathE = '::Math::E';
+
 /**
  * Operators converter
  */
@@ -125,72 +128,58 @@ const OperatorsConverter = {
                 return block;
             });
         });
-    },
 
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
-        let block;
-        // rand, [], length, include? have been moved to register pattern
+        // Not operator: !
+        converter.registerCallMethod('any', '!', 0, params => {
+            const {receiver} = params;
+            if (!converter._isFalseOrBooleanBlock(receiver)) return null;
 
-        let rh;
-        if (args.length === 1) {
-            if (_.isArray(args[0]) && args[0].length === 1) {
-                rh = args[0][0];
-            } else {
-                rh = args[0];
+            const block = converter._createBlock('operator_not', 'value_boolean');
+            if (!converter._isFalse(receiver)) {
+                converter._addInput(
+                    block,
+                    'OPERAND',
+                    converter._createTextBlock(converter._isNumber(receiver) ? receiver.toString() : receiver)
+                );
             }
-        }
+            return block;
+        });
 
-        switch (name) {
-        // +, -, *, /, %, >, <, == have been moved to register pattern
-        case '!':
-            if (args.length === 0 && this._isFalseOrBooleanBlock(receiver)) {
-                block = this._createBlock('operator_not', 'value_boolean');
-                if (!this._isFalse(receiver)) {
-                    this._addInput(
-                        block,
-                        'OPERAND',
-                        this._createTextBlock(this._isNumber(receiver) ? receiver.toString() : receiver)
-                    );
-                }
-                return block;
-            }
-            break;
-        case 'round':
-            if (args.length === 0 && this._isNumberOrBlock(receiver)) {
-                block = this._createBlock('operator_round', 'value');
-                this._addNumberInput(block, 'NUM', 'math_number', receiver, '');
-                return block;
-            }
-            break;
-        case 'abs':
-        case 'floor':
-        case 'ceil':
-            if (args.length === 0 && this._isNumberOrBlock(receiver)) {
-                let operator = name;
-                if (name === 'ceil') {
+        // Round method
+        converter.registerCallMethod('any', 'round', 0, params => {
+            const {receiver} = params;
+            if (!converter._isNumberOrBlock(receiver)) return null;
+
+            const block = converter._createBlock('operator_round', 'value');
+            converter._addNumberInput(block, 'NUM', 'math_number', receiver, '');
+            return block;
+        });
+
+        // Math operations: abs, floor, ceil
+        ['abs', 'floor', 'ceil'].forEach(methodName => {
+            converter.registerCallMethod('any', methodName, 0, params => {
+                const {receiver} = params;
+                if (!converter._isNumberOrBlock(receiver)) return null;
+
+                let operator = methodName;
+                if (methodName === 'ceil') {
                     operator = 'ceiling';
                 }
-                block = this._createBlock('operator_mathop', 'value');
-                this._addField(block, 'OPERATOR', operator);
-                this._addNumberInput(block, 'NUM', 'math_number', receiver, '');
+                const block = converter._createBlock('operator_mathop', 'value');
+                converter._addField(block, 'OPERATOR', operator);
+                converter._addNumberInput(block, 'NUM', 'math_number', receiver, '');
                 return block;
-            }
-            break;
-        case 'sqrt':
-        case 'sin':
-        case 'cos':
-        case 'tan':
-        case 'asin':
-        case 'acos':
-        case 'atan':
-        case 'log':
-        case 'log10':
-            if (rh &&
-                this._isConst(receiver) && receiver.toString() === '::Math' &&
-                this._isNumberOrBlock(rh)) {
+            });
+        });
+
+        // Math functions: sqrt, sin, cos, tan, asin, acos, atan, log, log10
+        ['sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10'].forEach(methodName => {
+            converter.registerCallMethod(Math, methodName, 1, params => {
+                const {args} = params;
+                if (!converter._isNumberOrBlock(args[0])) return null;
+
                 let operator;
-                switch (name) {
+                switch (methodName) {
                 case 'log':
                     operator = 'ln';
                     break;
@@ -198,33 +187,37 @@ const OperatorsConverter = {
                     operator = 'log';
                     break;
                 default:
-                    operator = name;
+                    operator = methodName;
                 }
-                block = this._createBlock('operator_mathop', 'value');
-                this._addField(block, 'OPERATOR', operator);
-                this._addNumberInput(block, 'NUM', 'math_number', rh, '');
+                const block = converter._createBlock('operator_mathop', 'value');
+                converter._addField(block, 'OPERATOR', operator);
+                converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
                 return block;
-            }
-            break;
-        case '**':
-            if (rh && this._isNumberOrBlock(rh)) {
-                let operator;
-                if (this._isConst(receiver) && receiver.toString() === '::Math::E') {
-                    operator = 'e ^';
-                } else if (receiver.type === 'int' && receiver.value === 10) {
-                    operator = '10 ^';
-                }
-                if (operator) {
-                    block = this._createBlock('operator_mathop', 'value');
-                    this._addField(block, 'OPERATOR', operator);
-                    this._addNumberInput(block, 'NUM', 'math_number', rh, '');
-                    return block;
-                }
-            }
-            break;
-        }
+            });
+        });
 
-        return null;
+        // Power operator: ** for Math::E
+        converter.registerCallMethod(MathE, '**', 1, params => {
+            const {args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._createBlock('operator_mathop', 'value');
+            converter._addField(block, 'OPERATOR', 'e ^');
+            converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
+            return block;
+        });
+
+        // Power operator for base 10
+        converter.registerCallMethod('any', '**', 1, params => {
+            const {receiver, args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+            if (!(receiver.type === 'int' && receiver.value === 10)) return null;
+
+            const block = converter._createBlock('operator_mathop', 'value');
+            converter._addField(block, 'OPERATOR', '10 ^');
+            converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
+            return block;
+        });
     },
 
     // eslint-disable-next-line no-unused-vars

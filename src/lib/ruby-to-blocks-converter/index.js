@@ -375,6 +375,10 @@ class RubyToBlocksConverter {
             return textBlock.fields.TEXT.value;
         }
 
+        if (this._isConst (receiver)) {
+            return receiver.toString();
+        }
+
         return 'any';
     }
 

@@ -131,7 +131,8 @@ class RubyToBlocksConverter {
             OperatorsConverter,
             LooksConverter,
             EV3Converter,
-            GdxForConverter
+            GdxForConverter,
+            SmalrubotS1Converter
         ].forEach(x => x.register(this));
     }
 
@@ -593,8 +594,16 @@ class RubyToBlocksConverter {
         return _.isNumber(value) || (value && (value.type === 'int' || value.type === 'float'));
     }
 
+    isTrue (value) {
+        return this._isTrue(value);
+    }
+
     _isTrue (value) {
         return value === true || (value && value.type === 'true');
+    }
+
+    isFalse (value) {
+        return this._isFalse(value);
     }
 
     _isFalse (value) {

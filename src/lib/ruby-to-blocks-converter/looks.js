@@ -34,7 +34,7 @@ const validateCostume = function (costumeName, args) {
     if (!this._context.target || !this._context.target.getCostumes) {
         return;
     }
-    
+
     const costumes = this._context.target.getCostumes();
     const costumeExists = costumes.some(costume => costume.name === costumeName);
     if (!costumeExists) {
@@ -51,17 +51,17 @@ const validateBackdrop = function (backdropName, args) {
     if (specialBackdrops.includes(backdropName)) {
         return;
     }
-    
+
     // Skip validation if no VM context (e.g., in tests)
     if (!this.vm || !this.vm.runtime || !this.vm.runtime.getTargetForStage) {
         return;
     }
-    
+
     const stage = this.vm.runtime.getTargetForStage();
     if (!stage || !stage.getCostumes) {
         return;
     }
-    
+
     const backdrops = stage.getCostumes();
     const backdropExists = backdrops.some(backdrop => backdrop.name === backdropName);
     if (!backdropExists) {
@@ -78,15 +78,11 @@ const validateBackdrop = function (backdropName, args) {
  */
 const LooksConverter = {
     register: function (converter) {
-        // say and think methods - 1 argument version
+        // say and think methods - 1 argument version (sprite only)
         ['say', 'think'].forEach(methodName => {
-            converter.registerCallMethod('self', methodName, 1, params => {
-                const {args, node} = params;
+            converter.registerCallMethod('sprite', methodName, 1, params => {
+                const {args} = params;
                 if (!converter._isNumberOrStringOrBlock(args[0])) return null;
-                
-                if (converter._isStage()) {
-                    throw new RubyToBlocksConverterError(node, 'Stage selected: no say/think blocks');
-                }
                 
                 let opcode;
                 let defaultMessage;
@@ -102,15 +98,11 @@ const LooksConverter = {
             });
         });
 
-        // say and think methods - 2 argument version
+        // say and think methods - 2 argument version (sprite only)
         ['say', 'think'].forEach(methodName => {
-            converter.registerCallMethod('self', methodName, 2, params => {
-                const {args, node} = params;
+            converter.registerCallMethod('sprite', methodName, 2, params => {
+                const {args} = params;
                 if (!converter._isNumberOrStringOrBlock(args[0]) || !converter._isNumberOrBlock(args[1])) return null;
-                
-                if (converter._isStage()) {
-                    throw new RubyToBlocksConverterError(node, 'Stage selected: no say/think blocks');
-                }
                 
                 let opcode;
                 let defaultMessage;
@@ -128,14 +120,10 @@ const LooksConverter = {
             });
         });
 
-        // switch_costume method
-        converter.registerCallMethod('self', 'switch_costume', 1, params => {
-            const {args, node} = params;
+        // switch_costume method (sprite only)
+        converter.registerCallMethod('sprite', 'switch_costume', 1, params => {
+            const {args} = params;
             if (!converter._isString(args[0])) return null;
-            
-            if (converter._isStage()) {
-                throw new RubyToBlocksConverterError(node, 'Stage selected: no costume blocks');
-            }
             
             validateCostume.call(converter, args[0].toString(), args);
             const block = converter._createBlock('looks_switchcostumeto', 'statement');
@@ -143,7 +131,7 @@ const LooksConverter = {
             return block;
         });
 
-        // switch_backdrop method
+        // switch_backdrop method (both sprite and stage)
         converter.registerCallMethod('self', 'switch_backdrop', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
@@ -154,7 +142,7 @@ const LooksConverter = {
             return block;
         });
 
-        // switch_backdrop_and_wait method
+        // switch_backdrop_and_wait method (both sprite and stage)
         converter.registerCallMethod('self', 'switch_backdrop_and_wait', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
@@ -165,21 +153,17 @@ const LooksConverter = {
             return block;
         });
 
-        // size= method
-        converter.registerCallMethod('self', 'size=', 1, params => {
-            const {args, node} = params;
+        // size= method (sprite only)
+        converter.registerCallMethod('sprite', 'size=', 1, params => {
+            const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
-            
-            if (converter._isStage()) {
-                throw new RubyToBlocksConverterError(node, 'Stage selected: no size blocks');
-            }
             
             const block = converter._createBlock('looks_setsizeto', 'statement');
             converter._addNumberInput(block, 'SIZE', 'math_number', args[0], 100);
             return block;
         });
 
-        // change_effect_by method
+        // change_effect_by method (both sprite and stage)
         converter.registerCallMethod('self', 'change_effect_by', 2, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
@@ -191,7 +175,7 @@ const LooksConverter = {
             return block;
         });
 
-        // set_effect method
+        // set_effect method (both sprite and stage)
         converter.registerCallMethod('self', 'set_effect', 2, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
@@ -203,28 +187,20 @@ const LooksConverter = {
             return block;
         });
 
-        // go_to_layer method
-        converter.registerCallMethod('self', 'go_to_layer', 1, params => {
-            const {args, node} = params;
+        // go_to_layer method (sprite only)
+        converter.registerCallMethod('sprite', 'go_to_layer', 1, params => {
+            const {args} = params;
             if (!converter._isString(args[0]) || FrontBack.indexOf(args[0].toString()) < 0) return null;
-            
-            if (converter._isStage()) {
-                throw new RubyToBlocksConverterError(node, 'Stage selected: no layer blocks');
-            }
             
             const block = converter._createBlock('looks_gotofrontback', 'statement');
             converter._addField(block, 'FRONT_BACK', args[0]);
             return block;
         });
 
-        // go_layers method
-        converter.registerCallMethod('self', 'go_layers', 2, params => {
-            const {args, node} = params;
+        // go_layers method (sprite only)
+        converter.registerCallMethod('sprite', 'go_layers', 2, params => {
+            const {args} = params;
             if (!converter._isNumberOrBlock(args[0]) || ForwardBackward.indexOf(args[1].toString()) < 0) return null;
-            
-            if (converter._isStage()) {
-                throw new RubyToBlocksConverterError(node, 'Stage selected: no layer blocks');
-            }
             
             const block = converter._createBlock('looks_goforwardbackwardlayers', 'statement');
             converter._addNumberInput(block, 'NUM', 'math_integer', args[0], 1);
@@ -232,14 +208,9 @@ const LooksConverter = {
             return block;
         });
 
-        // costume_number and costume_name methods
+        // costume_number and costume_name methods (sprite only)
         ['costume_number', 'costume_name'].forEach(methodName => {
-            converter.registerCallMethod('self', methodName, 0, params => {
-                const {node} = params;
-                if (converter._isStage()) {
-                    throw new RubyToBlocksConverterError(node, 'Stage selected: no costume blocks');
-                }
-                
+            converter.registerCallMethod('sprite', methodName, 0, () => {
                 const a = methodName.split('_');
                 const block = converter._createBlock(`looks_${a[0]}numbername`, 'value');
                 converter._addField(block, 'NUMBER_NAME', a[1]);
@@ -247,7 +218,7 @@ const LooksConverter = {
             });
         });
 
-        // backdrop_number and backdrop_name methods
+        // backdrop_number and backdrop_name methods (both sprite and stage)
         ['backdrop_number', 'backdrop_name'].forEach(methodName => {
             converter.registerCallMethod('self', methodName, 0, () => {
                 const a = methodName.split('_');
@@ -257,36 +228,35 @@ const LooksConverter = {
             });
         });
 
-        // Zero-argument methods
-        const zeroArgMethods = {
-            next_costume: {opcode: 'looks_nextcostume', type: 'statement', stageCheck: true},
-            next_backdrop: {opcode: 'looks_nextbackdrop', type: 'statement', stageCheck: false},
-            clear_graphic_effects: {opcode: 'looks_cleargraphiceffects', type: 'statement', stageCheck: false},
-            show: {opcode: 'looks_show', type: 'statement', stageCheck: true},
-            hide: {opcode: 'looks_hide', type: 'statement', stageCheck: true},
-            size: {opcode: 'looks_size', type: 'value', stageCheck: true}
-        };
+        // next_costume method (sprite only)
+        converter.registerCallMethod('sprite', 'next_costume', 0, () =>
+            converter._createBlock('looks_nextcostume', 'statement')
+        );
 
-        Object.keys(zeroArgMethods).forEach(methodName => {
-            const config = zeroArgMethods[methodName];
-            converter.registerCallMethod('self', methodName, 0, params => {
-                const {node} = params;
-                
-                if (config.stageCheck && converter._isStage()) {
-                    let errorMessage;
-                    if (methodName.includes('costume')) {
-                        errorMessage = 'Stage selected: no costume blocks';
-                    } else if (methodName === 'show' || methodName === 'hide') {
-                        errorMessage = 'Stage selected: no show/hide blocks';
-                    } else if (methodName === 'size') {
-                        errorMessage = 'Stage selected: no size blocks';
-                    }
-                    throw new RubyToBlocksConverterError(node, errorMessage);
-                }
-                
-                return converter._createBlock(config.opcode, config.type);
-            });
-        });
+        // next_backdrop method (both sprite and stage)
+        converter.registerCallMethod('self', 'next_backdrop', 0, () =>
+            converter._createBlock('looks_nextbackdrop', 'statement')
+        );
+
+        // clear_graphic_effects method (both sprite and stage)
+        converter.registerCallMethod('self', 'clear_graphic_effects', 0, () =>
+            converter._createBlock('looks_cleargraphiceffects', 'statement')
+        );
+
+        // show method (sprite only)
+        converter.registerCallMethod('sprite', 'show', 0, () =>
+            converter._createBlock('looks_show', 'statement')
+        );
+
+        // hide method (sprite only)
+        converter.registerCallMethod('sprite', 'hide', 0, () =>
+            converter._createBlock('looks_hide', 'statement')
+        );
+
+        // size method (sprite only)
+        converter.registerCallMethod('sprite', 'size', 0, () =>
+            converter._createBlock('looks_size', 'value')
+        );
     },
 
     onSend: function () {

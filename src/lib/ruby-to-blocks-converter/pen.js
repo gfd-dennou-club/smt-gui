@@ -5,28 +5,28 @@ import _ from 'lodash';
  */
 const PenConverter = {
     register: function (converter) {
-        // pen_clear method
-        converter.registerCallMethod('self', 'pen_clear', 0, () =>
+        // pen_clear method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_clear', 0, () =>
             converter.createBlock('pen_clear', 'statement')
         );
 
-        // pen_stamp method
-        converter.registerCallMethod('self', 'pen_stamp', 0, () =>
+        // pen_stamp method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_stamp', 0, () =>
             converter.createBlock('pen_stamp', 'statement')
         );
 
-        // pen_down method
-        converter.registerCallMethod('self', 'pen_down', 0, () =>
+        // pen_down method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_down', 0, () =>
             converter.createBlock('pen_penDown', 'statement')
         );
 
-        // pen_up method
-        converter.registerCallMethod('self', 'pen_up', 0, () =>
+        // pen_up method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_up', 0, () =>
             converter.createBlock('pen_penUp', 'statement')
         );
 
-        // pen_color= method
-        converter.registerCallMethod('self', 'pen_color=', 1, params => {
+        // pen_color= method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_color=', 1, params => {
             const {args} = params;
 
             if (converter.isNumberOrBlock(args[0])) {
@@ -45,8 +45,8 @@ const PenConverter = {
             return null;
         });
 
-        // pen_saturation= method
-        converter.registerCallMethod('self', 'pen_saturation=', 1, params => {
+        // pen_saturation= method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_saturation=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -59,8 +59,8 @@ const PenConverter = {
             return block;
         });
 
-        // pen_brightness= method
-        converter.registerCallMethod('self', 'pen_brightness=', 1, params => {
+        // pen_brightness= method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_brightness=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -73,8 +73,8 @@ const PenConverter = {
             return block;
         });
 
-        // pen_transparency= method
-        converter.registerCallMethod('self', 'pen_transparency=', 1, params => {
+        // pen_transparency= method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_transparency=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -87,8 +87,8 @@ const PenConverter = {
             return block;
         });
 
-        // pen_size= method
-        converter.registerCallMethod('self', 'pen_size=', 1, params => {
+        // pen_size= method (sprite only)
+        converter.registerCallMethod('sprite', 'pen_size=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 

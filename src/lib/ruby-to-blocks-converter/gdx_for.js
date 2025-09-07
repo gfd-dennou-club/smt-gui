@@ -1,103 +1,119 @@
-/* global Opal */
 import _ from 'lodash';
 
 /**
  * GdxFor converter
  */
 const GdxForConverter = {
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
-        let block;
-        if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
-            switch (name) {
-            case 'gdx_for_acceleration':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    block = this._createBlock('gdxfor_getAcceleration', 'value');
-                    this._addInput(
-                        block,
-                        'DIRECTION',
-                        this._createFieldBlock('gdxfor_menu_axisOptions', 'axisOptions', args[0])
-                    );
-                }
-                break;
-            case 'gdx_for_force':
-                if (args.length === 0){
-                    block = this._createBlock('gdxfor_getForce', 'value');
-                }
-                break;
-            case 'gdx_for_tilted?':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    block = this._createBlock('gdxfor_isTilted', 'value');
-                    this._addInput(
-                        block,
-                        'TILT',
-                        this._createFieldBlock('gdxfor_menu_tiltAnyOptions', 'tiltAnyOptions', args[0])
-                    );
-                }
-                break;
-            case 'gdx_for_tilt_angle':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    block = this._createBlock('gdxfor_getTilt', 'value');
-                    this._addInput(
-                        block,
-                        'TILT',
-                        this._createFieldBlock('gdxfor_menu_tiltOptions', 'tiltOptions', args[0])
-                    );
-                }
-                break;
-            case 'gdx_for_falling?':
-                if (args.length === 0) {
-                    block = this._createBlock('gdxfor_isFreeFalling', 'value');
-                }
-                break;
-            case 'gdx_for_spin_speed':
-                if (args.length === 1 && this._isStringOrBlock(args[0])){
-                    block = this._createBlock('gdxfor_getSpinSpeed', 'value');
-                    this._addInput(
-                        block,
-                        'DIRECTION',
-                        this._createFieldBlock('gdxfor_menu_axisOptions', 'axisOptions', args[0])
-                    );
-                }
-                break;
-            }
-        } else if ((this._isSelf(receiver) || receiver === Opal.nil) &&
-            name === 'when' &&
-            args.length === 2 && args[0].type === 'sym' &&
-            this._isStringOrBlock(args[1]) &&
-            rubyBlockArgs && rubyBlockArgs.length === 0 &&
-            rubyBlock) {
+    register: function (converter) {
+        // Regular method calls
+        converter.registerCallMethod('self', 'gdx_for_acceleration', 1, params => {
+            const {args} = params;
+            
+            if (!converter.isStringOrBlock(args[0])) return null;
+            
+            const block = converter.createBlock('gdxfor_getAcceleration', 'value');
+            converter.addInput(
+                block,
+                'DIRECTION',
+                converter.createFieldBlock('gdxfor_menu_axisOptions', 'axisOptions', args[0])
+            );
+            return block;
+        });
+
+        converter.registerCallMethod('self', 'gdx_for_force', 0, () =>
+            converter.createBlock('gdxfor_getForce', 'value')
+        );
+
+        converter.registerCallMethod('self', 'gdx_for_tilted?', 1, params => {
+            const {args} = params;
+            
+            if (!converter.isStringOrBlock(args[0])) return null;
+            
+            const block = converter.createBlock('gdxfor_isTilted', 'value');
+            converter.addInput(
+                block,
+                'TILT',
+                converter.createFieldBlock('gdxfor_menu_tiltAnyOptions', 'tiltAnyOptions', args[0])
+            );
+            return block;
+        });
+
+        converter.registerCallMethod('self', 'gdx_for_tilt_angle', 1, params => {
+            const {args} = params;
+            
+            if (!converter.isStringOrBlock(args[0])) return null;
+            
+            const block = converter.createBlock('gdxfor_getTilt', 'value');
+            converter.addInput(
+                block,
+                'TILT',
+                converter.createFieldBlock('gdxfor_menu_tiltOptions', 'tiltOptions', args[0])
+            );
+            return block;
+        });
+
+        converter.registerCallMethod('self', 'gdx_for_falling?', 0, () =>
+            converter.createBlock('gdxfor_isFreeFalling', 'value')
+        );
+
+        converter.registerCallMethod('self', 'gdx_for_spin_speed', 1, params => {
+            const {args} = params;
+            
+            if (!converter.isStringOrBlock(args[0])) return null;
+            
+            const block = converter.createBlock('gdxfor_getSpinSpeed', 'value');
+            converter.addInput(
+                block,
+                'DIRECTION',
+                converter.createFieldBlock('gdxfor_menu_axisOptions', 'axisOptions', args[0])
+            );
+            return block;
+        });
+
+        // Event methods with blocks
+        converter.registerCallMethodWithBlock('self', 'when', 2, 0, params => {
+            const {args, rubyBlock} = params;
+            
+            if (args[0].type !== 'sym' || !converter.isStringOrBlock(args[1])) return null;
+            
+            let block;
             switch (args[0].value) {
-            case 'gdx_for_gesture':
-                block = this._createBlock('gdxfor_whenGesture', 'hat');
-                this._addInput(
+            case 'gdx_for_gesture': {
+                block = converter.createBlock('gdxfor_whenGesture', 'hat');
+                converter.addInput(
                     block,
                     'GESTURE',
-                    this._createFieldBlock('gdxfor_menu_gestureOptions', 'gestureOptions', args[1])
+                    converter.createFieldBlock('gdxfor_menu_gestureOptions', 'gestureOptions', args[1])
                 );
-                this._setParent(rubyBlock, block);
-                break;
-            case 'gdx_force_sensor':
-                block = this._createBlock('gdxfor_whenForcePushedOrPulled', 'hat');
-                this._addInput(
-                    block,
-                    'PUSH_PULL',
-                    this._createFieldBlock('gdxfor_menu_pushPullOptions', 'pushPullOptions', args[1])
-                );
-                this._setParent(rubyBlock, block);
-                break;
-            case 'gdx_for_tilted':
-                block = this._createBlock('gdxfor_whenTilted', 'hat');
-                this._addInput(
-                    block,
-                    'TILT',
-                    this._createFieldBlock('gdxfor_menu_tiltAnyOptions', 'tiltAnyOptions', args[1])
-                );
-                this._setParent(rubyBlock, block);
+                converter.setParent(rubyBlock, block);
                 break;
             }
-        }
-        return block;
+                
+            case 'gdx_force_sensor': {
+                block = converter.createBlock('gdxfor_whenForcePushedOrPulled', 'hat');
+                converter.addInput(
+                    block,
+                    'PUSH_PULL',
+                    converter.createFieldBlock('gdxfor_menu_pushPullOptions', 'pushPullOptions', args[1])
+                );
+                converter.setParent(rubyBlock, block);
+                break;
+            }
+                
+            case 'gdx_for_tilted': {
+                block = converter.createBlock('gdxfor_whenTilted', 'hat');
+                converter.addInput(
+                    block,
+                    'TILT',
+                    converter.createFieldBlock('gdxfor_menu_tiltAnyOptions', 'tiltAnyOptions', args[1])
+                );
+                converter.setParent(rubyBlock, block);
+                break;
+            }
+            }
+            
+            return block;
+        });
     }
 };
 

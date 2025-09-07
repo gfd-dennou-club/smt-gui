@@ -130,7 +130,8 @@ class RubyToBlocksConverter {
             MakeyMakeyConverter,
             OperatorsConverter,
             LooksConverter,
-            EV3Converter
+            EV3Converter,
+            GdxForConverter
         ].forEach(x => x.register(this));
     }
 

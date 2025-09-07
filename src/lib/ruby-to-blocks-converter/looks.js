@@ -1,3 +1,4 @@
+/* global Opal */
 import _ from 'lodash';
 import {RubyToBlocksConverterError} from './errors';
 
@@ -83,7 +84,7 @@ const LooksConverter = {
             converter.registerCallMethod('sprite', methodName, 1, params => {
                 const {args} = params;
                 if (!converter._isNumberOrStringOrBlock(args[0])) return null;
-                
+
                 let opcode;
                 let defaultMessage;
                 if (methodName === 'say') {
@@ -93,7 +94,7 @@ const LooksConverter = {
                     opcode = 'looks_think';
                     defaultMessage = 'Hmm...';
                 }
-                
+
                 return createBlockWithMessage.call(converter, opcode, args[0], defaultMessage);
             });
         });
@@ -103,7 +104,7 @@ const LooksConverter = {
             converter.registerCallMethod('sprite', methodName, 2, params => {
                 const {args} = params;
                 if (!converter._isNumberOrStringOrBlock(args[0]) || !converter._isNumberOrBlock(args[1])) return null;
-                
+
                 let opcode;
                 let defaultMessage;
                 if (methodName === 'say') {
@@ -113,7 +114,7 @@ const LooksConverter = {
                     opcode = 'looks_thinkforsecs';
                     defaultMessage = 'Hmm...';
                 }
-                
+
                 const block = createBlockWithMessage.call(converter, opcode, args[0], defaultMessage);
                 converter._addNumberInput(block, 'SECS', 'math_number', args[1], 2);
                 return block;
@@ -124,7 +125,7 @@ const LooksConverter = {
         converter.registerCallMethod('sprite', 'switch_costume', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
-            
+
             validateCostume.call(converter, args[0].toString(), args);
             const block = converter._createBlock('looks_switchcostumeto', 'statement');
             converter._addInput(block, 'COSTUME', converter._createFieldBlock('looks_costume', 'COSTUME', args[0]));
@@ -135,7 +136,7 @@ const LooksConverter = {
         converter.registerCallMethod('self', 'switch_backdrop', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
-            
+
             validateBackdrop.call(converter, args[0].toString(), args);
             const block = converter._createBlock('looks_switchbackdropto', 'statement');
             converter._addInput(block, 'BACKDROP', converter._createFieldBlock('looks_backdrops', 'BACKDROP', args[0]));
@@ -146,7 +147,7 @@ const LooksConverter = {
         converter.registerCallMethod('self', 'switch_backdrop_and_wait', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
-            
+
             validateBackdrop.call(converter, args[0].toString(), args);
             const block = converter._createBlock('looks_switchbackdroptoandwait', 'statement');
             converter._addInput(block, 'BACKDROP', converter._createFieldBlock('looks_backdrops', 'BACKDROP', args[0]));
@@ -157,7 +158,7 @@ const LooksConverter = {
         converter.registerCallMethod('sprite', 'size=', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
-            
+
             const block = converter._createBlock('looks_setsizeto', 'statement');
             converter._addNumberInput(block, 'SIZE', 'math_number', args[0], 100);
             return block;
@@ -168,7 +169,7 @@ const LooksConverter = {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
             if (!converter._isNumberOrBlock(args[1])) return null;
-            
+
             const block = converter._createBlock('looks_changeeffectby', 'statement');
             converter._addField(block, 'EFFECT', args[0].toString().toUpperCase());
             converter._addNumberInput(block, 'CHANGE', 'math_number', args[1], 25);
@@ -180,7 +181,7 @@ const LooksConverter = {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
             if (!converter._isNumberOrBlock(args[1])) return null;
-            
+
             const block = converter._createBlock('looks_seteffectto', 'statement');
             converter._addField(block, 'EFFECT', args[0].toString().toUpperCase());
             converter._addNumberInput(block, 'VALUE', 'math_number', args[1], 25);
@@ -191,7 +192,7 @@ const LooksConverter = {
         converter.registerCallMethod('sprite', 'go_to_layer', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || FrontBack.indexOf(args[0].toString()) < 0) return null;
-            
+
             const block = converter._createBlock('looks_gotofrontback', 'statement');
             converter._addField(block, 'FRONT_BACK', args[0]);
             return block;
@@ -201,7 +202,7 @@ const LooksConverter = {
         converter.registerCallMethod('sprite', 'go_layers', 2, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0]) || ForwardBackward.indexOf(args[1].toString()) < 0) return null;
-            
+
             const block = converter._createBlock('looks_goforwardbackwardlayers', 'statement');
             converter._addNumberInput(block, 'NUM', 'math_integer', args[0], 1);
             converter._addField(block, 'FORWARD_BACKWARD', args[1]);
@@ -220,7 +221,10 @@ const LooksConverter = {
 
         // backdrop_number and backdrop_name methods (both sprite and stage)
         ['backdrop_number', 'backdrop_name'].forEach(methodName => {
-            converter.registerCallMethod('self', methodName, 0, () => {
+            converter.registerCallMethod('self', methodName, 0, params => {
+                const {receiver} = params;
+                if (!converter._isSelf(receiver) && receiver !== Opal.nil) return null;
+
                 const a = methodName.split('_');
                 const block = converter._createBlock(`looks_${a[0]}numbername`, 'value');
                 converter._addField(block, 'NUMBER_NAME', a[1]);

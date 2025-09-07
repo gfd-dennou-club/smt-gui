@@ -17,7 +17,6 @@ const OperatorsConverter = {
 
         converter.registerCallMethod(['string', 'block'], '[]', 1, params => {
             const {receiver, args} = params;
-            if (converter.isVariableBlockType(receiver)) return null;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
             const block = converter._createBlock('operator_letter_of', 'value');
@@ -32,7 +31,6 @@ const OperatorsConverter = {
 
         converter.registerCallMethod(['string', 'block'], 'length', 0, params => {
             const {receiver} = params;
-            if (converter.isVariableBlockType(receiver)) return null;
 
             const block = converter._createBlock('operator_length', 'value');
             converter._addTextInput(block, 'STRING', receiver, 'apple');
@@ -41,7 +39,6 @@ const OperatorsConverter = {
 
         converter.registerCallMethod(['string', 'block'], 'include?', 1, params => {
             const {receiver, args} = params;
-            if (converter.isVariableBlockType(receiver)) return null;
             if (!converter._isStringOrBlock(args[0])) return null;
 
             const block = converter._createBlock('operator_contains', 'value');
@@ -51,7 +48,7 @@ const OperatorsConverter = {
         });
 
         ['+', '-', '*', '/', '%'].forEach(operator => {
-            converter.registerCallMethod(['number', 'block'], operator, 1, params => {
+            converter.registerCallMethod(['variable', 'number', 'block'], operator, 1, params => {
                 const {receiver, args} = params;
                 let rh = args[0];
                 if (_.isArray(rh)) {
@@ -81,7 +78,7 @@ const OperatorsConverter = {
             });
         });
 
-        converter.registerCallMethod(['string', 'block'], '+', 1, params => {
+        converter.registerCallMethod(['variable', 'string', 'block'], '+', 1, params => {
             const {receiver, args} = params;
             let rh = args[0];
             if (_.isArray(rh)) {
@@ -99,7 +96,6 @@ const OperatorsConverter = {
             return block;
         });
 
-        // Comparison operators: >, <, ==
         ['>', '<', '=='].forEach(operator => {
             converter.registerCallMethod('any', operator, 1, params => {
                 const {receiver, args} = params;
@@ -127,8 +123,7 @@ const OperatorsConverter = {
             });
         });
 
-        // Not operator: !
-        converter.registerCallMethod(['boolean', 'block'], '!', 0, params => {
+        converter.registerCallMethod(['variable', 'boolean', 'block'], '!', 0, params => {
             const {receiver} = params;
 
             const block = converter._createBlock('operator_not', 'value_boolean');
@@ -142,7 +137,7 @@ const OperatorsConverter = {
             return block;
         });
 
-        converter.registerCallMethod(['number', 'block'], 'round', 0, params => {
+        converter.registerCallMethod(['variable', 'number', 'block'], 'round', 0, params => {
             const {receiver} = params;
 
             const block = converter._createBlock('operator_round', 'value');
@@ -151,7 +146,7 @@ const OperatorsConverter = {
         });
 
         ['abs', 'floor', 'ceil'].forEach(methodName => {
-            converter.registerCallMethod(['number', 'block'], methodName, 0, params => {
+            converter.registerCallMethod(['variable', 'number', 'block'], methodName, 0, params => {
                 const {receiver} = params;
 
                 let operator = methodName;
@@ -168,7 +163,13 @@ const OperatorsConverter = {
         ['sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10'].forEach(methodName => {
             converter.registerCallMethod(Math, methodName, 1, params => {
                 const {args} = params;
-                if (!converter._isNumberOrBlock(args[0])) return null;
+                let rh = args[0];
+                if (_.isArray(rh)) {
+                    if (rh.length !== 1) return null;
+                    rh = rh[0];
+                }
+
+                if (!converter._isNumberOrBlock(rh)) return null;
 
                 let operator;
                 switch (methodName) {
@@ -183,29 +184,41 @@ const OperatorsConverter = {
                 }
                 const block = converter._createBlock('operator_mathop', 'value');
                 converter._addField(block, 'OPERATOR', operator);
-                converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
+                converter._addNumberInput(block, 'NUM', 'math_number', rh, '');
                 return block;
             });
         });
 
         converter.registerCallMethod(MathE, '**', 1, params => {
             const {args} = params;
-            if (!converter._isNumberOrBlock(args[0])) return null;
+            let rh = args[0];
+            if (_.isArray(rh)) {
+                if (rh.length !== 1) return null;
+                rh = rh[0];
+            }
+
+            if (!converter._isNumberOrBlock(rh)) return null;
 
             const block = converter._createBlock('operator_mathop', 'value');
             converter._addField(block, 'OPERATOR', 'e ^');
-            converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
+            converter._addNumberInput(block, 'NUM', 'math_number', rh, '');
             return block;
         });
 
-        converter.registerCallMethod(['number'], '**', 1, params => {
+        converter.registerCallMethod('number', '**', 1, params => {
             const {receiver, args} = params;
+            let rh = args[0];
+            if (_.isArray(rh)) {
+                if (rh.length !== 1) return null;
+                rh = rh[0];
+            }
+
             if (!receiver.value === 10) return null;
-            if (!converter._isNumberOrBlock(args[0])) return null;
+            if (!converter._isNumberOrBlock(rh)) return null;
 
             const block = converter._createBlock('operator_mathop', 'value');
             converter._addField(block, 'OPERATOR', '10 ^');
-            converter._addNumberInput(block, 'NUM', 'math_number', args[0], '');
+            converter._addNumberInput(block, 'NUM', 'math_number', rh, '');
             return block;
         });
     },

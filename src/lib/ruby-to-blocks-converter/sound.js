@@ -70,7 +70,7 @@ const SoundConverter = {
 
         converter.registerCallMethod('self', 'volume', 0, params => {
             const {receiver} = params;
-            if (receiver !== Opal.nil) return null;
+            if (!converter._isSelf(receiver) && receiver !== Opal.nil) return null;
 
             return converter.createBlock('sound_volume', 'value');
         });

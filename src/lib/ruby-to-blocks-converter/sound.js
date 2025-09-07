@@ -1,3 +1,4 @@
+/* global Opal */
 import _ from 'lodash';
 import {RubyToBlocksConverterError} from './errors';
 
@@ -67,10 +68,12 @@ const SoundConverter = {
             converter.createBlock('sound_cleareffects', 'statement')
         );
 
-        // volume method
-        converter.registerCallMethod('self', 'volume', 0, () =>
-            converter.createBlock('sound_volume', 'value')
-        );
+        converter.registerCallMethod('self', 'volume', 0, params => {
+            const {receiver} = params;
+            if (receiver !== Opal.nil) return null;
+
+            return converter.createBlock('sound_volume', 'value');
+        });
 
         // change_sound_effect_by method
         converter.registerCallMethod('self', 'change_sound_effect_by', 2, params => {

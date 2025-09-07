@@ -296,11 +296,26 @@ class RubyToBlocksConverter {
     }
 
     registerCallMethodWithBlock (receiverName, name, numArgs, numRubyBlockArgs, createBlockFunc) {
+        if (receiverName === 'any') {
+            this._anyReceiverNames().forEach(rn => {
+                this.registerCallMethodWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
+            });
+            return;
+        }
+
+        if (_.isArray(receiverName)) {
+            receiverName.forEach(rn => {
+                this.registerCallMethodWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
+            });
+            return;
+        }
+
         if (receiverName === 'self') {
             this.registerCallMethodWithBlock('sprite', name, numArgs, numRubyBlockArgs, createBlockFunc);
             this.registerCallMethodWithBlock('stage', name, numArgs, numRubyBlockArgs, createBlockFunc);
             return;
         }
+
         let methodToNumArgs = this._receiverToMethods[receiverName];
         if (!methodToNumArgs) methodToNumArgs = this._receiverToMethods[receiverName] = {};
 
@@ -358,6 +373,27 @@ class RubyToBlocksConverter {
         return null;
     }
 
+    /**
+     * Determines the receiver name for method call registration and lookup.
+     * This method analyzes the receiver object from Ruby AST and returns the corresponding
+     * receiver name string used in the register pattern system.
+     *
+     * @param {*} receiver - The receiver object from Ruby AST (primitives, blocks, constants, etc.)
+     * @returns {string|null} The receiver name string, or null if cannot be determined:
+     *   - 'stage': when receiver is self/nil and current target is stage
+     *   - 'sprite': when receiver is self/nil and current target is sprite
+     *   - 'variable': when receiver is a variable block type
+     *   - 'string': when receiver is a string primitive
+     *   - 'number': when receiver is a number primitive (int/float)
+     *   - 'array': when receiver is an array primitive
+     *   - 'hash': when receiver is a hash primitive
+     *   - 'boolean': when receiver is true/false primitive
+     *   - 'nil': when receiver is nil primitive
+     *   - 'block': when receiver is any other block type
+     *   - {string}: the const string representation (e.g., '::Math', '::Math::E') when receiver is const
+     *   - {string}: the text value when receiver is a ruby_expression block
+     *   - null: fallback when receiver type cannot be determined
+     */
     _getReceiverName (receiver) {
         if (this._isSelf(receiver) || receiver === Opal.nil) {
             if (this._context.target && this._context.target.isStage) {
@@ -370,16 +406,48 @@ class RubyToBlocksConverter {
             return 'variable';
         }
 
+        if (this._isString(receiver)) {
+            return 'string';
+        }
+
+        if (this._isNumber(receiver)) {
+            return 'number';
+        }
+
+        if (this._isArray(receiver)) {
+            return 'array';
+        }
+
+        if (this._isHash(receiver)) {
+            return 'hash';
+        }
+
+        if (this._isTrue(receiver) || this._isFalse(receiver)) {
+            return 'boolean';
+        }
+
+        if (this.isNil(receiver)) {
+            return 'nil';
+        }
+
+        if (this._isConst(receiver)) {
+            return receiver.toString();
+        }
+
         if (this._isBlock(receiver) && receiver.opcode === 'ruby_expression') {
             const textBlock = this._context.blocks[receiver.inputs.EXPRESSION.block];
             return textBlock.fields.TEXT.value;
         }
 
-        if (this._isConst (receiver)) {
-            return receiver.toString();
+        if (this._isBlock(receiver)) {
+            return 'block';
         }
 
-        return 'any';
+        return null;
+    }
+
+    _anyReceiverNames () {
+        return ['sprite', 'stage', 'variable', 'string', 'number', 'array', 'hash', 'boolean', 'nil', 'block'];
     }
 
     createBlock (opcode, type, attributes = {}) {

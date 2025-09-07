@@ -15,10 +15,10 @@ const OperatorsConverter = {
             return converter._changeBlock(args[0], 'operator_random', 'value');
         });
 
-        converter.registerCallMethod('any', '[]', 1, params => {
+        converter.registerCallMethod(['string', 'block'], '[]', 1, params => {
             const {receiver, args} = params;
             if (converter.isVariableBlockType(receiver)) return null;
-            if (!converter._isStringOrBlock(receiver) || !converter._isNumberOrBlock(args[0])) return null;
+            if (!converter._isNumberOrBlock(args[0])) return null;
 
             const block = converter._createBlock('operator_letter_of', 'value');
             converter._addTextInput(block, 'STRING', receiver, 'apple');
@@ -30,19 +30,18 @@ const OperatorsConverter = {
             return block;
         });
 
-        converter.registerCallMethod('any', 'length', 0, params => {
+        converter.registerCallMethod(['string', 'block'], 'length', 0, params => {
             const {receiver} = params;
             if (converter.isVariableBlockType(receiver)) return null;
-            if (!converter._isStringOrBlock(receiver)) return null;
 
             const block = converter._createBlock('operator_length', 'value');
             converter._addTextInput(block, 'STRING', receiver, 'apple');
             return block;
         });
 
-        converter.registerCallMethod('any', 'include?', 1, params => {
+        converter.registerCallMethod(['string', 'block'], 'include?', 1, params => {
             const {receiver, args} = params;
-            if (converter.isVariableBlockType(receiver) || !converter._isStringOrBlock(receiver)) return null;
+            if (converter.isVariableBlockType(receiver)) return null;
             if (!converter._isStringOrBlock(args[0])) return null;
 
             const block = converter._createBlock('operator_contains', 'value');
@@ -52,7 +51,7 @@ const OperatorsConverter = {
         });
 
         ['+', '-', '*', '/', '%'].forEach(operator => {
-            converter.registerCallMethod('any', operator, 1, params => {
+            converter.registerCallMethod(['number', 'block'], operator, 1, params => {
                 const {receiver, args} = params;
                 let rh = args[0];
                 if (_.isArray(rh)) {
@@ -60,7 +59,7 @@ const OperatorsConverter = {
                     rh = rh[0];
                 }
 
-                if (!converter._isNumberOrBlock(receiver) || !converter._isNumberOrBlock(rh)) return null;
+                if (!converter._isNumberOrBlock(rh)) return null;
 
                 let opcode;
                 if (operator === '+') {
@@ -82,7 +81,7 @@ const OperatorsConverter = {
             });
         });
 
-        converter.registerCallMethod('any', '+', 1, params => {
+        converter.registerCallMethod(['string', 'block'], '+', 1, params => {
             const {receiver, args} = params;
             let rh = args[0];
             if (_.isArray(rh)) {
@@ -90,7 +89,6 @@ const OperatorsConverter = {
                 rh = rh[0];
             }
 
-            if (!converter._isStringOrBlock(receiver)) return null;
             if (!converter._isStringOrBlock(rh)) return null;
 
             const block = converter._createBlock('operator_join', 'value');
@@ -130,9 +128,8 @@ const OperatorsConverter = {
         });
 
         // Not operator: !
-        converter.registerCallMethod('any', '!', 0, params => {
+        converter.registerCallMethod(['boolean', 'block'], '!', 0, params => {
             const {receiver} = params;
-            if (!converter._isFalseOrBooleanBlock(receiver)) return null;
 
             const block = converter._createBlock('operator_not', 'value_boolean');
             if (!converter._isFalse(receiver)) {
@@ -145,21 +142,17 @@ const OperatorsConverter = {
             return block;
         });
 
-        // Round method
-        converter.registerCallMethod('any', 'round', 0, params => {
+        converter.registerCallMethod(['number', 'block'], 'round', 0, params => {
             const {receiver} = params;
-            if (!converter._isNumberOrBlock(receiver)) return null;
 
             const block = converter._createBlock('operator_round', 'value');
             converter._addNumberInput(block, 'NUM', 'math_number', receiver, '');
             return block;
         });
 
-        // Math operations: abs, floor, ceil
         ['abs', 'floor', 'ceil'].forEach(methodName => {
-            converter.registerCallMethod('any', methodName, 0, params => {
+            converter.registerCallMethod(['number', 'block'], methodName, 0, params => {
                 const {receiver} = params;
-                if (!converter._isNumberOrBlock(receiver)) return null;
 
                 let operator = methodName;
                 if (methodName === 'ceil') {
@@ -172,7 +165,6 @@ const OperatorsConverter = {
             });
         });
 
-        // Math functions: sqrt, sin, cos, tan, asin, acos, atan, log, log10
         ['sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'log', 'log10'].forEach(methodName => {
             converter.registerCallMethod(Math, methodName, 1, params => {
                 const {args} = params;
@@ -196,7 +188,6 @@ const OperatorsConverter = {
             });
         });
 
-        // Power operator: ** for Math::E
         converter.registerCallMethod(MathE, '**', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
@@ -207,11 +198,10 @@ const OperatorsConverter = {
             return block;
         });
 
-        // Power operator for base 10
-        converter.registerCallMethod('any', '**', 1, params => {
+        converter.registerCallMethod(['number'], '**', 1, params => {
             const {receiver, args} = params;
+            if (!receiver.value === 10) return null;
             if (!converter._isNumberOrBlock(args[0])) return null;
-            if (!(receiver.type === 'int' && receiver.value === 10)) return null;
 
             const block = converter._createBlock('operator_mathop', 'value');
             converter._addField(block, 'OPERATOR', '10 ^');

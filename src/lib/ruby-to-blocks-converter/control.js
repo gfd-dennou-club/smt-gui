@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 
 /* eslint-disable no-invalid-this */
@@ -20,63 +19,6 @@ const StopOptions = [
  * Control converter
  */
 const ControlConverter = {
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        let block;
-        if (this._isSelf(receiver) || receiver === Opal.nil) {
-            switch (name) {
-            case 'sleep':
-                if (args.length === 1 && this._isNumberOrBlock(args[0])) {
-                    block = this._createBlock('control_wait', 'statement');
-                    this._addNumberInput(block, 'DURATION', 'math_positive_number', args[0], 1);
-                }
-                break;
-            case 'repeat':
-                if (args.length === 1 && this._isNumberOrBlock(args[0]) &&
-                    rubyBlockArgs && rubyBlockArgs.length === 0) {
-                    rubyBlock = this._removeWaitBlocks(rubyBlock);
-                    block = createControlRepeatBlock.call(this, args[0], rubyBlock);
-                }
-                break;
-            case 'loop':
-            case 'forever':
-                if (args.length === 0 && rubyBlockArgs && rubyBlockArgs.length === 0 && rubyBlock) {
-                    rubyBlock = this._removeWaitBlocks(rubyBlock);
-                    block = this._createBlock('control_forever', 'terminate');
-                    this._addSubstack(block, rubyBlock);
-                }
-                break;
-            case 'stop':
-                if (args.length === 1 &&
-                    this._isString(args[0]) && StopOptions.indexOf(args[0].toString()) >= 0) {
-                    block = this._createBlock('control_stop', 'terminate');
-                    this._addField(block, 'STOP_OPTION', args[0]);
-                }
-                break;
-            case 'create_clone':
-                if (args.length === 1 && this._isString(args[0])) {
-                    block = this._createBlock('control_create_clone_of', 'statement');
-                    const optionBlock = this._createBlock('control_create_clone_of_menu', 'value', {
-                        shadow: true
-                    });
-                    this._addField(optionBlock, 'CLONE_OPTION', args[0]);
-                    this._addInput(block, 'CLONE_OPTION', optionBlock, optionBlock);
-                }
-                break;
-            }
-        } else if (this._isNumberOrBlock(receiver)) {
-            switch (name) {
-            case 'times':
-                if (args.length === 0 &&
-                    rubyBlockArgs && rubyBlockArgs.length === 0 && rubyBlock) {
-                    rubyBlock = this._removeWaitBlocks(rubyBlock);
-                    block = createControlRepeatBlock.call(this, receiver, rubyBlock);
-                }
-                break;
-            }
-        }
-        return block;
-    },
 
     onIf: function (cond, statement, elseStatement) {
         const block = this._createBlock('control_if', 'statement');
@@ -109,6 +51,72 @@ const ControlConverter = {
     },
 
     register: function (converter) {
+        // sleep(duration) - control_wait
+        converter.registerCallMethod('self', 'sleep', 1, params => {
+            const {args} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+
+            const block = converter._createBlock('control_wait', 'statement');
+            converter._addNumberInput(block, 'DURATION', 'math_positive_number', args[0], 1);
+            return block;
+        });
+
+        // repeat(times) { block } - control_repeat
+        converter.registerCallMethodWithBlock('self', 'repeat', 1, 0, params => {
+            const {args, rubyBlock} = params;
+            if (!converter._isNumberOrBlock(args[0])) return null;
+
+            const cleanedRubyBlock = converter._removeWaitBlocks(rubyBlock);
+            return createControlRepeatBlock.call(converter, args[0], cleanedRubyBlock);
+        });
+
+        // loop { block } and forever { block } - control_forever
+        ['loop', 'forever'].forEach(methodName => {
+            converter.registerCallMethodWithBlock('self', methodName, 0, 0, params => {
+                const {rubyBlock} = params;
+                if (!rubyBlock) return null;
+
+                const cleanedRubyBlock = converter._removeWaitBlocks(rubyBlock);
+                const block = converter._createBlock('control_forever', 'terminate');
+                converter._addSubstack(block, cleanedRubyBlock);
+                return block;
+            });
+        });
+
+        // stop(option) - control_stop
+        converter.registerCallMethod('self', 'stop', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0]) || StopOptions.indexOf(args[0].toString()) < 0) return null;
+
+            const block = converter._createBlock('control_stop', 'terminate');
+            converter._addField(block, 'STOP_OPTION', args[0]);
+            return block;
+        });
+
+        // create_clone(target) - control_create_clone_of
+        converter.registerCallMethod('self', 'create_clone', 1, params => {
+            const {args} = params;
+            if (!converter._isString(args[0])) return null;
+
+            const block = converter._createBlock('control_create_clone_of', 'statement');
+            const optionBlock = converter._createBlock('control_create_clone_of_menu', 'value', {
+                shadow: true
+            });
+            converter._addField(optionBlock, 'CLONE_OPTION', args[0]);
+            converter._addInput(block, 'CLONE_OPTION', optionBlock, optionBlock);
+            return block;
+        });
+
+        // number.times { block } - control_repeat
+        converter.registerCallMethodWithBlock('number', 'times', 0, 0, params => {
+            const {receiver, rubyBlock} = params;
+            if (!rubyBlock) return null;
+
+            const cleanedRubyBlock = converter._removeWaitBlocks(rubyBlock);
+            return createControlRepeatBlock.call(converter, receiver, cleanedRubyBlock);
+        });
+
+        // when_start_as_a_clone { block } (sprite only)
         converter.registerCallMethodWithBlock('sprite', 'when_start_as_a_clone', 0, 0, params => {
             const {rubyBlock} = params;
             const block = converter.createBlock('control_start_as_clone', 'hat');

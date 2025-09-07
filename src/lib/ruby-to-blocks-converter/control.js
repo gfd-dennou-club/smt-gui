@@ -107,10 +107,10 @@ const ControlConverter = {
             return block;
         });
 
-        // number.times { block } - control_repeat
-        converter.registerCallMethodWithBlock('number', 'times', 0, 0, params => {
+        // number.times { block } and variable.times { block } - control_repeat
+        converter.registerCallMethodWithBlock('any', 'times', 0, 0, params => {
             const {receiver, rubyBlock} = params;
-            if (!rubyBlock) return null;
+            if (!rubyBlock || !converter._isNumberOrBlock(receiver)) return null;
 
             const cleanedRubyBlock = converter._removeWaitBlocks(rubyBlock);
             return createControlRepeatBlock.call(converter, receiver, cleanedRubyBlock);

@@ -5,7 +5,6 @@ import _ from 'lodash';
  */
 const BoostConverter = {
     register: function (converter) {
-        // boost_motor_turn_on_for with 2 args -> boost_motorOnFor
         converter.registerCallMethod('self', 'boost_motor_turn_on_for', 2, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0]) || !converter.isNumberOrBlock(args[1])) return null;
@@ -20,7 +19,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_turn_on_for with 1 arg -> boost_motorOn
         converter.registerCallMethod('self', 'boost_motor_turn_on_for', 1, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -34,7 +32,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_turn_this_way_for
         converter.registerCallMethod('self', 'boost_motor_turn_this_way_for', 2, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0]) || !converter.isNumberOrBlock(args[1])) return null;
@@ -49,7 +46,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_turn_off_for
         converter.registerCallMethod('self', 'boost_motor_turn_off_for', 1, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -63,7 +59,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_set_power_for
         converter.registerCallMethod('self', 'boost_motor_set_power_for', 2, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0]) || !converter.isNumberOrBlock(args[1])) return null;
@@ -78,7 +73,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_set_direction_for
         converter.registerCallMethod('self', 'boost_motor_set_direction_for', 2, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0]) || !converter.isStringOrBlock(args[1])) return null;
@@ -97,7 +91,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_motor_get_position
         converter.registerCallMethod('self', 'boost_motor_get_position', 1, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -111,7 +104,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_seeing_color?
         converter.registerCallMethod('self', 'boost_seeing_color?', 1, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -125,7 +117,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_get_tilt_angle
         converter.registerCallMethod('self', 'boost_get_tilt_angle', 1, params => {
             const {args} = params;
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -139,7 +130,6 @@ const BoostConverter = {
             return block;
         });
 
-        // boost_set_light_color
         converter.registerCallMethod('self', 'boost_set_light_color', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
@@ -149,7 +139,6 @@ const BoostConverter = {
             return block;
         });
 
-        // when block handlers for boost events
         converter.registerCallMethodWithBlock('self', 'when', 2, 0, params => {
             const {args, rubyBlock} = params;
 

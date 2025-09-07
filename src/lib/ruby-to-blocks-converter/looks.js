@@ -79,7 +79,6 @@ const validateBackdrop = function (backdropName, args) {
  */
 const LooksConverter = {
     register: function (converter) {
-        // say and think methods - 1 argument version (sprite only)
         ['say', 'think'].forEach(methodName => {
             converter.registerCallMethod('sprite', methodName, 1, params => {
                 const {args} = params;
@@ -99,7 +98,6 @@ const LooksConverter = {
             });
         });
 
-        // say and think methods - 2 argument version (sprite only)
         ['say', 'think'].forEach(methodName => {
             converter.registerCallMethod('sprite', methodName, 2, params => {
                 const {args} = params;
@@ -121,7 +119,6 @@ const LooksConverter = {
             });
         });
 
-        // switch_costume method (sprite only)
         converter.registerCallMethod('sprite', 'switch_costume', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
@@ -132,7 +129,6 @@ const LooksConverter = {
             return block;
         });
 
-        // switch_backdrop method (both sprite and stage)
         converter.registerCallMethod('self', 'switch_backdrop', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
@@ -143,7 +139,6 @@ const LooksConverter = {
             return block;
         });
 
-        // switch_backdrop_and_wait method (both sprite and stage)
         converter.registerCallMethod('self', 'switch_backdrop_and_wait', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
@@ -154,7 +149,6 @@ const LooksConverter = {
             return block;
         });
 
-        // size= method (sprite only)
         converter.registerCallMethod('sprite', 'size=', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
@@ -164,7 +158,6 @@ const LooksConverter = {
             return block;
         });
 
-        // change_effect_by method (both sprite and stage)
         converter.registerCallMethod('self', 'change_effect_by', 2, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
@@ -176,7 +169,6 @@ const LooksConverter = {
             return block;
         });
 
-        // set_effect method (both sprite and stage)
         converter.registerCallMethod('self', 'set_effect', 2, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || Effects.indexOf(args[0].toString().toUpperCase()) < 0) return null;
@@ -188,7 +180,6 @@ const LooksConverter = {
             return block;
         });
 
-        // go_to_layer method (sprite only)
         converter.registerCallMethod('sprite', 'go_to_layer', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || FrontBack.indexOf(args[0].toString()) < 0) return null;
@@ -198,7 +189,6 @@ const LooksConverter = {
             return block;
         });
 
-        // go_layers method (sprite only)
         converter.registerCallMethod('sprite', 'go_layers', 2, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0]) || ForwardBackward.indexOf(args[1].toString()) < 0) return null;
@@ -209,7 +199,6 @@ const LooksConverter = {
             return block;
         });
 
-        // costume_number and costume_name methods (sprite only)
         ['costume_number', 'costume_name'].forEach(methodName => {
             converter.registerCallMethod('sprite', methodName, 0, () => {
                 const a = methodName.split('_');
@@ -219,7 +208,6 @@ const LooksConverter = {
             });
         });
 
-        // backdrop_number and backdrop_name methods (both sprite and stage)
         ['backdrop_number', 'backdrop_name'].forEach(methodName => {
             converter.registerCallMethod('self', methodName, 0, params => {
                 const {receiver} = params;
@@ -232,39 +220,29 @@ const LooksConverter = {
             });
         });
 
-        // next_costume method (sprite only)
         converter.registerCallMethod('sprite', 'next_costume', 0, () =>
             converter._createBlock('looks_nextcostume', 'statement')
         );
 
-        // next_backdrop method (both sprite and stage)
         converter.registerCallMethod('self', 'next_backdrop', 0, () =>
             converter._createBlock('looks_nextbackdrop', 'statement')
         );
 
-        // clear_graphic_effects method (both sprite and stage)
         converter.registerCallMethod('self', 'clear_graphic_effects', 0, () =>
             converter._createBlock('looks_cleargraphiceffects', 'statement')
         );
 
-        // show method (sprite only)
         converter.registerCallMethod('sprite', 'show', 0, () =>
             converter._createBlock('looks_show', 'statement')
         );
 
-        // hide method (sprite only)
         converter.registerCallMethod('sprite', 'hide', 0, () =>
             converter._createBlock('looks_hide', 'statement')
         );
 
-        // size method (sprite only)
         converter.registerCallMethod('sprite', 'size', 0, () =>
             converter._createBlock('looks_size', 'value')
         );
-    },
-
-    onSend: function () {
-        return null;
     },
 
     // eslint-disable-next-line no-unused-vars

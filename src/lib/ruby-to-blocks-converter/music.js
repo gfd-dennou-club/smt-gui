@@ -5,8 +5,7 @@ import _ from 'lodash';
  */
 const MusicConverter = {
     register: function (converter) {
-        // play_drum method (sprite only)
-        converter.registerCallMethod('sprite', 'play_drum', 1, params => {
+        converter.registerCallMethod('self', 'play_drum', 1, params => {
             const {args} = params;
             if (!converter._isHash(args[0]) || args[0].size !== 2) return null;
 
@@ -24,8 +23,7 @@ const MusicConverter = {
             return block;
         });
 
-        // rest method (sprite only)
-        converter.registerCallMethod('sprite', 'rest', 1, params => {
+        converter.registerCallMethod('self', 'rest', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -34,8 +32,7 @@ const MusicConverter = {
             return block;
         });
 
-        // play_note method (sprite only)
-        converter.registerCallMethod('sprite', 'play_note', 1, params => {
+        converter.registerCallMethod('self', 'play_note', 1, params => {
             const {args} = params;
             if (!converter._isHash(args[0]) || args[0].size !== 2) return null;
 
@@ -49,8 +46,7 @@ const MusicConverter = {
             return block;
         });
 
-        // instrument= method (sprite only)
-        converter.registerCallMethod('sprite', 'instrument=', 1, params => {
+        converter.registerCallMethod('self', 'instrument=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -63,8 +59,7 @@ const MusicConverter = {
             return block;
         });
 
-        // tempo= method (sprite only)
-        converter.registerCallMethod('sprite', 'tempo=', 1, params => {
+        converter.registerCallMethod('self', 'tempo=', 1, params => {
             const {args} = params;
             if (!converter.isNumberOrBlock(args[0])) return null;
 
@@ -73,8 +68,7 @@ const MusicConverter = {
             return block;
         });
 
-        // tempo method (sprite only)
-        converter.registerCallMethod('sprite', 'tempo', 0, () =>
+        converter.registerCallMethod('self', 'tempo', 0, () =>
             converter.createBlock('music_getTempo', 'value')
         );
     },

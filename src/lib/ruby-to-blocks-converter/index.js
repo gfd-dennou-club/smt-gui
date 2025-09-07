@@ -663,6 +663,10 @@ class RubyToBlocksConverter {
         return this._isNumber(block) || this._isString(block) || this._isValueBlock(block);
     }
 
+    isColorOrBlock (colorOrBlock) {
+        return this._isColorOrBlock(colorOrBlock);
+    }
+
     _isColorOrBlock (colorOrBlock) {
         return this._isBlock(colorOrBlock) || (this._isString(colorOrBlock) && ColorRegexp.test(colorOrBlock));
     }
@@ -700,8 +704,16 @@ class RubyToBlocksConverter {
         return this.getBlockType(block) === 'value_variable' && block.opcode === 'data_listcontents';
     }
 
+    isRubyExpression (block) {
+        return this._isRubyExpression(block);
+    }
+
     _isRubyExpression (block) {
         return this._isBlock(block) && block.opcode === 'ruby_expression';
+    }
+
+    getRubyExpression (block) {
+        return this._getRubyExpression(block);
     }
 
     _getRubyExpression (block) {
@@ -744,6 +756,10 @@ class RubyToBlocksConverter {
         this._context.blocks[block.id] = block;
         this._context.blockTypes[block.id] = type;
         return block;
+    }
+
+    createFieldBlock (opcode, fieldName, value) {
+        return this._createFieldBlock(opcode, fieldName, value);
     }
 
     _createFieldBlock (opcode, fieldName, value) {
@@ -1044,6 +1060,14 @@ class RubyToBlocksConverter {
         return procedure;
     }
 
+    getBlock (blockId) {
+        return this._context.blocks[blockId];
+    }
+
+    getSource (node) {
+        return this._getSource(node);
+    }
+
     _getSource (node) {
         const expression = node.$loc().$expression();
         if (expression === Opal.nil) {
@@ -1132,6 +1156,13 @@ class RubyToBlocksConverter {
     _changeBlock (block, opcode, blockType) {
         block.opcode = opcode;
         this._setBlockType(block, blockType);
+        return block;
+    }
+
+    changeRubyExpression (block, node) {
+        block.node = node;
+        const expressionBlock = this._context.blocks[block.inputs.EXPRESSION.block];
+        expressionBlock.fields.TEXT.value = this._getSource(node);
         return block;
     }
 

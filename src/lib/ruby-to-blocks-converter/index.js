@@ -132,7 +132,9 @@ class RubyToBlocksConverter {
             LooksConverter,
             EV3Converter,
             GdxForConverter,
-            SmalrubotS1Converter
+            SmalrubotS1Converter,
+            MotionConverter,
+            SensingConverter
         ].forEach(x => x.register(this));
     }
 
@@ -440,7 +442,15 @@ class RubyToBlocksConverter {
 
         if (this._isBlock(receiver) && receiver.opcode === 'ruby_expression') {
             const textBlock = this._context.blocks[receiver.inputs.EXPRESSION.block];
-            return textBlock.fields.TEXT.value;
+            const text = textBlock.fields.TEXT.value;
+
+            // Sprite call pattern detection
+            const SpriteCallRe = /^sprite\("(.*)"\)$/;
+            if (SpriteCallRe.test(text)) {
+                return 'sprite_call';
+            }
+
+            return text;
         }
 
         if (this._isBlock(receiver)) {
@@ -452,6 +462,23 @@ class RubyToBlocksConverter {
 
     _anyReceiverNames () {
         return ['sprite', 'stage', 'variable', 'string', 'number', 'array', 'hash', 'boolean', 'nil', 'block'];
+    }
+
+    _getSpriteCallName (receiver) {
+        if (this._isBlock(receiver) && receiver.opcode === 'ruby_expression') {
+            const textBlock = this._context.blocks[receiver.inputs.EXPRESSION.block];
+            const text = textBlock.fields.TEXT.value;
+            const SpriteCallRe = /^sprite\("(.*)"\)$/;
+            const match = SpriteCallRe.exec(text);
+            if (match) {
+                return match[1];
+            }
+        }
+        return null;
+    }
+
+    _isSpriteCall (receiver) {
+        return this._getSpriteCallName(receiver) !== null;
     }
 
     setParent (block, parent) {
@@ -1166,10 +1193,10 @@ class RubyToBlocksConverter {
         return block;
     }
 
-    changeRubyExpression (block, node) {
+    changeRubyExpression (block, node, source = null) {
         block.node = node;
         const expressionBlock = this._context.blocks[block.inputs.EXPRESSION.block];
-        expressionBlock.fields.TEXT.value = this._getSource(node);
+        expressionBlock.fields.TEXT.value = source || this._getSource(node);
         return block;
     }
 

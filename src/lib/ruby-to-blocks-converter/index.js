@@ -109,7 +109,7 @@ class RubyToBlocksConverter {
             MyBlocksConverter
         ];
         this._receiverToMethods = {};
-        this._dynamicCallHandlers = {};
+        this._receiverToMyBlocks = {};
         this.reset();
 
         [
@@ -345,47 +345,52 @@ class RubyToBlocksConverter {
         this.registerCallMethodWithBlock(receiverName, name, numArgs, 'none', createBlockFunc);
     }
 
-    registerDynamicCallMethod (receiverName, dynamicCallHandler) {
+    registerCallMyBlock (receiverName, myBlockHandler) {
         if (receiverName === 'any') {
-            this._anyReceiverNames().forEach(rn => this.registerDynamicCallMethod(rn, dynamicCallHandler));
+            this._anyReceiverNames().forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
             return;
         }
 
         if (_.isArray(receiverName)) {
-            receiverName.forEach(rn => this.registerDynamicCallMethod(rn, dynamicCallHandler));
+            receiverName.forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
             return;
         }
 
         if (receiverName === 'self') {
-            this.registerDynamicCallMethod('sprite', dynamicCallHandler);
-            this.registerDynamicCallMethod('stage', dynamicCallHandler);
+            this.registerCallMyBlock('sprite', myBlockHandler);
+            this.registerCallMyBlock('stage', myBlockHandler);
             return;
         }
 
-        if (!this._dynamicCallHandlers[receiverName]) {
-            this._dynamicCallHandlers[receiverName] = [];
+        if (!this._receiverToMyBlocks[receiverName]) {
+            this._receiverToMyBlocks[receiverName] = [];
         }
-        this._dynamicCallHandlers[receiverName].push(dynamicCallHandler);
+        this._receiverToMyBlocks[receiverName].push(myBlockHandler);
     }
 
     callMethod (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
         const receiverName = this._getReceiverName(receiver);
         if (!receiverName) return null;
 
-        if (this._dynamicCallHandlers[receiverName]) {
-            const params = {
-                receiver: receiver,
-                receiverName: receiverName,
-                name: name,
-                args: args,
-                rubyBlockArgs: rubyBlockArgs,
-                rubyBlock: rubyBlock,
-                node: node
-            };
+        // Check for my-block procedure calls
+        if (this._receiverToMyBlocks[receiverName]) {
+            const procedure = this._lookupProcedure(name);
+            if (procedure) {
+                const params = {
+                    receiver: receiver,
+                    receiverName: receiverName,
+                    name: name,
+                    args: args,
+                    rubyBlockArgs: rubyBlockArgs,
+                    rubyBlock: rubyBlock,
+                    node: node,
+                    procedure: procedure
+                };
 
-            for (const handler of this._dynamicCallHandlers[receiverName]) {
-                const block = handler.apply(this, [params]);
-                if (block) return block;
+                for (const handler of this._receiverToMyBlocks[receiverName]) {
+                    const block = handler.apply(this, [params]);
+                    if (block) return block;
+                }
             }
         }
 

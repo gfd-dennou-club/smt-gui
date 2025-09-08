@@ -133,7 +133,8 @@ class RubyToBlocksConverter {
             EV3Converter,
             GdxForConverter,
             SmalrubotS1Converter,
-            MotionConverter
+            MotionConverter,
+            SensingConverter
         ].forEach(x => x.register(this));
     }
 

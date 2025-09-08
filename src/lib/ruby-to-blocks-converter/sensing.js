@@ -82,30 +82,6 @@ const SensingConverter = {
                     this._addTextInput(block, 'QUESTION', args[0], 'What\'s your name?');
                 }
                 break;
-            case 'answer':
-            case 'loudness':
-            case 'days_since_2000':
-            case 'user_name':
-                if (args.length === 0) {
-                    let opcode;
-                    switch (name) {
-                    case 'answer':
-                        opcode = 'sensing_answer';
-                        break;
-                    case 'loudness':
-                        opcode = 'sensing_loudness';
-                        break;
-                    case 'days_since_2000':
-                        opcode = 'sensing_dayssince2000';
-                        break;
-                    case 'user_name':
-                        opcode = 'sensing_username';
-                        break;
-                    }
-                    block = this._createBlock(opcode, 'value');
-                    break;
-                }
-                break;
             case 'drag_mode=':
                 if (args.length === 1 &&
                     ((this._isString(args[0]) && DragMode.indexOf(args[0].toString()) >= 0) ||
@@ -126,11 +102,6 @@ const SensingConverter = {
             case 'sprite':
                 if (args.length === 1 && this._isString(args[0])) {
                     block = this._createRubyExpressionBlock(spriteCall(args[0]), node);
-                }
-                break;
-            case 'stage':
-                if (args.length === 0) {
-                    block = this._createRubyExpressionBlock(Stage, node);
                 }
                 break;
             }
@@ -309,6 +280,28 @@ const SensingConverter = {
         }
 
         return block;
+    },
+
+    register: function (converter) {
+        // Simple getters with no arguments
+        const simpleGetters = [
+            {method: 'answer', opcode: 'sensing_answer'},
+            {method: 'loudness', opcode: 'sensing_loudness'},
+            {method: 'days_since_2000', opcode: 'sensing_dayssince2000'},
+            {method: 'user_name', opcode: 'sensing_username'}
+        ];
+
+        simpleGetters.forEach(({method, opcode}) => {
+            converter.registerCallMethod('self', method, 0, () =>
+                converter._createBlock(opcode, 'value')
+            );
+        });
+
+        // stage - returns Ruby expression
+        converter.registerCallMethod('self', 'stage', 0, params => {
+            const {node} = params;
+            return converter._createRubyExpressionBlock(Stage, node);
+        });
     }
 };
 

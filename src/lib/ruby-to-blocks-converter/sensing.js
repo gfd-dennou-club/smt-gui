@@ -1,7 +1,6 @@
 /* global Opal */
 import _ from 'lodash';
 import {KeyOptions} from './constants';
-import {RubyToBlocksConverterError} from './errors';
 
 const DragMode = [
     'draggable',
@@ -34,71 +33,6 @@ const SensingConverter = {
         let block;
         if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
             switch (name) {
-            case 'touching?':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    if (this._isStage()) {
-                        throw new RubyToBlocksConverterError(node, 'Stage selected: no touching blocks');
-                    }
-                    block = this._createBlock('sensing_touchingobject', 'value_boolean');
-                    this._addFieldInput(
-                        block, 'TOUCHINGOBJECTMENU', 'sensing_touchingobjectmenu', 'TOUCHINGOBJECTMENU',
-                        args[0], '_mouse_'
-                    );
-                }
-                break;
-            case 'touching_color?':
-                if (args.length === 1 && this._isColorOrBlock(args[0])) {
-                    if (this._isStage()) {
-                        throw new RubyToBlocksConverterError(node, 'Stage selected: no touching blocks');
-                    }
-                    block = this._createBlock('sensing_touchingcolor', 'value_boolean');
-                    this._addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#43066f');
-                }
-                break;
-            case 'color_is_touching_color?':
-                if (args.length === 2 && this._isColorOrBlock(args[0]) && this._isColorOrBlock(args[1])) {
-                    if (this._isStage()) {
-                        throw new RubyToBlocksConverterError(node, 'Stage selected: no touching blocks');
-                    }
-                    block = this._createBlock('sensing_coloristouchingcolor', 'value_boolean');
-                    this._addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#aad315');
-                    this._addFieldInput(block, 'COLOR2', 'colour_picker', 'COLOUR', args[1], '#fca3bf');
-                }
-                break;
-            case 'distance':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    if (this._isStage()) {
-                        throw new RubyToBlocksConverterError(node, 'Stage selected: no distance blocks');
-                    }
-                    block = this._createBlock('sensing_distanceto', 'value');
-                    this._addFieldInput(
-                        block, 'DISTANCETOMENU', 'sensing_distancetomenu', 'DISTANCETOMENU', args[0], '_mouse_'
-                    );
-                }
-                break;
-            case 'ask':
-                if (args.length === 1 && this._isStringOrBlock(args[0])) {
-                    block = this._createBlock('sensing_askandwait', 'statement');
-                    this._addTextInput(block, 'QUESTION', args[0], 'What\'s your name?');
-                }
-                break;
-            case 'drag_mode=':
-                if (args.length === 1 &&
-                    ((this._isString(args[0]) && DragMode.indexOf(args[0].toString()) >= 0) ||
-                     (args[0] && (args[0].type === 'true' || args[0].type === 'false')))) {
-                    if (this._isStage()) {
-                        throw new RubyToBlocksConverterError(node, 'Stage selected: no drag mode blocks');
-                    }
-                    block = this._createBlock('sensing_setdragmode', 'statement');
-                    let dragMode = args[0];
-                    if (dragMode.type === 'true') {
-                        dragMode = 'draggable';
-                    } else if (dragMode.type === 'false') {
-                        dragMode = 'not draggable';
-                    }
-                    this._addField(block, 'DRAG_MODE', dragMode);
-                }
-                break;
             case 'sprite':
                 if (args.length === 1 && this._isString(args[0])) {
                     block = this._createRubyExpressionBlock(spriteCall(args[0]), node);
@@ -284,6 +218,85 @@ const SensingConverter = {
             const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
             converter.addField(block, 'PROPERTY', args[0]);
             converter.addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', '_stage_');
+            return block;
+        });
+
+        // Touching methods (sprite only)
+        converter.registerCallMethod('sprite', 'touching?', 1, params => {
+            const {args} = params;
+
+            if (!converter.isStringOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('sensing_touchingobject', 'value_boolean');
+            converter.addFieldInput(
+                block, 'TOUCHINGOBJECTMENU', 'sensing_touchingobjectmenu', 'TOUCHINGOBJECTMENU',
+                args[0], '_mouse_'
+            );
+            return block;
+        });
+
+        converter.registerCallMethod('sprite', 'touching_color?', 1, params => {
+            const {args} = params;
+
+            if (!converter.isColorOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('sensing_touchingcolor', 'value_boolean');
+            converter.addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#43066f');
+            return block;
+        });
+
+        converter.registerCallMethod('sprite', 'color_is_touching_color?', 2, params => {
+            const {args} = params;
+
+            if (!converter.isColorOrBlock(args[0]) || !converter.isColorOrBlock(args[1])) return null;
+
+            const block = converter.createBlock('sensing_coloristouchingcolor', 'value_boolean');
+            converter.addFieldInput(block, 'COLOR', 'colour_picker', 'COLOUR', args[0], '#aad315');
+            converter.addFieldInput(block, 'COLOR2', 'colour_picker', 'COLOUR', args[1], '#fca3bf');
+            return block;
+        });
+
+        // Distance method (sprite only)
+        converter.registerCallMethod('sprite', 'distance', 1, params => {
+            const {args} = params;
+
+            if (!converter.isStringOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('sensing_distanceto', 'value');
+            converter.addFieldInput(
+                block, 'DISTANCETOMENU', 'sensing_distancetomenu', 'DISTANCETOMENU', args[0], '_mouse_'
+            );
+            return block;
+        });
+
+        // Ask method (all targets)
+        converter.registerCallMethod('self', 'ask', 1, params => {
+            const {args} = params;
+
+            if (!converter.isStringOrBlock(args[0])) return null;
+
+            const block = converter.createBlock('sensing_askandwait', 'statement');
+            converter.addTextInput(block, 'QUESTION', args[0], 'What\'s your name?');
+            return block;
+        });
+
+        // Drag mode method (sprite only)
+        converter.registerCallMethod('sprite', 'drag_mode=', 1, params => {
+            const {args} = params;
+
+            const validDragMode = converter.isString(args[0]) && DragMode.indexOf(args[0].toString()) >= 0;
+            const validBoolean = args[0] && (args[0].type === 'true' || args[0].type === 'false');
+
+            if (!validDragMode && !validBoolean) return null;
+
+            const block = converter.createBlock('sensing_setdragmode', 'statement');
+            let dragMode = args[0];
+            if (dragMode.type === 'true') {
+                dragMode = 'draggable';
+            } else if (dragMode.type === 'false') {
+                dragMode = 'not draggable';
+            }
+            converter.addField(block, 'DRAG_MODE', dragMode);
             return block;
         });
     }

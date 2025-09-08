@@ -41,14 +41,6 @@ const SensingConverter = {
             }
         } else if (this._isConst(receiver)) {
             switch (receiver.toString()) {
-            case '::Keyboard':
-                if (name === 'pressed?' && args.length === 1 &&
-                    (this._isBlock(args[0]) ||
-                     (this._isString(args[0]) && KeyOptions.indexOf(args[0].toString()) >= 0))) {
-                    block = this._createBlock('sensing_keypressed', 'value_boolean');
-                    this._addFieldInput(block, 'KEY_OPTION', 'sensing_keyoptions', 'KEY_OPTION', args[0], 'space');
-                }
-                break;
             case '::Time':
                 if (name === 'now' && args.length === 0) {
                     block = this._createRubyExpressionBlock(TimeNow, node);
@@ -297,6 +289,20 @@ const SensingConverter = {
                 dragMode = 'not draggable';
             }
             converter.addField(block, 'DRAG_MODE', dragMode);
+            return block;
+        });
+
+        // Keyboard method
+        converter.registerCallMethod('::Keyboard', 'pressed?', 1, params => {
+            const {args} = params;
+
+            const validKey = converter.isString(args[0]) && KeyOptions.indexOf(args[0].toString()) >= 0;
+            const isBlockArg = converter.isBlock(args[0]);
+
+            if (!validKey && !isBlockArg) return null;
+
+            const block = converter.createBlock('sensing_keypressed', 'value_boolean');
+            converter.addFieldInput(block, 'KEY_OPTION', 'sensing_keyoptions', 'KEY_OPTION', args[0], 'space');
             return block;
         });
     }

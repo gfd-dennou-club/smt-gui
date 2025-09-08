@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 import {KeyOptions} from './constants';
 
@@ -13,13 +12,6 @@ const TimeNowWday = 'Time.now.wday';
 const spriteCall = function (name) {
     return `sprite("${name.toString()}")`;
 };
-const SpriteCallRe = /^sprite\("(.*)"\)$/;
-const getSpriteName = function (code) {
-    if (code !== null) {
-        return SpriteCallRe.exec(code)[1];
-    }
-    return null;
-};
 
 const Stage = 'stage';
 /* eslint-enable no-invalid-this */
@@ -28,68 +20,6 @@ const Stage = 'stage';
  * Sensing converter
  */
 const SensingConverter = {
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        let block;
-        if ((this._isSelf(receiver) || receiver === Opal.nil) && !rubyBlock) {
-            switch (name) {
-            case 'sprite':
-                if (args.length === 1 && this._isString(args[0])) {
-                    block = this._createRubyExpressionBlock(spriteCall(args[0]), node);
-                }
-                break;
-            }
-        } else if (this._matchRubyExpression(receiver, SpriteCallRe)) {
-            if (args.length === 0) {
-                let property;
-                switch (name) {
-                case 'x':
-                    property = 'x position';
-                    break;
-                case 'y':
-                    property = 'y position';
-                    break;
-                case 'direction':
-                    property = 'direction';
-                    break;
-                case 'costume_number':
-                    property = 'costume #';
-                    break;
-                case 'costume_name':
-                    property = 'costume name';
-                    break;
-                case 'size':
-                    property = 'size';
-                    break;
-                case 'volume':
-                    property = 'volume';
-                    break;
-                }
-                if (property) {
-                    const spriteName = getSpriteName(this._getRubyExpression(receiver));
-
-                    block = this._changeBlock(receiver, 'sensing_of', 'value');
-                    delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-                    delete receiver.inputs.EXPRESSION;
-
-                    this._addField(block, 'PROPERTY', property);
-                    this._addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', spriteName);
-                }
-            } else if (args.length === 1 && name === 'variable' && this._isString(args[0])) {
-                const spriteName = getSpriteName(this._getRubyExpression(receiver));
-
-                block = this._changeBlock(receiver, 'sensing_of', 'value');
-                delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-                delete receiver.inputs.EXPRESSION;
-
-                this._addField(block, 'PROPERTY', args[0]);
-                this._addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', spriteName);
-            }
-        }
-
-        return block;
-    },
-
     register: function (converter) {
         // Simple getters with no arguments
         const simpleGetters = [
@@ -281,12 +211,9 @@ const SensingConverter = {
 
         // Special handling for wday - changes expression to TimeNowWday
         converter.registerCallMethod(TimeNow, 'wday', 0, params => {
-            const {receiver} = params;
+            const {receiver, node} = params;
 
-            const block = receiver;
-            const textBlock = converter._context.blocks[block.inputs.EXPRESSION.block];
-            textBlock.fields.TEXT.value = TimeNowWday;
-            return block;
+            return converter.changeRubyExpression(receiver, node, TimeNowWday);
         });
 
         // Special handling for wday + 1 (DAYOFWEEK)
@@ -297,6 +224,54 @@ const SensingConverter = {
 
             const block = converter.changeRubyExpressionBlock(receiver, 'sensing_current', 'value');
             converter.addField(block, 'CURRENTMENU', 'DAYOFWEEK');
+            return block;
+        });
+
+        converter.registerCallMethod('self', 'sprite', 1, params => {
+            const {args, node} = params;
+
+            if (!converter.isString(args[0])) return null;
+
+            return converter.createRubyExpressionBlock(spriteCall(args[0]), node);
+        });
+
+        // Sprite property getters
+        const spriteGetters = [
+            {method: 'x', property: 'x position'},
+            {method: 'y', property: 'y position'},
+            {method: 'direction', property: 'direction'},
+            {method: 'costume_number', property: 'costume #'},
+            {method: 'costume_name', property: 'costume name'},
+            {method: 'size', property: 'size'},
+            {method: 'volume', property: 'volume'}
+        ];
+
+        spriteGetters.forEach(({method, property}) => {
+            converter.registerCallMethod('sprite_call', method, 0, params => {
+                const {receiver} = params;
+
+                const spriteName = converter._getSpriteCallName(receiver);
+                if (!spriteName) return null;
+
+                const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
+                converter.addField(block, 'PROPERTY', property);
+                converter.addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', spriteName);
+                return block;
+            });
+        });
+
+        // Sprite variable method
+        converter.registerCallMethod('sprite_call', 'variable', 1, params => {
+            const {receiver, args} = params;
+
+            if (!converter.isString(args[0])) return null;
+
+            const spriteName = converter._getSpriteCallName(receiver);
+            if (!spriteName) return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
+            converter.addField(block, 'PROPERTY', args[0]);
+            converter.addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', spriteName);
             return block;
         });
     }

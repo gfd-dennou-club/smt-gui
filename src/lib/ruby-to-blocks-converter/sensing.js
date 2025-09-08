@@ -209,36 +209,6 @@ const SensingConverter = {
                 this._addField(block, 'PROPERTY', args[0]);
                 this._addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', spriteName);
             }
-        } else if (this._equalRubyExpression(receiver, Stage)) {
-            if (args.length === 0) {
-                let property;
-                switch (name) {
-                case 'backdrop_number':
-                    property = 'backdrop #';
-                    break;
-                case 'backdrop_name':
-                    property = 'backdrop name';
-                    break;
-                case 'volume':
-                    property = 'volume';
-                    break;
-                }
-                if (property) {
-                    block = this._changeBlock(receiver, 'sensing_of', 'value');
-                    delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-                    delete receiver.inputs.EXPRESSION;
-
-                    this._addField(block, 'PROPERTY', property);
-                    this._addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', '_stage_');
-                }
-            } else if (args.length === 1 && name === 'variable' && this._isString(args[0])) {
-                block = this._changeBlock(receiver, 'sensing_of', 'value');
-                delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-                delete receiver.inputs.EXPRESSION;
-
-                this._addField(block, 'PROPERTY', args[0]);
-                this._addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', '_stage_');
-            }
         }
 
         return block;
@@ -255,7 +225,7 @@ const SensingConverter = {
 
         simpleGetters.forEach(({method, opcode}) => {
             converter.registerCallMethod('self', method, 0, () =>
-                converter._createBlock(opcode, 'value')
+                converter.createBlock(opcode, 'value')
             );
         });
 
@@ -268,7 +238,7 @@ const SensingConverter = {
 
         mouseGetters.forEach(({method, opcode, blockType}) => {
             converter.registerCallMethod('::Mouse', method, 0, () =>
-                converter._createBlock(opcode, blockType)
+                converter.createBlock(opcode, blockType)
             );
         });
 
@@ -280,14 +250,41 @@ const SensingConverter = {
 
         timerMethods.forEach(({method, opcode, blockType}) => {
             converter.registerCallMethod('::Timer', method, 0, () =>
-                converter._createBlock(opcode, blockType)
+                converter.createBlock(opcode, blockType)
             );
         });
 
         // stage - returns Ruby expression
-        converter.registerCallMethod('self', 'stage', 0, params => {
+        converter.registerCallMethod('self', Stage, 0, params => {
             const {node} = params;
-            return converter._createRubyExpressionBlock(Stage, node);
+            return converter.createRubyExpressionBlock(Stage, node);
+        });
+
+        const stageGetters = [
+            {method: 'backdrop_number', property: 'backdrop #'},
+            {method: 'backdrop_name', property: 'backdrop name'},
+            {method: 'volume', property: 'volume'}
+        ];
+        stageGetters.forEach(({method, property}) => {
+            converter.registerCallMethod(Stage, method, 0, params => {
+                const {receiver} = params;
+
+                const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
+                converter.addField(block, 'PROPERTY', property);
+                converter.addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', '_stage_');
+                return block;
+            });
+        });
+
+        converter.registerCallMethod(Stage, 'variable', 1, params => {
+            const {receiver, args} = params;
+
+            if (!converter.isString(args[0])) return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
+            converter.addField(block, 'PROPERTY', args[0]);
+            converter.addFieldInput(block, 'OBJECT', 'sensing_of_object_menu', 'OBJECT', '_stage_');
+            return block;
         });
     }
 };

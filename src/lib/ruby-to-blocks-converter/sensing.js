@@ -115,27 +115,6 @@ const SensingConverter = {
                     this._addFieldInput(block, 'KEY_OPTION', 'sensing_keyoptions', 'KEY_OPTION', args[0], 'space');
                 }
                 break;
-            case '::Mouse':
-                if (args.length === 0) {
-                    let opcode;
-                    let blockType;
-                    switch (name) {
-                    case 'down?':
-                        opcode = 'sensing_mousedown';
-                        blockType = 'value_boolean';
-                        break;
-                    case 'x':
-                        opcode = 'sensing_mousex';
-                        blockType = 'value';
-                        break;
-                    case 'y':
-                        opcode = 'sensing_mousey';
-                        blockType = 'value';
-                        break;
-                    }
-                    block = this._createBlock(opcode, blockType);
-                }
-                break;
             case '::Timer':
                 if (args.length === 0) {
                     let opcode;
@@ -294,6 +273,19 @@ const SensingConverter = {
         simpleGetters.forEach(({method, opcode}) => {
             converter.registerCallMethod('self', method, 0, () =>
                 converter._createBlock(opcode, 'value')
+            );
+        });
+
+        // Mouse methods
+        const mouseGetters = [
+            {method: 'down?', opcode: 'sensing_mousedown', blockType: 'value_boolean'},
+            {method: 'x', opcode: 'sensing_mousex', blockType: 'value'},
+            {method: 'y', opcode: 'sensing_mousey', blockType: 'value'}
+        ];
+
+        mouseGetters.forEach(({method, opcode, blockType}) => {
+            converter.registerCallMethod('::Mouse', method, 0, () =>
+                converter._createBlock(opcode, blockType)
             );
         });
 

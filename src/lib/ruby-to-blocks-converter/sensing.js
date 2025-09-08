@@ -7,7 +7,7 @@ const DragMode = [
     'not draggable'
 ];
 
-const TimeNow = 'Time.now';
+const TimeNow = '::Time.now';
 const TimeNowWday = 'Time.now.wday';
 
 const spriteCall = function (name) {
@@ -39,56 +39,6 @@ const SensingConverter = {
                 }
                 break;
             }
-        } else if (this._isConst(receiver)) {
-            switch (receiver.toString()) {
-            case '::Time':
-                if (name === 'now' && args.length === 0) {
-                    block = this._createRubyExpressionBlock(TimeNow, node);
-                }
-                break;
-            }
-        } else if (args.length === 0 && this._equalRubyExpression(receiver, TimeNow)) {
-            let currentMenu;
-            switch (name) {
-            case 'year':
-                currentMenu = 'YEAR';
-                break;
-            case 'month':
-                currentMenu = 'MONTH';
-                break;
-            case 'day':
-                currentMenu = 'DATE';
-                break;
-            case 'wday': {
-                block = receiver;
-                const textBlock = this._context.blocks[block.inputs.EXPRESSION.block];
-                textBlock.fields.TEXT.value = TimeNowWday;
-                break;
-            }
-            case 'hour':
-                currentMenu = 'HOUR';
-                break;
-            case 'min':
-                currentMenu = 'MINUTE';
-                break;
-            case 'sec':
-                currentMenu = 'SECOND';
-                break;
-            }
-            if (currentMenu) {
-                block = this._changeBlock(receiver, 'sensing_current', 'value');
-                delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-                delete receiver.inputs.EXPRESSION;
-
-                this._addField(block, 'CURRENTMENU', currentMenu);
-            }
-        } else if (name === '+' && args.length === 1 && this._isNumber(args[0]) && args[0].toString() === '1' &&
-                   this._equalRubyExpression(receiver, TimeNowWday)) {
-            block = this._changeBlock(receiver, 'sensing_current', 'value');
-            delete this._context.blocks[receiver.inputs.EXPRESSION.block];
-            delete receiver.inputs.EXPRESSION;
-
-            this._addField(block, 'CURRENTMENU', 'DAYOFWEEK');
         } else if (this._matchRubyExpression(receiver, SpriteCallRe)) {
             if (args.length === 0) {
                 let property;
@@ -292,7 +242,6 @@ const SensingConverter = {
             return block;
         });
 
-        // Keyboard method
         converter.registerCallMethod('::Keyboard', 'pressed?', 1, params => {
             const {args} = params;
 
@@ -303,6 +252,51 @@ const SensingConverter = {
 
             const block = converter.createBlock('sensing_keypressed', 'value_boolean');
             converter.addFieldInput(block, 'KEY_OPTION', 'sensing_keyoptions', 'KEY_OPTION', args[0], 'space');
+            return block;
+        });
+
+        converter.registerCallMethod('::Time', 'now', 0, params => {
+            const {node} = params;
+
+            return converter.createRubyExpressionBlock(TimeNow, node);
+        });
+
+        const timeNowMethods = [
+            {method: 'year', currentMenu: 'YEAR'},
+            {method: 'month', currentMenu: 'MONTH'},
+            {method: 'day', currentMenu: 'DATE'},
+            {method: 'hour', currentMenu: 'HOUR'},
+            {method: 'min', currentMenu: 'MINUTE'},
+            {method: 'sec', currentMenu: 'SECOND'}
+        ];
+        timeNowMethods.forEach(({method, currentMenu}) => {
+            converter.registerCallMethod(TimeNow, method, 0, params => {
+                const {receiver} = params;
+
+                const block = converter.changeRubyExpressionBlock(receiver, 'sensing_current', 'value');
+                converter.addField(block, 'CURRENTMENU', currentMenu);
+                return block;
+            });
+        });
+
+        // Special handling for wday - changes expression to TimeNowWday
+        converter.registerCallMethod(TimeNow, 'wday', 0, params => {
+            const {receiver} = params;
+
+            const block = receiver;
+            const textBlock = converter._context.blocks[block.inputs.EXPRESSION.block];
+            textBlock.fields.TEXT.value = TimeNowWday;
+            return block;
+        });
+
+        // Special handling for wday + 1 (DAYOFWEEK)
+        converter.registerCallMethod(TimeNowWday, '+', 1, params => {
+            const {receiver, args} = params;
+
+            if (!converter.isNumber(args[0]) || args[0].toString() !== '1') return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'sensing_current', 'value');
+            converter.addField(block, 'CURRENTMENU', 'DAYOFWEEK');
             return block;
         });
     }

@@ -1,4 +1,3 @@
-/* global Opal */
 import _ from 'lodash';
 import Blockly from 'scratch-blocks';
 import {RubyToBlocksConverterError} from './errors';
@@ -7,54 +6,56 @@ import {RubyToBlocksConverterError} from './errors';
  * My Blocks converter
  */
 const MyBlocksConverter = {
-    // eslint-disable-next-line no-unused-vars
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock) {
-        let block;
-        if (this._isSelf(receiver) || receiver === Opal.nil) {
-            const procedure = this._lookupProcedure(name);
-            if (procedure) {
-                if (procedure.argumentIds.length === args.length) {
-                    block = this._createBlock('procedures_call', 'statement', {
-                        mutation: {
-                            argumentids: JSON.stringify(procedure.argumentIds),
-                            children: [],
-                            proccode: procedure.procCode.join(' '),
-                            tagName: 'mutation',
-                            warp: 'false'
-                        }
-                    });
+    register: function (converter) {
+        // Register dynamic call handler for procedure calls
+        converter.registerDynamicCallMethod('self', params => {
+            const {name, args} = params;
 
-                    if (Object.prototype.hasOwnProperty.call(this._context.procedureCallBlocks, procedure.id)) {
-                        this._context.procedureCallBlocks[procedure.id].push(block.id);
-                    } else {
-                        this._context.procedureCallBlocks[procedure.id] = [block.id];
-                    }
+            const procedure = converter._lookupProcedure(name);
+            if (!procedure) return null;
 
-                    args.forEach((arg, i) => {
-                        const argumentId = procedure.argumentIds[i];
-                        if (this._isFalseOrBooleanBlock(arg)) {
-                            if (procedure.argumentVariables[i].isBoolean ||
-                                this._changeToBooleanArgument(procedure.argumentNames[i])) {
-                                if (!this._isFalse(arg)) {
-                                    this._addInput(block, argumentId, arg, null);
-                                }
-                                return;
-                            }
-                        }
-                        if (!procedure.argumentVariables[i].isBoolean &&
-                            (this._isNumberOrBlock(arg) || this._isStringOrBlock(arg))) {
-                            this._addTextInput(block, argumentId, this._isNumber(arg) ? arg.toString() : arg, '');
-                            return;
-                        }
-                        throw new RubyToBlocksConverterError(
-                            this._context.currentNode,
-                            `invalid type of My Block "${name}" argument #${i + 1}`
-                        );
-                    });
+            if (procedure.argumentIds.length !== args.length) return null;
+
+            const block = converter._createBlock('procedures_call', 'statement', {
+                mutation: {
+                    argumentids: JSON.stringify(procedure.argumentIds),
+                    children: [],
+                    proccode: procedure.procCode.join(' '),
+                    tagName: 'mutation',
+                    warp: 'false'
                 }
+            });
+
+            if (Object.prototype.hasOwnProperty.call(converter._context.procedureCallBlocks, procedure.id)) {
+                converter._context.procedureCallBlocks[procedure.id].push(block.id);
+            } else {
+                converter._context.procedureCallBlocks[procedure.id] = [block.id];
             }
-        }
-        return block;
+
+            args.forEach((arg, i) => {
+                const argumentId = procedure.argumentIds[i];
+                if (converter._isFalseOrBooleanBlock(arg)) {
+                    if (procedure.argumentVariables[i].isBoolean ||
+                        converter._changeToBooleanArgument(procedure.argumentNames[i])) {
+                        if (!converter._isFalse(arg)) {
+                            converter._addInput(block, argumentId, arg, null);
+                        }
+                        return;
+                    }
+                }
+                if (!procedure.argumentVariables[i].isBoolean &&
+                    (converter._isNumberOrBlock(arg) || converter._isStringOrBlock(arg))) {
+                    converter._addTextInput(block, argumentId, converter._isNumber(arg) ? arg.toString() : arg, '');
+                    return;
+                }
+                throw new RubyToBlocksConverterError(
+                    converter._context.currentNode,
+                    `invalid type of My Block "${name}" argument #${i + 1}`
+                );
+            });
+
+            return block;
+        });
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -112,7 +113,7 @@ const MyBlocksConverter = {
             const originalName = n.toString();
             // Convert argument name to snake_case lowercase
             const normalizedName = this._toSnakeCaseLowercase(originalName);
-            
+
             procedure.argumentNames.push(normalizedName);
             procedure.argumentVariables.push(this._lookupOrCreateVariable(normalizedName));
             procedure.procCode.push('%s');

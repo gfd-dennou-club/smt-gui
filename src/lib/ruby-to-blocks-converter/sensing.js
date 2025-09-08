@@ -115,23 +115,6 @@ const SensingConverter = {
                     this._addFieldInput(block, 'KEY_OPTION', 'sensing_keyoptions', 'KEY_OPTION', args[0], 'space');
                 }
                 break;
-            case '::Timer':
-                if (args.length === 0) {
-                    let opcode;
-                    let blockType;
-                    switch (name) {
-                    case 'value':
-                        opcode = 'sensing_timer';
-                        blockType = 'value';
-                        break;
-                    case 'reset':
-                        opcode = 'sensing_resettimer';
-                        blockType = 'statement';
-                        break;
-                    }
-                    block = this._createBlock(opcode, blockType);
-                }
-                break;
             case '::Time':
                 if (name === 'now' && args.length === 0) {
                     block = this._createRubyExpressionBlock(TimeNow, node);
@@ -285,6 +268,18 @@ const SensingConverter = {
 
         mouseGetters.forEach(({method, opcode, blockType}) => {
             converter.registerCallMethod('::Mouse', method, 0, () =>
+                converter._createBlock(opcode, blockType)
+            );
+        });
+
+        // Timer methods
+        const timerMethods = [
+            {method: 'value', opcode: 'sensing_timer', blockType: 'value'},
+            {method: 'reset', opcode: 'sensing_resettimer', blockType: 'statement'}
+        ];
+
+        timerMethods.forEach(({method, opcode, blockType}) => {
+            converter.registerCallMethod('::Timer', method, 0, () =>
                 converter._createBlock(opcode, blockType)
             );
         });

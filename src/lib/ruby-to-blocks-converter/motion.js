@@ -139,6 +139,31 @@ const MotionConverter = {
         // direction getter
         converter.registerCallMethod('sprite', 'direction', 0, () =>
             converter._createBlock('motion_direction', 'value'));
+
+        // Register onXxx handlers
+        converter.registerOnOpAsgn((lh, operator, rh) => {
+            let block;
+            if (converter._isBlock(lh) && operator === '+' && converter._isNumberOrBlock(rh)) {
+                let xy;
+                switch (lh.opcode) {
+                case 'motion_xposition':
+                case 'motion_yposition':
+                    // All Motion blocks are sprite-only
+                    if (converter._isStage()) {
+                        throw new RubyToBlocksConverterError(lh.node, 'Stage selected: no motion blocks');
+                    }
+                    if (lh.opcode === 'motion_xposition') {
+                        xy = 'x';
+                    } else {
+                        xy = 'y';
+                    }
+                    block = converter._changeBlock(lh, `motion_change${xy}by`, 'statement');
+                    converter._addNumberInput(block, `D${_.toUpper(xy)}`, 'math_number', rh, 10);
+                    break;
+                }
+            }
+            return block;
+        });
     },
 
     // Handle compound assignments like x += value, y += value

@@ -191,6 +191,64 @@ const VariablesConverter = {
             );
             return block;
         });
+
+        // Register onXxx handlers
+        converter.registerOnOpAsgn((lh, operator, rh) => {
+            let block;
+            if (operator === '+' && converter._isString(lh) && converter._isNumberOrBlock(rh)) {
+                const variable = converter._lookupOrCreateVariable(lh);
+                if (variable.scope !== 'local') {
+                    block = converter._createBlock('data_changevariableby', 'statement', {
+                        fields: {
+                            VARIABLE: {
+                                name: 'VARIABLE',
+                                id: variable.id,
+                                value: variable.name,
+                                variableType: variable.type
+                            }
+                        }
+                    });
+                    converter._addNumberInput(block, 'VALUE', 'math_number', rh, 1);
+                }
+            }
+            return block;
+        });
+
+        converter.registerOnVar((scope, variable) => {
+            if (scope === 'global' || scope === 'instance') {
+                return converter._createBlock('data_variable', 'value_variable', {
+                    fields: {
+                        VARIABLE: {
+                            name: 'VARIABLE',
+                            id: variable.id,
+                            value: variable.name,
+                            variableType: variable.type
+                        }
+                    }
+                });
+            }
+            return null;
+        });
+
+        converter.registerOnVasgn((scope, variable, rh) => {
+            if (scope === 'global' || scope === 'instance') {
+                if (converter._isNumberOrBlock(rh) || converter._isStringOrBlock(rh)) {
+                    const block = converter._createBlock('data_setvariableto', 'statement', {
+                        fields: {
+                            VARIABLE: {
+                                name: 'VARIABLE',
+                                id: variable.id,
+                                value: variable.name,
+                                variableType: variable.type
+                            }
+                        }
+                    });
+                    converter._addTextInput(block, 'VALUE', converter._isNumber(rh) ? rh.toString() : rh, '0');
+                    return block;
+                }
+            }
+            return null;
+        });
     },
 
     // eslint-disable-next-line no-unused-vars

@@ -145,6 +145,37 @@ const ControlConverter = {
 
             return null;
         });
+
+        // Register onXxx handlers
+        converter.registerOnIf((cond, statement, elseStatement) => {
+            const block = converter._createBlock('control_if', 'statement');
+            if (!converter._isFalse(cond)) {
+                converter._addInput(block, 'CONDITION', cond);
+            }
+            converter._addSubstack(block, statement);
+            if (elseStatement) {
+                block.opcode = 'control_if_else';
+                converter._addSubstack(block, elseStatement, 2);
+            }
+            return block;
+        });
+
+        converter.registerOnUntil((cond, statement) => {
+            statement = converter._removeWaitBlocks(statement);
+
+            let opcode;
+            if (statement === null) {
+                opcode = 'control_wait_until';
+            } else {
+                opcode = 'control_repeat_until';
+            }
+            const block = converter._createBlock(opcode, 'statement');
+            if (!converter._isFalse(cond)) {
+                converter._addInput(block, 'CONDITION', cond);
+            }
+            converter._addSubstack(block, statement);
+            return block;
+        });
     }
 };
 

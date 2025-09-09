@@ -23,6 +23,7 @@ const ToolsConverter = {
         //正しい puts()
         converter.registerCallMethod("self", "puts", 1, (params) => {
             const { args } = params;
+            console.error(args[0].value.name);
             if (!converter.isStringOrBlock(args[0])) return null;
 
             const block = converter.createBlock("tools_puts", "statement");

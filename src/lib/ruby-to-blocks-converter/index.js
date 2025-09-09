@@ -33,6 +33,8 @@ import MyBlocksConverter from "./my-blocks";
 // import VideoConverter from './video';
 // import Text2SpeechConverter from './text2speech';
 import ToolsConverter from "./tools";
+// import Kanirobo2Converter from "./kanirobo2";
+import KaniOldBlocksConverter from "./kanirobo-old";
 
 const messages = defineMessages({
     couldNotConvertPremitive: {
@@ -102,6 +104,7 @@ class RubyToBlocksConverter {
             OperatorsConverter,
             VariablesConverter,
             MyBlocksConverter,
+            KaniOldBlocksConverter,
         ];
         this._receiverToMethods = {};
         this.reset();
@@ -116,6 +119,7 @@ class RubyToBlocksConverter {
             // MicrobitMoreConverter,
             // MeshConverter
             ToolsConverter,
+            //Kanirobo2Converter,
         ].forEach((x) => x.register(this));
     }
 
@@ -338,13 +342,19 @@ class RubyToBlocksConverter {
         if (!numArgsToNumRubyBlockArgs)
             numArgsToNumRubyBlockArgs = methodToNumArgs[name] = {};
 
-        let numRubyBlockArgsToCreateBlockFuncs = numArgsToNumRubyBlockArgs[numArgs];
+        let numRubyBlockArgsToCreateBlockFuncs =
+            numArgsToNumRubyBlockArgs[numArgs];
         if (!numRubyBlockArgsToCreateBlockFuncs)
-            numRubyBlockArgsToCreateBlockFuncs = numArgsToNumRubyBlockArgs[numArgs] = {};
+            numRubyBlockArgsToCreateBlockFuncs = numArgsToNumRubyBlockArgs[
+                numArgs
+            ] = {};
 
-        let createBlockFuncs = numRubyBlockArgsToCreateBlockFuncs[numRubyBlockArgs];
+        let createBlockFuncs =
+            numRubyBlockArgsToCreateBlockFuncs[numRubyBlockArgs];
         if (!createBlockFuncs)
-            createBlockFuncs = numRubyBlockArgsToCreateBlockFuncs[numRubyBlockArgs] = [];
+            createBlockFuncs = numRubyBlockArgsToCreateBlockFuncs[
+                numRubyBlockArgs
+            ] = [];
 
         createBlockFuncs.push(createBlockFunc);
     }
@@ -390,7 +400,7 @@ class RubyToBlocksConverter {
         };
         for (let i = 0; i < createBlockFuncs.length; i++) {
             const createBlockFunc = createBlockFuncs[i];
-            console.error(params)
+            console.error(params);
             const block = createBlockFunc.apply(this, [params]);
             if (block) return block;
         }
@@ -1278,7 +1288,7 @@ class RubyToBlocksConverter {
     _onSend(node, rubyBlockArgsNode, rubyBlockNode) {
         const saved = this._saveContext();
 
-        console.error(node.children)
+        console.error(node.children);
 
         let receiver = this._process(node.children[0]);
         if (_.isArray(receiver) && receiver.length === 1) {
@@ -1299,7 +1309,7 @@ class RubyToBlocksConverter {
             rubyBlock = this._processStatement(rubyBlockNode);
         }
 
-        console.error(receiver)
+        console.error(receiver);
 
         let block = this.callMethod(
             receiver,

@@ -20,36 +20,6 @@ const StopOptions = [
  */
 const ControlConverter = {
 
-    onIf: function (cond, statement, elseStatement) {
-        const block = this._createBlock('control_if', 'statement');
-        if (!this._isFalse(cond)) {
-            this._addInput(block, 'CONDITION', cond);
-        }
-        this._addSubstack(block, statement);
-        if (elseStatement) {
-            block.opcode = 'control_if_else';
-            this._addSubstack(block, elseStatement, 2);
-        }
-        return block;
-    },
-
-    onUntil: function (cond, statement) {
-        statement = this._removeWaitBlocks(statement);
-
-        let opcode;
-        if (statement === null) {
-            opcode = 'control_wait_until';
-        } else {
-            opcode = 'control_repeat_until';
-        }
-        const block = this._createBlock(opcode, 'statement');
-        if (!this._isFalse(cond)) {
-            this._addInput(block, 'CONDITION', cond);
-        }
-        this._addSubstack(block, statement);
-        return block;
-    },
-
     register: function (converter) {
         // sleep(duration) - control_wait
         converter.registerCallMethod('self', 'sleep', 1, params => {

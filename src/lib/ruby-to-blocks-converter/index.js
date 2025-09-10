@@ -89,25 +89,6 @@ class RubyToBlocksConverter {
     constructor (vm) {
         this.vm = vm;
         this._translator = message => message.defaultMessage;
-        this._converters = [
-            MusicConverter,
-            PenConverter,
-            EV3Converter,
-            GdxForConverter,
-            SmalrubotS1Converter,
-            BoostConverter,
-            TranslateConverter,
-            MakeyMakeyConverter,
-
-            MotionConverter,
-            LooksConverter,
-            SoundConverter,
-            ControlConverter,
-            SensingConverter,
-            OperatorsConverter,
-            VariablesConverter,
-            MyBlocksConverter
-        ];
         this._receiverToMethods = {};
         this._receiverToMyBlocks = {};
         this._onIfHandlers = [];
@@ -593,9 +574,23 @@ class RubyToBlocksConverter {
             }
         }
 
-        // Then, check legacy converter objects
-        for (let i = 0; i < this._converters.length; i++) {
-            const converter = this._converters[i];
+        // Then, check legacy converter objects for remaining unmigrated handlers
+        const legacyConverters = [
+            MusicConverter,
+            PenConverter,
+            EV3Converter,
+            GdxForConverter,
+            SmalrubotS1Converter,
+            BoostConverter,
+            TranslateConverter,
+            MakeyMakeyConverter,
+            LooksConverter,
+            SoundConverter,
+            SensingConverter
+        ];
+        
+        for (let i = 0; i < legacyConverters.length; i++) {
+            const converter = legacyConverters[i];
             if (Object.prototype.hasOwnProperty.call(converter, handlerName)) {
                 const block = converter[handlerName].apply(this, args);
                 if (block) {
@@ -603,6 +598,7 @@ class RubyToBlocksConverter {
                 }
             }
         }
+
         return null;
     }
 

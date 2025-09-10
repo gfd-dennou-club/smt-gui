@@ -5,7 +5,7 @@ import _ from 'lodash';
  */
 const VariablesConverter = {
     register: function (converter) {
-        converter.registerCallMethod('self', 'show_variable', 1, params => {
+        converter.registerOnSend('self', 'show_variable', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -25,7 +25,7 @@ const VariablesConverter = {
             return null;
         });
 
-        converter.registerCallMethod('self', 'hide_variable', 1, params => {
+        converter.registerOnSend('self', 'hide_variable', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -45,7 +45,7 @@ const VariablesConverter = {
             return null;
         });
 
-        converter.registerCallMethod('self', 'list', 1, params => {
+        converter.registerOnSend('self', 'list', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -65,7 +65,7 @@ const VariablesConverter = {
             return null;
         });
 
-        converter.registerCallMethod('self', 'show_list', 1, params => {
+        converter.registerOnSend('self', 'show_list', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -85,7 +85,7 @@ const VariablesConverter = {
             return null;
         });
 
-        converter.registerCallMethod('self', 'hide_list', 1, params => {
+        converter.registerOnSend('self', 'hide_list', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -105,7 +105,7 @@ const VariablesConverter = {
             return null;
         });
 
-        converter.registerCallMethod('variable', 'push', 1, params => {
+        converter.registerOnSend('variable', 'push', 1, params => {
             const {receiver, args} = params;
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 
@@ -116,7 +116,7 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', 'delete_at', 1, params => {
+        converter.registerOnSend('variable', 'delete_at', 1, params => {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -125,12 +125,12 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', 'clear', 0, params => {
+        converter.registerOnSend('variable', 'clear', 0, params => {
             const {receiver} = params;
             return converter._changeBlock(receiver, 'data_deletealloflist', 'statement');
         });
 
-        converter.registerCallMethod('variable', 'insert', 2, params => {
+        converter.registerOnSend('variable', 'insert', 2, params => {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
             if (!converter._isStringOrBlock(args[1]) && !converter._isNumberOrBlock(args[1])) return null;
@@ -143,7 +143,7 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', '[]=', 2, params => {
+        converter.registerOnSend('variable', '[]=', 2, params => {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
             if (!converter._isStringOrBlock(args[1]) && !converter._isNumberOrBlock(args[1])) return null;
@@ -156,7 +156,7 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', '[]', 1, params => {
+        converter.registerOnSend('variable', '[]', 1, params => {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -165,7 +165,7 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', 'index', 1, params => {
+        converter.registerOnSend('variable', 'index', 1, params => {
             const {receiver, args} = params;
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 
@@ -176,12 +176,12 @@ const VariablesConverter = {
             return block;
         });
 
-        converter.registerCallMethod('variable', 'length', 0, params => {
+        converter.registerOnSend('variable', 'length', 0, params => {
             const {receiver} = params;
             return converter._changeBlock(receiver, 'data_lengthoflist', 'value');
         });
 
-        converter.registerCallMethod('variable', 'include?', 1, params => {
+        converter.registerOnSend('variable', 'include?', 1, params => {
             const {receiver, args} = params;
             if (!converter._isStringOrBlock(args[0]) && !converter._isNumberOrBlock(args[0])) return null;
 

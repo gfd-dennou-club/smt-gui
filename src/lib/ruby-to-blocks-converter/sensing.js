@@ -30,7 +30,7 @@ const SensingConverter = {
         ];
 
         simpleGetters.forEach(({method, opcode}) => {
-            converter.registerCallMethod('self', method, 0, () =>
+            converter.registerOnSend('self', method, 0, () =>
                 converter.createBlock(opcode, 'value')
             );
         });
@@ -43,7 +43,7 @@ const SensingConverter = {
         ];
 
         mouseGetters.forEach(({method, opcode, blockType}) => {
-            converter.registerCallMethod('::Mouse', method, 0, () =>
+            converter.registerOnSend('::Mouse', method, 0, () =>
                 converter.createBlock(opcode, blockType)
             );
         });
@@ -55,13 +55,13 @@ const SensingConverter = {
         ];
 
         timerMethods.forEach(({method, opcode, blockType}) => {
-            converter.registerCallMethod('::Timer', method, 0, () =>
+            converter.registerOnSend('::Timer', method, 0, () =>
                 converter.createBlock(opcode, blockType)
             );
         });
 
         // stage - returns Ruby expression
-        converter.registerCallMethod('self', Stage, 0, params => {
+        converter.registerOnSend('self', Stage, 0, params => {
             const {node} = params;
             return converter.createRubyExpressionBlock(Stage, node);
         });
@@ -72,7 +72,7 @@ const SensingConverter = {
             {method: 'volume', property: 'volume'}
         ];
         stageGetters.forEach(({method, property}) => {
-            converter.registerCallMethod(Stage, method, 0, params => {
+            converter.registerOnSend(Stage, method, 0, params => {
                 const {receiver} = params;
 
                 const block = converter.changeRubyExpressionBlock(receiver, 'sensing_of', 'value');
@@ -82,7 +82,7 @@ const SensingConverter = {
             });
         });
 
-        converter.registerCallMethod(Stage, 'variable', 1, params => {
+        converter.registerOnSend(Stage, 'variable', 1, params => {
             const {receiver, args} = params;
 
             if (!converter.isString(args[0])) return null;
@@ -94,7 +94,7 @@ const SensingConverter = {
         });
 
         // Touching methods (sprite only)
-        converter.registerCallMethod('sprite', 'touching?', 1, params => {
+        converter.registerOnSend('sprite', 'touching?', 1, params => {
             const {args} = params;
 
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -107,7 +107,7 @@ const SensingConverter = {
             return block;
         });
 
-        converter.registerCallMethod('sprite', 'touching_color?', 1, params => {
+        converter.registerOnSend('sprite', 'touching_color?', 1, params => {
             const {args} = params;
 
             if (!converter.isColorOrBlock(args[0])) return null;
@@ -117,7 +117,7 @@ const SensingConverter = {
             return block;
         });
 
-        converter.registerCallMethod('sprite', 'color_is_touching_color?', 2, params => {
+        converter.registerOnSend('sprite', 'color_is_touching_color?', 2, params => {
             const {args} = params;
 
             if (!converter.isColorOrBlock(args[0]) || !converter.isColorOrBlock(args[1])) return null;
@@ -129,7 +129,7 @@ const SensingConverter = {
         });
 
         // Distance method (sprite only)
-        converter.registerCallMethod('sprite', 'distance', 1, params => {
+        converter.registerOnSend('sprite', 'distance', 1, params => {
             const {args} = params;
 
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -142,7 +142,7 @@ const SensingConverter = {
         });
 
         // Ask method (all targets)
-        converter.registerCallMethod('self', 'ask', 1, params => {
+        converter.registerOnSend('self', 'ask', 1, params => {
             const {args} = params;
 
             if (!converter.isStringOrBlock(args[0])) return null;
@@ -153,7 +153,7 @@ const SensingConverter = {
         });
 
         // Drag mode method (sprite only)
-        converter.registerCallMethod('sprite', 'drag_mode=', 1, params => {
+        converter.registerOnSend('sprite', 'drag_mode=', 1, params => {
             const {args} = params;
 
             const validDragMode = converter.isString(args[0]) && DragMode.indexOf(args[0].toString()) >= 0;
@@ -172,7 +172,7 @@ const SensingConverter = {
             return block;
         });
 
-        converter.registerCallMethod('::Keyboard', 'pressed?', 1, params => {
+        converter.registerOnSend('::Keyboard', 'pressed?', 1, params => {
             const {args} = params;
 
             const validKey = converter.isString(args[0]) && KeyOptions.indexOf(args[0].toString()) >= 0;
@@ -185,7 +185,7 @@ const SensingConverter = {
             return block;
         });
 
-        converter.registerCallMethod('::Time', 'now', 0, params => {
+        converter.registerOnSend('::Time', 'now', 0, params => {
             const {node} = params;
 
             return converter.createRubyExpressionBlock(TimeNow, node);
@@ -200,7 +200,7 @@ const SensingConverter = {
             {method: 'sec', currentMenu: 'SECOND'}
         ];
         timeNowMethods.forEach(({method, currentMenu}) => {
-            converter.registerCallMethod(TimeNow, method, 0, params => {
+            converter.registerOnSend(TimeNow, method, 0, params => {
                 const {receiver} = params;
 
                 const block = converter.changeRubyExpressionBlock(receiver, 'sensing_current', 'value');
@@ -210,14 +210,14 @@ const SensingConverter = {
         });
 
         // Special handling for wday - changes expression to TimeNowWday
-        converter.registerCallMethod(TimeNow, 'wday', 0, params => {
+        converter.registerOnSend(TimeNow, 'wday', 0, params => {
             const {receiver, node} = params;
 
             return converter.changeRubyExpression(receiver, node, TimeNowWday);
         });
 
         // Special handling for wday + 1 (DAYOFWEEK)
-        converter.registerCallMethod(TimeNowWday, '+', 1, params => {
+        converter.registerOnSend(TimeNowWday, '+', 1, params => {
             const {receiver, args} = params;
 
             if (!converter.isNumber(args[0]) || args[0].toString() !== '1') return null;
@@ -227,7 +227,7 @@ const SensingConverter = {
             return block;
         });
 
-        converter.registerCallMethod('self', 'sprite', 1, params => {
+        converter.registerOnSend('self', 'sprite', 1, params => {
             const {args, node} = params;
 
             if (!converter.isString(args[0])) return null;
@@ -247,7 +247,7 @@ const SensingConverter = {
         ];
 
         spriteGetters.forEach(({method, property}) => {
-            converter.registerCallMethod('sprite_call', method, 0, params => {
+            converter.registerOnSend('sprite_call', method, 0, params => {
                 const {receiver} = params;
 
                 const spriteName = converter._getSpriteCallName(receiver);
@@ -261,7 +261,7 @@ const SensingConverter = {
         });
 
         // Sprite variable method
-        converter.registerCallMethod('sprite_call', 'variable', 1, params => {
+        converter.registerOnSend('sprite_call', 'variable', 1, params => {
             const {receiver, args} = params;
 
             if (!converter.isString(args[0])) return null;

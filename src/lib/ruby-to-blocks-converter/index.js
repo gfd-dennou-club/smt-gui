@@ -395,7 +395,9 @@ class RubyToBlocksConverter {
         }
 
         const methodToNumArgs = this._receiverToMethods[receiverName];
+        if (!methodToNumArgs) return null;
         const numArgsToNumRubyBlockArgs = methodToNumArgs[name];
+        if (!numArgsToNumRubyBlockArgs) return null;
         const numRubyBlockArgsToCreateBlockFuncs = numArgsToNumRubyBlockArgs[args.length];
         if (!numRubyBlockArgsToCreateBlockFuncs) return null;
 

@@ -8,7 +8,7 @@ import {RubyToBlocksConverterError} from './errors';
 const MyBlocksConverter = {
     register: function (converter) {
         // Register my-block handler for procedure calls
-        converter.registerCallMyBlock('self', params => {
+        converter.registerOnSendMyBlock('self', params => {
             const {name, args, procedure} = params;
 
             if (procedure.argumentIds.length !== args.length) return null;

@@ -22,7 +22,7 @@ const ControlConverter = {
 
     register: function (converter) {
         // sleep(duration) - control_wait
-        converter.registerCallMethod('self', 'sleep', 1, params => {
+        converter.registerOnSend('self', 'sleep', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -32,7 +32,7 @@ const ControlConverter = {
         });
 
         // repeat(times) { block } - control_repeat
-        converter.registerCallMethodWithBlock('self', 'repeat', 1, 0, params => {
+        converter.registerOnSendWithBlock('self', 'repeat', 1, 0, params => {
             const {args, rubyBlock} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -42,7 +42,7 @@ const ControlConverter = {
 
         // loop { block } and forever { block } - control_forever
         ['loop', 'forever'].forEach(methodName => {
-            converter.registerCallMethodWithBlock('self', methodName, 0, 0, params => {
+            converter.registerOnSendWithBlock('self', methodName, 0, 0, params => {
                 const {rubyBlock} = params;
                 if (!rubyBlock) return null;
 
@@ -54,7 +54,7 @@ const ControlConverter = {
         });
 
         // stop(option) - control_stop
-        converter.registerCallMethod('self', 'stop', 1, params => {
+        converter.registerOnSend('self', 'stop', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || StopOptions.indexOf(args[0].toString()) < 0) return null;
 
@@ -64,7 +64,7 @@ const ControlConverter = {
         });
 
         // create_clone(target) - control_create_clone_of
-        converter.registerCallMethod('self', 'create_clone', 1, params => {
+        converter.registerOnSend('self', 'create_clone', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -78,7 +78,7 @@ const ControlConverter = {
         });
 
         // number.times { block } and variable.times { block } - control_repeat
-        converter.registerCallMethodWithBlock('any', 'times', 0, 0, params => {
+        converter.registerOnSendWithBlock('any', 'times', 0, 0, params => {
             const {receiver, rubyBlock} = params;
             if (!rubyBlock || !converter._isNumberOrBlock(receiver)) return null;
 
@@ -87,7 +87,7 @@ const ControlConverter = {
         });
 
         // when_start_as_a_clone { block } (sprite only)
-        converter.registerCallMethodWithBlock('sprite', 'when_start_as_a_clone', 0, 0, params => {
+        converter.registerOnSendWithBlock('sprite', 'when_start_as_a_clone', 0, 0, params => {
             const {rubyBlock} = params;
             const block = converter.createBlock('control_start_as_clone', 'hat');
             converter.setParent(rubyBlock, block);
@@ -95,12 +95,12 @@ const ControlConverter = {
         });
 
         // delete_this_clone method (sprite only)
-        converter.registerCallMethod('sprite', 'delete_this_clone', 0, () =>
+        converter.registerOnSend('sprite', 'delete_this_clone', 0, () =>
             converter._createBlock('control_delete_this_clone', 'statement')
         );
 
         // backward compatibility
-        converter.registerCallMethodWithBlock('self', 'when', 1, 0, params => {
+        converter.registerOnSendWithBlock('self', 'when', 1, 0, params => {
             const {args} = params;
 
             if (args[0].type !== 'sym') return null;

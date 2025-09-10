@@ -13,7 +13,7 @@ const RotationStyle = [
 const MotionConverter = {
     register: function (converter) {
         // move(steps)
-        converter.registerCallMethod('sprite', 'move', 1, params => {
+        converter.registerOnSend('sprite', 'move', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -24,7 +24,7 @@ const MotionConverter = {
 
         // turn_right(degrees) and turn_left(degrees)
         ['turn_right', 'turn_left'].forEach(methodName => {
-            converter.registerCallMethod('sprite', methodName, 1, params => {
+            converter.registerOnSend('sprite', methodName, 1, params => {
                 const {args} = params;
                 if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -36,7 +36,7 @@ const MotionConverter = {
         });
 
         // go_to(target)
-        converter.registerCallMethod('sprite', 'go_to', 1, params => {
+        converter.registerOnSend('sprite', 'go_to', 1, params => {
             const {args} = params;
             if (converter._isString(args[0])) {
                 const block = converter._createBlock('motion_goto', 'statement');
@@ -53,7 +53,7 @@ const MotionConverter = {
         });
 
         // glide(target, secs: duration)
-        converter.registerCallMethod('sprite', 'glide', 2, params => {
+        converter.registerOnSend('sprite', 'glide', 2, params => {
             const {args} = params;
             if (args.length !== 2 || !converter._isHash(args[1]) || args[1].size !== 1) return null;
 
@@ -80,7 +80,7 @@ const MotionConverter = {
         });
 
         // direction = value
-        converter.registerCallMethod('sprite', 'direction=', 1, params => {
+        converter.registerOnSend('sprite', 'direction=', 1, params => {
             const {args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -90,7 +90,7 @@ const MotionConverter = {
         });
 
         // point_towards(target)
-        converter.registerCallMethod('sprite', 'point_towards', 1, params => {
+        converter.registerOnSend('sprite', 'point_towards', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0])) return null;
 
@@ -104,11 +104,11 @@ const MotionConverter = {
         });
 
         // bounce_if_on_edge()
-        converter.registerCallMethod('sprite', 'bounce_if_on_edge', 0, () =>
+        converter.registerOnSend('sprite', 'bounce_if_on_edge', 0, () =>
             converter._createBlock('motion_ifonedgebounce', 'statement'));
 
         // rotation_style = value
-        converter.registerCallMethod('sprite', 'rotation_style=', 1, params => {
+        converter.registerOnSend('sprite', 'rotation_style=', 1, params => {
             const {args} = params;
             if (!converter._isString(args[0]) || RotationStyle.indexOf(args[0].toString()) < 0) return null;
 
@@ -119,7 +119,7 @@ const MotionConverter = {
 
         // x = value and y = value
         ['x=', 'y='].forEach(methodName => {
-            converter.registerCallMethod('sprite', methodName, 1, params => {
+            converter.registerOnSend('sprite', methodName, 1, params => {
                 const {args} = params;
                 if (!converter._isNumberOrBlock(args[0])) return null;
 
@@ -132,12 +132,12 @@ const MotionConverter = {
 
         // x and y position getters
         ['x', 'y'].forEach(methodName => {
-            converter.registerCallMethod('sprite', methodName, 0, () =>
+            converter.registerOnSend('sprite', methodName, 0, () =>
                 converter._createBlock(`motion_${methodName}position`, 'value'));
         });
 
         // direction getter
-        converter.registerCallMethod('sprite', 'direction', 0, () =>
+        converter.registerOnSend('sprite', 'direction', 0, () =>
             converter._createBlock('motion_direction', 'value'));
 
         // Register onXxx handlers

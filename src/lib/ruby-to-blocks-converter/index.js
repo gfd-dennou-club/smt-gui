@@ -292,24 +292,24 @@ class RubyToBlocksConverter {
         });
     }
 
-    registerCallMethodWithBlock (receiverName, name, numArgs, numRubyBlockArgs, createBlockFunc) {
+    registerOnSendWithBlock (receiverName, name, numArgs, numRubyBlockArgs, createBlockFunc) {
         if (receiverName === 'any') {
             this._anyReceiverNames().forEach(rn => {
-                this.registerCallMethodWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
+                this.registerOnSendWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
             });
             return;
         }
 
         if (_.isArray(receiverName)) {
             receiverName.forEach(rn => {
-                this.registerCallMethodWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
+                this.registerOnSendWithBlock(rn, name, numArgs, numRubyBlockArgs, createBlockFunc);
             });
             return;
         }
 
         if (receiverName === 'self') {
-            this.registerCallMethodWithBlock('sprite', name, numArgs, numRubyBlockArgs, createBlockFunc);
-            this.registerCallMethodWithBlock('stage', name, numArgs, numRubyBlockArgs, createBlockFunc);
+            this.registerOnSendWithBlock('sprite', name, numArgs, numRubyBlockArgs, createBlockFunc);
+            this.registerOnSendWithBlock('stage', name, numArgs, numRubyBlockArgs, createBlockFunc);
             return;
         }
 
@@ -330,24 +330,24 @@ class RubyToBlocksConverter {
         createBlockFuncs.push(createBlockFunc);
     }
 
-    registerCallMethod (receiverName, name, numArgs, createBlockFunc) {
-        this.registerCallMethodWithBlock(receiverName, name, numArgs, 'none', createBlockFunc);
+    registerOnSend (receiverName, name, numArgs, createBlockFunc) {
+        this.registerOnSendWithBlock(receiverName, name, numArgs, 'none', createBlockFunc);
     }
 
-    registerCallMyBlock (receiverName, myBlockHandler) {
+    registerOnSendMyBlock (receiverName, myBlockHandler) {
         if (receiverName === 'any') {
-            this._anyReceiverNames().forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
+            this._anyReceiverNames().forEach(rn => this.registerOnSendMyBlock(rn, myBlockHandler));
             return;
         }
 
         if (_.isArray(receiverName)) {
-            receiverName.forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
+            receiverName.forEach(rn => this.registerOnSendMyBlock(rn, myBlockHandler));
             return;
         }
 
         if (receiverName === 'self') {
-            this.registerCallMyBlock('sprite', myBlockHandler);
-            this.registerCallMyBlock('stage', myBlockHandler);
+            this.registerOnSendMyBlock('sprite', myBlockHandler);
+            this.registerOnSendMyBlock('stage', myBlockHandler);
             return;
         }
 

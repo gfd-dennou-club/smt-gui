@@ -221,40 +221,39 @@ const OperatorsConverter = {
             converter._addNumberInput(block, 'NUM', 'math_number', rh, '');
             return block;
         });
-    },
 
-    // eslint-disable-next-line no-unused-vars
-    onAnd: function (operands) {
-        const block = this._createBlock('operator_and', 'value_boolean');
-        operands.forEach(o => {
-            if (o) {
-                o.parent = block.id;
+        // Register onXxx handlers
+        converter.registerOnAnd(operands => {
+            const block = converter._createBlock('operator_and', 'value_boolean');
+            operands.forEach(o => {
+                if (o) {
+                    o.parent = block.id;
+                }
+            });
+            if (!converter._isFalse(operands[0])) {
+                converter._addInput(block, 'OPERAND1', converter._createTextBlock(operands[0]));
             }
+            if (!converter._isFalse(operands[1])) {
+                converter._addInput(block, 'OPERAND2', converter._createTextBlock(operands[1]));
+            }
+            return block;
         });
-        if (!this._isFalse(operands[0])) {
-            this._addInput(block, 'OPERAND1', this._createTextBlock(operands[0]));
-        }
-        if (!this._isFalse(operands[1])) {
-            this._addInput(block, 'OPERAND2', this._createTextBlock(operands[1]));
-        }
-        return block;
-    },
 
-    // eslint-disable-next-line no-unused-vars
-    onOr: function (operands) {
-        const block = this._createBlock('operator_or', 'value_boolean');
-        operands.forEach(o => {
-            if (o) {
-                o.parent = block.id;
+        converter.registerOnOr(operands => {
+            const block = converter._createBlock('operator_or', 'value_boolean');
+            operands.forEach(o => {
+                if (o) {
+                    o.parent = block.id;
+                }
+            });
+            if (!converter._isFalse(operands[0])) {
+                converter._addInput(block, 'OPERAND1', converter._createTextBlock(operands[0]));
             }
+            if (!converter._isFalse(operands[1])) {
+                converter._addInput(block, 'OPERAND2', converter._createTextBlock(operands[1]));
+            }
+            return block;
         });
-        if (!this._isFalse(operands[0])) {
-            this._addInput(block, 'OPERAND1', this._createTextBlock(operands[0]));
-        }
-        if (!this._isFalse(operands[1])) {
-            this._addInput(block, 'OPERAND2', this._createTextBlock(operands[1]));
-        }
-        return block;
     }
 };
 

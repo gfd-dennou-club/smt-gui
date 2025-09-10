@@ -109,6 +109,7 @@ class RubyToBlocksConverter {
             MyBlocksConverter
         ];
         this._receiverToMethods = {};
+        this._receiverToMyBlocks = {};
         this.reset();
 
         [
@@ -134,7 +135,8 @@ class RubyToBlocksConverter {
             GdxForConverter,
             SmalrubotS1Converter,
             MotionConverter,
-            SensingConverter
+            SensingConverter,
+            MyBlocksConverter
         ].forEach(x => x.register(this));
     }
 
@@ -343,16 +345,59 @@ class RubyToBlocksConverter {
         this.registerCallMethodWithBlock(receiverName, name, numArgs, 'none', createBlockFunc);
     }
 
+    registerCallMyBlock (receiverName, myBlockHandler) {
+        if (receiverName === 'any') {
+            this._anyReceiverNames().forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
+            return;
+        }
+
+        if (_.isArray(receiverName)) {
+            receiverName.forEach(rn => this.registerCallMyBlock(rn, myBlockHandler));
+            return;
+        }
+
+        if (receiverName === 'self') {
+            this.registerCallMyBlock('sprite', myBlockHandler);
+            this.registerCallMyBlock('stage', myBlockHandler);
+            return;
+        }
+
+        if (!this._receiverToMyBlocks[receiverName]) {
+            this._receiverToMyBlocks[receiverName] = [];
+        }
+        this._receiverToMyBlocks[receiverName].push(myBlockHandler);
+    }
+
     callMethod (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
         const receiverName = this._getReceiverName(receiver);
         if (!receiverName) return null;
 
+        // Check for my-block procedure calls
+        if (this._receiverToMyBlocks[receiverName]) {
+            const procedure = this._lookupProcedure(name);
+            if (procedure) {
+                const params = {
+                    receiver: receiver,
+                    receiverName: receiverName,
+                    name: name,
+                    args: args,
+                    rubyBlockArgs: rubyBlockArgs,
+                    rubyBlock: rubyBlock,
+                    node: node,
+                    procedure: procedure
+                };
+
+                for (const handler of this._receiverToMyBlocks[receiverName]) {
+                    const block = handler.apply(this, [params]);
+                    if (block) return block;
+                }
+            }
+        }
+
         const methodToNumArgs = this._receiverToMethods[receiverName];
         if (!methodToNumArgs) return null;
-
         const numArgsToNumRubyBlockArgs = methodToNumArgs[name];
         if (!numArgsToNumRubyBlockArgs) return null;
-
         const numRubyBlockArgsToCreateBlockFuncs = numArgsToNumRubyBlockArgs[args.length];
         if (!numRubyBlockArgsToCreateBlockFuncs) return null;
 

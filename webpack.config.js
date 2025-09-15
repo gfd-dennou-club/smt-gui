@@ -187,7 +187,7 @@ const buildWithPwaConfig = buildConfig.clone()
     )
     .addPlugin(
         new WebpackPwaManifest({
-            publicPath: './',
+            publicPath: process.env.PUBLIC_PATH || 'auto',
             name: 'Smalruby',
             short_name: 'Smalruby',
             description: 'GraphicaL User Interface for creating and running Smalruby 3.0 projects',

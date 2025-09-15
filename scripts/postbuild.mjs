@@ -26,24 +26,27 @@ const fixFetchWorkerPaths = (filePath, publicPath) => {
     }
 
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Replace relative "chunks/" paths with absolute paths including publicPath
     const fixedContent = content.replace(
         /return "chunks\/" \+ "fetch-worker"/g,
         `return "${publicPath}chunks/" + "fetch-worker"`
+    ).replace(
+        /[=]>"chunks\/fetch-worker\./g,
+        `=>"${publicPath}chunks/fetch-worker.`
     );
 
-    if (content !== fixedContent) {
+    if (content === fixedContent) {
+        console.info(`No fetch-worker paths found in ${path.relative(basePath, filePath)}`);
+    } else {
         fs.writeFileSync(filePath, fixedContent);
         console.info(`Fixed fetch-worker paths in ${path.relative(basePath, filePath)}`);
-    } else {
-        console.info(`No fetch-worker paths found in ${path.relative(basePath, filePath)}`);
     }
 };
 
-const postbuild = async () => {
+const postbuild = () => {
     const publicPath = process.env.PUBLIC_PATH;
-    
+
     if (!publicPath) {
         console.info('PUBLIC_PATH not set - skipping fetch-worker path fixes');
         return;
@@ -63,13 +66,6 @@ const postbuild = async () => {
     }
 };
 
-postbuild().then(
-    () => {
-        console.info('Post-build script complete');
-        process.exit(0);
-    },
-    e => {
-        console.error('Post-build script failed:', e);
-        process.exit(1);
-    }
-);
+postbuild();
+console.info('Post-build script complete');
+process.exit(0);

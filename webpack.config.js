@@ -30,12 +30,13 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         rootPath: path.resolve(__dirname),
         enableReact: true,
         shouldSplitChunks: false,
-        publicPath: 'auto'
+        publicPath: process.env.PUBLIC_PATH || '/'
     })
     .setTarget('browserslist')
     .merge({
         output: {
             assetModuleFilename: 'static/assets/[name].[hash][ext][query]',
+            publicPath: process.env.PUBLIC_PATH || '/',
             library: {
                 name: 'GUI',
                 type: 'umd2'
@@ -101,9 +102,9 @@ const distConfig = baseConfig.clone()
         },
         output: {
             path: path.resolve(__dirname, 'dist')
-        }
+        },
+        externals: ['react', 'react-dom']
     })
-    .addExternals(['react', 'react-dom'])
     .addPlugin(
         new CopyWebpackPlugin({
             patterns: [

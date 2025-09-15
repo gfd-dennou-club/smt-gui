@@ -121,7 +121,10 @@ jobs:
                 NODE_OPTIONS: --max-old-space-size=4000
                 NODE_ENV: production
                 PUBLIC_PATH: /smalruby3-gui/
-              run: npm run build
+              run: |
+                npm run build
+                # Fix worker-loader paths for smalruby3-gui deployment
+                sed -i 's|return "chunks/" + "fetch-worker"|return "/smalruby3-gui/chunks/" + "fetch-worker"|g' build/gui.js build/player.js
             - name: Deploy playground to GitHub Pages
               uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
               if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
@@ -146,7 +149,10 @@ jobs:
                 NODE_OPTIONS: --max-old-space-size=4000
                 NODE_ENV: production
                 PUBLIC_PATH: /smalruby3-gui/${{ steps.branch.outputs.BRANCH_NAME }}/
-              run: npm run build
+              run: |
+                npm run build
+                # Fix worker-loader paths for branch deployment
+                sed -i 's|return "chunks/" + "fetch-worker"|return "/smalruby3-gui/${{ steps.branch.outputs.BRANCH_NAME }}/chunks/" + "fetch-worker"|g' build/gui.js build/player.js
             - name: Deploy playground to GitHub Pages for branch
               if: |
                 (!(

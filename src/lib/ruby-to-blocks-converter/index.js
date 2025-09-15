@@ -5,7 +5,7 @@ import log from '../log';
 import Blockly from 'scratch-blocks';
 import RubyParser from '../ruby-parser';
 // eslint-disable-next-line import/no-unresolved
-import Variable from 'scratch-vm/src/engine/variable';
+import {Variable} from './constants';
 
 import Primitive from './primitive';
 import {RubyToBlocksConverterError} from './errors';
@@ -588,7 +588,7 @@ class RubyToBlocksConverter {
             SoundConverter,
             SensingConverter
         ];
-        
+
         for (let i = 0; i < legacyConverters.length; i++) {
             const converter = legacyConverters[i];
             if (Object.prototype.hasOwnProperty.call(converter, handlerName)) {

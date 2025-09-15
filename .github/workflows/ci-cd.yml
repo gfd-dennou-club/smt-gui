@@ -106,13 +106,11 @@ jobs:
                 if [[ ${{ contains(github.ref, 'hotfix') }} == 'true' ]]; then
                 sed -e "s|hotfix/REPLACE|${{ github.ref_name }}|" --in-place release.config.js
                 fi
-            - name: Deploy playground to GitHub Pages
-              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+            - name: Prepare deployment files
               if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-              with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-                publish_dir: ./build
-                full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
+              run: |
+                touch build/.nojekyll
+                echo "smalruby.app" > build/CNAME
             - name: Deploy playground to Smalruby.app GitHub Pages
               uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
               if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
@@ -122,9 +120,52 @@ jobs:
                 full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
                 cname: smalruby.app
                 external_repository: smalruby/smalruby.app
+            - name: Rebuild for smalruby3-gui GitHub Pages
+              if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+              env:
+                NODE_OPTIONS: --max-old-space-size=4000
+                NODE_ENV: production
+                PUBLIC_PATH: /smalruby3-gui/
+              run: npm run build
+            - name: Prepare deployment files for smalruby3-gui GitHub Pages
+              if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+              run: touch build/.nojekyll
+            - name: Deploy playground to GitHub Pages
+              uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
+              if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./build
+                full_commit_message: "Build for ${{ github.sha }} ${{ github.event.head_commit.message }}"
             - name: Set branch name
               id: branch
               run: echo "BRANCH_NAME=${{ github.head_ref || github.ref_name }}" >> $GITHUB_OUTPUT
+            - name: Rebuild for branch GitHub Pages
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main' ||
+                  startsWith(github.ref, 'refs/heads/hotfix/') ||
+                  startsWith(github.ref, 'refs/heads/dependabot/') ||
+                  startsWith(github.ref, 'refs/heads/renovate/')
+                ))
+              env:
+                NODE_OPTIONS: --max-old-space-size=4000
+                NODE_ENV: production
+                PUBLIC_PATH: /smalruby3-gui/${{ steps.branch.outputs.BRANCH_NAME }}/
+              run: npm run build
+            - name: Prepare deployment files for branch GitHub Pages
+              if: |
+                (!(
+                  github.ref == 'refs/heads/develop' ||
+                  github.ref == 'refs/heads/master' ||
+                  github.ref == 'refs/heads/main' ||
+                  startsWith(github.ref, 'refs/heads/hotfix/') ||
+                  startsWith(github.ref, 'refs/heads/dependabot/') ||
+                  startsWith(github.ref, 'refs/heads/renovate/')
+                ))
+              run: touch build/.nojekyll
             - name: Deploy playground to GitHub Pages for branch
               if: |
                 (!(

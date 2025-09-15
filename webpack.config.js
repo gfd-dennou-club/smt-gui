@@ -101,9 +101,9 @@ const distConfig = baseConfig.clone()
         },
         output: {
             path: path.resolve(__dirname, 'dist')
-        }
+        },
+        externals: ['react', 'react-dom']
     })
-    .addExternals(['react', 'react-dom'])
     .addPlugin(
         new CopyWebpackPlugin({
             patterns: [

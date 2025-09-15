@@ -43,6 +43,17 @@ const KeyOptions = [
     '9'
 ];
 
+/**
+ * scratch-vm/src/engine/variable.jsからコピー
+ * @const
+ */
+const Variable = {
+    SCALAR_TYPE: '',
+    LIST_TYPE: 'list',
+    BROADCAST_MESSAGE_TYPE: 'broadcast_msg'
+};
+
 export {
-    KeyOptions
+    KeyOptions,
+    Variable
 };

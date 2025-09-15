@@ -13,7 +13,7 @@
   "scripts": {
     "setup-opal": "node ./scripts/make-setup-opal.js",
     "setup-scratch-vm": "cd node_modules/scratch-vm && npm install && webpack",
-    "build": "npm run clean && node ./scripts/makePWAAssetsManifest.js && webpack",
+    "build": "npm run clean && node ./scripts/makePWAAssetsManifest.js && webpack && node ./scripts/postbuild.mjs",
     "clean": "rimraf ./build && mkdirp build && rimraf ./dist && mkdirp dist",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"[skip ci] Build for $(git log --pretty=format:%H -n1)\"",
     "deploy:smalruby.app": "rimraf node_modules/gh-pages/.cache && echo \"smalruby.app\" > build/CNAME && touch build/.nojekyll && gh-pages -t -d build -m \"build: build for $(git log --pretty=format:%H -n1) [skip ci] \"",

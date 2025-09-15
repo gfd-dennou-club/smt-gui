@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import Variable from 'scratch-vm/src/engine/variable';
-import {KeyOptions} from './constants';
+import {KeyOptions, Variable} from './constants';
 
 const GreaterThanMenu = [
     'LOUDNESS',

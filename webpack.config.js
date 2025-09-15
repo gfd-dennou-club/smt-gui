@@ -30,7 +30,7 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         rootPath: path.resolve(__dirname),
         enableReact: true,
         shouldSplitChunks: false,
-        publicPath: process.env.PUBLIC_PATH || 'auto'
+        publicPath: 'auto'
     })
     .setTarget('browserslist')
     .merge({
@@ -59,16 +59,6 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.GTM_ENV_AUTH': `"${process.env.GTM_ENV_AUTH || ''}"`,
         'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null
     }))
-    .addPlugin(new webpack.NormalModuleReplacementPlugin(
-        /worker-loader\?\{inline:true,fallback:true\}!.*FetchWorkerTool\.worker$/,
-        resource => {
-            const publicPath = process.env.PUBLIC_PATH || 'auto';
-            resource.request = resource.request.replace(
-                /worker-loader\?\{inline:true,fallback:true\}/,
-                `worker-loader?{"inline":true,"fallback":true,"publicPath":"${publicPath}"}`
-            );
-        }
-    ))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [
             {
@@ -197,7 +187,7 @@ const buildWithPwaConfig = buildConfig.clone()
     )
     .addPlugin(
         new WebpackPwaManifest({
-            publicPath: process.env.PUBLIC_PATH || 'auto',
+            publicPath: './',
             name: 'Smalruby',
             short_name: 'Smalruby',
             description: 'GraphicaL User Interface for creating and running Smalruby 3.0 projects',

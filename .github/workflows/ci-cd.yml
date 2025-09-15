@@ -125,7 +125,7 @@ jobs:
               run: npm exec node ./scripts/postbuild.mjs
             - name: Prepare deployment files for smalruby3-gui GitHub Pages
               if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-              run: touch build/.nojekyll
+              run: rm -f build/CNAME
             - name: Deploy playground to GitHub Pages
               uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847 # v3
               if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'

@@ -12,7 +12,9 @@ import {
     LoadingStates,
     getIsLoadingUpload,
     getIsShowingWithoutId,
-    onLoadedProject,
+    onFetchedProjectData,
+    projectError,
+    setProjectId,
     requestProjectUpload
 } from '../reducers/project-state';
 import {setProjectTitle} from '../reducers/project-title';
@@ -133,7 +135,9 @@ const URLLoaderHOC = function (WrappedComponent) {
         // Step 4: Actually load the project data
         loadProjectFromUrl (projectId) {
             this.props.onLoadingStarted();
-            let loadingSuccess = false;
+
+            // Set project ID in Redux state first (like project-fetcher-hoc.jsx)
+            this.props.setProjectId(projectId.toString());
 
             // Use the same approach as project-fetcher-hoc.jsx
             // First get the project token via the proxy API
@@ -158,7 +162,7 @@ const URLLoaderHOC = function (WrappedComponent) {
                 .then(data => {
                     const projectToken = data.project_token;
 
-                    // Now load the project using the VM's storage system
+                    // Now load the project using storage system (like project-fetcher-hoc.jsx)
                     const storage = this.props.vm.runtime.storage;
                     storage.setProjectToken(projectToken);
 
@@ -166,22 +170,23 @@ const URLLoaderHOC = function (WrappedComponent) {
                 })
                 .then(projectAsset => {
                     if (projectAsset) {
-                        return this.props.vm.loadProject(projectAsset.data);
+                        // Use onFetchedProjectData instead of direct VM loading
+                        this.props.onFetchedProjectData(projectAsset.data, this.props.loadingState);
+
+                        // Set project title based on the project data or URL
+                        const projectTitle = `Project ${this.projectIdToLoad}`;
+                        this.props.onSetProjectTitle(projectTitle);
+                    } else {
+                        throw new Error('Could not find project');
                     }
-                    throw new Error('Could not find project');
-                })
-                .then(() => {
-                    // Set project title based on the project data or URL
-                    const projectTitle = `Project ${this.projectIdToLoad}`;
-                    this.props.onSetProjectTitle(projectTitle);
-                    loadingSuccess = true;
                 })
                 .catch(error => {
                     log.warn('URL loader error:', error);
+                    this.props.onError(error);
                     alert(this.props.intl.formatMessage(messages.loadError)); // eslint-disable-line no-alert
                 })
                 .then(() => {
-                    this.props.onLoadingFinished(this.props.loadingState, loadingSuccess);
+                    this.props.onLoadingFinished();
                     // Clear the project reference
                     this.projectIdToLoad = null;
                     this.projectUrlToLoad = null;
@@ -226,12 +231,15 @@ const URLLoaderHOC = function (WrappedComponent) {
         isLoadingUpload: PropTypes.bool,
         isShowingWithoutId: PropTypes.bool,
         loadingState: PropTypes.oneOf(LoadingStates),
+        onError: PropTypes.func,
+        onFetchedProjectData: PropTypes.func,
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
         onStartSelectingUrlLoad: PropTypes.func,
         projectChanged: PropTypes.bool,
         requestProjectUpload: PropTypes.func,
+        setProjectId: PropTypes.func,
         userOwnsProject: PropTypes.bool,
         vm: PropTypes.shape({
             loadProject: PropTypes.func,
@@ -255,17 +263,20 @@ const URLLoaderHOC = function (WrappedComponent) {
         };
     };
 
-    const mapDispatchToProps = (dispatch, ownProps) => ({
-        cancelFileUpload: loadingState => dispatch(onLoadedProject(loadingState, false, false)),
+    const mapDispatchToProps = dispatch => ({
+        cancelFileUpload: loadingState => dispatch(onFetchedProjectData(null, loadingState)),
         closeFileMenu: () => dispatch(closeFileMenu()),
-        onLoadingFinished: (loadingState, success) => {
-            dispatch(onLoadedProject(loadingState, ownProps.canSave, success));
+        onError: error => dispatch(projectError(error)),
+        onFetchedProjectData: (projectData, loadingState) =>
+            dispatch(onFetchedProjectData(projectData, loadingState)),
+        onLoadingFinished: () => {
             dispatch(closeLoadingProject());
             dispatch(closeFileMenu());
         },
         onLoadingStarted: () => dispatch(openLoadingProject()),
         onSetProjectTitle: title => dispatch(setProjectTitle(title)),
-        requestProjectUpload: loadingState => dispatch(requestProjectUpload(loadingState))
+        requestProjectUpload: loadingState => dispatch(requestProjectUpload(loadingState)),
+        setProjectId: projectId => dispatch(setProjectId(projectId))
     });
 
     const mergeProps = (stateProps, dispatchProps, ownProps) => Object.assign(

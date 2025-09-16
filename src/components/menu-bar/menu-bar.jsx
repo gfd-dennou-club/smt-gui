@@ -188,7 +188,8 @@ class MenuBar extends React.Component {
             'handleKeyPress',
             'handleRestoreOption',
             'getSaveToComputerHandler',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
+            'handleClickLoadFromUrl'
         ]);
     }
     componentDidMount () {
@@ -276,6 +277,15 @@ class MenuBar extends React.Component {
                 this.props.onProjectTelemetryEvent('projectDidSave', metadata);
             }
         };
+    }
+    handleClickLoadFromUrl () {
+        console.log('[MenuBar] handleClickLoadFromUrl called');
+        console.log('[MenuBar] onStartSelectingUrlLoad prop:', this.props.onStartSelectingUrlLoad);
+        if (this.props.onStartSelectingUrlLoad) {
+            this.props.onStartSelectingUrlLoad();
+        } else {
+            console.error('[MenuBar] onStartSelectingUrlLoad prop is not available');
+        }
     }
     restoreOptionMessage (deletedItem) {
         switch (deletedItem) {
@@ -493,7 +503,7 @@ class MenuBar extends React.Component {
                                             {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
                                         </MenuItem>
                                         <MenuItem
-                                            onClick={this.props.onStartSelectingUrlLoad}
+                                            onClick={this.handleClickLoadFromUrl}
                                         >
                                             <FormattedMessage
                                                 defaultMessage="Load from URL"

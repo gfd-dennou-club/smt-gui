@@ -202,6 +202,7 @@ const URLLoaderHOC = function (WrappedComponent) {
                 projectChanged,
                 requestProjectUpload: requestProjectUploadProp,
                 userOwnsProject,
+                onStartSelectingUrlLoad: onStartSelectingUrlLoadProp,
                 /* eslint-enable no-unused-vars */
                 ...componentProps
             } = this.props;
@@ -228,6 +229,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
+        onStartSelectingUrlLoad: PropTypes.func,
         projectChanged: PropTypes.bool,
         requestProjectUpload: PropTypes.func,
         userOwnsProject: PropTypes.bool,

@@ -12,7 +12,7 @@ import {
     LoadingStates,
     getIsLoadingUpload,
     getIsShowingWithoutId,
-    onFetchedProjectData,
+    onLoadedProject,
     projectError,
     setProjectId,
     requestProjectUpload
@@ -170,15 +170,18 @@ const URLLoaderHOC = function (WrappedComponent) {
                 })
                 .then(projectAsset => {
                     if (projectAsset) {
-                        // Use onFetchedProjectData instead of direct VM loading
-                        this.props.onFetchedProjectData(projectAsset.data, this.props.loadingState);
-
-                        // Set project title based on the project data or URL
-                        const projectTitle = `Project ${this.projectIdToLoad}`;
-                        this.props.onSetProjectTitle(projectTitle);
-                    } else {
-                        throw new Error('Could not find project');
+                        // Load project directly to VM (like sb-file-uploader-hoc.jsx for LOADING_VM_FILE_UPLOAD)
+                        return this.props.vm.loadProject(projectAsset.data);
                     }
+                    throw new Error('Could not find project');
+                })
+                .then(() => {
+                    // Set project title based on the project data or URL
+                    const projectTitle = `Project ${this.projectIdToLoad}`;
+                    this.props.onSetProjectTitle(projectTitle);
+
+                    // Use onLoadedProject for LOADING_VM_FILE_UPLOAD state
+                    this.props.onLoadedProject(this.props.loadingState, true, true);
                 })
                 .catch(error => {
                     log.warn('URL loader error:', error);
@@ -232,7 +235,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         isShowingWithoutId: PropTypes.bool,
         loadingState: PropTypes.oneOf(LoadingStates),
         onError: PropTypes.func,
-        onFetchedProjectData: PropTypes.func,
+        onLoadedProject: PropTypes.func,
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
@@ -264,11 +267,11 @@ const URLLoaderHOC = function (WrappedComponent) {
     };
 
     const mapDispatchToProps = dispatch => ({
-        cancelFileUpload: loadingState => dispatch(onFetchedProjectData(null, loadingState)),
+        cancelFileUpload: loadingState => dispatch(onLoadedProject(loadingState, false, false)),
         closeFileMenu: () => dispatch(closeFileMenu()),
         onError: error => dispatch(projectError(error)),
-        onFetchedProjectData: (projectData, loadingState) =>
-            dispatch(onFetchedProjectData(projectData, loadingState)),
+        onLoadedProject: (loadingState, canSave, success) =>
+            dispatch(onLoadedProject(loadingState, canSave, success)),
         onLoadingFinished: () => {
             dispatch(closeLoadingProject());
             dispatch(closeFileMenu());

@@ -57,7 +57,6 @@ const URLLoaderHOC = function (WrappedComponent) {
     class URLLoaderComponent extends React.Component {
         constructor (props) {
             super(props);
-            console.log('[URLLoaderHOC] Constructor called');
             bindAll(this, [
                 'handleStartSelectingUrlLoad',
                 'handleUrlInput',
@@ -73,7 +72,6 @@ const URLLoaderHOC = function (WrappedComponent) {
 
         // Step 1: Start the URL loading process
         handleStartSelectingUrlLoad () {
-            console.log('[URLLoaderHOC] handleStartSelectingUrlLoad called');
             this.handleUrlInput();
         }
 
@@ -214,7 +212,6 @@ const URLLoaderHOC = function (WrappedComponent) {
                 /* eslint-enable no-unused-vars */
                 ...componentProps
             } = this.props;
-            console.log('[URLLoaderHOC] Rendering with onStartSelectingUrlLoad:', this.handleStartSelectingUrlLoad);
             return (
                 <React.Fragment>
                     <WrappedComponent

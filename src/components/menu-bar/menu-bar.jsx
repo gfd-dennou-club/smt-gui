@@ -279,12 +279,8 @@ class MenuBar extends React.Component {
         };
     }
     handleClickLoadFromUrl () {
-        console.log('[MenuBar] handleClickLoadFromUrl called');
-        console.log('[MenuBar] onStartSelectingUrlLoad prop:', this.props.onStartSelectingUrlLoad);
         if (this.props.onStartSelectingUrlLoad) {
             this.props.onStartSelectingUrlLoad();
-        } else {
-            console.error('[MenuBar] onStartSelectingUrlLoad prop is not available');
         }
     }
     restoreOptionMessage (deletedItem) {

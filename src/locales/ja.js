@@ -1,4 +1,5 @@
 export default {
+    'gui.menuBar.loadFromUrl': 'URLから読み込む',
     'gui.menuBar.seeProjectPage': 'プロジェクトページを見る',
     'gui.loader.creating': 'プロジェクトを作成中...',
     'gui.smalruby3.crashMessage.description': '申し訳ありません。スモウルビーがクラッシュしたようです。このバグは自動的にスモウルビーチームに報告されました。ページを再読み込みしてください。',

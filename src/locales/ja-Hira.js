@@ -1,4 +1,8 @@
 export default {
+    'gui.menuBar.loadFromUrl': 'URLからよみこむ',
+    'gui.urlLoader.loadError': 'プロジェクトURLのよみこみにしっぱいしました。',
+    'gui.urlLoader.invalidUrl': 'ゆうこうなScratchプロジェクトURLをにゅうりょくしてください。',
+    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLをにゅうりょくしてください（れい：https://scratch.mit.edu/projects/1209008277/）：',
     'gui.menuBar.seeProjectPage': 'プロジェクトページをみる',
     'gui.loader.creating': 'プロジェクトをさくせいちゅう...',
     'gui.smalruby3.crashMessage.description': 'もうしわけありません。スモウルビーがクラッシュしたようです。このバグはじどうてきにスモウルビーチームにほうこくされました。ページをさいよみこみしてください。',

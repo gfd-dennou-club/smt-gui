@@ -1,5 +1,8 @@
 export default {
     'gui.menuBar.loadFromUrl': 'URLから読み込む',
+    'gui.urlLoader.loadError': 'プロジェクトURLの読み込みに失敗しました。',
+    'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLを入力してください。',
+    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLを入力してください（例：https://scratch.mit.edu/projects/1209008277/）：',
     'gui.menuBar.seeProjectPage': 'プロジェクトページを見る',
     'gui.loader.creating': 'プロジェクトを作成中...',
     'gui.smalruby3.crashMessage.description': '申し訳ありません。スモウルビーがクラッシュしたようです。このバグは自動的にスモウルビーチームに報告されました。ページを再読み込みしてください。',

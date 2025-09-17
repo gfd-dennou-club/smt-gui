@@ -24,7 +24,9 @@ import {
     closeBackdropLibrary,
     closeTelemetryModal,
     openExtensionLibrary,
-    closeDebugModal
+    closeDebugModal,
+    openUrlLoaderModal,
+    closeUrlLoaderModal
 } from '../reducers/modals';
 
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
@@ -178,6 +180,7 @@ const mapStateToProps = state => {
         telemetryModalVisible: state.scratchGui.modals.telemetryModal,
         tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
         rubyTabVisible: state.scratchGui.editorTab.activeTabIndex === RUBY_TAB_INDEX,
+        urlLoaderModalVisible: state.scratchGui.modals.urlLoaderModal,
         vm: state.scratchGui.vm
     };
 };
@@ -191,7 +194,9 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
     onRequestCloseDebugModal: () => dispatch(closeDebugModal()),
-    onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal())
+    onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal()),
+    openUrlLoaderModal: () => dispatch(openUrlLoaderModal()),
+    closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal())
 });
 
 const ConnectedGUI = injectIntl(connect(

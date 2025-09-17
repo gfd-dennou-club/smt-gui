@@ -32,6 +32,7 @@ import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 import BlockDisplayModal from '../../containers/block-display-modal.jsx';
+import URLLoaderModal from '../url-loader-modal/url-loader-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -133,6 +134,9 @@ const GUIComponent = props => {
         telemetryModalVisible,
         theme,
         tipsLibraryVisible,
+        urlLoaderModalVisible,
+        closeUrlLoaderModal,
+        onUrlLoaderSubmit,
         vm,
         // Exclude Redux-related props from being passed to DOM
         setSelectedBlocks: _setSelectedBlocks,
@@ -186,6 +190,12 @@ const GUIComponent = props => {
                         onOptOut={onTelemetryModalOptOut}
                         onRequestClose={onRequestCloseTelemetryModal}
                         onShowPrivacyPolicy={onShowPrivacyPolicy}
+                    />
+                ) : null}
+                {urlLoaderModalVisible ? (
+                    <URLLoaderModal
+                        onRequestClose={closeUrlLoaderModal}
+                        onLoadUrl={onUrlLoaderSubmit}
                     />
                 ) : null}
                 {loading ? (
@@ -483,6 +493,9 @@ GUIComponent.propTypes = {
     telemetryModalVisible: PropTypes.bool,
     theme: PropTypes.string,
     tipsLibraryVisible: PropTypes.bool,
+    urlLoaderModalVisible: PropTypes.bool,
+    closeUrlLoaderModal: PropTypes.func,
+    onUrlLoaderSubmit: PropTypes.func,
     vm: PropTypes.instanceOf(VM).isRequired
 };
 GUIComponent.defaultProps = {

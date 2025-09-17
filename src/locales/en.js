@@ -175,5 +175,14 @@ export default {
     'gui.smalruby3.blockDisplayModal.operator_contains': '(apple) contains (a)?',
     'gui.smalruby3.blockDisplayModal.operator_mod': '( ) mod ( )',
     'gui.smalruby3.blockDisplayModal.operator_round': 'round ( )',
-    'gui.smalruby3.blockDisplayModal.operator_mathop': '[abs ▼] of ( )'
+    'gui.smalruby3.blockDisplayModal.operator_mathop': '[abs ▼] of ( )',
+
+    // URL Loader messages
+    'gui.urlLoader.loadError': 'The project URL that was entered failed to load.',
+    'gui.urlLoader.invalidUrl': 'Please enter a valid Scratch project URL.',
+    'gui.urlLoader.urlPrompt': 'Enter a Scratch project URL (e.g., https://scratch.mit.edu/projects/1209008277/):',
+    'gui.urlLoader.title': 'Load from URL',
+    'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/',
+    'gui.urlLoader.openButton': 'Open',
+    'gui.urlLoader.cancelButton': 'Cancel'
 };

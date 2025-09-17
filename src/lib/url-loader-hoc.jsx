@@ -59,7 +59,7 @@ const URLLoaderHOC = function (WrappedComponent) {
             super(props);
             bindAll(this, [
                 'handleStartSelectingUrlLoad',
-                'handleUrlInput',
+                'handleUrlSubmit',
                 'loadProjectFromUrl',
                 'handleFinishedLoadingUpload'
             ]);
@@ -72,11 +72,12 @@ const URLLoaderHOC = function (WrappedComponent) {
 
         // Step 1: Start the URL loading process
         handleStartSelectingUrlLoad () {
-            this.handleUrlInput();
+            this.props.openUrlLoaderModal();
+            this.props.closeFileMenu();
         }
 
-        // Step 2: Prompt user for URL input
-        handleUrlInput () {
+        // Step 2: Handle URL submission from modal
+        handleUrlSubmit (url) {
             const {
                 intl,
                 isShowingWithoutId,
@@ -85,18 +86,10 @@ const URLLoaderHOC = function (WrappedComponent) {
                 userOwnsProject
             } = this.props;
 
-            const url = prompt(intl.formatMessage(messages.urlPrompt)); // eslint-disable-line no-alert
-
-            if (!url) {
-                // User cancelled
-                this.props.closeFileMenu();
-                return;
-            }
-
             const projectId = extractScratchProjectId(url);
             if (!projectId) {
                 alert(intl.formatMessage(messages.invalidUrl)); // eslint-disable-line no-alert
-                this.props.closeFileMenu();
+                this.props.closeUrlLoaderModal();
                 return;
             }
 
@@ -118,7 +111,7 @@ const URLLoaderHOC = function (WrappedComponent) {
                 this.props.requestProjectUpload(loadingState);
             }
 
-            this.props.closeFileMenu();
+            this.props.closeUrlLoaderModal();
         }
 
         // Step 3: Load project from URL (called from componentDidUpdate)
@@ -216,6 +209,7 @@ const URLLoaderHOC = function (WrappedComponent) {
                 <React.Fragment>
                     <WrappedComponent
                         onStartSelectingUrlLoad={this.handleStartSelectingUrlLoad}
+                        onUrlLoaderSubmit={this.handleUrlSubmit}
                         {...componentProps}
                     />
                 </React.Fragment>
@@ -227,6 +221,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         canSave: PropTypes.bool,
         cancelFileUpload: PropTypes.func,
         closeFileMenu: PropTypes.func,
+        closeUrlLoaderModal: PropTypes.func,
         intl: intlShape.isRequired,
         isLoadingUpload: PropTypes.bool,
         isShowingWithoutId: PropTypes.bool,
@@ -237,6 +232,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
         onStartSelectingUrlLoad: PropTypes.func,
+        openUrlLoaderModal: PropTypes.func,
         projectChanged: PropTypes.bool,
         requestProjectUpload: PropTypes.func,
         setProjectId: PropTypes.func,

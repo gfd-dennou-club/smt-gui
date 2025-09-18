@@ -38,11 +38,6 @@ const messages = defineMessages({
         id: 'gui.urlLoader.invalidUrl',
         defaultMessage: 'Please enter a valid Scratch project URL.',
         description: 'An error that displays when an invalid URL is entered.'
-    },
-    urlPrompt: {
-        id: 'gui.urlLoader.urlPrompt',
-        defaultMessage: 'Enter a Scratch project URL (e.g., https://scratch.mit.edu/projects/1209008277/):',
-        description: 'Prompt for entering a project URL.'
     }
 });
 

@@ -17,7 +17,7 @@ const messages = defineMessages({
         id: 'gui.urlLoader.title'
     },
     prompt: {
-        defaultMessage: 'Enter a Scratch project URL (e.g., https://scratch.mit.edu/projects/1209008277/):',
+        defaultMessage: 'Enter a Scratch project URL:',
         description: 'Prompt message for URL input',
         id: 'gui.urlLoader.urlPrompt'
     },

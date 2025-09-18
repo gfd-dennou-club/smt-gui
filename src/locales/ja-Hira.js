@@ -2,7 +2,7 @@ export default {
     'gui.menuBar.loadFromUrl': 'URLからよみこむ',
     'gui.urlLoader.loadError': 'プロジェクトURLのよみこみにしっぱいしました。',
     'gui.urlLoader.invalidUrl': 'ゆうこうなScratchプロジェクトURLをにゅうりょくしてください。',
-    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLをにゅうりょくしてください（れい：https://scratch.mit.edu/projects/1209008277/）：',
+    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLをにゅうりょくしてください：',
     'gui.urlLoader.title': 'URLからよみこむ',
     'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/',
     'gui.urlLoader.openButton': 'ひらく',

@@ -2,7 +2,7 @@ export default {
     'gui.menuBar.loadFromUrl': 'URLから読み込む',
     'gui.urlLoader.loadError': 'プロジェクトURLの読み込みに失敗しました。',
     'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLを入力してください。',
-    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLを入力してください（例：https://scratch.mit.edu/projects/1209008277/）：',
+    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLを入力してください：',
     'gui.urlLoader.title': 'URLから読み込む',
     'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/',
     'gui.urlLoader.openButton': '開く',

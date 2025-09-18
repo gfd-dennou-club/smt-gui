@@ -436,7 +436,8 @@ const onLoadedProject = (loadingState, canSave, success) => {
         // failed to load default project; show error
         return {type: START_ERROR};
     default:
-        return;
+        // For states like SHOWING_WITH_ID, return a no-op action
+        return {type: RETURN_TO_SHOWING};
     }
 };
 

@@ -188,7 +188,8 @@ class MenuBar extends React.Component {
             'handleKeyPress',
             'handleRestoreOption',
             'getSaveToComputerHandler',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
+            'handleClickLoadFromUrl'
         ]);
     }
     componentDidMount () {
@@ -276,6 +277,11 @@ class MenuBar extends React.Component {
                 this.props.onProjectTelemetryEvent('projectDidSave', metadata);
             }
         };
+    }
+    handleClickLoadFromUrl () {
+        if (this.props.onStartSelectingUrlLoad) {
+            this.props.onStartSelectingUrlLoad();
+        }
     }
     restoreOptionMessage (deletedItem) {
         switch (deletedItem) {
@@ -504,6 +510,15 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
+                                        <MenuItem
+                                            onClick={this.handleClickLoadFromUrl}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Load from URL"
+                                                description="Menu bar item for loading from URL"
+                                                id="gui.menuBar.loadFromUrl"
+                                            />
+                                        </MenuItem>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>
@@ -931,6 +946,7 @@ MenuBar.propTypes = {
     onSetTimeTravelMode: PropTypes.func,
     onShare: PropTypes.func,
     onStartSelectingFileUpload: PropTypes.func,
+    onStartSelectingUrlLoad: PropTypes.func,
     onToggleLoginOpen: PropTypes.func,
     projectTitle: PropTypes.string,
     renderLogin: PropTypes.func,

@@ -7,7 +7,7 @@ export default function (Generator) {
     Generator.translate_getTranslate = function (block) {
         const words = Generator.valueToCode(block, 'WORDS', Generator.ORDER_NONE) || null;
         const language = Generator.valueToCode(block, 'LANGUAGE', Generator.ORDER_NONE);
-        return `translate(${words}, ${language})\n`;
+        return [`translate(${words}, ${language})`, Generator.ORDER_FUNCTION_CALL];
     };
 
     Generator.translate_menu_languages = Generator.text2speech_menu_languages;

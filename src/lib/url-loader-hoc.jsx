@@ -256,15 +256,22 @@ const URLLoaderHOC = function (WrappedComponent) {
                 /* eslint-disable no-unused-vars */
                 cancelFileUpload,
                 closeFileMenu: closeFileMenuProp,
+                closeUrlLoaderModal: closeUrlLoaderModalProp,
+                intl,
                 isLoadingUpload,
                 isShowingWithoutId,
                 loadingState,
+                onError,
+                onLoadedProject: onLoadedProjectProp,
                 onLoadingFinished,
                 onLoadingStarted,
                 onSetProjectTitle,
+                openUrlLoaderModal: openUrlLoaderModalProp,
                 projectChanged,
                 requestProjectUpload: requestProjectUploadProp,
+                setProjectId: setProjectIdProp,
                 userOwnsProject,
+                vm,
                 onStartSelectingUrlLoad: onStartSelectingUrlLoadProp,
                 /* eslint-enable no-unused-vars */
                 ...componentProps

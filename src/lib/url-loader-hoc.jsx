@@ -281,6 +281,7 @@ const URLLoaderHOC = function (WrappedComponent) {
                     <WrappedComponent
                         onStartSelectingUrlLoad={this.handleStartSelectingUrlLoad}
                         onUrlLoaderSubmit={this.handleUrlSubmit}
+                        vm={vm}
                         {...componentProps}
                     />
                 </React.Fragment>

@@ -54,6 +54,18 @@
     color: $text-primary-transparent;
 }
 
+.urlInput.inputError {
+    border-color: $error-primary;
+    box-shadow: 0 0 0 1px $error-primary;
+}
+
+.errorMessage {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: $error-primary;
+    line-height: 1.4;
+}
+
 .buttonSection {
     display: flex;
     justify-content: flex-end;

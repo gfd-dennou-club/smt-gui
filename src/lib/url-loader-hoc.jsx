@@ -79,7 +79,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         }
 
         // Step 2: Handle URL submission from modal
-        handleUrlSubmit (url) {
+        handleUrlSubmit (url, errorCallback) {
             const {
                 intl,
                 isShowingWithoutId,
@@ -90,8 +90,10 @@ const URLLoaderHOC = function (WrappedComponent) {
 
             const projectId = extractScratchProjectId(url);
             if (!projectId) {
-                alert(intl.formatMessage(messages.invalidUrl)); // eslint-disable-line no-alert
-                this.props.closeUrlLoaderModal();
+                // Instead of alert, pass error to modal via callback
+                if (errorCallback) {
+                    errorCallback(intl.formatMessage(messages.invalidUrl));
+                }
                 return;
             }
 
@@ -111,9 +113,12 @@ const URLLoaderHOC = function (WrappedComponent) {
             if (uploadAllowed) {
                 // Start the loading process
                 this.props.requestProjectUpload(loadingState);
+                // Close modal only when validation passes and user confirms
+                this.props.closeUrlLoaderModal();
+            } else {
+                // Close modal if user cancels the replacement
+                this.props.closeUrlLoaderModal();
             }
-
-            this.props.closeUrlLoaderModal();
         }
 
         // Step 3: Load project from URL (called from componentDidUpdate)

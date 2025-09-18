@@ -35,6 +35,11 @@ const messages = defineMessages({
         defaultMessage: 'Cancel',
         description: 'Label for cancel button',
         id: 'gui.urlLoader.cancelButton'
+    },
+    invalidUrlError: {
+        defaultMessage: 'Please enter a valid Scratch project URL.',
+        description: 'Error message for invalid URL',
+        id: 'gui.urlLoader.invalidUrl'
     }
 });
 
@@ -45,22 +50,35 @@ class URLLoaderModal extends React.Component {
             'handleUrlChange',
             'handleOpenClick',
             'handleCancelClick',
-            'handleKeyPress'
+            'handleKeyPress',
+            'clearError'
         ]);
 
         this.state = {
-            url: ''
+            url: '',
+            error: null
         };
     }
 
     handleUrlChange (event) {
-        this.setState({url: event.target.value});
+        this.setState({
+            url: event.target.value,
+            error: null // Clear error when user types
+        });
+    }
+
+    clearError () {
+        this.setState({error: null});
     }
 
     handleOpenClick () {
         const {url} = this.state;
         if (url.trim()) {
-            this.props.onLoadUrl(url.trim());
+            this.props.onLoadUrl(url.trim(), error => {
+                if (error) {
+                    this.setState({error: error});
+                }
+            });
         }
     }
 
@@ -76,7 +94,7 @@ class URLLoaderModal extends React.Component {
 
     render () {
         const {intl, onRequestClose} = this.props;
-        const {url} = this.state;
+        const {url, error} = this.state;
 
         return (
             <Modal
@@ -98,7 +116,9 @@ class URLLoaderModal extends React.Component {
 
                     <Box className={styles.inputSection}>
                         <input
-                            className={styles.urlInput}
+                            className={classNames(styles.urlInput, {
+                                [styles.inputError]: error
+                            })}
                             type="text"
                             value={url}
                             placeholder={intl.formatMessage(messages.urlPlaceholder)}
@@ -106,6 +126,13 @@ class URLLoaderModal extends React.Component {
                             onKeyPress={this.handleKeyPress}
                             autoFocus
                         />
+                        {error && (
+                            <div className={styles.errorMessage}>
+                                <FormattedMessage
+                                    {...messages.invalidUrlError}
+                                />
+                            </div>
+                        )}
                     </Box>
 
                     <Box className={styles.buttonSection}>

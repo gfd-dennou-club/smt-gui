@@ -180,9 +180,11 @@ export default {
     // URL Loader messages
     'gui.urlLoader.loadError': 'The project URL that was entered failed to load.',
     'gui.urlLoader.invalidUrl': 'Please enter a valid Scratch project URL or Google Drive URL.',
-    'gui.urlLoader.urlPrompt': 'Enter a project URL:',
     'gui.urlLoader.title': 'Load from URL',
-    'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/ or https://drive.google.com/file/d/FILE_ID/view',
+    'gui.urlLoader.urlPlaceholder': 'Enter project URL...',
     'gui.urlLoader.openButton': 'Open',
-    'gui.urlLoader.cancelButton': 'Cancel'
+    'gui.urlLoader.cancelButton': 'Cancel',
+    'gui.urlLoader.urlExamplesTitle': 'URL Examples',
+    'gui.urlLoader.urlExampleScratch': 'https://scratch.mit.edu/projects/{project_id}/',
+    'gui.urlLoader.urlExampleGoogleDrive': 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link'
 };

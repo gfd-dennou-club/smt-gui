@@ -19,16 +19,6 @@
     gap: 1.5rem;
 }
 
-.promptSection {
-    text-align: left;
-}
-
-.promptText {
-    font-size: 0.875rem;
-    color: $text-primary;
-    line-height: 1.5;
-}
-
 .inputSection {
     display: flex;
     flex-direction: column;
@@ -64,6 +54,43 @@
     font-size: 0.75rem;
     color: $error-primary;
     line-height: 1.4;
+}
+
+.examplesSection {
+    display: flex;
+    flex-direction: column;
+    margin-top: -0.5rem;
+}
+
+.examplesTitle {
+    font-size: 0.75rem;
+    color: $text-primary;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.examplesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.exampleItem {
+    font-size: 0.75rem;
+    color: $text-primary-transparent;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.exampleItem::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: $text-primary-transparent;
 }
 
 .buttonSection {

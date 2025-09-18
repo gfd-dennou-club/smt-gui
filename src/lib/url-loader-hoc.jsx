@@ -20,7 +20,9 @@ import {
 import {setProjectTitle} from '../reducers/project-title';
 import {
     openLoadingProject,
-    closeLoadingProject
+    closeLoadingProject,
+    openUrlLoaderModal,
+    closeUrlLoaderModal
 } from '../reducers/modals';
 import {
     closeFileMenu
@@ -262,6 +264,7 @@ const URLLoaderHOC = function (WrappedComponent) {
     const mapDispatchToProps = dispatch => ({
         cancelFileUpload: loadingState => dispatch(onLoadedProject(loadingState, false, false)),
         closeFileMenu: () => dispatch(closeFileMenu()),
+        closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal()),
         onError: error => dispatch(projectError(error)),
         onLoadedProject: (loadingState, canSave, success) =>
             dispatch(onLoadedProject(loadingState, canSave, success)),
@@ -271,6 +274,7 @@ const URLLoaderHOC = function (WrappedComponent) {
         },
         onLoadingStarted: () => dispatch(openLoadingProject()),
         onSetProjectTitle: title => dispatch(setProjectTitle(title)),
+        openUrlLoaderModal: () => dispatch(openUrlLoaderModal()),
         requestProjectUpload: loadingState => dispatch(requestProjectUpload(loadingState)),
         setProjectId: projectId => dispatch(setProjectId(projectId))
     });

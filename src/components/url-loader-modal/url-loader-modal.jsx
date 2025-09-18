@@ -16,15 +16,25 @@ const messages = defineMessages({
         description: 'Title for the URL loader modal',
         id: 'gui.urlLoader.title'
     },
-    prompt: {
-        defaultMessage: 'Enter a Scratch project URL:',
-        description: 'Prompt message for URL input',
-        id: 'gui.urlLoader.urlPrompt'
-    },
     urlPlaceholder: {
-        defaultMessage: 'https://scratch.mit.edu/projects/1234567890/',
+        defaultMessage: 'Enter project URL...',
         description: 'Placeholder text for URL input field',
         id: 'gui.urlLoader.urlPlaceholder'
+    },
+    urlExamplesTitle: {
+        defaultMessage: 'URL Examples',
+        description: 'Title for URL examples section',
+        id: 'gui.urlLoader.urlExamplesTitle'
+    },
+    urlExampleScratch: {
+        defaultMessage: 'https://scratch.mit.edu/projects/{project_id}/',
+        description: 'Example URL format for Scratch projects',
+        id: 'gui.urlLoader.urlExampleScratch'
+    },
+    urlExampleGoogleDrive: {
+        defaultMessage: 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link',
+        description: 'Example URL format for Google Drive files',
+        id: 'gui.urlLoader.urlExampleGoogleDrive'
     },
     openButton: {
         defaultMessage: 'Open',
@@ -106,14 +116,6 @@ class URLLoaderModal extends React.Component {
                 onRequestClose={onRequestClose}
             >
                 <Box className={styles.body}>
-                    <Box className={styles.promptSection}>
-                        <div className={styles.promptText}>
-                            <FormattedMessage
-                                {...messages.prompt}
-                            />
-                        </div>
-                    </Box>
-
                     <Box className={styles.inputSection}>
                         <input
                             className={classNames(styles.urlInput, {
@@ -133,6 +135,26 @@ class URLLoaderModal extends React.Component {
                                 />
                             </div>
                         )}
+                    </Box>
+
+                    <Box className={styles.examplesSection}>
+                        <div className={styles.examplesTitle}>
+                            <FormattedMessage
+                                {...messages.urlExamplesTitle}
+                            />
+                        </div>
+                        <ul className={styles.examplesList}>
+                            <li className={styles.exampleItem}>
+                                <FormattedMessage
+                                    {...messages.urlExampleScratch}
+                                />
+                            </li>
+                            <li className={styles.exampleItem}>
+                                <FormattedMessage
+                                    {...messages.urlExampleGoogleDrive}
+                                />
+                            </li>
+                        </ul>
                     </Box>
 
                     <Box className={styles.buttonSection}>

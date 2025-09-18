@@ -61,8 +61,10 @@ const URLLoaderHOC = function (WrappedComponent) {
             bindAll(this, [
                 'handleStartSelectingUrlLoad',
                 'handleUrlSubmit',
-                'loadProjectFromUrl',
-                'handleFinishedLoadingUpload'
+                'loadScratchProjectFromUrl',
+                'loadGoogleDriveProjectFromUrl',
+                'handleFinishedLoadingUpload',
+                'clearLoadingReferences'
             ]);
         }
         componentDidUpdate (prevProps) {

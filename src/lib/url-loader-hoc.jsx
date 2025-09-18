@@ -6,7 +6,11 @@ import {connect} from 'react-redux';
 import log from '../lib/log';
 import sharedMessages from './shared-messages';
 
-import {extractScratchProjectId} from './url-parser';
+import {
+    extractScratchProjectId,
+    extractGoogleDriveFileId,
+    getUrlType
+} from './url-parser';
 
 import {
     LoadingStates,
@@ -83,8 +87,8 @@ const URLLoaderHOC = function (WrappedComponent) {
                 userOwnsProject
             } = this.props;
 
-            const projectId = extractScratchProjectId(url);
-            if (!projectId) {
+            const urlType = getUrlType(url);
+            if (!urlType) {
                 // Instead of alert, pass error to modal via callback
                 if (errorCallback) {
                     errorCallback(intl.formatMessage(messages.invalidUrl));
@@ -92,8 +96,15 @@ const URLLoaderHOC = function (WrappedComponent) {
                 return;
             }
 
-            this.projectIdToLoad = projectId;
+            // Store URL type and appropriate identifier
+            this.urlType = urlType;
             this.projectUrlToLoad = url;
+
+            if (urlType === 'scratch') {
+                this.projectIdToLoad = extractScratchProjectId(url);
+            } else if (urlType === 'google-drive') {
+                this.googleDriveFileId = extractGoogleDriveFileId(url);
+            }
 
             // If user owns the project, or user has changed the project,
             // we must confirm with the user that they really intend to
@@ -118,15 +129,18 @@ const URLLoaderHOC = function (WrappedComponent) {
 
         // Step 3: Load project from URL (called from componentDidUpdate)
         handleFinishedLoadingUpload () {
-            if (this.projectIdToLoad) {
-                this.loadProjectFromUrl(this.projectIdToLoad);
+            if (this.urlType === 'scratch' && this.projectIdToLoad) {
+                this.loadScratchProjectFromUrl(this.projectIdToLoad);
+                return;
+            } else if (this.urlType === 'google-drive' && this.googleDriveFileId) {
+                this.loadGoogleDriveProjectFromUrl(this.googleDriveFileId);
                 return;
             }
             this.props.cancelFileUpload(this.props.loadingState);
         }
 
-        // Step 4: Actually load the project data
-        loadProjectFromUrl (projectId) {
+        // Step 4a: Load Scratch project from URL
+        loadScratchProjectFromUrl (projectId) {
             this.props.onLoadingStarted();
 
             // Set project ID in Redux state first (like project-fetcher-hoc.jsx)
@@ -184,9 +198,55 @@ const URLLoaderHOC = function (WrappedComponent) {
                 .then(() => {
                     this.props.onLoadingFinished();
                     // Clear the project reference
-                    this.projectIdToLoad = null;
-                    this.projectUrlToLoad = null;
+                    this.clearLoadingReferences();
                 });
+        }
+
+        // Step 4b: Load Google Drive project from URL
+        loadGoogleDriveProjectFromUrl (fileId) {
+            this.props.onLoadingStarted();
+
+            // Convert Google Drive URL to direct download URL via CORS proxy
+            const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+            const corsProxyUrl = `https://api.smalruby.app/cors-proxy?url=${encodeURIComponent(directDownloadUrl)}`;
+
+            fetch(corsProxyUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.arrayBuffer();
+                })
+                .then(arrayBuffer =>
+                    // Load SB3 file directly to VM (same as sb-file-uploader-hoc.jsx)
+                    this.props.vm.loadProject(arrayBuffer)
+                )
+                .then(() => {
+                    // Set project title based on the Google Drive file
+                    const projectTitle = `Google Drive Project ${fileId}`;
+                    this.props.onSetProjectTitle(projectTitle);
+
+                    // Use onLoadedProject for LOADING_VM_FILE_UPLOAD state
+                    this.props.onLoadedProject(this.props.loadingState, true, true);
+                })
+                .catch(error => {
+                    log.warn('Google Drive URL loader error:', error);
+                    this.props.onError(error);
+                    alert(this.props.intl.formatMessage(messages.loadError)); // eslint-disable-line no-alert
+                })
+                .then(() => {
+                    this.props.onLoadingFinished();
+                    // Clear the references
+                    this.clearLoadingReferences();
+                });
+        }
+
+        // Clear all loading references
+        clearLoadingReferences () {
+            this.urlType = null;
+            this.projectIdToLoad = null;
+            this.googleDriveFileId = null;
+            this.projectUrlToLoad = null;
         }
 
         render () {

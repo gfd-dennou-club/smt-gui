@@ -1,10 +1,10 @@
 export default {
     'gui.menuBar.loadFromUrl': 'URLから読み込む',
     'gui.urlLoader.loadError': 'プロジェクトURLの読み込みに失敗しました。',
-    'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLを入力してください。',
-    'gui.urlLoader.urlPrompt': 'ScratchプロジェクトのURLを入力してください：',
+    'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLまたはGoogle DriveのURLを入力してください。',
+    'gui.urlLoader.urlPrompt': 'プロジェクトのURLを入力してください：',
     'gui.urlLoader.title': 'URLから読み込む',
-    'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/',
+    'gui.urlLoader.urlPlaceholder': 'https://scratch.mit.edu/projects/1234567890/ または https://drive.google.com/file/d/FILE_ID/view',
     'gui.urlLoader.openButton': '開く',
     'gui.urlLoader.cancelButton': 'キャンセル',
     'gui.menuBar.seeProjectPage': 'プロジェクトページを見る',

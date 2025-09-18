@@ -17,13 +17,13 @@ const messages = defineMessages({
         id: 'gui.urlLoader.title'
     },
     prompt: {
-        defaultMessage: 'Enter a Scratch project URL:',
+        defaultMessage: 'Enter a project URL:',
         description: 'Prompt message for URL input',
         id: 'gui.urlLoader.urlPrompt'
     },
     urlPlaceholder: {
-        defaultMessage: 'https://scratch.mit.edu/projects/1234567890/',
-        description: 'Placeholder text for URL input field',
+        defaultMessage: 'https://scratch.mit.edu/projects/1234567890/ or https://drive.google.com/file/d/FILE_ID/view',
+        description: 'Placeholder text for URL input field showing both Scratch and Google Drive examples',
         id: 'gui.urlLoader.urlPlaceholder'
     },
     openButton: {

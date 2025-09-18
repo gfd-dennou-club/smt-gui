@@ -498,15 +498,6 @@ class MenuBar extends React.Component {
                                         >
                                             {this.props.intl.formatMessage(sharedMessages.loadFromComputerTitle)}
                                         </MenuItem>
-                                        <MenuItem
-                                            onClick={this.handleClickLoadFromUrl}
-                                        >
-                                            <FormattedMessage
-                                                defaultMessage="Load from URL"
-                                                description="Menu bar item for loading from URL"
-                                                id="gui.menuBar.loadFromUrl"
-                                            />
-                                        </MenuItem>
                                         <SB3Downloader>{(className, downloadProjectCallback) => (
                                             <MenuItem
                                                 className={className}
@@ -519,6 +510,15 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
+                                        <MenuItem
+                                            onClick={this.handleClickLoadFromUrl}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Load from URL"
+                                                description="Menu bar item for loading from URL"
+                                                id="gui.menuBar.loadFromUrl"
+                                            />
+                                        </MenuItem>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>

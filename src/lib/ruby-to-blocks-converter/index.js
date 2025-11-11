@@ -33,7 +33,7 @@ import MyBlocksConverter from "./my-blocks";
 // import VideoConverter from './video';
 // import Text2SpeechConverter from './text2speech';
 import ToolsConverter from "./tools";
-// import Kanirobo2Converter from "./kanirobo2";
+import Kanirobo2Converter from "./kanirobo2";
 import KaniOldBlocksConverter from "./kanirobo-old";
 
 const messages = defineMessages({
@@ -104,7 +104,8 @@ class RubyToBlocksConverter {
             OperatorsConverter,
             VariablesConverter,
             MyBlocksConverter,
-            KaniOldBlocksConverter,
+            Kanirobo2Converter,
+            //KaniOldBlocksConverter,
         ];
         this._receiverToMethods = {};
         this.reset();
@@ -119,7 +120,7 @@ class RubyToBlocksConverter {
             // MicrobitMoreConverter,
             // MeshConverter
             ToolsConverter,
-            //Kanirobo2Converter,
+            Kanirobo2Converter,
         ].forEach((x) => x.register(this));
     }
 
@@ -173,7 +174,9 @@ class RubyToBlocksConverter {
         this._setTarget(target);
         this._loadVariables(target);
         try {
+            console.log(code);
             const root = RubyParser.$parse(code);
+            console.log(root);
             let blocks = this._process(root);
             if (blocks === null || blocks === Opal.nil) {
                 return true;
@@ -400,7 +403,6 @@ class RubyToBlocksConverter {
         };
         for (let i = 0; i < createBlockFuncs.length; i++) {
             const createBlockFunc = createBlockFuncs[i];
-            console.error(params);
             const block = createBlockFunc.apply(this, [params]);
             if (block) return block;
         }
@@ -420,6 +422,14 @@ class RubyToBlocksConverter {
             const textBlock =
                 this._context.blocks[receiver.inputs.EXPRESSION.block];
             return textBlock.fields.TEXT.value;
+        }
+
+        if (
+            receiver instanceof Primitive &&
+            receiver.type === "const" &&
+            receiver.value
+        ) {
+            return receiver.value.name;
         }
 
         return null;
@@ -1288,8 +1298,6 @@ class RubyToBlocksConverter {
     _onSend(node, rubyBlockArgsNode, rubyBlockNode) {
         const saved = this._saveContext();
 
-        console.error(node.children);
-
         let receiver = this._process(node.children[0]);
         if (_.isArray(receiver) && receiver.length === 1) {
             receiver = receiver[0];
@@ -1308,8 +1316,6 @@ class RubyToBlocksConverter {
         if (rubyBlockNode) {
             rubyBlock = this._processStatement(rubyBlockNode);
         }
-
-        console.error(receiver);
 
         let block = this.callMethod(
             receiver,

@@ -34,7 +34,6 @@ import MyBlocksConverter from "./my-blocks";
 // import Text2SpeechConverter from './text2speech';
 import ToolsConverter from "./tools";
 import Kanirobo2Converter from "./kanirobo2";
-import KaniOldBlocksConverter from "./kanirobo-old";
 
 const messages = defineMessages({
     couldNotConvertPremitive: {
@@ -105,7 +104,6 @@ class RubyToBlocksConverter {
             VariablesConverter,
             MyBlocksConverter,
             Kanirobo2Converter,
-            //KaniOldBlocksConverter,
         ];
         this._receiverToMethods = {};
         this.reset();
@@ -174,9 +172,7 @@ class RubyToBlocksConverter {
         this._setTarget(target);
         this._loadVariables(target);
         try {
-            console.log(code);
             const root = RubyParser.$parse(code);
-            console.log(root);
             let blocks = this._process(root);
             if (blocks === null || blocks === Opal.nil) {
                 return true;

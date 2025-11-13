@@ -695,6 +695,13 @@ class RubyToBlocksConverter {
         return this._isBlock(block) && block.opcode === "ruby_expression";
     }
 
+    _isRubyArgument(block) {
+        return (
+            this._isBlock(block) &&
+            block.opcode === "argument_reporter_string_number"
+        );
+    }
+
     _getRubyExpression(block) {
         if (this._isRubyExpression(block)) {
             const textBlock =

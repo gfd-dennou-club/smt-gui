@@ -14,15 +14,12 @@ export default function (Generator) {
     };
 
     Generator.kanirobo1v2_lux_init = function (block) {
-        if (block) return `lux${block} = ADC.new(${block})\n`;
-        else return ``;
-        /*
         return (
             `lux36 = ADC.new(36)\n` +
             `lux34 = ADC.new(34)\n` +
             `lux35 = ADC.new(35)\n` +
             `lux2  = ADC.new(2)\n`
-        );*/
+        );
     };
 
     Generator.kanirobo1v2_servo_init = function (block) {
@@ -50,7 +47,6 @@ export default function (Generator) {
         const text =
             Generator.valueToCode(block, "TEXT", Generator.ORDER_NONE) || null;
         Generator.prepares_[`lux`] += Generator.kanirobo1v2_lux_init(null);
-        console.log(Generator.prepares_["lux"]);
         return [`lux${text}.read_raw`, Generator.ORDER_ATOMIC];
     };
 

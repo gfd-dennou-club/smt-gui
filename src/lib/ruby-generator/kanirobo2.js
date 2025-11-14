@@ -12,9 +12,8 @@ export default function (Generator) {
 
     Generator.kanirobo2_command3 = function (block) {
         const text = Generator.getFieldValue(block, "TEXT") || null;
-        return `pwm${text} = PWM.new( ${text}, timer:1, channel:${
-            (text % 2) + 1
-        }, frequency:1000 )\n`;
+        const channel = text === "26" ? 1 : 2;
+        return `pwm${text} = PWM.new( ${text}, timer:1, channel:${channel}, frequency:1000 )\n`;
     };
 
     Generator.kanirobo2_command4 = function (block) {

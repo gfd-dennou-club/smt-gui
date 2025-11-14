@@ -229,13 +229,13 @@ const Kanirobo2Converter = {
                             return this._changeRubyExpressionBlock(
                                 receiver,
                                 "kanirobo2_value0",
-                                "statement"
+                                "value"
                             );
                         } else {
                             return this._changeBlock(
                                 receiver,
                                 "kanirobo2_value0",
-                                "statement"
+                                "value"
                             );
                         }
                     })();

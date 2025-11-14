@@ -34,20 +34,6 @@ const Kanirobo2Converter = {
                 const { node } = params;
                 return converter.createRubyExpressionBlock("gpio" + pin, node);
             });
-            // gpio.write
-            // converter.registerCallMethod("gpio" + pin, "write", 1, (params) => {
-            //     const { receiver, args } = params;
-            //     if (!converter.isNumber(args[0])) return null;
-            //     if (args[0].value !== 0 && args[0].value !== 1) return null;
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "kanirobo2_command4",
-            //         "statement"
-            //     );
-            //     converter.addField(block, "TEXT1", pin);
-            //     converter.addField(block, "TEXT2", args[0]);
-            //     return block;
-            // });
         });
         // pwm
         pwmPins.forEach((pin) => {
@@ -57,86 +43,6 @@ const Kanirobo2Converter = {
 
                 return converter.createRubyExpressionBlock("pwm" + pin, node);
             });
-
-            // switch (pin) {
-            //     // pwm.pulse_with_us
-            //     case "27":
-            //     case "14":
-            //         converter.registerCallMethod(
-            //             "pwm" + pin,
-            //             "pulse_with_us",
-            //             1,
-            //             (params) => {
-            //                 const { receiver, args } = params;
-            //                 const pulseWidth = (() => {
-            //                     if (converter.isBlock(args[0])) {
-            //                         const source = converter._getSource(
-            //                             args[0].node
-            //                         );
-
-            //                         deleteBlock(converter, args[0]);
-
-            //                         return source.match(/(\d+)\.to_i\s*\*/)[1];
-            //                     }
-            //                 })();
-            //                 if (!pulseWidth) return null;
-
-            //                 const block = converter.changeRubyExpressionBlock(
-            //                     receiver,
-            //                     "kanirobo2_command8",
-            //                     "statement"
-            //                 );
-            //                 converter.addField(block, "TEXT", pin);
-            //                 converter.addNumberInput(
-            //                     block,
-            //                     "NUM",
-            //                     "math_number",
-            //                     Number(pulseWidth)
-            //                 );
-            //                 return block;
-            //             }
-            //         );
-            //     case "26":
-            //     case "33":
-            //         // pwm.duty
-            //         converter.registerCallMethod(
-            //             "pwm" + pin,
-            //             "duty",
-            //             1,
-            //             (params) => {
-            //                 const { receiver, args } = params;
-
-            //                 const duty = (() => {
-            //                     if (converter.isBlock(args[0])) {
-            //                         const source = converter._getSource(
-            //                             args[0].node
-            //                         );
-
-            //                         deleteBlock(converter, args[0]);
-
-            //                         return source.match(
-            //                             /\(\s*(\d+)\s*%\s*\d+\s*\)\.to_i/
-            //                         )[1];
-            //                     }
-            //                 })();
-            //                 if (!duty) return null;
-
-            //                 const block = converter.changeRubyExpressionBlock(
-            //                     receiver,
-            //                     "kanirobo2_command5",
-            //                     "statement"
-            //                 );
-            //                 converter.addField(block, "TEXT", pin);
-            //                 converter.addNumberInput(
-            //                     block,
-            //                     "NUM",
-            //                     "math_number",
-            //                     Number(duty)
-            //                 );
-            //                 return block;
-            //             }
-            //         );
-            // }
         });
         // adc
         adcPins.forEach((pin) => {
@@ -146,25 +52,6 @@ const Kanirobo2Converter = {
 
                 return converter.createRubyExpressionBlock("adc" + pin, node);
             });
-
-            // adc.read_raw
-            // converter.registerCallMethod(
-            //     "adc" + pin,
-            //     "read_raw",
-            //     0,
-            //     (params) => {
-            //         const { receiver } = params;
-
-            //         const block = converter.changeRubyExpressionBlock(
-            //             receiver,
-            //             "kanirobo2_value0",
-            //             "statement"
-            //         );
-            //         converter.addField(block, "TEXT", pin);
-
-            //         return block;
-            //     }
-            // );
         });
 
         // GPIO.new()
@@ -250,6 +137,7 @@ const Kanirobo2Converter = {
         if (!receiverName) return null;
 
         switch (name) {
+            // gpio.write
             case "write": {
                 const match = receiverName.match(/^gpio(\d+)$/);
 
@@ -281,6 +169,7 @@ const Kanirobo2Converter = {
                 }
                 break;
             }
+            // pwm.duty
             case "duty": {
                 const match = receiverName.match(/^pwm(\d+)$/);
 
@@ -293,8 +182,6 @@ const Kanirobo2Converter = {
                             const source = this._getSource(args[0].node);
 
                             deleteBlock(this, args[0]);
-
-                            console.log(args[0]);
 
                             return source.match(
                                 /\(\s*(\d+)\s*%\s*\d+\s*\)\.to_i/
@@ -311,7 +198,7 @@ const Kanirobo2Converter = {
                                 "statement"
                             );
                         } else {
-                            this._changeBlock(
+                            return this._changeBlock(
                                 receiver,
                                 "kanirobo2_command5",
                                 "statement"
@@ -330,6 +217,7 @@ const Kanirobo2Converter = {
                 }
                 break;
             }
+            //adc.read_raw
             case "read_raw": {
                 const match = receiverName.match(/^adc(\d+)$/);
 
@@ -357,6 +245,7 @@ const Kanirobo2Converter = {
                 }
                 break;
             }
+            // pwm.pulse_with_us
             case "pulse_with_us": {
                 const match = receiverName.match(/^pwm(\d+)$/);
 

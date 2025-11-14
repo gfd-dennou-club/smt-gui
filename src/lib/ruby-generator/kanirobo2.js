@@ -6,81 +6,78 @@
 export default function (Generator) {
     // 各ブロックに対応する Ruby コードを書く
     Generator.kanirobo2_command2 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
         return `gpio${text} = GPIO.new( ${text}, GPIO::OUT )\n`;
     };
 
     Generator.kanirobo2_command3 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
-        const channel = text === "26" ? 1 : 2;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
+        const channel = text === '26' ? 1 : 2;
         return `pwm${text} = PWM.new( ${text}, timer:1, channel:${channel}, frequency:1000 )\n`;
     };
 
     Generator.kanirobo2_command4 = function (block) {
-        const text1 = Generator.getFieldValue(block, "TEXT1") || null;
-        const text2 = Generator.getFieldValue(block, "TEXT2") || null;
+        const text1 = Generator.getFieldValue(block, 'TEXT1') || null;
+        const text2 = Generator.getFieldValue(block, 'TEXT2') || null;
         return `gpio${text1}.write( ${text2} )\n`;
     };
 
     Generator.kanirobo2_command5 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
-        const num =
-            Generator.valueToCode(block, "NUM", Generator.ORDER_NONE) || 0;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
+        const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || 0;
         return `pwm${text}.duty( ( ${num} % 101 ).to_i )\n`;
     };
 
     Generator.kanirobo2_command6 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
         return `adc${text} = ADC.new( ${text} )\n`;
     };
 
     Generator.kanirobo2_value0 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
         return [`adc${text}.read_raw`, Generator.ORDER_ATOMIC];
     };
 
     Generator.kanirobo2_command7 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
-        const num =
-            Generator.valueToCode(block, "NUM", Generator.ORDER_NONE) || 0;
-        const channel = text === "27" ? 3 : 4;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
+        const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || 0;
+        const channel = text === '27' ? 3 : 4;
         return `pwm${text} = PWM.new( ${text}, timer:2, channel:${channel}, frequency:(1000 / ${num}.to_i) )\n`;
     };
 
     Generator.kanirobo2_command8 = function (block) {
-        const text = Generator.getFieldValue(block, "TEXT") || null;
-        const num =
-            Generator.valueToCode(block, "NUM", Generator.ORDER_NONE) || 0;
+        const text = Generator.getFieldValue(block, 'TEXT') || null;
+        const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || 0;
         return `pwm${text}.pulse_with_us( ${num}.to_i * 1000 )\n`;
     };
 
     // メニューについては Ruby 側でも定義が必要のようだ
     Generator.kanirobo2_menu_menu1 = function (block) {
-        const menu1 = Generator.getFieldValue(block, "menu1") || null;
+        const menu1 = Generator.getFieldValue(block, 'menu1') || null;
         return [menu1, Generator.ORDER_ATOMIC];
     };
 
     Generator.kanirobo2_menu_menu2 = function (block) {
-        const menu2 = Generator.getFieldValue(block, "menu2") || null;
+        const menu2 = Generator.getFieldValue(block, 'menu2') || null;
         return [menu2, Generator.ORDER_ATOMIC];
     };
     Generator.kanirobo2_menu_menu3 = function (block) {
-        const menu3 = Generator.getFieldValue(block, "menu3") || null;
+        const menu3 = Generator.getFieldValue(block, 'menu3') || null;
         return [menu3, Generator.ORDER_ATOMIC];
     };
 
     Generator.kanirobo2_menu_menu4 = function (block) {
-        const menu4 = Generator.getFieldValue(block, "menu4") || null;
+        const menu4 = Generator.getFieldValue(block, 'menu4') || null;
         return [menu4, Generator.ORDER_ATOMIC];
     };
 
     Generator.kanirobo2_menu_menu5 = function (block) {
-        const menu5 = Generator.getFieldValue(block, "menu5") || null;
+        const menu5 = Generator.getFieldValue(block, 'menu5') || null;
         return [menu5, Generator.ORDER_ATOMIC];
     };
 
     Generator.kanirobo2_menu_menu6 = function (block) {
-        const menu6 = Generator.getFieldValue(block, "menu6") || null;
+        const menu6 = Generator.getFieldValue(block, 'menu6') || null;
         return [menu6, Generator.ORDER_ATOMIC];
     };
 

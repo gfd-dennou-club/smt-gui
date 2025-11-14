@@ -41,8 +41,8 @@ export default function (Generator) {
         );
     };
     Generator.kanirobo1v2_value0 = function (block) {
+        Generator.prepares_[`lux`] = Generator.kanirobo1v2_lux_init(null);
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
-        Generator.prepares_[`lux`] += Generator.kanirobo1v2_lux_init(null);
         return [`lux${text}.read_raw`, Generator.ORDER_ATOMIC];
     };
 

@@ -9,6 +9,8 @@ import ControlsComponent from '../components/controls/controls.jsx';
 
 import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
 
+import RubyUploader from './ruby-uploader.jsx';
+
 class Controls extends React.Component {
     constructor (props) {
         super(props);
@@ -51,13 +53,28 @@ class Controls extends React.Component {
             ...props
         } = this.props;
         return (
+/*
             <ControlsComponent
                 {...props}
                 active={projectRunning}
                 turbo={turbo}
                 onGreenFlagClick={this.handleGreenFlagClick}
                 onStopAllClick={this.handleStopAllClick}
-            />
+  	    />
+*/
+	    <RubyUploader>
+                 {(
+                     _1, _2, uploadProject
+                 ) => (
+                     <ControlsComponent
+                         {...props}
+                         active={projectRunning}
+                         turbo={turbo}
+                         onGreenFlagClick={uploadProject}
+                         onStopAllClick={this.handleStopAllClick}
+                     />
+                 )}
+             </RubyUploader>
         );
     }
 }

@@ -29,6 +29,8 @@ import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
+import RubyUploader from '../../containers/ruby-uploader.jsx'; // kani-robo
+
 import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
 import {openBlockDisplayModal} from '../../reducers/block-display';
 import {setPlayer} from '../../reducers/mode';
@@ -189,7 +191,8 @@ class MenuBar extends React.Component {
             'handleRestoreOption',
             'getSaveToComputerHandler',
             'restoreOptionMessage',
-            'handleClickLoadFromUrl'
+            'handleClickLoadFromUrl',
+            'getSaveRubyToComputerHandler' //kanirobo
         ]);
     }
     componentDidMount () {
@@ -278,6 +281,14 @@ class MenuBar extends React.Component {
             }
         };
     }
+    //kanirobo
+    getSaveRubyToComputerHandler (uploadProjectCallback) {
+        return () => {
+            this.props.onRequestCloseFile();
+            uploadProjectCallback();
+        };
+    }
+
     handleClickLoadFromUrl () {
         if (this.props.onStartSelectingUrlLoad) {
             this.props.onStartSelectingUrlLoad();
@@ -519,6 +530,24 @@ class MenuBar extends React.Component {
                                                 id="gui.menuBar.loadFromUrl"
                                             />
                                         </MenuItem>
+                                    </MenuSection>
+                                    <MenuSection>
+                                        <RubyUploader>
+                                            {(
+                                                className, _, uploadProject
+                                            ) => (
+                                                <MenuItem
+                                                    className={className}
+                                                    onClick={this.getSaveRubyToComputerHandler(uploadProject)}
+                                                >
+                                                    <FormattedMessage
+                                                        defaultMessage="Send to MicroComputer"
+                                                        description="Menu bar item for send to MicroComputer"
+                                                        id="gui.menuBar.uploadToServer"
+                                                    />
+                                                </MenuItem>
+                                            )}
+                                        </RubyUploader>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>

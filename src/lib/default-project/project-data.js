@@ -65,8 +65,9 @@ const projectData = translateFunction => {
                 volume: 100
             },
             {
+		//My default
                 isStage: false,
-                name: translator(messages.sprite, {index: 1}),
+                name: 'master',
                 variables: {},
                 lists: {},
                 broadcasts: {},
@@ -75,12 +76,12 @@ const projectData = translateFunction => {
                 costumes: [
                     {
                         assetId: '7499cf6ec438d0c7af6f896bc6adc294',
-                        name: translator(messages.costume, {index: 1}),
+                        name: 'master',
                         bitmapResolution: 1,
                         md5ext: '7499cf6ec438d0c7af6f896bc6adc294.svg',
                         dataFormat: 'svg',
-                        rotationCenterX: 87,
-                        rotationCenterY: 39
+                        rotationCenterX: 200,
+                        rotationCenterY: 120
                     }
                 ],
                 sounds: [

@@ -10,11 +10,44 @@ const getInitialSelectedBlocks = () => {
     // Parse URL parameters
     const urlParams = typeof window === 'undefined' ?
         {} : queryString.parse(window.location.search);
-
-    const onlyBlocks = urlParams.only_blocks;
-
+    console.log( urlParams );
+    
+    //    const onlyBlocks = urlParams.only_blocks;
+    //
     // Initialize from only_blocks parameter (null if not present, which will select all blocks)
-    return initializeBlockSelectionFromOnlyBlocks(onlyBlocks);
+    //    return initializeBlockSelectionFromOnlyBlocks(onlyBlocks);
+
+    //必要なブロックのみに限定
+    const onlyBlocks = {
+	control: [
+            'control_wait',
+            'control_repeat',
+            'control_forever',
+            'control_if',
+            'control_if_else',
+            'control_wait_until',
+            'control_repeat_until'
+	],
+	operators: [
+            'operator_add',
+            'operator_subtract',
+            'operator_multiply',
+            'operator_divide',
+            'operator_gt',
+            'operator_lt',
+            'operator_equals',
+            'operator_and',
+            'operator_or',
+            'operator_not',
+            'operator_join',
+            'operator_letter_of',
+            'operator_length',
+            'operator_contains',
+            'operator_mod',
+            'operator_round'
+	]
+    };
+    return onlyBlocks;
 };
 
 const initialState = {

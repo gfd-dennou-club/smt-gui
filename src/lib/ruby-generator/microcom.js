@@ -9,7 +9,7 @@ export default function (Generator) {
         return `gpio${pin} = GPIO.new( ${pin}, GPIO::OUT )\n`;
     };
 
-    Generator.microcom_gpio_output = function (block) {
+    Generator.microcom_gpio_write = function (block) {
         const pin   = Generator.valueToCode(block, 'PIN',   Generator.ORDER_NONE) || null;
         const value = Generator.valueToCode(block, 'VALUE', Generator.ORDER_NONE);
         return `gpio${pin}.write( ${value} )\n`;
@@ -20,7 +20,7 @@ export default function (Generator) {
         return `gpio${pin} = GPIO.new( ${pin}, GPIO::IN|GPIO::PULL_UP )\n`;
     };
 
-    Generator.microcom_gpio_input = function (block) {
+    Generator.microcom_gpio_read = function (block) {
         const pin = Generator.valueToCode(block, 'PIN', Generator.ORDER_NONE) || null;
         return [`gpio${pin}.read`, Generator.ORDER_ATOMIC];
     };
@@ -36,13 +36,13 @@ export default function (Generator) {
     Generator.microcom_pwm_duty = function (block) {
         const pin  = Generator.valueToCode(block, 'PIN',  Generator.ORDER_NONE) || null;
         const duty = Generator.valueToCode(block, 'DUTY', Generator.ORDER_NONE) || null;
-        return `pwm${pin}.duty( ${duty} % 101 )\n`;
+        return `pwm${pin}.duty( ${duty} )\n`;
     };
 
     Generator.microcom_pwm_frequency = function (block) {
         const pin  = Generator.valueToCode(block, 'PIN',  Generator.ORDER_NONE) || null;
         const freq = Generator.valueToCode(block, 'FREQ', Generator.ORDER_NONE) || null;
-        return `pwm${pin}.freq( ${freq} )\n`;
+        return `pwm${pin}.frequency( ${freq} )\n`;
     };
 
     Generator.microcom_pwm_pulse = function (block) {
@@ -93,22 +93,28 @@ export default function (Generator) {
     Generator.microcom_uart_puts = function (block) {
         const uart = Generator.valueToCode(block, 'UART', Generator.ORDER_NONE) || null;
         const comm = Generator.valueToCode(block, 'COMM', Generator.ORDER_NONE) || null;
-        return `uart${uart}.puts( ${comm} )\n`;
+        return (
+	    `uart${uart}.puts( ${comm} )\n`
+	);
     };
 
     Generator.microcom_uart_gets = function (block) {
         const uart = Generator.valueToCode(block, 'UART', Generator.ORDER_NONE) || null;
-        return [`uart${text}.gets()`, Generator.ORDER_ATOMIC];
+        return [`uart${uart}.gets()`, Generator.ORDER_ATOMIC];
     };
 
-    Generator.microcom_txclear = function (block) {
+    Generator.microcom_uart_txclear = function (block) {
         const uart = Generator.valueToCode(block, 'UART', Generator.ORDER_NONE) || null;
-        return [`uart${text}.tx_clear()`, Generator.ORDER_ATOMIC];
+        return (
+	    `uart${uart}.tx_clear()\n`
+	);
     };
 
-    Generator.microcom_rxclear = function (block) {
+    Generator.microcom_uart_rxclear = function (block) {
         const uart = Generator.valueToCode(block, 'UART', Generator.ORDER_NONE) || null;
-        return [`uart${text}.rx_clear()`, Generator.ORDER_ATOMIC];
+        return (
+	    `uart${uart}.rx_clear()\n`
+	);
     };
 
     Generator.microcom_puts = function (block) {

@@ -36,7 +36,7 @@ export default function (Generator) {
     };
 
     Generator.rboard_led_all = function (block) {
-	Generator.prepares_[`led_all`] = Generator.rboard_led_init(null);
+	Generator.prepares_.led = Generator.rboard_led_init(null);
         const onoff1  = Generator.getFieldValue(block, 'ONOFF1', Generator.ORDER_NONE);
         const onoff2  = Generator.getFieldValue(block, 'ONOFF2', Generator.ORDER_NONE);
         const onoff3  = Generator.getFieldValue(block, 'ONOFF3', Generator.ORDER_NONE);
@@ -50,7 +50,7 @@ export default function (Generator) {
     };
 
     Generator.rboard_led = function (block) {
-	Generator.prepares_[`led`] = Generator.rboard_led_init(null);
+	Generator.prepares_.led = Generator.rboard_led_init(null);
         const pin   = Generator.getFieldValue(block, 'PIN',   Generator.ORDER_NONE);
         const onoff = Generator.getFieldValue(block, 'ONOFF', Generator.ORDER_NONE);
         return (
@@ -59,20 +59,20 @@ export default function (Generator) {
     };
 
     Generator.rboard_sw = function (block) {
-	Generator.prepares_[`sw`] = Generator.rboard_sw_init(null);
+	Generator.prepares_.sw = Generator.rboard_sw_init(null);
         const onoff = Generator.getFieldValue(block, 'ONOFF', Generator.ORDER_NONE);
         return [`sw12.read == ${onoff}`, Generator.ORDER_ATOMIC];
     };
 
     Generator.rboard_pwm_duty = function (block) {
-	Generator.prepares_[`pwm`] = Generator.rboard_pwm_init(null);
+	Generator.prepares_.pwm = Generator.rboard_pwm_init(null);
         const pin  = Generator.getFieldValue(block, 'PIN',  Generator.ORDER_NONE);
 	const duty = Generator.valueToCode(block, 'DUTY', Generator.ORDER_NONE) || 0;
         return `pwm${pin}.duty( ${duty} % 101 )\n`;
     };
 
     Generator.rboard_adc_volt = function (block) {
-	Generator.prepares_[`adc`] = Generator.rboard_adc_init(null);
+	Generator.prepares_.adc = Generator.rboard_adc_init(null);
         const pin = Generator.getFieldValue(block, 'PIN',  Generator.ORDER_NONE);
         return [`adc${pin}.read`, Generator.ORDER_ATOMIC];
     };

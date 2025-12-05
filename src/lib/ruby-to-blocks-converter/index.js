@@ -35,6 +35,9 @@ import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
 import KoshienConverter from './koshien';
 
+//import SmtMicrocomConverter from './smt_microcom';
+import KaniroboConverter from './kanirobo';
+
 const messages = defineMessages({
     couldNotConvertPrimitive: {
         defaultMessage: '"{ SOURCE }" could not be converted the block.',
@@ -125,7 +128,9 @@ class RubyToBlocksConverter {
             SmalrubotS1Converter,
             MotionConverter,
             SensingConverter,
-            MyBlocksConverter
+            MyBlocksConverter,
+//            SmtMicrocomConverter,
+            KaniroboConverter
         ].forEach(x => x.register(this));
     }
 

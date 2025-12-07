@@ -10,7 +10,7 @@ const getClassConstant = (block) => {
 };
 
 /**
- * KaniRobo converter
+ * Microcom converter
  */
 const MicrocomConverter = {
     register: function (converter) {
@@ -87,6 +87,7 @@ const MicrocomConverter = {
 
             return block;
         });
+
         for (let pin = 0; pin <= 40; pin++) {
             let str = "gpio" + pin;
 
@@ -97,39 +98,6 @@ const MicrocomConverter = {
                 const { node } = params;
                 return createMicroBlock(node);
             });
-
-            // // gpio.write
-            // converter.registerOnSend(str, "write", 1, (params) => {
-            //     const { receiver, args } = params;
-            //     if (!converter.isNumberOrBlock(args[0])) return null;
-
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_gpio_write",
-            //         "statement"
-            //     );
-            //     converter.addNumberInput(
-            //         block,
-            //         "VALUE",
-            //         "math_integer",
-            //         args[0],
-            //         0
-            //     );
-            //     converter.addNumberInput(block, "PIN", "math_integer", pin, 10);
-            //     return block;
-            // });
-
-            // // gpio.read
-            // converter.registerOnSend(str, "read", 0, (params) => {
-            //     const { receiver, args } = params;
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_gpio_read",
-            //         "value"
-            //     );
-            //     converter.addNumberInput(block, "PIN", "math_integer", pin, 10);
-            //     return block;
-            // });
         }
 
         // PWM
@@ -200,6 +168,7 @@ const MicrocomConverter = {
 
             return block;
         });
+
         for (let pin = 0; pin <= 40; pin++) {
             let str = "pwm" + pin;
 
@@ -209,84 +178,6 @@ const MicrocomConverter = {
                 const { node } = params;
                 return createMicroBlock(node);
             });
-
-            // converter.registerOnSend(str, "duty", 1, (params) => {
-            //     const { receiver, args } = params;
-            //     if (!converter._isNumberOrBlock(args[0])) return null;
-
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_pwm_duty",
-            //         "statement"
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "DUTY",
-            //         "math_integer",
-            //         args[0],
-            //         0
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "PIN",
-            //         "math_integer",
-            //         pin,
-            //         10
-            //     );
-            //     return block;
-            // });
-
-            // converter.registerOnSend(str, "frequency", 1, (params) => {
-            //     const { receiver, args } = params;
-            //     if (!converter._isNumberOrBlock(args[0])) return null;
-
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_pwm_frequency",
-            //         "statement"
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "FREQ",
-            //         "math_integer",
-            //         args[0],
-            //         1000
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "PIN",
-            //         "math_integer",
-            //         pin,
-            //         10
-            //     );
-            //     return block;
-            // });
-
-            // converter.registerOnSend(str, "pulse_width_us", 1, (params) => {
-            //     const { receiver, args } = params;
-            //     if (!converter._isNumberOrBlock(args[0])) return null;
-
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_pwm_pulse",
-            //         "statement"
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "PULSE",
-            //         "math_integer",
-            //         args[0],
-            //         10
-            //     );
-            //     converter._addNumberInput(
-            //         block,
-            //         "PIN",
-            //         "math_integer",
-            //         pin,
-            //         10
-            //     );
-            //     return block;
-            // });
         }
 
         // ADC
@@ -305,6 +196,7 @@ const MicrocomConverter = {
         converter.registerOnVasgn((scope, variable, rh) => {
             const expression = converter.getRubyExpression(rh);
             const match = expression.match(/^ADC\.new\(\s*(\d+)\s*\)/);
+            if (!match) return null;
             if (variable.name !== `adc${match[1]}`) return null;
 
             const block = converter.changeRubyExpressionBlock(
@@ -332,31 +224,62 @@ const MicrocomConverter = {
                 const { node } = params;
                 return createMicroBlock(node);
             });
+        }
 
-            // // adc.read_raw
-            // converter.registerOnSend(str, "read_raw", 0, (params) => {
-            //     console.log("test");
-            //     const { receiver } = params;
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_adc_raw",
-            //         "value"
-            //     );
-            //     converter.addNumberInput(block, "PIN", "math_integer", pin, 10);
-            //     return block;
-            // });
+        // UART
+        // UART.new
+        converter.registerOnSend("::UART", "new", 2, (params) => {
+            const { args, node } = params;
 
-            // // adc.read
-            // converter.registerOnSend(str, "read", 0, (params) => {
-            //     const { receiver } = params;
-            //     const block = converter.changeRubyExpressionBlock(
-            //         receiver,
-            //         "microcom_adc_volt",
-            //         "value"
-            //     );
-            //     converter.addNumberInput(block, "PIN", "math_integer", pin, 10);
-            //     return block;
-            // });
+            if (!converter.isNumber(args[0])) return null;
+            const baundrate = args[1].get("sym:baudrate");
+            if (!baundrate) return null;
+            if (!converter.isNumber(baundrate)) return null;
+
+            const expression = `UART.new( ${args[0].value}, baudrate:${baundrate.value} )`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+        // uart = UART.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+            const expression = converter.getRubyExpression(rh);
+            if (!expression) return null;
+
+            const match = expression.match(
+                /^UART\.new\(\s*(\d+),\s*baudrate:\s*(\d+)\s*\)/
+            );
+
+            if (!match) return null;
+            if (variable.name != `uart${match[1]}`) return null;
+
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_uart_init",
+                "statement"
+            );
+            converter.addNumberInput(
+                block,
+                "UART",
+                "math_integer",
+                Number(match[1])
+            );
+            converter.addNumberInput(
+                block,
+                "RATE",
+                "math_integer",
+                Number(match[2])
+            );
+
+            return block;
+        });
+
+        // uart
+        for (let pin = 0; pin <= 40; pin++) {
+            converter.registerOnSend("self", "uart" + pin, 0, (params) => {
+                const { node } = params;
+
+                return converter.createRubyExpressionBlock("uart" + pin, node);
+            });
         }
 
         // puts
@@ -464,7 +387,7 @@ const MicrocomConverter = {
                             );
                         }
                     })();
-                    this.addNumberInput(block, "PIN", "math_integer", pin, 10);
+                    this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
                 }
@@ -588,7 +511,7 @@ const MicrocomConverter = {
             case "read_raw": {
                 const match = receiverName.match(/^adc(\d+)$/);
 
-                if (match) {
+                if (match && args.length == 0) {
                     const pin = Number(match[1]);
 
                     const block = (() => {
@@ -607,6 +530,149 @@ const MicrocomConverter = {
                         }
                     })();
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
+
+                    return block;
+                }
+                break;
+            }
+            // uart.puts
+            case "puts": {
+                const match = receiverName.match(/^uart(\d+)$/);
+
+                if (match && args.length == 1) {
+                    const pin = Number(match[1]);
+
+                    if (!this._isString(args[0])) return null;
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_uart_puts",
+                                "statement"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_uart_puts",
+                                "statement"
+                            );
+                        }
+                    })();
+
+                    this._addNumberInput(
+                        block,
+                        "UART",
+                        "math_integer",
+                        pin,
+                        10
+                    );
+                    this._addTextInput(block, "COMM", args[0], "Output String");
+
+                    return block;
+                }
+                break;
+            }
+            // uart.gets
+            case "gets": {
+                const match = receiverName.match(/^uart(\d+)$/);
+
+                if (match && args.length == 0) {
+                    const pin = Number(match[1]);
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_uart_gets",
+                                "value"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_uart_gets",
+                                "value"
+                            );
+                        }
+                    })();
+
+                    this._addNumberInput(
+                        block,
+                        "UART",
+                        "math_integer",
+                        pin,
+                        10
+                    );
+
+                    return block;
+                }
+                break;
+            }
+            // uart.tx_clear
+            case "tx_clear": {
+                const match = receiverName.match(/^uart(\d+)$/);
+
+                if (match && args.length == 0) {
+                    const pin = Number(match[1]);
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_uart_txclear",
+                                "statement"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_uart_txclear",
+                                "statement"
+                            );
+                        }
+                    })();
+
+                    this._addNumberInput(
+                        block,
+                        "UART",
+                        "math_integer",
+                        pin,
+                        10
+                    );
+
+                    return block;
+                }
+                break;
+            }
+            // uart.rx_clear
+            case "rx_clear": {
+                const match = receiverName.match(/^uart(\d+)$/);
+
+                if (match && args.length == 0) {
+                    const pin = Number(match[1]);
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_uart_rxclear",
+                                "statement"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_uart_rxclear",
+                                "statement"
+                            );
+                        }
+                    })();
+
+                    this._addNumberInput(
+                        block,
+                        "UART",
+                        "math_integer",
+                        pin,
+                        10
+                    );
 
                     return block;
                 }

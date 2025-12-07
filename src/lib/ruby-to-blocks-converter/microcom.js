@@ -226,6 +226,58 @@ const MicrocomConverter = {
             });
         }
 
+        // I2C
+        // I2C.new
+        converter.registerOnSend("::I2C", "new", 2, (params) => {
+            const { args, node } = params;
+
+            if (!converter.isNumber(args[0])) return null;
+            if (!converter.isNumber(args[1])) return null;
+
+            const expression = `I2C.new( ${args[0].value}, ${args[1].value})`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+        // i2c = I2C.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+            const expression = converter.getRubyExpression(rh);
+            if (!expression) return null;
+
+            const match = expression.match(
+                /^I2C\.new\(\s*(\d+)\s*,\s*(\d+)\s*\)/
+            );
+
+            if (!match) return null;
+            if (variable.name != "i2c") return null;
+
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_i2c_init",
+                "statement"
+            );
+            converter.addNumberInput(
+                block,
+                "SCL",
+                "math_integer",
+                Number(match[1])
+            );
+            converter.addNumberInput(
+                block,
+                "SDA",
+                "math_integer",
+                Number(match[2])
+            );
+
+            return block;
+        });
+
+        // i2c
+        converter.registerOnSend("self", "i2c", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("i2c", node);
+        });
+
         // UART
         // UART.new
         converter.registerOnSend("::UART", "new", 2, (params) => {
@@ -534,6 +586,79 @@ const MicrocomConverter = {
                     return block;
                 }
                 break;
+            }
+            // i2c.writeto
+            case "writeto": {
+                if (receiverName == "i2c" && args.length == 2) {
+                    if (!this._isNumber(args[0])) return null;
+                    if (!this._isString(args[1])) return null;
+                    // ToDo: コマンドの詳しいチェック
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_i2c_write",
+                                "statement"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_i2c_write",
+                                "statement"
+                            );
+                        }
+                    })();
+                    this._addNumberInput(
+                        block,
+                        "ADDR",
+                        "math_integer",
+                        Number(args[0]),
+                        10
+                    );
+                    this._addTextInput(block, "COMM", args[1], "[0x00, 0x21]");
+
+                    return block;
+                }
+            }
+            // i2c.readfrom
+            case "readfrom": {
+                if (receiverName == "i2c" && args.length == 2) {
+                    if (!this._isNumber(args[0])) return null;
+                    if (!this._isNumber(args[1])) return null;
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_i2c_read",
+                                "value"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_i2c_read",
+                                "value"
+                            );
+                        }
+                    })();
+                    this._addNumberInput(
+                        block,
+                        "ADDR",
+                        "math_integer",
+                        Number(args[0]),
+                        10
+                    );
+                    this._addNumberInput(
+                        block,
+                        "BYTES",
+                        "math_integer",
+                        Number(args[1]),
+                        10
+                    );
+
+                    return block;
+                }
             }
             // uart.puts
             case "puts": {

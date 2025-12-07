@@ -36,7 +36,7 @@ import Text2SpeechConverter from './text2speech';
 import KoshienConverter from './koshien';
 
 //import SmtMicrocomConverter from './smt_microcom';
-import KaniroboConverter from './kanirobo';
+import MicrocomConverter from './microcom';
 
 const messages = defineMessages({
     couldNotConvertPrimitive: {
@@ -130,7 +130,7 @@ class RubyToBlocksConverter {
             SensingConverter,
             MyBlocksConverter,
 //            SmtMicrocomConverter,
-            KaniroboConverter
+            MicrocomConverter
         ].forEach(x => x.register(this));
     }
 
@@ -591,7 +591,8 @@ class RubyToBlocksConverter {
             MakeyMakeyConverter,
             LooksConverter,
             SoundConverter,
-            SensingConverter
+            SensingConverter,
+            MicrocomConverter
         ];
 
         for (let i = 0; i < legacyConverters.length; i++) {

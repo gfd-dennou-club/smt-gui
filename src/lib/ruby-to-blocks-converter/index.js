@@ -755,6 +755,10 @@ class RubyToBlocksConverter {
         return _.isArray(value) || (value && value.type === 'array');
     }
 
+    isHash (value) {
+        return this._isHash(value);
+    }
+
     _isHash (value) {
         return value && value.type === 'hash';
     }
@@ -854,6 +858,10 @@ class RubyToBlocksConverter {
 
     _isRubyExpression (block) {
         return this._isBlock(block) && block.opcode === 'ruby_expression';
+    }
+
+    _isRubyArgument(block) {
+        return this._isBlock(block) && block.opcode === 'argument_reporter_string_number';
     }
 
     getRubyExpression (block) {
@@ -1210,6 +1218,10 @@ class RubyToBlocksConverter {
         };
         this._context.procedures[name] = procedure;
         return procedure;
+    }
+
+    getSource(node) {
+        return this._getSource(node);
     }
 
     _getSource (node) {

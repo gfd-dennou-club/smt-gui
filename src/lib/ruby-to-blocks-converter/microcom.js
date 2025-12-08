@@ -1,5 +1,3 @@
-const classNames = ["GPIO", "PWM", "ADC", "UART", "I2C"];
-
 const getClassConstant = (block) => {
     const value = block.value;
     if (!value) return null;
@@ -14,42 +12,27 @@ const getClassConstant = (block) => {
  */
 const MicrocomConverter = {
     register: function (converter) {
-        //Class
-        classNames.forEach((className) => {
-            const createMicroBlock = (node) =>
-                converter.createRubyExpressionBlock(className, node);
-            converter.registerOnSend("self", className, 0, (params) => {
-                console.log("ClassName start");
-                const { node } = params;
-                return createMicroBlock(node);
-            });
-        });
-
         // GPIO
-        // GPIO.new out
+        // GPIO.new
         converter.registerOnSend("::GPIO", "new", 2, (params) => {
             const { args, node } = params;
 
             if (!converter.isNumber(args[0])) return null;
-            const mode = getClassConstant(args[1]);
-            if (mode != "::GPIO::OUT") return null;
+            if (converter.isBlock(args[1])) {
+                const mode = converter.getSource(args[1].node);
+                if (!mode == "GPIO::IN|GPIO::PULL_UP") return null;
 
-            const expression = `GPIO.new(${args[0].value}, GPIO::OUT)`;
-            return converter.createRubyExpressionBlock(expression, node);
-        });
+                converter.removeBlock(args[1]);
 
-        // GPIO.new in
-        converter.registerOnSend("::GPIO", "new", 3, (params) => {
-            const { args, node } = params;
+                const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
+                return converter.createRubyExpressionBlock(expression, node);
+            } else {
+                const mode = getClassConstant(args[1]);
+                if (mode != "::GPIO::OUT") return null;
 
-            if (!converter.isNumber(args[0])) return null;
-            const mode = getClassConstant(args[1]);
-            if (mode != "::GPIO::IN") return null;
-            const pullMode = getClassConstant(args[2]);
-            if (pullMode != "::GPIO::PULL_UP") return null;
-
-            const expression = `GPIO.new(${args[0].value}, GPIO::IN, GPIO::PULL_UP)`;
-            return converter.createRubyExpressionBlock(expression, node);
+                const expression = `GPIO.new( ${args[0].value}, GPIO::OUT )`;
+                return converter.createRubyExpressionBlock(expression, node);
+            }
         });
 
         // gpio = GPIO.new
@@ -58,7 +41,7 @@ const MicrocomConverter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /GPIO\.new\(\s*([^,]+?)\s*,\s*([^,]+?)\s*(?:,\s*([^,]+?)\s*)?\)/
+                /GPIO\.new\(\s*(\d+)\s*,\s*(.+?)\s*\)/
             );
             if (!match) return null;
             if (variable.name !== `gpio${match[1]}`) return null;
@@ -66,7 +49,7 @@ const MicrocomConverter = {
             const opcode = (() => {
                 if (match[2] == "GPIO::OUT" && match[3] == null)
                     return "microcom_gpio_output_init";
-                else if (match[2] == "GPIO::IN" && match[3] == "GPIO::PULL_UP")
+                else if (match[2] == "GPIO::IN|GPIO::PULL_UP")
                     return "microcom_gpio_input_init";
                 else return null;
             })();
@@ -169,6 +152,7 @@ const MicrocomConverter = {
             return block;
         });
 
+        // pwm
         for (let pin = 0; pin <= 40; pin++) {
             let str = "pwm" + pin;
 
@@ -214,10 +198,10 @@ const MicrocomConverter = {
             return block;
         });
 
+        // adc
         for (let pin = 0; pin <= 40; pin++) {
             let str = "adc" + pin;
 
-            // adc
             const createMicroBlock = (node) =>
                 converter.createRubyExpressionBlock(str, node);
             converter.registerOnSend("self", str, 0, (params) => {
@@ -228,13 +212,16 @@ const MicrocomConverter = {
 
         // I2C
         // I2C.new
-        converter.registerOnSend("::I2C", "new", 2, (params) => {
+        converter.registerOnSend("::I2C", "new", 1, (params) => {
             const { args, node } = params;
 
-            if (!converter.isNumber(args[0])) return null;
-            if (!converter.isNumber(args[1])) return null;
+            if (!converter.isHash(args[0])) return null;
+            const scl = args[0].get("sym:scl_pin");
+            const sda = args[0].get("sym:sda_pin");
+            if (!converter.isNumber(scl)) return null;
+            if (!converter.isNumber(sda)) return null;
 
-            const expression = `I2C.new( ${args[0].value}, ${args[1].value})`;
+            const expression = `I2C.new( scl_pin:${scl.value}, sda_pin:${sda.value})`;
             return converter.createRubyExpressionBlock(expression, node);
         });
 
@@ -244,7 +231,7 @@ const MicrocomConverter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /^I2C\.new\(\s*(\d+)\s*,\s*(\d+)\s*\)/
+                /^I2C\.new\(\s*scl_pin:\s*(\d+)\s*,\s*sda_pin:\s*(\d+)\s*\)/
             );
 
             if (!match) return null;
@@ -349,20 +336,23 @@ const MicrocomConverter = {
         const receiverName = (() => {
             if (this._isRubyExpression(receiver)) {
                 return this._getRubyExpression(receiver);
-            } else {
+            } else if (this._isRubyArgument(receiver)) {
                 return receiver.fields.VALUE.value;
+            } else {
+                return null;
             }
         })();
 
         if (!receiverName) return null;
 
         switch (name) {
-            // gpio.write
+            // gpio.write i2c.write
             case "write": {
-                const match = receiverName.match(/^gpio(\d+)$/);
+                const match = receiverName.match(/^(.+?)(\d*)$/);
 
-                if (match && args.length === 1) {
-                    const pin = Number(match[1]);
+                if (match[1] == "gpio" && args.length == 1) {
+                    // gpio.write
+                    const pin = Number(match[2]);
 
                     if (!this._isNumber(args[0])) return null;
                     if (args[0].value !== 0 && args[0].value !== 1) return null;
@@ -393,12 +383,43 @@ const MicrocomConverter = {
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
+                } else if (match[1] == "i2c" && args.length == 2) {
+                    // i2c.write
+                    if (!this._isNumber(args[0])) return null;
+                    if (!this._isString(args[1])) return null;
+                    // ToDo: コマンドの詳しいチェック
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_i2c_write",
+                                "statement"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_i2c_write",
+                                "statement"
+                            );
+                        }
+                    })();
+                    this._addNumberInput(
+                        block,
+                        "ADDR",
+                        "math_integer",
+                        Number(args[0]),
+                        10
+                    );
+                    this._addTextInput(block, "COMM", args[1], "[0x00, 0x21]");
+
+                    return block;
                 }
                 break;
             }
-            // gpio.read adc.read
+            // gpio.read adc.read i2c.read
             case "read": {
-                const match = receiverName.match(/^(\D+)(\d+)$/);
+                const match = receiverName.match(/^(.+?)(\d*)$/);
                 const pin = Number(match[2]);
 
                 if (match[1] == "gpio" && args.length == 0) {
@@ -440,6 +461,41 @@ const MicrocomConverter = {
                         }
                     })();
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
+
+                    return block;
+                } else if (match[1] == "i2c" && args.length == 2) {
+                    if (!this._isNumber(args[0])) return null;
+                    if (!this._isNumber(args[1])) return null;
+
+                    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_i2c_read",
+                                "value"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_i2c_read",
+                                "value"
+                            );
+                        }
+                    })();
+                    this._addNumberInput(
+                        block,
+                        "ADDR",
+                        "math_integer",
+                        Number(args[0]),
+                        10
+                    );
+                    this._addNumberInput(
+                        block,
+                        "BYTES",
+                        "math_integer",
+                        Number(args[1]),
+                        10
+                    );
 
                     return block;
                 }

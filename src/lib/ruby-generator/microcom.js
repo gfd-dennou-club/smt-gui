@@ -24,7 +24,7 @@ export default function (Generator) {
     Generator.microcom_gpio_input_init = function (block) {
         const pin =
             Generator.valueToCode(block, "PIN", Generator.ORDER_NONE) || null;
-        return `gpio${pin} = GPIO.new( ${pin}, GPIO::IN, GPIO::PULL_UP )\n`;
+        return `gpio${pin} = GPIO.new( ${pin}, GPIO::IN|GPIO::PULL_UP )\n`;
     };
 
     Generator.microcom_gpio_read = function (block) {
@@ -92,7 +92,7 @@ export default function (Generator) {
             Generator.valueToCode(block, "SCL", Generator.ORDER_NONE) || 23;
         const sda =
             Generator.valueToCode(block, "SDA", Generator.ORDER_NONE) || 22;
-        return `i2c = I2C.new( ${scl}, ${sda} )\n`;
+        return `i2c = I2C.new( scl_pin:${scl}, sda_pin:${sda} )\n`;
     };
 
     Generator.microcom_i2c_write = function (block) {
@@ -100,7 +100,8 @@ export default function (Generator) {
             Generator.valueToCode(block, "ADDR", Generator.ORDER_NONE) || null;
         const comm =
             Generator.valueToCode(block, "COMM", Generator.ORDER_NONE) || null;
-        return `i2c.writeto( ${addr}, ${comm} )\n`;
+        console.log(comm);
+        return `i2c.write( ${addr}, ${comm} )\n`;
     };
 
     Generator.microcom_i2c_read = function (block) {
@@ -108,7 +109,7 @@ export default function (Generator) {
             Generator.valueToCode(block, "ADDR", Generator.ORDER_NONE) || null;
         const bytes =
             Generator.valueToCode(block, "BYTES", Generator.ORDER_NONE) || 1;
-        return [`i2c.readfrom( ${addr}, ${bytes} )`, Generator.ORDER_ATOMIC];
+        return [`i2c.read( ${addr}, ${bytes} )`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_uart_init = function (block) {

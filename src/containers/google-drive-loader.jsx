@@ -17,6 +17,9 @@ import {
     openLoadingProject,
     closeLoadingProject
 } from '../reducers/modals';
+import {
+    closeFileMenu
+} from '../reducers/menus';
 
 const messages = defineMessages({
     loadError: {
@@ -73,6 +76,9 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 log.warn('Google Drive API is not configured');
                 return;
             }
+
+            // Close file menu
+            this.props.closeFileMenu();
 
             // Initialize and show Google Picker
             // Don't show loading modal yet - wait until user selects a file
@@ -174,6 +180,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         render () {
             const {
                 /* eslint-disable no-unused-vars */
+                closeFileMenu: closeFileMenuProp,
                 intl,
                 isLoadingUpload,
                 loadingState,
@@ -199,6 +206,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
     }
 
     GoogleDriveLoaderComponent.propTypes = {
+        closeFileMenu: PropTypes.func,
         intl: intlShape.isRequired,
         isLoadingUpload: PropTypes.bool,
         loadingState: PropTypes.oneOf(LoadingStates),
@@ -220,6 +228,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
     });
 
     const mapDispatchToProps = dispatch => ({
+        closeFileMenu: () => dispatch(closeFileMenu()),
         onCloseLoadingProject: () => dispatch(closeLoadingProject()),
         onLoadingFinished: (loadingState, success) => {
             dispatch(onLoadedProject(loadingState, false, success));

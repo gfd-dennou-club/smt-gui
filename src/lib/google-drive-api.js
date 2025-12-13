@@ -109,9 +109,10 @@ class GoogleDriveAPI {
     /**
      * Show Google Picker to select a file
      * @param {Function} callback - Called when user selects a file
+     * @param {string} locale - Locale code (e.g., 'en', 'ja') for picker UI language
      * @returns {Promise<void>} Promise that resolves when picker is shown
      */
-    async showPicker (callback) {
+    async showPicker (callback, locale = 'en') {
         if (!this.isInitialized) {
             await this.initialize();
         }
@@ -137,6 +138,7 @@ class GoogleDriveAPI {
                 .setDeveloperKey(API_KEY)
                 .setCallback(this.handlePickerResponse.bind(this))
                 .setTitle('Select a Scratch 3.0 project (.sb3) from Google Drive')
+                .setLocale(locale)
                 .build();
 
             picker.setVisible(true);
@@ -157,7 +159,6 @@ class GoogleDriveAPI {
             const doc = data[window.google.picker.Response.DOCUMENTS][0];
             const fileId = doc[window.google.picker.Document.ID];
             const fileName = doc[window.google.picker.Document.NAME];
-            const mimeType = doc[window.google.picker.Document.MIME_TYPE];
 
             // Validate file type by extension (more reliable than MIME type for .sb3 files)
             if (!fileName.endsWith('.sb3')) {
@@ -184,7 +185,10 @@ class GoogleDriveAPI {
                                 fileData: fileData
                             });
                         } catch (callbackError) {
-                            console.error('[GoogleDriveAPI] Error in picker callback (not a download error):', callbackError);
+                            console.error(
+                                '[GoogleDriveAPI] Error in picker callback (not a download error):',
+                                callbackError
+                            );
                             // Don't re-throw - this is a callback error, not a download error
                         }
                     }

@@ -82,7 +82,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
 
             // Initialize and show Google Picker
             // Don't show loading modal yet - wait until user selects a file
-            googleDriveAPI.showPicker(this.handlePickerCallback)
+            googleDriveAPI.showPicker(this.handlePickerCallback, this.props.locale)
                 .catch(error => {
                     log.error('Failed to show Google Picker:', error);
                     alert(this.props.intl.formatMessage(messages.authError)); // eslint-disable-line no-alert
@@ -184,6 +184,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 intl,
                 isLoadingUpload,
                 loadingState,
+                locale,
                 onCloseLoadingProject,
                 onLoadingFinished,
                 onLoadingStarted,
@@ -210,6 +211,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         intl: intlShape.isRequired,
         isLoadingUpload: PropTypes.bool,
         loadingState: PropTypes.oneOf(LoadingStates),
+        locale: PropTypes.string,
         onCloseLoadingProject: PropTypes.func,
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
@@ -224,6 +226,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
     const mapStateToProps = state => ({
         isLoadingUpload: getIsLoadingUpload(state.scratchGui.projectState.loadingState),
         loadingState: state.scratchGui.projectState.loadingState,
+        locale: state.locales.locale,
         vm: state.scratchGui.vm
     });
 

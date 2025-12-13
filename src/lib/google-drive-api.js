@@ -127,7 +127,7 @@ class GoogleDriveAPI {
                 .addView(
                     new window.google.picker.DocsView()
                         .setIncludeFolders(true)
-                        .setMimeTypes('application/x.scratch.sb3')
+                    // No MIME type filter - show all files and validate by extension
                 )
                 .addView(
                     new window.google.picker.DocsUploadView()
@@ -159,8 +159,8 @@ class GoogleDriveAPI {
             const fileName = doc[window.google.picker.Document.NAME];
             const mimeType = doc[window.google.picker.Document.MIME_TYPE];
 
-            // Validate file type
-            if (mimeType !== 'application/x.scratch.sb3' && !fileName.endsWith('.sb3')) {
+            // Validate file type by extension (more reliable than MIME type for .sb3 files)
+            if (!fileName.endsWith('.sb3')) {
                 if (this.pickerCallback) {
                     this.pickerCallback({
                         error: 'Invalid file type. Please select a .sb3 file.'
@@ -172,20 +172,40 @@ class GoogleDriveAPI {
             // Download file
             this.downloadFile(fileId, fileName)
                 .then(fileData => {
+                    console.log('[GoogleDriveAPI] File downloaded successfully, calling picker callback');
                     if (this.pickerCallback) {
-                        this.pickerCallback({
-                            success: true,
-                            fileId: fileId,
-                            fileName: fileName,
-                            fileData: fileData
-                        });
+                        // Wrap callback invocation in try-catch to prevent callback errors
+                        // from being caught as download errors
+                        try {
+                            this.pickerCallback({
+                                success: true,
+                                fileId: fileId,
+                                fileName: fileName,
+                                fileData: fileData
+                            });
+                        } catch (callbackError) {
+                            console.error('[GoogleDriveAPI] Error in picker callback (not a download error):', callbackError);
+                            // Don't re-throw - this is a callback error, not a download error
+                        }
                     }
                 })
                 .catch(error => {
+                    console.error('[GoogleDriveAPI] Download error caught in handlePickerResponse:', {
+                        error: error,
+                        errorType: typeof error,
+                        hasMessage: error && 'message' in error,
+                        errorString: String(error)
+                    });
+
                     if (this.pickerCallback) {
-                        this.pickerCallback({
-                            error: `Failed to download file: ${error.message}`
-                        });
+                        const errorMessage = error && error.message ? error.message : String(error);
+                        try {
+                            this.pickerCallback({
+                                error: `Failed to download file: ${errorMessage}`
+                            });
+                        } catch (callbackError) {
+                            console.error('[GoogleDriveAPI] Error in error callback:', callbackError);
+                        }
                     }
                 });
         } else if (action === window.google.picker.Action.CANCEL) {
@@ -204,24 +224,49 @@ class GoogleDriveAPI {
      * @returns {Promise<ArrayBuffer>} Promise that resolves with file data as ArrayBuffer
      */
     async downloadFile (fileId, fileName) {
+        console.log(`[GoogleDriveAPI] Starting download: fileId=${fileId}, fileName=${fileName}`);
+
         try {
+            console.log('[GoogleDriveAPI] Calling gapi.client.drive.files.get with alt=media');
             const response = await window.gapi.client.drive.files.get({
                 fileId: fileId,
                 alt: 'media'
             });
 
+            console.log('[GoogleDriveAPI] Response received:', {
+                status: response.status,
+                statusText: response.statusText,
+                bodyType: typeof response.body,
+                bodyLength: response.body ? response.body.length : 0,
+                hasResult: !!response.result,
+                resultType: typeof response.result
+            });
+
             // Convert response to ArrayBuffer
             // gapi returns the file content as a string for binary files
             const binaryString = response.body;
+            console.log(`[GoogleDriveAPI] Converting binary string to ArrayBuffer (length: ${binaryString.length})`);
+
             const len = binaryString.length;
             const bytes = new Uint8Array(len);
             for (let i = 0; i < len; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
+
+            console.log(`[GoogleDriveAPI] Download successful, ArrayBuffer size: ${bytes.buffer.byteLength} bytes`);
             return bytes.buffer;
         } catch (error) {
-            console.error(`Failed to download file ${fileName}:`, error);
-            throw new Error(`Failed to download file: ${error.message}`);
+            console.error(`[GoogleDriveAPI] Download failed for ${fileName}:`, {
+                error: error,
+                errorType: typeof error,
+                errorConstructor: error ? error.constructor.name : 'N/A',
+                hasMessage: error && 'message' in error,
+                message: error && error.message,
+                hasStatus: error && 'status' in error,
+                status: error && error.status,
+                keys: error ? Object.keys(error) : []
+            });
+            throw error;
         }
     }
 

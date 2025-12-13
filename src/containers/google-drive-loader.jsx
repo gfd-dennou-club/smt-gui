@@ -91,14 +91,23 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
          * @param {object} result - Picker result
          */
         handlePickerCallback (result) {
+            console.log('[GoogleDriveLoader] Picker callback received:', {
+                cancelled: result.cancelled,
+                hasError: !!result.error,
+                hasSuccess: !!result.success,
+                resultKeys: Object.keys(result)
+            });
+
             if (result.cancelled) {
                 // User cancelled picker
+                console.log('[GoogleDriveLoader] User cancelled picker');
                 this.props.onCloseLoadingProject();
                 return;
             }
 
             if (result.error) {
                 // Error occurred
+                console.error('[GoogleDriveLoader] Picker error:', result.error);
                 log.error('Google Drive picker error:', result.error);
                 this.props.onCloseLoadingProject();
                 alert(result.error); // eslint-disable-line no-alert
@@ -108,22 +117,39 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
             if (result.success) {
                 // File selected and downloaded successfully
                 const {fileName, fileData} = result;
+                console.log('[GoogleDriveLoader] File received:', {
+                    fileName: fileName,
+                    fileDataType: typeof fileData,
+                    fileDataConstructor: fileData ? fileData.constructor.name : 'N/A',
+                    fileDataByteLength: fileData ? fileData.byteLength : 0
+                });
 
                 // Update project title
                 const projectTitle = this.getProjectTitleFromFilename(fileName);
+                console.log('[GoogleDriveLoader] Setting project title:', projectTitle);
                 this.props.onSetProjectTitle(projectTitle);
 
                 // Convert ArrayBuffer to Uint8Array
+                console.log('[GoogleDriveLoader] Converting to Uint8Array');
                 const content = new Uint8Array(fileData);
+                console.log('[GoogleDriveLoader] Uint8Array created, length:', content.length);
 
                 // Load the project
-                this.props.onLoadingStarted();
+                console.log('[GoogleDriveLoader] Starting project load with loadingState:', this.props.loadingState);
+                this.props.onLoadingStarted(this.props.loadingState);
                 this.props.vm.loadProject(content)
                     .then(() => {
+                        console.log('[GoogleDriveLoader] Project loaded successfully');
                         this.props.onLoadingFinished(this.props.loadingState, true);
                         this.props.onCloseLoadingProject();
                     })
                     .catch(error => {
+                        console.error('[GoogleDriveLoader] Project load failed:', {
+                            error: error,
+                            errorType: typeof error,
+                            errorMessage: error && error.message,
+                            errorStack: error && error.stack
+                        });
                         log.error('Failed to load project from Google Drive:', error);
                         this.props.onCloseLoadingProject();
                         alert(this.props.intl.formatMessage(messages.loadError)); // eslint-disable-line no-alert
@@ -165,6 +191,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
 
             return (
                 <WrappedComponent
+                    intl={intl}
                     onStartSelectingGoogleDrive={this.handleStartSelectingGoogleDrive}
                     {...componentProps}
                 />
@@ -198,7 +225,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
             dispatch(onLoadedProject(loadingState, false, success));
             dispatch(closeLoadingProject());
         },
-        onLoadingStarted: () => dispatch(requestProjectUpload(LoadingStates.LOADING_VM_FILE_UPLOAD)),
+        onLoadingStarted: loadingState => dispatch(requestProjectUpload(loadingState)),
         onSetProjectTitle: title => dispatch(setProjectTitle(title)),
         onShowLoadingProject: () => dispatch(openLoadingProject())
     });

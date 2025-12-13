@@ -74,14 +74,11 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 return;
             }
 
-            // Show loading modal while initializing
-            this.props.onShowLoadingProject();
-
             // Initialize and show Google Picker
+            // Don't show loading modal yet - wait until user selects a file
             googleDriveAPI.showPicker(this.handlePickerCallback)
                 .catch(error => {
                     log.error('Failed to show Google Picker:', error);
-                    this.props.onCloseLoadingProject();
                     alert(this.props.intl.formatMessage(messages.authError)); // eslint-disable-line no-alert
                 });
         }
@@ -124,6 +121,9 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                     fileDataByteLength: fileData ? fileData.byteLength : 0
                 });
 
+                // Show loading modal now that user has selected a file
+                this.props.onShowLoadingProject();
+
                 // Update project title
                 const projectTitle = this.getProjectTitleFromFilename(fileName);
                 console.log('[GoogleDriveLoader] Setting project title:', projectTitle);
@@ -135,11 +135,9 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 console.log('[GoogleDriveLoader] Uint8Array created, length:', content.length);
 
                 // Load the project
-                console.log('[GoogleDriveLoader] Starting project load with loadingState:', this.props.loadingState);
                 this.props.onLoadingStarted(this.props.loadingState);
                 this.props.vm.loadProject(content)
                     .then(() => {
-                        console.log('[GoogleDriveLoader] Project loaded successfully');
                         this.props.onLoadingFinished(this.props.loadingState, true);
                         this.props.onCloseLoadingProject();
                     })
@@ -184,6 +182,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 onLoadingStarted,
                 onSetProjectTitle,
                 onShowLoadingProject,
+                openUrlLoaderModal,
                 vm,
                 /* eslint-enable no-unused-vars */
                 ...componentProps
@@ -208,6 +207,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
         onShowLoadingProject: PropTypes.func,
+        openUrlLoaderModal: PropTypes.func,
         vm: PropTypes.shape({
             loadProject: PropTypes.func
         })

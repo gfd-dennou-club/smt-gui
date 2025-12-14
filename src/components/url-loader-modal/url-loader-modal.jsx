@@ -31,11 +31,6 @@ const messages = defineMessages({
         description: 'Example URL format for Scratch projects',
         id: 'gui.urlLoader.urlExampleScratch'
     },
-    urlExampleGoogleDrive: {
-        defaultMessage: 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link',
-        description: 'Example URL format for Google Drive files',
-        id: 'gui.urlLoader.urlExampleGoogleDrive'
-    },
     openButton: {
         defaultMessage: 'Open',
         description: 'Label for open button',
@@ -147,11 +142,6 @@ class URLLoaderModal extends React.Component {
                             <li className={styles.exampleItem}>
                                 <FormattedMessage
                                     {...messages.urlExampleScratch}
-                                />
-                            </li>
-                            <li className={styles.exampleItem}>
-                                <FormattedMessage
-                                    {...messages.urlExampleGoogleDrive}
                                 />
                             </li>
                         </ul>

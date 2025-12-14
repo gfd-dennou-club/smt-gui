@@ -33,7 +33,6 @@ export default {
     'gui.urlLoader.cancelButton': 'キャンセル',
     'gui.urlLoader.urlExamplesTitle': 'URLの例',
     'gui.urlLoader.urlExampleScratch': 'https://scratch.mit.edu/projects/{project_id}/',
-    'gui.urlLoader.urlExampleGoogleDrive': 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link',
     'gui.menuBar.seeProjectPage': 'プロジェクトページを見る',
     'gui.loader.creating': 'プロジェクトを作成中...',
     'gui.smalruby3.crashMessage.description': '申し訳ありません。スモウルビーがクラッシュしたようです。このバグは自動的にスモウルビーチームに報告されました。ページを再読み込みしてください。',

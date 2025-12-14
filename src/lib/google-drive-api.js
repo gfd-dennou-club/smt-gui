@@ -9,7 +9,10 @@
 import {loadAllGoogleScripts} from './google-script-loader';
 
 // OAuth 2.0 scopes
-const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+// Using 'drive.file' scope to allow:
+// - Reading files selected by the user via Picker
+// - Uploading new files to Google Drive
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 // Discovery docs for Google Drive API
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];

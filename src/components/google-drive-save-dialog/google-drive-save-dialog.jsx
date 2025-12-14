@@ -196,31 +196,10 @@ class GoogleDriveSaveDialog extends React.Component {
                         <Box className={styles.formRow}>
                             <label
                                 className={styles.label}
-                                htmlFor="filetype"
-                            >
-                                <FormattedMessage
-                                    defaultMessage="タイプ:"
-                                    description="Label for file type"
-                                    id="gui.googleDriveSaveDialog.typeLabel"
-                                />
-                            </label>
-                            <input
-                                className={styles.input}
-                                disabled
-                                id="filetype"
-                                readOnly
-                                type="text"
-                                value="Scratch 3.0 Project (.sb3)"
-                            />
-                        </Box>
-
-                        <Box className={styles.formRow}>
-                            <label
-                                className={styles.label}
                                 htmlFor="location"
                             >
                                 <FormattedMessage
-                                    defaultMessage="Where:"
+                                    defaultMessage="フォルダ:"
                                     description="Label for save location"
                                     id="gui.googleDriveSaveDialog.whereLabel"
                                 />
@@ -232,18 +211,18 @@ class GoogleDriveSaveDialog extends React.Component {
                                 onChange={this.handleLocationChange}
                             >
                                 <option value="my-drive">
-                                    <FormattedMessage
-                                        defaultMessage="Google ドライブ – My Drive"
-                                        description="Option for saving to My Drive root"
-                                        id="gui.googleDriveSaveDialog.myDrive"
-                                    />
+                                    {this.props.intl.formatMessage({
+                                        defaultMessage: 'Google ドライブ – My Drive',
+                                        description: 'Option for saving to My Drive root',
+                                        id: 'gui.googleDriveSaveDialog.myDrive'
+                                    })}
                                 </option>
                                 <option value="select-folder">
-                                    <FormattedMessage
-                                        defaultMessage="Google ドライブ – フォルダを選択する..."
-                                        description="Option for selecting a folder"
-                                        id="gui.googleDriveSaveDialog.selectFolder"
-                                    />
+                                    {this.props.intl.formatMessage({
+                                        defaultMessage: 'Google ドライブ – フォルダを選択する...',
+                                        description: 'Option for selecting a folder',
+                                        id: 'gui.googleDriveSaveDialog.selectFolder'
+                                    })}
                                 </option>
                             </select>
                             {locationLabel && (

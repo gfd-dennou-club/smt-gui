@@ -11,7 +11,6 @@ export default {
     'gui.googleDriveSaver.configError': 'Google ドライブが設定されていません。管理者に連絡してください。',
     'gui.googleDriveSaver.uploadSuccess': 'プロジェクトを Google ドライブに正常にアップロードしました！',
     'gui.googleDriveSaveDialog.title': 'Googleドライブにコピーを保存',
-    'gui.googleDriveSaveDialog.header': 'Googleドライブにコピーを保存',
     'gui.googleDriveSaveDialog.filenameLabel': '名前を付けて保存:',
     'gui.googleDriveSaveDialog.whereLabel': 'フォルダ:',
     'gui.googleDriveSaveDialog.myDrive': 'マイドライブ',

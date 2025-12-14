@@ -171,14 +171,6 @@ class GoogleDriveSaveDialog extends React.Component {
                 onRequestClose={this.handleCancel}
             >
                 <Box className={styles.body}>
-                    <Box className={styles.header}>
-                        <FormattedMessage
-                            defaultMessage="Save a copy to Google Drive"
-                            description="Header for save a copy to Google Drive dialog"
-                            id="gui.googleDriveSaveDialog.header"
-                        />
-                    </Box>
-
                     <Box className={styles.content}>
                         <Box className={styles.formRow}>
                             <label

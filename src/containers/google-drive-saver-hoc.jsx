@@ -57,7 +57,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             ]);
             this.state = {
                 showSaveDialog: false,
-                isUploading: false
+                saveStatus: 'idle' // 'idle' | 'saving' | 'saved'
             };
         }
 
@@ -104,14 +104,14 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
          * @param {string} folderId - Google Drive folder ID (null for My Drive root)
          */
         async handleSaveToGoogleDrive (filename, folderId) {
-            // Close dialog
-            this.setState({showSaveDialog: false, isUploading: true});
+            // Close dialog and set status to saving
+            this.setState({showSaveDialog: false, saveStatus: 'saving'});
 
             try {
                 // Convert Ruby code to blocks
                 const converter = this.props.targetCodeToBlocks(this.props.intl);
                 if (!converter.result) {
-                    this.setState({isUploading: false});
+                    this.setState({saveStatus: 'idle'});
                     return;
                 }
 
@@ -123,14 +123,17 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 // Upload to Google Drive
                 await googleDriveAPI.uploadFile(filename, content, folderId);
 
-                this.setState({isUploading: false});
+                // Set status to saved
+                this.setState({saveStatus: 'saved'});
 
-                // Show success message
-                alert(this.props.intl.formatMessage(messages.uploadSuccess)); // eslint-disable-line no-alert
+                // Reset status to idle after 3 seconds
+                setTimeout(() => {
+                    this.setState({saveStatus: 'idle'});
+                }, 3000);
             } catch (error) {
                 console.error('[GoogleDriveSaver] Upload failed:', error);
                 log.error('Failed to upload project to Google Drive:', error);
-                this.setState({isUploading: false});
+                this.setState({saveStatus: 'idle'});
 
                 // Show error message
                 const errorMessage = error && error.message ?
@@ -156,7 +159,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             return (
                 <WrappedComponent
                     googleDriveSaveDialogVisible={this.state.showSaveDialog}
-                    googleDriveUploading={this.state.isUploading}
+                    googleDriveSaveStatus={this.state.saveStatus}
                     intl={intl}
                     projectFilename={this.getProjectFilename()}
                     onCancelGoogleDriveSave={this.handleCancelGoogleDriveSave}

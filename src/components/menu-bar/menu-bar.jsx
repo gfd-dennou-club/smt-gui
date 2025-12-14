@@ -16,6 +16,7 @@ import ShareButton from './share-button.jsx';
 import {ComingSoonTooltip} from '../coming-soon/coming-soon.jsx';
 import Divider from '../divider/divider.jsx';
 import SaveStatus from './save-status.jsx';
+import Spinner from '../spinner/spinner.jsx';
 import ProjectWatcher from '../../containers/project-watcher.jsx';
 import MenuBarMenu from './menu-bar-menu.jsx';
 import {MenuItem, MenuSection} from '../menu/menu.jsx';
@@ -764,6 +765,27 @@ class MenuBar extends React.Component {
                             <SaveStatus />
                         )}
                     </div>
+                    {this.props.googleDriveSaveStatus === 'saving' && (
+                        <div className={styles.saveStatus}>
+                            <Spinner
+                                className={styles.saveStatusSpinner}
+                                level="info"
+                                small
+                            />
+                            <FormattedMessage
+                                defaultMessage="Saving project..."
+                                id="gui.menuBar.savingToGoogleDrive"
+                            />
+                        </div>
+                    )}
+                    {this.props.googleDriveSaveStatus === 'saved' && (
+                        <div className={styles.saveStatus}>
+                            <FormattedMessage
+                                defaultMessage="Project saved."
+                                id="gui.menuBar.savedToGoogleDrive"
+                            />
+                        </div>
+                    )}
                     {this.props.sessionExists ? (
                         this.props.username ? (
                             // ************ user is logged in ************
@@ -924,7 +946,7 @@ MenuBar.propTypes = {
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     googleDriveSaveDialogVisible: PropTypes.bool,
-    googleDriveUploading: PropTypes.bool,
+    googleDriveSaveStatus: PropTypes.string,
     intl: intlShape,
     isRtl: PropTypes.bool,
     isShared: PropTypes.bool,

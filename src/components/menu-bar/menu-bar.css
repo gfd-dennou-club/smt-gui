@@ -236,3 +236,18 @@
         margin-right: 0;
     }
 }
+
+.save-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    color: $ui-white;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+
+.save-status-spinner {
+    flex-shrink: 0;
+}

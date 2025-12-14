@@ -165,16 +165,16 @@ class GoogleDriveSaveDialog extends React.Component {
                 className={styles.modalContent}
                 contentLabel={this.props.intl.formatMessage({
                     id: 'gui.googleDriveSaveDialog.title',
-                    defaultMessage: 'Save as to Google Drive',
-                    description: 'Title for save as to Google Drive dialog.'
+                    defaultMessage: 'Save a copy to Google Drive',
+                    description: 'Title for save a copy to Google Drive dialog.'
                 })}
                 onRequestClose={this.handleCancel}
             >
                 <Box className={styles.body}>
                     <Box className={styles.header}>
                         <FormattedMessage
-                            defaultMessage="Save as to Google Drive"
-                            description="Header for save as to Google Drive dialog"
+                            defaultMessage="Save a copy to Google Drive"
+                            description="Header for save a copy to Google Drive dialog"
                             id="gui.googleDriveSaveDialog.header"
                         />
                     </Box>

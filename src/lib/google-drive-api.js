@@ -127,10 +127,11 @@ class GoogleDriveAPI {
 
             this.pickerCallback = callback;
 
-            // Create DocsView with .sb3 query filter
+            // Create DocsView with .sb3 query filter, starting from root
             const docsView = new window.google.picker.DocsView()
                 .setIncludeFolders(true)
-                .setQuery('.sb3');
+                .setQuery('.sb3')
+                .setParent('root'); // Start from root folder for hierarchical navigation
 
             const picker = new window.google.picker.PickerBuilder()
                 .addView(docsView)

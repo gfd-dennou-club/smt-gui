@@ -14,7 +14,7 @@ export default {
     'gui.googleDriveSaveDialog.header': 'Google ドライブに保存',
     'gui.googleDriveSaveDialog.filenameLabel': '名前を付けて保存:',
     'gui.googleDriveSaveDialog.whereLabel': 'フォルダ:',
-    'gui.googleDriveSaveDialog.myDrive': 'My Drive',
+    'gui.googleDriveSaveDialog.myDrive': 'マイドライブ',
     'gui.googleDriveSaveDialog.selectFolder': 'フォルダを選択する...',
     'gui.googleDriveSaveDialog.selectedFolder': '選択: {folderName}',
     'gui.googleDriveSaveDialog.cancel': 'キャンセル',

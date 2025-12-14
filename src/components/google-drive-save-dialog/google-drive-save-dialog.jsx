@@ -83,21 +83,32 @@ class GoogleDriveSaveDialog extends React.Component {
 
     handleFolderPickerCallback (result) {
         if (result.cancelled) {
-            // User cancelled folder picker, reset to my-drive
-            this.setState({saveLocation: 'my-drive'});
+            // User cancelled folder picker
+            // If there's already a selected folder, keep it; otherwise reset to my-drive
+            if (this.state.selectedFolderId) {
+                this.setState({saveLocation: 'selected-folder'});
+            } else {
+                this.setState({saveLocation: 'my-drive'});
+            }
             return;
         }
 
         if (result.error) {
             log.error('Folder picker error:', result.error);
             alert(result.error); // eslint-disable-line no-alert
-            this.setState({saveLocation: 'my-drive'});
+            // If there's already a selected folder, keep it; otherwise reset to my-drive
+            if (this.state.selectedFolderId) {
+                this.setState({saveLocation: 'selected-folder'});
+            } else {
+                this.setState({saveLocation: 'my-drive'});
+            }
             return;
         }
 
         if (result.success) {
             const {folderId, folderName} = result;
             this.setState({
+                saveLocation: 'selected-folder',
                 selectedFolderId: folderId,
                 selectedFolderName: folderName
             });
@@ -132,7 +143,7 @@ class GoogleDriveSaveDialog extends React.Component {
         }
 
         // Determine folder ID
-        const folderId = this.state.saveLocation === 'select-folder' ?
+        const folderId = this.state.saveLocation === 'selected-folder' ?
             this.state.selectedFolderId :
             null;
 
@@ -148,10 +159,6 @@ class GoogleDriveSaveDialog extends React.Component {
         if (!this.props.isVisible) {
             return null;
         }
-
-        const locationLabel = this.state.saveLocation === 'select-folder' && this.state.selectedFolderName ?
-            this.state.selectedFolderName :
-            null;
 
         return (
             <Modal
@@ -210,6 +217,11 @@ class GoogleDriveSaveDialog extends React.Component {
                                 value={this.state.saveLocation}
                                 onChange={this.handleLocationChange}
                             >
+                                {this.state.selectedFolderName && (
+                                    <option value="selected-folder">
+                                        {this.state.selectedFolderName}
+                                    </option>
+                                )}
                                 <option value="my-drive">
                                     {this.props.intl.formatMessage({
                                         defaultMessage: 'My Drive',
@@ -225,16 +237,6 @@ class GoogleDriveSaveDialog extends React.Component {
                                     })}
                                 </option>
                             </select>
-                            {locationLabel && (
-                                <Box className={styles.selectedFolder}>
-                                    <FormattedMessage
-                                        defaultMessage="Selected: {folderName}"
-                                        description="Shows selected folder name"
-                                        id="gui.googleDriveSaveDialog.selectedFolder"
-                                        values={{folderName: locationLabel}}
-                                    />
-                                </Box>
-                            )}
                         </Box>
                     </Box>
 

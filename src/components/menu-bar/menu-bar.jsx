@@ -514,15 +514,6 @@ class MenuBar extends React.Component {
                                             </MenuItem>
                                         )}</SB3Downloader>
                                         <MenuItem
-                                            onClick={this.props.onStartSavingToGoogleDrive}
-                                        >
-                                            <FormattedMessage
-                                                defaultMessage="Save to Google Drive"
-                                                description="Menu bar item for saving to Google Drive"
-                                                id="gui.menuBar.saveToGoogleDrive"
-                                            />
-                                        </MenuItem>
-                                        <MenuItem
                                             onClick={this.handleClickLoadFromUrl}
                                         >
                                             <FormattedMessage
@@ -538,6 +529,15 @@ class MenuBar extends React.Component {
                                                 defaultMessage="Load from Google Drive"
                                                 description="Menu bar item for loading from Google Drive"
                                                 id="gui.menuBar.loadFromGoogleDrive"
+                                            />
+                                        </MenuItem>
+                                        <MenuItem
+                                            onClick={this.props.onStartSavingToGoogleDrive}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Save to Google Drive"
+                                                description="Menu bar item for saving to Google Drive"
+                                                id="gui.menuBar.saveToGoogleDrive"
                                             />
                                         </MenuItem>
                                     </MenuSection>

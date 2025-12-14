@@ -12,6 +12,7 @@ import {
     onLoadedProject
 } from '../reducers/project-state';
 import {setProjectTitle} from '../reducers/project-title';
+import {setGoogleDriveFile} from '../reducers/google-drive-file';
 import {
     openLoadingProject,
     closeLoadingProject
@@ -130,7 +131,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
 
             if (result.success) {
                 // File downloaded successfully - load the project
-                const {fileData} = result;
+                const {fileId, fileName, fileData} = result;
 
                 // Convert ArrayBuffer to Uint8Array
                 const content = new Uint8Array(fileData);
@@ -138,6 +139,8 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 // Load the project
                 this.props.vm.loadProject(content)
                     .then(() => {
+                        // Store Google Drive file metadata for direct save functionality
+                        this.props.onSetGoogleDriveFile(fileId, fileName, null);
                         this.props.onLoadingFinished(this.props.loadingState, true);
                         this.props.onCloseLoadingProject();
                     })
@@ -208,6 +211,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         onCloseLoadingProject: PropTypes.func,
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
+        onSetGoogleDriveFile: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
         openUrlLoaderModal: PropTypes.func,
         vm: PropTypes.shape({
@@ -230,6 +234,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
             dispatch(closeLoadingProject());
         },
         onLoadingStarted: () => dispatch(openLoadingProject()),
+        onSetGoogleDriveFile: (fileId, fileName, folderId) => dispatch(setGoogleDriveFile(fileId, fileName, folderId)),
         onSetProjectTitle: title => dispatch(setProjectTitle(title))
     });
 

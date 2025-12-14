@@ -2,6 +2,7 @@ export default {
     'gui.menuBar.loadFromUrl': 'URLから読み込む',
     'gui.menuBar.loadFromGoogleDrive': 'Google ドライブから読み込む',
     'gui.menuBar.saveToGoogleDrive': 'Googleドライブにコピーを保存...',
+    'gui.menuBar.saveDirectlyToGoogleDrive': 'Googleドライブに直ちに保存',
     'gui.menuBar.savingToGoogleDrive': 'プロジェクトを保存中...',
     'gui.menuBar.savedToGoogleDrive': 'プロジェクトが保存されました。',
     'gui.googleDriveLoader.loadError': 'Google ドライブからプロジェクトの読み込みに失敗しました。',

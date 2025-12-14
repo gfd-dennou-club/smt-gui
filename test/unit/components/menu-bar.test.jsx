@@ -26,6 +26,20 @@ describe('MenuBar Component', () => {
             timeTravel: {
                 year: 'NOW'
             },
+            targets: {
+                sprites: {},
+                stage: {},
+                editingTarget: null,
+                highlightedTargetId: null,
+                highlightedTargetTime: null
+            },
+            rubyCode: {
+                target: null,
+                code: '',
+                modified: false,
+                errors: [],
+                markers: []
+            },
             vm: new VM()
         }
     });

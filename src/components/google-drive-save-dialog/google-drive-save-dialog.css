@@ -117,5 +117,5 @@
 }
 
 .saveButton:hover {
-    background-color: $motion-primary-transparent;
+    background-color: $motion-tertiary;
 }

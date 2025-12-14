@@ -57,7 +57,9 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.DEBUG': Boolean(process.env.DEBUG),
         'process.env.GA_ID': `"${process.env.GA_ID || 'UA-000000-01'}"`,
         'process.env.GTM_ENV_AUTH': `"${process.env.GTM_ENV_AUTH || ''}"`,
-        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null
+        'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null,
+        'process.env.GOOGLE_CLIENT_ID': `"${process.env.GOOGLE_CLIENT_ID || ''}"`,
+        'process.env.GOOGLE_API_KEY': `"${process.env.GOOGLE_API_KEY || ''}"`
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [
@@ -214,6 +216,19 @@ const buildWithPwaConfig = buildConfig.clone()
 // `BUILD_MODE=dist npm run build`
 const buildDist = process.env.NODE_ENV === 'production' || process.env.BUILD_MODE === 'dist';
 
-module.exports = buildDist ?
+// Get the webpack config
+const finalConfig = buildDist ?
     [buildWithPwaConfig.get(), distConfig.get()] :
     buildConfig.get();
+
+// Override devServer headers to allow Google Picker API to work
+// Must be done after .get() to ensure it's not overridden by ScratchWebpackConfigBuilder
+if (!buildDist && finalConfig.devServer) {
+    finalConfig.devServer.headers = {
+        ...finalConfig.devServer.headers,
+        'Cross-Origin-Opener-Policy': 'unsafe-none',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none'
+    };
+}
+
+module.exports = finalConfig;

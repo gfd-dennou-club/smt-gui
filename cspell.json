@@ -1,0 +1,15 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "gapi",
+    "googleusercontent"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "build",
+    "dist",
+    "coverage",
+    ".nyc_output"
+  ]
+}

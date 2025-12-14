@@ -27,6 +27,7 @@ import SB3Downloader from '../../containers/sb3-downloader.jsx';
 import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
+import GoogleDriveLoaderHOC from '../../containers/google-drive-loader-hoc.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
 import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
@@ -519,6 +520,15 @@ class MenuBar extends React.Component {
                                                 id="gui.menuBar.loadFromUrl"
                                             />
                                         </MenuItem>
+                                        <MenuItem
+                                            onClick={this.props.onStartSelectingGoogleDrive}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Load from Google Drive"
+                                                description="Menu bar item for loading from Google Drive"
+                                                id="gui.menuBar.loadFromGoogleDrive"
+                                            />
+                                        </MenuItem>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>
@@ -946,6 +956,7 @@ MenuBar.propTypes = {
     onSetTimeTravelMode: PropTypes.func,
     onShare: PropTypes.func,
     onStartSelectingFileUpload: PropTypes.func,
+    onStartSelectingGoogleDrive: PropTypes.func,
     onStartSelectingUrlLoad: PropTypes.func,
     onToggleLoginOpen: PropTypes.func,
     projectTitle: PropTypes.string,
@@ -1026,6 +1037,7 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
     injectIntl,
     MenuBarHOC,
+    GoogleDriveLoaderHOC,
     connect(
         mapStateToProps,
         mapDispatchToProps

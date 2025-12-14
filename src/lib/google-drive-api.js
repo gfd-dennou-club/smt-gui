@@ -276,6 +276,156 @@ class GoogleDriveAPI {
     }
 
     /**
+     * Show Google Picker to select a folder
+     * @param {Function} callback - Called when user selects a folder
+     * @param {string} locale - Locale code (e.g., 'en', 'ja') for picker UI language
+     * @param {string} title - Title for the picker dialog
+     * @returns {Promise<void>} Promise that resolves when picker is shown
+     */
+    async showFolderPicker (callback, locale = 'en', title = 'Select a folder in Google Drive') {
+        if (!this.isInitialized) {
+            await this.initialize();
+        }
+
+        try {
+            // Request access token if not already available
+            const token = await this.requestAccessToken();
+
+            this.pickerCallback = callback;
+
+            // Create DocsView for folders only
+            const docsView = new window.google.picker.DocsView(window.google.picker.ViewId.FOLDERS)
+                .setIncludeFolders(true)
+                .setSelectFolderEnabled(true);
+
+            const picker = new window.google.picker.PickerBuilder()
+                .addView(docsView)
+                .setOAuthToken(token)
+                .setDeveloperKey(API_KEY)
+                .setCallback(this.handleFolderPickerResponse.bind(this))
+                .setTitle(title)
+                .setLocale(locale)
+                .build();
+
+            picker.setVisible(true);
+        } catch (error) {
+            console.error('Failed to show Google Folder Picker:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Handle folder picker response
+     * @param {object} data - Picker response data
+     */
+    handleFolderPickerResponse (data) {
+        const action = data[window.google.picker.Response.ACTION];
+
+        if (action === window.google.picker.Action.PICKED) {
+            const doc = data[window.google.picker.Response.DOCUMENTS][0];
+            const folderId = doc[window.google.picker.Document.ID];
+            const folderName = doc[window.google.picker.Document.NAME];
+
+            if (this.pickerCallback) {
+                try {
+                    this.pickerCallback({
+                        success: true,
+                        folderId: folderId,
+                        folderName: folderName
+                    });
+                } catch (callbackError) {
+                    console.error('[GoogleDriveAPI] Error in folder picker callback:', callbackError);
+                }
+            }
+        } else if (action === window.google.picker.Action.CANCEL) {
+            if (this.pickerCallback) {
+                this.pickerCallback({
+                    cancelled: true
+                });
+            }
+        }
+    }
+
+    /**
+     * Upload file to Google Drive
+     * @param {string} filename - File name
+     * @param {Blob} fileData - File content as Blob
+     * @param {string} folderId - Optional folder ID (null for My Drive root)
+     * @returns {Promise<object>} Upload result with file ID and webViewLink
+     */
+    async uploadFile (filename, fileData, folderId = null) {
+        if (!this.isInitialized) {
+            await this.initialize();
+        }
+
+        try {
+            // Request access token if not already available
+            await this.requestAccessToken();
+
+            // Prepare metadata
+            const metadata = {
+                name: filename,
+                mimeType: 'application/x.scratch.sb3'
+            };
+
+            // Add parent folder if specified
+            if (folderId) {
+                metadata.parents = [folderId];
+            }
+
+            // Create multipart request body
+            const boundary = '-------314159265358979323846';
+            const delimiter = `\r\n--${boundary}\r\n`;
+            const closeDelimiter = `\r\n--${boundary}--`;
+
+            // Convert blob to base64
+            const reader = new FileReader();
+            const base64Promise = new Promise((resolve, reject) => {
+                reader.onloadend = () => {
+                    const base64Data = reader.result.split(',')[1];
+                    resolve(base64Data);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(fileData);
+            });
+
+            const base64Data = await base64Promise;
+
+            // Build multipart body
+            const multipartRequestBody = `${delimiter}Content-Type: application/json; charset=UTF-8\r\n\r\n${
+                JSON.stringify(metadata)
+            }${delimiter}Content-Type: application/x.scratch.sb3\r\nContent-Transfer-Encoding: base64\r\n\r\n${
+                base64Data
+            }${closeDelimiter}`;
+
+            // Upload file using gapi.client.request
+            const response = await window.gapi.client.request({
+                path: '/upload/drive/v3/files',
+                method: 'POST',
+                params: {
+                    uploadType: 'multipart',
+                    fields: 'id,name,webViewLink'
+                },
+                headers: {
+                    'Content-Type': `multipart/related; boundary=${boundary}`
+                },
+                body: multipartRequestBody
+            });
+
+            console.log('[GoogleDriveAPI] File uploaded successfully:', response.result);
+            return response.result;
+        } catch (error) {
+            console.error('[GoogleDriveAPI] Upload failed:', {
+                error: error,
+                errorType: typeof error,
+                message: error && error.message,
+                status: error && error.status
+            });
+            throw error;
+        }
+    }
+
+    /**
      * Check if API is configured
      * @returns {boolean} True if API credentials are configured
      */

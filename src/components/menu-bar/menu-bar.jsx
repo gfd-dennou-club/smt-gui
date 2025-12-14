@@ -28,6 +28,8 @@ import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
 import GoogleDriveLoaderHOC from '../../containers/google-drive-loader-hoc.jsx';
+import GoogleDriveSaverHOC from '../../containers/google-drive-saver-hoc.jsx';
+import GoogleDriveSaveDialog from '../google-drive-save-dialog/google-drive-save-dialog.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
 import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
@@ -512,6 +514,15 @@ class MenuBar extends React.Component {
                                             </MenuItem>
                                         )}</SB3Downloader>
                                         <MenuItem
+                                            onClick={this.props.onStartSavingToGoogleDrive}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Save to Google Drive"
+                                                description="Menu bar item for saving to Google Drive"
+                                                id="gui.menuBar.saveToGoogleDrive"
+                                            />
+                                        </MenuItem>
+                                        <MenuItem
                                             onClick={this.handleClickLoadFromUrl}
                                         >
                                             <FormattedMessage
@@ -876,6 +887,15 @@ class MenuBar extends React.Component {
                 </div>
 
                 {aboutButton}
+
+                {/* Google Drive Save Dialog */}
+                <GoogleDriveSaveDialog
+                    defaultFilename={this.props.projectFilename}
+                    isVisible={this.props.googleDriveSaveDialogVisible}
+                    locale={this.props.locale}
+                    onCancel={this.props.onCancelGoogleDriveSave}
+                    onSave={this.props.onSaveToGoogleDrive}
+                />
             </Box>
         );
     }
@@ -903,6 +923,8 @@ MenuBar.propTypes = {
     editMenuOpen: PropTypes.bool,
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
+    googleDriveSaveDialogVisible: PropTypes.bool,
+    googleDriveUploading: PropTypes.bool,
     intl: intlShape,
     isRtl: PropTypes.bool,
     isShared: PropTypes.bool,
@@ -952,12 +974,16 @@ MenuBar.propTypes = {
     onRequestCloseMode: PropTypes.func,
     onRequestCloseSettings: PropTypes.func,
     onRequestOpenAbout: PropTypes.func,
+    onCancelGoogleDriveSave: PropTypes.func,
+    onSaveToGoogleDrive: PropTypes.func,
     onSeeCommunity: PropTypes.func,
     onSetTimeTravelMode: PropTypes.func,
     onShare: PropTypes.func,
     onStartSelectingFileUpload: PropTypes.func,
     onStartSelectingGoogleDrive: PropTypes.func,
+    onStartSavingToGoogleDrive: PropTypes.func,
     onStartSelectingUrlLoad: PropTypes.func,
+    projectFilename: PropTypes.string,
     onToggleLoginOpen: PropTypes.func,
     projectTitle: PropTypes.string,
     renderLogin: PropTypes.func,
@@ -1038,6 +1064,7 @@ export default compose(
     injectIntl,
     MenuBarHOC,
     GoogleDriveLoaderHOC,
+    GoogleDriveSaverHOC,
     connect(
         mapStateToProps,
         mapDispatchToProps

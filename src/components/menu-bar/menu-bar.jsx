@@ -53,6 +53,7 @@ import {
     remixProject,
     saveProjectAsCopy
 } from '../../reducers/project-state';
+import {clearGoogleDriveFile} from '../../reducers/google-drive-file';
 import {
     openAboutMenu,
     closeAboutMenu,
@@ -514,15 +515,19 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
+                                    </MenuSection>
+                                    <MenuSection>
                                         <MenuItem
                                             onClick={this.handleClickLoadFromUrl}
                                         >
                                             <FormattedMessage
-                                                defaultMessage="Load from URL"
-                                                description="Menu bar item for loading from URL"
+                                                defaultMessage="Load from Scratch"
+                                                description="Menu bar item for loading from Scratch"
                                                 id="gui.menuBar.loadFromUrl"
                                             />
                                         </MenuItem>
+                                    </MenuSection>
+                                    <MenuSection>
                                         <MenuItem
                                             onClick={this.props.onStartSelectingGoogleDrive}
                                         >
@@ -530,6 +535,16 @@ class MenuBar extends React.Component {
                                                 defaultMessage="Load from Google Drive"
                                                 description="Menu bar item for loading from Google Drive"
                                                 id="gui.menuBar.loadFromGoogleDrive"
+                                            />
+                                        </MenuItem>
+                                        <MenuItem
+                                            className={classNames({[styles.disabled]: !this.props.isGoogleDriveFile})}
+                                            onClick={this.props.onSaveDirectlyToGoogleDrive}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Save directly to Google Drive"
+                                                description="Menu bar item for direct save to current Google Drive file"
+                                                id="gui.menuBar.saveDirectlyToGoogleDrive"
                                             />
                                         </MenuItem>
                                         <MenuItem
@@ -786,6 +801,27 @@ class MenuBar extends React.Component {
                             />
                         </div>
                     )}
+                    {this.props.googleDriveSaveDirectStatus === 'saving' && (
+                        <div className={styles.saveStatus}>
+                            <Spinner
+                                className={styles.saveStatusSpinner}
+                                level="info"
+                                small
+                            />
+                            <FormattedMessage
+                                defaultMessage="Saving project..."
+                                id="gui.menuBar.savingToGoogleDrive"
+                            />
+                        </div>
+                    )}
+                    {this.props.googleDriveSaveDirectStatus === 'saved' && (
+                        <div className={styles.saveStatus}>
+                            <FormattedMessage
+                                defaultMessage="Project saved."
+                                id="gui.menuBar.savedToGoogleDrive"
+                            />
+                        </div>
+                    )}
                     {this.props.sessionExists ? (
                         this.props.username ? (
                             // ************ user is logged in ************
@@ -946,6 +982,7 @@ MenuBar.propTypes = {
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
     googleDriveSaveDialogVisible: PropTypes.bool,
+    googleDriveSaveDirectStatus: PropTypes.string,
     googleDriveSaveStatus: PropTypes.string,
     intl: intlShape,
     isRtl: PropTypes.bool,
@@ -1004,6 +1041,8 @@ MenuBar.propTypes = {
     onStartSelectingFileUpload: PropTypes.func,
     onStartSelectingGoogleDrive: PropTypes.func,
     onStartSavingToGoogleDrive: PropTypes.func,
+    onSaveDirectlyToGoogleDrive: PropTypes.func,
+    isGoogleDriveFile: PropTypes.bool,
     onStartSelectingUrlLoad: PropTypes.func,
     projectFilename: PropTypes.string,
     onToggleLoginOpen: PropTypes.func,
@@ -1033,6 +1072,7 @@ const mapStateToProps = (state, ownProps) => {
         currentLocale: state.locales.locale,
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
+        isGoogleDriveFile: state.scratchGui.googleDriveFile.isGoogleDriveFile,
         isRtl: state.locales.isRtl,
         isUpdating: getIsUpdating(loadingState),
         isShowingProject: getIsShowingProject(loadingState),
@@ -1073,7 +1113,10 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseAbout: () => dispatch(closeAboutMenu()),
     onClickSettings: () => dispatch(openSettingsMenu()),
     onRequestCloseSettings: () => dispatch(closeSettingsMenu()),
-    onClickNew: needSave => dispatch(requestNewProject(needSave)),
+    onClickNew: needSave => {
+        dispatch(requestNewProject(needSave));
+        dispatch(clearGoogleDriveFile());
+    },
     onClickRemix: () => dispatch(remixProject()),
     onClickSave: () => dispatch(manualUpdateProject()),
     onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),

@@ -40,6 +40,12 @@ describe('MenuBar Component', () => {
                 errors: [],
                 markers: []
             },
+            googleDriveFile: {
+                fileId: null,
+                fileName: null,
+                folderId: null,
+                isGoogleDriveFile: false
+            },
             vm: new VM()
         }
     });

@@ -428,6 +428,83 @@ class GoogleDriveAPI {
     }
 
     /**
+     * Update existing file in Google Drive
+     * @param {string} fileId - Google Drive file ID
+     * @param {string} filename - File name
+     * @param {Blob} fileData - File content as Blob
+     * @returns {Promise<object>} Update result with file ID and webViewLink
+     */
+    async updateFile (fileId, filename, fileData) {
+        if (!this.isInitialized) {
+            await this.initialize();
+        }
+
+        try {
+            // Check if token is valid, if not, request new one
+            const hasValidToken = this.accessToken && window.gapi.client.getToken();
+            if (!hasValidToken) {
+                await this.requestAccessToken();
+            }
+
+            // Prepare metadata
+            const metadata = {
+                name: filename,
+                mimeType: 'application/x.scratch.sb3'
+            };
+
+            // Create multipart request body
+            const boundary = '-------314159265358979323846';
+            const delimiter = `\r\n--${boundary}\r\n`;
+            const closeDelimiter = `\r\n--${boundary}--`;
+
+            // Convert blob to base64
+            const reader = new FileReader();
+            const base64Promise = new Promise((resolve, reject) => {
+                reader.onloadend = () => {
+                    const base64Data = reader.result.split(',')[1];
+                    resolve(base64Data);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(fileData);
+            });
+
+            const base64Data = await base64Promise;
+
+            // Build multipart body
+            const multipartRequestBody = `${delimiter}Content-Type: application/json; charset=UTF-8\r\n\r\n${
+                JSON.stringify(metadata)
+            }${delimiter}Content-Type: application/x.scratch.sb3\r\nContent-Transfer-Encoding: base64\r\n\r\n${
+                base64Data
+            }${closeDelimiter}`;
+
+            // Update file using gapi.client.request with PATCH method
+            const response = await window.gapi.client.request({
+                path: `/upload/drive/v3/files/${fileId}`,
+                method: 'PATCH',
+                params: {
+                    uploadType: 'multipart',
+                    fields: 'id,name,webViewLink'
+                },
+                headers: {
+                    'Content-Type': `multipart/related; boundary=${boundary}`
+                },
+                body: multipartRequestBody
+            });
+
+            console.log('[GoogleDriveAPI] File updated successfully:', response.result);
+            return response.result;
+        } catch (error) {
+            console.error('[GoogleDriveAPI] Update failed:', {
+                error: error,
+                errorType: typeof error,
+                message: error && error.message,
+                status: error && error.status
+            });
+            throw error;
+        }
+    }
+
+    /**
      * Check if API is configured
      * @returns {boolean} True if API credentials are configured
      */

@@ -14,6 +14,7 @@ import {
     requestProjectUpload
 } from '../reducers/project-state';
 import {setProjectTitle} from '../reducers/project-title';
+import {clearGoogleDriveFile} from '../reducers/google-drive-file';
 import {
     openLoadingProject,
     closeLoadingProject
@@ -146,13 +147,13 @@ const SBFileUploaderHOC = function (WrappedComponent) {
             return matches[1].substring(0, 100); // truncate project title to max 100 chars
         }
 
-        
+
         // Extract only_blocks setting from Stage comments and update selectedBlocks
         updateSelectedBlocksFromStageComments () {
             try {
                 const stage = this.props.vm.runtime.getTargetForStage();
                 if (!stage || !stage.comments) return;
-                
+
                 // Search through Stage comments for only_blocks pattern
                 for (const commentId in stage.comments) {
                     const comment = stage.comments[commentId];
@@ -183,14 +184,17 @@ const SBFileUploaderHOC = function (WrappedComponent) {
                             const uploadedProjectTitle = this.getProjectTitleFromFilename(filename);
                             this.props.onSetProjectTitle(uploadedProjectTitle);
                         }
-                        
+
+                        // Clear Google Drive file info when loading from local file
+                        this.props.onClearGoogleDriveFile();
+
                         // Update selectedBlocks from Stage comments to reflect in block-display-modal
                         setTimeout(() => {
                             this.updateSelectedBlocksFromStageComments();
                             // Trigger toolbox update to apply Stage comment only_blocks settings
                             this.props.vm.refreshWorkspace();
                         }, 100);
-                        
+
                         loadingSuccess = true;
                     })
                     .catch(error => {
@@ -224,6 +228,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
                 isLoadingUpload,
                 isShowingWithoutId,
                 loadingState,
+                onClearGoogleDriveFile,
                 onLoadingFinished,
                 onLoadingStarted,
                 onSetProjectTitle,
@@ -252,6 +257,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
         isLoadingUpload: PropTypes.bool,
         isShowingWithoutId: PropTypes.bool,
         loadingState: PropTypes.oneOf(LoadingStates),
+        onClearGoogleDriveFile: PropTypes.func,
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
@@ -283,6 +289,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
     const mapDispatchToProps = (dispatch, ownProps) => ({
         cancelFileUpload: loadingState => dispatch(onLoadedProject(loadingState, false, false)),
         closeFileMenu: () => dispatch(closeFileMenu()),
+        onClearGoogleDriveFile: () => dispatch(clearGoogleDriveFile()),
         // transition project state from loading to regular, and close
         // loading screen and file menu
         onLoadingFinished: (loadingState, success) => {

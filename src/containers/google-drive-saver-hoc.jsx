@@ -7,6 +7,7 @@ import log from '../lib/log';
 
 import googleDriveAPI from '../lib/google-drive-api';
 import {projectTitleInitialState} from '../reducers/project-title';
+import {setGoogleDriveFile} from '../reducers/google-drive-file';
 import {
     closeFileMenu
 } from '../reducers/menus';
@@ -33,6 +34,11 @@ const messages = defineMessages({
         id: 'gui.googleDriveSaver.uploadSuccess',
         defaultMessage: 'Project successfully uploaded to Google Drive!',
         description: 'A message that displays when a project is successfully uploaded to Google Drive.'
+    },
+    updateError: {
+        id: 'gui.googleDriveSaver.updateError',
+        defaultMessage: 'Failed to save project to Google Drive.',
+        description: 'An error that displays when a Google Drive project update fails.'
     }
 });
 
@@ -52,12 +58,14 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             bindAll(this, [
                 'handleStartSavingToGoogleDrive',
                 'handleSaveToGoogleDrive',
+                'handleSaveDirectlyToGoogleDrive',
                 'handleCancelGoogleDriveSave',
                 'getProjectFilename'
             ]);
             this.state = {
                 showSaveDialog: false,
-                saveStatus: 'idle' // 'idle' | 'saving' | 'saved'
+                saveStatus: 'idle', // 'idle' | 'saving' | 'saved'
+                saveDirectStatus: 'idle' // 'idle' | 'saving' | 'saved'
             };
         }
 
@@ -92,6 +100,67 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
         }
 
         /**
+         * Handle save directly to current Google Drive file (without dialog)
+         */
+        async handleSaveDirectlyToGoogleDrive () {
+            // Check if Google Drive file info exists
+            if (!this.props.googleDriveFile || !this.props.googleDriveFile.isGoogleDriveFile) {
+                log.warn('No Google Drive file info available for direct save');
+                return;
+            }
+
+            // Check if Google Drive is configured
+            if (!googleDriveAPI.constructor.isConfigured()) {
+                alert(this.props.intl.formatMessage(messages.configError)); // eslint-disable-line no-alert
+                log.warn('Google Drive API is not configured');
+                return;
+            }
+
+            const {fileId, fileName} = this.props.googleDriveFile;
+
+            // Close file menu if open
+            this.props.closeFileMenu();
+
+            // Set status to saving
+            this.setState({saveDirectStatus: 'saving'});
+
+            try {
+                // Convert Ruby code to blocks
+                const converter = this.props.targetCodeToBlocks(this.props.intl);
+                if (!converter.result) {
+                    this.setState({saveDirectStatus: 'idle'});
+                    return;
+                }
+
+                await converter.apply();
+
+                // Generate project data
+                const content = await this.props.saveProjectSb3();
+
+                // Update existing file in Google Drive
+                await googleDriveAPI.updateFile(fileId, fileName, content);
+
+                // Set status to saved
+                this.setState({saveDirectStatus: 'saved'});
+
+                // Reset status to idle after 3 seconds
+                setTimeout(() => {
+                    this.setState({saveDirectStatus: 'idle'});
+                }, 3000);
+            } catch (error) {
+                console.error('[GoogleDriveSaver] Direct save failed:', error);
+                log.error('Failed to save project to Google Drive:', error);
+                this.setState({saveDirectStatus: 'idle'});
+
+                // Show error message
+                const errorMessage = error && error.message ?
+                    error.message :
+                    this.props.intl.formatMessage(messages.updateError);
+                alert(errorMessage); // eslint-disable-line no-alert
+            }
+        }
+
+        /**
          * Handle cancel Google Drive save dialog
          */
         handleCancelGoogleDriveSave () {
@@ -121,7 +190,10 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 const content = await this.props.saveProjectSb3();
 
                 // Upload to Google Drive
-                await googleDriveAPI.uploadFile(filename, content, folderId);
+                const response = await googleDriveAPI.uploadFile(filename, content, folderId);
+
+                // Store Google Drive file metadata for direct save functionality
+                this.props.onSetGoogleDriveFile(response.id, filename, folderId);
 
                 // Set status to saved
                 this.setState({saveStatus: 'saved'});
@@ -159,10 +231,12 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             return (
                 <WrappedComponent
                     googleDriveSaveDialogVisible={this.state.showSaveDialog}
+                    googleDriveSaveDirectStatus={this.state.saveDirectStatus}
                     googleDriveSaveStatus={this.state.saveStatus}
                     intl={intl}
                     projectFilename={this.getProjectFilename()}
                     onCancelGoogleDriveSave={this.handleCancelGoogleDriveSave}
+                    onSaveDirectlyToGoogleDrive={this.handleSaveDirectlyToGoogleDrive}
                     onSaveToGoogleDrive={this.handleSaveToGoogleDrive}
                     onStartSavingToGoogleDrive={this.handleStartSavingToGoogleDrive}
                     {...componentProps}
@@ -173,21 +247,30 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
 
     GoogleDriveSaverComponent.propTypes = {
         closeFileMenu: PropTypes.func,
+        googleDriveFile: PropTypes.shape({
+            fileId: PropTypes.string,
+            fileName: PropTypes.string,
+            folderId: PropTypes.string,
+            isGoogleDriveFile: PropTypes.bool
+        }),
         intl: intlShape.isRequired,
         locale: PropTypes.string,
+        onSetGoogleDriveFile: PropTypes.func,
         projectTitle: PropTypes.string,
         saveProjectSb3: PropTypes.func,
         targetCodeToBlocks: PropTypes.func
     };
 
     const mapStateToProps = state => ({
+        googleDriveFile: state.scratchGui.googleDriveFile,
         locale: state.locales.locale,
         projectTitle: state.scratchGui.projectTitle,
         saveProjectSb3: state.scratchGui.vm.saveProjectSb3.bind(state.scratchGui.vm)
     });
 
     const mapDispatchToProps = dispatch => ({
-        closeFileMenu: () => dispatch(closeFileMenu())
+        closeFileMenu: () => dispatch(closeFileMenu()),
+        onSetGoogleDriveFile: (fileId, fileName, folderId) => dispatch(setGoogleDriveFile(fileId, fileName, folderId))
     });
 
     return RubyToBlocksConverterHOC(injectIntl(connect(

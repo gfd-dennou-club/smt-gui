@@ -19,6 +19,7 @@ import projectChangedReducer, {projectChangedInitialState} from './project-chang
 import projectStateReducer, {projectStateInitialState} from './project-state';
 import projectTitleReducer, {projectTitleInitialState} from './project-title';
 import fontsLoadedReducer, {fontsLoadedInitialState} from './fonts-loaded';
+import googleDriveFileReducer, {googleDriveFileInitialState} from './google-drive-file';
 import restoreDeletionReducer, {restoreDeletionInitialState} from './restore-deletion';
 import rubyCodeReducer, {rubyCodeInitialState} from './ruby-code';
 import stageSizeReducer, {stageSizeInitialState} from './stage-size';
@@ -58,6 +59,7 @@ const guiInitialState = {
     projectState: projectStateInitialState,
     projectTitle: projectTitleInitialState,
     fontsLoaded: fontsLoadedInitialState,
+    googleDriveFile: googleDriveFileInitialState,
     rubyCode: rubyCodeInitialState,
     restoreDeletion: restoreDeletionInitialState,
     targets: targetsInitialState,
@@ -161,6 +163,7 @@ const guiReducer = combineReducers({
     projectState: projectStateReducer,
     projectTitle: projectTitleReducer,
     fontsLoaded: fontsLoadedReducer,
+    googleDriveFile: googleDriveFileReducer,
     restoreDeletion: restoreDeletionReducer,
     rubyCode: rubyCodeReducer,
     targets: targetReducer,

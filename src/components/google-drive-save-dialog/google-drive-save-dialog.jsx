@@ -165,16 +165,16 @@ class GoogleDriveSaveDialog extends React.Component {
                 className={styles.modalContent}
                 contentLabel={this.props.intl.formatMessage({
                     id: 'gui.googleDriveSaveDialog.title',
-                    defaultMessage: 'Save to Google Drive',
-                    description: 'Title for save to Google Drive dialog.'
+                    defaultMessage: 'Save as to Google Drive',
+                    description: 'Title for save as to Google Drive dialog.'
                 })}
                 onRequestClose={this.handleCancel}
             >
                 <Box className={styles.body}>
                     <Box className={styles.header}>
                         <FormattedMessage
-                            defaultMessage="Save to Google Drive"
-                            description="Header for save to Google Drive dialog"
+                            defaultMessage="Save as to Google Drive"
+                            description="Header for save as to Google Drive dialog"
                             id="gui.googleDriveSaveDialog.header"
                         />
                     </Box>
@@ -186,7 +186,7 @@ class GoogleDriveSaveDialog extends React.Component {
                                 htmlFor="filename"
                             >
                                 <FormattedMessage
-                                    defaultMessage="名前を付けて保存:"
+                                    defaultMessage="Save as:"
                                     description="Label for filename input"
                                     id="gui.googleDriveSaveDialog.filenameLabel"
                                 />
@@ -206,7 +206,7 @@ class GoogleDriveSaveDialog extends React.Component {
                                 htmlFor="location"
                             >
                                 <FormattedMessage
-                                    defaultMessage="フォルダ:"
+                                    defaultMessage="Folder:"
                                     description="Label for save location"
                                     id="gui.googleDriveSaveDialog.whereLabel"
                                 />
@@ -231,7 +231,7 @@ class GoogleDriveSaveDialog extends React.Component {
                                 </option>
                                 <option value="select-folder">
                                     {this.props.intl.formatMessage({
-                                        defaultMessage: 'フォルダを選択する...',
+                                        defaultMessage: 'Select folder...',
                                         description: 'Option for selecting a folder',
                                         id: 'gui.googleDriveSaveDialog.selectFolder'
                                     })}
@@ -246,7 +246,7 @@ class GoogleDriveSaveDialog extends React.Component {
                             onClick={this.handleCancel}
                         >
                             <FormattedMessage
-                                defaultMessage="キャンセル"
+                                defaultMessage="Cancel"
                                 description="Cancel button"
                                 id="gui.googleDriveSaveDialog.cancel"
                             />
@@ -256,7 +256,7 @@ class GoogleDriveSaveDialog extends React.Component {
                             onClick={this.handleReset}
                         >
                             <FormattedMessage
-                                defaultMessage="リセット"
+                                defaultMessage="Reset"
                                 description="Reset button"
                                 id="gui.googleDriveSaveDialog.reset"
                             />
@@ -266,7 +266,7 @@ class GoogleDriveSaveDialog extends React.Component {
                             onClick={this.handleSave}
                         >
                             <FormattedMessage
-                                defaultMessage="保存"
+                                defaultMessage="Save"
                                 description="Save button"
                                 id="gui.googleDriveSaveDialog.save"
                             />

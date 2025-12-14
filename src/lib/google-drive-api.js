@@ -113,9 +113,10 @@ class GoogleDriveAPI {
      * Show Google Picker to select a file
      * @param {Function} callback - Called when user selects a file
      * @param {string} locale - Locale code (e.g., 'en', 'ja') for picker UI language
+     * @param {string} title - Title for the picker dialog
      * @returns {Promise<void>} Promise that resolves when picker is shown
      */
-    async showPicker (callback, locale = 'en') {
+    async showPicker (callback, locale = 'en', title = 'Select a Scratch 3.0 project (.sb3) from Google Drive') {
         if (!this.isInitialized) {
             await this.initialize();
         }
@@ -126,13 +127,13 @@ class GoogleDriveAPI {
 
             this.pickerCallback = callback;
 
-            // Create and show picker
+            // Create DocsView with .sb3 query filter
+            const docsView = new window.google.picker.DocsView()
+                .setIncludeFolders(true)
+                .setQuery('.sb3');
+
             const picker = new window.google.picker.PickerBuilder()
-                .addView(
-                    new window.google.picker.DocsView()
-                        .setIncludeFolders(true)
-                    // No MIME type filter - show all files and validate by extension
-                )
+                .addView(docsView)
                 .addView(
                     new window.google.picker.DocsUploadView()
                         .setIncludeFolders(true)
@@ -140,7 +141,7 @@ class GoogleDriveAPI {
                 .setOAuthToken(token)
                 .setDeveloperKey(API_KEY)
                 .setCallback(this.handlePickerResponse.bind(this))
-                .setTitle('Select a Scratch 3.0 project (.sb3) from Google Drive')
+                .setTitle(title)
                 .setLocale(locale)
                 .build();
 

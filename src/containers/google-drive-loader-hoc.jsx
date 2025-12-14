@@ -35,6 +35,11 @@ const messages = defineMessages({
         id: 'gui.googleDriveLoader.configError',
         defaultMessage: 'Google Drive is not configured. Please contact the administrator.',
         description: 'An error that displays when Google Drive API is not configured.'
+    },
+    pickerTitle: {
+        id: 'gui.googleDriveLoader.pickerTitle',
+        defaultMessage: 'Select a Scratch 3.0 project (.sb3) from Google Drive',
+        description: 'Title for Google Drive file picker dialog.'
     }
 });
 
@@ -79,9 +84,12 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
             // Close file menu
             this.props.closeFileMenu();
 
+            // Get localized title
+            const title = this.props.intl.formatMessage(messages.pickerTitle);
+
             // Initialize and show Google Picker
             // Don't show loading modal yet - wait until user selects a file
-            googleDriveAPI.showPicker(this.handlePickerCallback, this.props.locale)
+            googleDriveAPI.showPicker(this.handlePickerCallback, this.props.locale, title)
                 .catch(error => {
                     log.error('Failed to show Google Picker:', error);
                     alert(this.props.intl.formatMessage(messages.authError)); // eslint-disable-line no-alert

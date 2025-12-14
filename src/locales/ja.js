@@ -4,6 +4,7 @@ export default {
     'gui.googleDriveLoader.loadError': 'Google ドライブからプロジェクトの読み込みに失敗しました。',
     'gui.googleDriveLoader.authError': 'Google ドライブの認証に失敗しました。もう一度お試しください。',
     'gui.googleDriveLoader.configError': 'Google ドライブが設定されていません。管理者に連絡してください。',
+    'gui.googleDriveLoader.pickerTitle': 'Google ドライブから Scratch 3.0 プロジェクト (.sb3) を選択',
     'gui.urlLoader.loadError': 'プロジェクトURLの読み込みに失敗しました。',
     'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLまたはGoogle DriveのURLを入力してください。',
     'gui.urlLoader.title': 'URLから読み込む',

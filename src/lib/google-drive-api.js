@@ -293,10 +293,11 @@ class GoogleDriveAPI {
 
             this.pickerCallback = callback;
 
-            // Create DocsView for folders only
+            // Create DocsView for folders only, starting from root
             const docsView = new window.google.picker.DocsView(window.google.picker.ViewId.FOLDERS)
                 .setIncludeFolders(true)
-                .setSelectFolderEnabled(true);
+                .setSelectFolderEnabled(true)
+                .setParent('root'); // Start from root folder for hierarchical navigation
 
             const picker = new window.google.picker.PickerBuilder()
                 .addView(docsView)

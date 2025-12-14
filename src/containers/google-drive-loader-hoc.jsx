@@ -9,8 +9,7 @@ import googleDriveAPI from '../lib/google-drive-api';
 import {
     LoadingStates,
     getIsLoadingUpload,
-    onLoadedProject,
-    requestProjectUpload
+    onLoadedProject
 } from '../reducers/project-state';
 import {setProjectTitle} from '../reducers/project-title';
 import {
@@ -127,9 +126,6 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                     fileDataByteLength: fileData ? fileData.byteLength : 0
                 });
 
-                // Show loading modal now that user has selected a file
-                this.props.onShowLoadingProject();
-
                 // Update project title
                 const projectTitle = this.getProjectTitleFromFilename(fileName);
                 console.log('[GoogleDriveLoader] Setting project title:', projectTitle);
@@ -140,8 +136,8 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 const content = new Uint8Array(fileData);
                 console.log('[GoogleDriveLoader] Uint8Array created, length:', content.length);
 
-                // Load the project
-                this.props.onLoadingStarted(this.props.loadingState);
+                // Show loading modal and load the project
+                this.props.onLoadingStarted();
                 this.props.vm.loadProject(content)
                     .then(() => {
                         this.props.onLoadingFinished(this.props.loadingState, true);
@@ -189,7 +185,6 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 onLoadingFinished,
                 onLoadingStarted,
                 onSetProjectTitle,
-                onShowLoadingProject,
                 openUrlLoaderModal,
                 vm,
                 /* eslint-enable no-unused-vars */
@@ -216,7 +211,6 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         onLoadingFinished: PropTypes.func,
         onLoadingStarted: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
-        onShowLoadingProject: PropTypes.func,
         openUrlLoaderModal: PropTypes.func,
         vm: PropTypes.shape({
             loadProject: PropTypes.func
@@ -237,9 +231,8 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
             dispatch(onLoadedProject(loadingState, false, success));
             dispatch(closeLoadingProject());
         },
-        onLoadingStarted: loadingState => dispatch(requestProjectUpload(loadingState)),
-        onSetProjectTitle: title => dispatch(setProjectTitle(title)),
-        onShowLoadingProject: () => dispatch(openLoadingProject())
+        onLoadingStarted: () => dispatch(openLoadingProject()),
+        onSetProjectTitle: title => dispatch(setProjectTitle(title))
     });
 
     return injectIntl(connect(

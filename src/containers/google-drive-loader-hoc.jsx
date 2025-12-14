@@ -97,6 +97,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 cancelled: result.cancelled,
                 hasError: !!result.error,
                 hasSuccess: !!result.success,
+                hasSelected: !!result.selected,
                 resultKeys: Object.keys(result)
             });
 
@@ -116,28 +117,38 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                 return;
             }
 
-            if (result.success) {
-                // File selected and downloaded successfully
-                const {fileName, fileData} = result;
-                console.log('[GoogleDriveLoader] File received:', {
-                    fileName: fileName,
-                    fileDataType: typeof fileData,
-                    fileDataConstructor: fileData ? fileData.constructor.name : 'N/A',
-                    fileDataByteLength: fileData ? fileData.byteLength : 0
-                });
+            if (result.selected) {
+                // File selected - show loading modal immediately (before download)
+                const {fileName} = result;
+                console.log('[GoogleDriveLoader] File selected:', fileName);
 
                 // Update project title
                 const projectTitle = this.getProjectTitleFromFilename(fileName);
                 console.log('[GoogleDriveLoader] Setting project title:', projectTitle);
                 this.props.onSetProjectTitle(projectTitle);
 
+                // Show loading modal
+                console.log('[GoogleDriveLoader] Showing loading modal');
+                this.props.onLoadingStarted();
+                return;
+            }
+
+            if (result.success) {
+                // File downloaded successfully - load the project
+                const {fileName, fileData} = result;
+                console.log('[GoogleDriveLoader] File downloaded:', {
+                    fileName: fileName,
+                    fileDataType: typeof fileData,
+                    fileDataConstructor: fileData ? fileData.constructor.name : 'N/A',
+                    fileDataByteLength: fileData ? fileData.byteLength : 0
+                });
+
                 // Convert ArrayBuffer to Uint8Array
                 console.log('[GoogleDriveLoader] Converting to Uint8Array');
                 const content = new Uint8Array(fileData);
                 console.log('[GoogleDriveLoader] Uint8Array created, length:', content.length);
 
-                // Show loading modal and load the project
-                this.props.onLoadingStarted();
+                // Load the project
                 this.props.vm.loadProject(content)
                     .then(() => {
                         this.props.onLoadingFinished(this.props.loadingState, true);

@@ -170,6 +170,19 @@ class GoogleDriveAPI {
                 return;
             }
 
+            // Notify that file has been selected (before download starts)
+            if (this.pickerCallback) {
+                try {
+                    this.pickerCallback({
+                        selected: true,
+                        fileName: fileName
+                    });
+                } catch (callbackError) {
+                    console.error('[GoogleDriveAPI] Error in file selected callback:', callbackError);
+                    // Continue with download even if callback fails
+                }
+            }
+
             // Download file
             this.downloadFile(fileId, fileName)
                 .then(fileData => {

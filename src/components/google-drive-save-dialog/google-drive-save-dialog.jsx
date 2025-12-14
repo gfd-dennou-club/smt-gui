@@ -212,14 +212,14 @@ class GoogleDriveSaveDialog extends React.Component {
                             >
                                 <option value="my-drive">
                                     {this.props.intl.formatMessage({
-                                        defaultMessage: 'Google ドライブ – My Drive',
+                                        defaultMessage: 'My Drive',
                                         description: 'Option for saving to My Drive root',
                                         id: 'gui.googleDriveSaveDialog.myDrive'
                                     })}
                                 </option>
                                 <option value="select-folder">
                                     {this.props.intl.formatMessage({
-                                        defaultMessage: 'Google ドライブ – フォルダを選択する...',
+                                        defaultMessage: 'フォルダを選択する...',
                                         description: 'Option for selecting a folder',
                                         id: 'gui.googleDriveSaveDialog.selectFolder'
                                     })}

@@ -1,5 +1,5 @@
 export default {
-    'gui.menuBar.loadFromUrl': 'URLから読み込む',
+    'gui.menuBar.loadFromUrl': 'Scratchから読み込む',
     'gui.menuBar.loadFromGoogleDrive': 'Google ドライブから読み込む',
     'gui.menuBar.saveToGoogleDrive': 'Googleドライブにコピーを保存...',
     'gui.menuBar.saveDirectlyToGoogleDrive': 'Googleドライブに直ちに保存',
@@ -27,7 +27,7 @@ export default {
     'gui.googleDriveSaveDialog.folderPickerError': 'フォルダピッカーの表示に失敗しました。もう一度お試しください。',
     'gui.urlLoader.loadError': 'プロジェクトURLの読み込みに失敗しました。',
     'gui.urlLoader.invalidUrl': '有効なScratchプロジェクトURLまたはGoogle DriveのURLを入力してください。',
-    'gui.urlLoader.title': 'URLから読み込む',
+    'gui.urlLoader.title': 'Scratchから読み込む',
     'gui.urlLoader.urlPlaceholder': 'プロジェクトのURLを入力...',
     'gui.urlLoader.openButton': '開く',
     'gui.urlLoader.cancelButton': 'キャンセル',

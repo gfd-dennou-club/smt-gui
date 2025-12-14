@@ -12,8 +12,8 @@ import styles from './url-loader-modal.css';
 
 const messages = defineMessages({
     title: {
-        defaultMessage: 'Load from URL',
-        description: 'Title for the URL loader modal',
+        defaultMessage: 'Load from Scratch',
+        description: 'Title for the Scratch loader modal',
         id: 'gui.urlLoader.title'
     },
     urlPlaceholder: {

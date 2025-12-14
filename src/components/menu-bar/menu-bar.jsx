@@ -515,12 +515,14 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
+                                    </MenuSection>
+                                    <MenuSection>
                                         <MenuItem
                                             onClick={this.handleClickLoadFromUrl}
                                         >
                                             <FormattedMessage
-                                                defaultMessage="Load from URL"
-                                                description="Menu bar item for loading from URL"
+                                                defaultMessage="Load from Scratch"
+                                                description="Menu bar item for loading from Scratch"
                                                 id="gui.menuBar.loadFromUrl"
                                             />
                                         </MenuItem>

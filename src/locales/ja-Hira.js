@@ -1,8 +1,8 @@
 export default {
-    'gui.menuBar.loadFromUrl': 'URLからよみこむ',
+    'gui.menuBar.loadFromUrl': 'Scratchからよみこむ',
     'gui.urlLoader.loadError': 'プロジェクトURLのよみこみにしっぱいしました。',
     'gui.urlLoader.invalidUrl': 'ゆうこうなScratchプロジェクトURLをにゅうりょくしてください。',
-    'gui.urlLoader.title': 'URLからよみこむ',
+    'gui.urlLoader.title': 'Scratchからよみこむ',
     'gui.urlLoader.urlPlaceholder': 'プロジェクトのURLをにゅうりょく...',
     'gui.urlLoader.openButton': 'ひらく',
     'gui.urlLoader.cancelButton': 'キャンセル',

@@ -1,7 +1,7 @@
 export default {
     'gui.menuBar.loadFromUrl': 'URLから読み込む',
     'gui.menuBar.loadFromGoogleDrive': 'Google ドライブから読み込む',
-    'gui.menuBar.saveToGoogleDrive': 'Google ドライブに保存',
+    'gui.menuBar.saveToGoogleDrive': 'Googleドライブに名前をつけて保存...',
     'gui.googleDriveLoader.loadError': 'Google ドライブからプロジェクトの読み込みに失敗しました。',
     'gui.googleDriveLoader.authError': 'Google ドライブの認証に失敗しました。もう一度お試しください。',
     'gui.googleDriveLoader.configError': 'Google ドライブが設定されていません。管理者に連絡してください。',

@@ -535,7 +535,7 @@ class MenuBar extends React.Component {
                                             onClick={this.props.onStartSavingToGoogleDrive}
                                         >
                                             <FormattedMessage
-                                                defaultMessage="Save to Google Drive"
+                                                defaultMessage="Save to Google Drive..."
                                                 description="Menu bar item for saving to Google Drive"
                                                 id="gui.menuBar.saveToGoogleDrive"
                                             />

@@ -27,8 +27,8 @@ const messages = defineMessages({
         id: 'gui.urlLoader.urlExamplesTitle'
     },
     urlExampleScratch: {
-        defaultMessage: 'https://scratch.mit.edu/projects/{project_id}/',
-        description: 'Example URL format for Scratch projects',
+        defaultMessage: 'https://scratch.mit.edu/projects/1234567/',
+        description: 'Example URL for Scratch projects',
         id: 'gui.urlLoader.urlExampleScratch'
     },
     openButton: {

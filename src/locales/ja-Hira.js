@@ -7,7 +7,7 @@ export default {
     'gui.urlLoader.openButton': 'ひらく',
     'gui.urlLoader.cancelButton': 'キャンセル',
     'gui.urlLoader.urlExamplesTitle': 'URLのれい',
-    'gui.urlLoader.urlExampleScratch': 'https://scratch.mit.edu/projects/{project_id}/',
+    'gui.urlLoader.urlExampleScratch': 'https://scratch.mit.edu/projects/1234567/',
     'gui.menuBar.seeProjectPage': 'プロジェクトページをみる',
     'gui.loader.creating': 'プロジェクトをさくせいちゅう...',
     'gui.smalruby3.crashMessage.description': 'もうしわけありません。スモウルビーがクラッシュしたようです。このバグはじどうてきにスモウルビーチームにほうこくされました。ページをさいよみこみしてください。',

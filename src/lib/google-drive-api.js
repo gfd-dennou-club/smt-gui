@@ -189,7 +189,6 @@ class GoogleDriveAPI {
             // Download file
             this.downloadFile(fileId, fileName)
                 .then(fileData => {
-                    console.log('[GoogleDriveAPI] File downloaded successfully, calling picker callback');
                     if (this.pickerCallback) {
                         // Wrap callback invocation in try-catch to prevent callback errors
                         // from being caught as download errors
@@ -244,36 +243,21 @@ class GoogleDriveAPI {
      * @returns {Promise<ArrayBuffer>} Promise that resolves with file data as ArrayBuffer
      */
     async downloadFile (fileId, fileName) {
-        console.log(`[GoogleDriveAPI] Starting download: fileId=${fileId}, fileName=${fileName}`);
-
         try {
-            console.log('[GoogleDriveAPI] Calling gapi.client.drive.files.get with alt=media');
             const response = await window.gapi.client.drive.files.get({
                 fileId: fileId,
                 alt: 'media'
             });
 
-            console.log('[GoogleDriveAPI] Response received:', {
-                status: response.status,
-                statusText: response.statusText,
-                bodyType: typeof response.body,
-                bodyLength: response.body ? response.body.length : 0,
-                hasResult: !!response.result,
-                resultType: typeof response.result
-            });
-
             // Convert response to ArrayBuffer
             // gapi returns the file content as a string for binary files
             const binaryString = response.body;
-            console.log(`[GoogleDriveAPI] Converting binary string to ArrayBuffer (length: ${binaryString.length})`);
-
             const len = binaryString.length;
             const bytes = new Uint8Array(len);
             for (let i = 0; i < len; i++) {
                 bytes[i] = binaryString.charCodeAt(i);
             }
 
-            console.log(`[GoogleDriveAPI] Download successful, ArrayBuffer size: ${bytes.buffer.byteLength} bytes`);
             return bytes.buffer;
         } catch (error) {
             console.error(`[GoogleDriveAPI] Download failed for ${fileName}:`, {

@@ -128,7 +128,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
         tryToAutoSave () {
             const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
             if (this.props.projectChanged && isGoogleDriveFile) {
-                this.handleSaveDirectlyToGoogleDrive();
+                this.handleSaveDirectlyToGoogleDrive(false); // Auto-save: don't show auth dialog
             }
         }
 
@@ -152,8 +152,9 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
 
         /**
          * Handle save directly to current Google Drive file (without dialog)
+         * @param {boolean} isUserInitiated - True if user explicitly clicked save button, false for auto-save
          */
-        async handleSaveDirectlyToGoogleDrive () {
+        async handleSaveDirectlyToGoogleDrive (isUserInitiated = true) {
             // Check if Google Drive file info exists
             if (!this.props.googleDriveFile || !this.props.googleDriveFile.isGoogleDriveFile) {
                 log.warn('No Google Drive file info available for direct save');
@@ -216,8 +217,39 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                     ));
 
                 if (isAuthError) {
-                    // Set auth error status - user needs to click to re-authenticate
-                    this.setState({saveDirectStatus: 'auth_error'});
+                    if (isUserInitiated) {
+                        // User clicked save button - attempt re-authentication
+                        try {
+                            // Request new access token (will show OAuth dialog)
+                            await googleDriveAPI.requestAccessToken();
+
+                            // Re-authentication successful - regenerate project data and retry save
+                            const retryContent = await this.props.saveProjectSb3();
+                            await googleDriveAPI.updateFile(fileId, fileName, retryContent);
+
+                            // Mark project as unchanged after successful save
+                            this.props.onSetProjectUnchanged();
+
+                            // Set status to saved
+                            this.setState({saveDirectStatus: 'saved'});
+
+                            // Reset status to idle after 3 seconds
+                            setTimeout(() => {
+                                this.setState({saveDirectStatus: 'idle'});
+                            }, 3000);
+                        } catch (reAuthError) {
+                            console.error('[GoogleDriveSaver] Re-authentication or retry save failed:', reAuthError);
+                            log.error('Failed to re-authenticate or save:', reAuthError);
+                            this.setState({saveDirectStatus: 'idle'});
+                            const errorMessage = reAuthError && reAuthError.message ?
+                                reAuthError.message :
+                                this.props.intl.formatMessage(messages.authError);
+                            alert(errorMessage); // eslint-disable-line no-alert
+                        }
+                    } else {
+                        // Auto-save - don't show auth dialog, just set auth error status
+                        this.setState({saveDirectStatus: 'auth_error'});
+                    }
                 } else {
                     // Regular error - show alert and reset to idle
                     this.setState({saveDirectStatus: 'idle'});

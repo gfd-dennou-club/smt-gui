@@ -194,7 +194,8 @@ class MenuBar extends React.Component {
             'handleRestoreOption',
             'getSaveToComputerHandler',
             'restoreOptionMessage',
-            'handleClickLoadFromUrl'
+            'handleClickLoadFromUrl',
+            'handleSaveDirectlyToGoogleDrive'
         ]);
     }
     componentDidMount () {
@@ -229,6 +230,9 @@ class MenuBar extends React.Component {
     handleClickSaveAsCopy () {
         this.props.onClickSaveAsCopy();
         this.props.onRequestCloseFile();
+    }
+    handleSaveDirectlyToGoogleDrive () {
+        this.props.onSaveDirectlyToGoogleDrive(true);
     }
     handleClickGenerateRubyFromCode () {
         this.props.updateRubyCodeTargetState(this.props.vm.editingTarget);
@@ -826,17 +830,17 @@ class MenuBar extends React.Component {
                         <div className={styles.saveStatus}>
                             <Button
                                 className={styles.saveDirectlyButton}
-                                onClick={this.props.onSaveDirectlyToGoogleDrive}
+                                title={this.props.intl.formatMessage({
+                                    id: 'gui.menuBar.authExpired',
+                                    defaultMessage: 'Authentication expired. Click to save.'
+                                })}
+                                onClick={this.handleSaveDirectlyToGoogleDrive}
                             >
                                 <FormattedMessage
                                     defaultMessage="Save directly"
                                     id="gui.menuBar.saveDirectlyButton"
                                 />
                             </Button>
-                            <FormattedMessage
-                                defaultMessage="Authentication expired. Click to save."
-                                id="gui.menuBar.authExpired"
-                            />
                         </div>
                     )}
                     {this.props.sessionExists ? (

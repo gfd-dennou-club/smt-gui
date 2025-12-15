@@ -74,7 +74,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             };
             this.autoSaveIntervalSecs = 30; // Auto-save interval: 30 seconds
             // DEBUG: Counter for simulating auth errors (0 = disabled, >0 = number of errors to simulate)
-            this.simulateAuthErrorCount = 2;
+            this.simulateAuthErrorCount = 0;
         }
 
         componentDidUpdate (prevProps) {

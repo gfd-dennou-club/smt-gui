@@ -5,6 +5,8 @@ export default {
     'gui.menuBar.saveDirectlyToGoogleDrive': 'Googleドライブに直ちに保存',
     'gui.menuBar.savingToGoogleDrive': 'プロジェクトを保存中...',
     'gui.menuBar.savedToGoogleDrive': 'プロジェクトが保存されました。',
+    'gui.menuBar.saveDirectlyButton': '直ちに保存',
+    'gui.menuBar.authExpired': '認証が期限切れです。クリックして保存してください。',
     'gui.googleDriveLoader.loadError': 'Google ドライブからプロジェクトの読み込みに失敗しました。',
     'gui.googleDriveLoader.authError': 'Google ドライブの認証に失敗しました。もう一度お試しください。',
     'gui.googleDriveLoader.configError': 'Google ドライブが設定されていません。管理者に連絡してください。',

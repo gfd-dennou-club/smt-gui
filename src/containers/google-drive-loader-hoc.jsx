@@ -13,6 +13,7 @@ import {
 } from '../reducers/project-state';
 import {setProjectTitle} from '../reducers/project-title';
 import {setGoogleDriveFile} from '../reducers/google-drive-file';
+import {setProjectUnchanged} from '../reducers/project-changed';
 import {
     openLoadingProject,
     closeLoadingProject
@@ -141,6 +142,8 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
                     .then(() => {
                         // Store Google Drive file metadata for direct save functionality
                         this.props.onSetGoogleDriveFile(fileId, fileName, null);
+                        // Mark project as unchanged after loading from Google Drive
+                        this.props.onSetProjectUnchanged();
                         this.props.onLoadingFinished(this.props.loadingState, true);
                         this.props.onCloseLoadingProject();
                     })
@@ -213,6 +216,7 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         onLoadingStarted: PropTypes.func,
         onSetGoogleDriveFile: PropTypes.func,
         onSetProjectTitle: PropTypes.func,
+        onSetProjectUnchanged: PropTypes.func,
         openUrlLoaderModal: PropTypes.func,
         vm: PropTypes.shape({
             loadProject: PropTypes.func
@@ -235,7 +239,8 @@ const GoogleDriveLoaderHOC = function (WrappedComponent) {
         },
         onLoadingStarted: () => dispatch(openLoadingProject()),
         onSetGoogleDriveFile: (fileId, fileName, folderId) => dispatch(setGoogleDriveFile(fileId, fileName, folderId)),
-        onSetProjectTitle: title => dispatch(setProjectTitle(title))
+        onSetProjectTitle: title => dispatch(setProjectTitle(title)),
+        onSetProjectUnchanged: () => dispatch(setProjectUnchanged())
     });
 
     return injectIntl(connect(

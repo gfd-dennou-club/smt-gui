@@ -194,7 +194,8 @@ class MenuBar extends React.Component {
             'handleRestoreOption',
             'getSaveToComputerHandler',
             'restoreOptionMessage',
-            'handleClickLoadFromUrl'
+            'handleClickLoadFromUrl',
+            'handleSaveDirectlyToGoogleDrive'
         ]);
     }
     componentDidMount () {
@@ -229,6 +230,9 @@ class MenuBar extends React.Component {
     handleClickSaveAsCopy () {
         this.props.onClickSaveAsCopy();
         this.props.onRequestCloseFile();
+    }
+    handleSaveDirectlyToGoogleDrive () {
+        this.props.onSaveDirectlyToGoogleDrive(true);
     }
     handleClickGenerateRubyFromCode () {
         this.props.updateRubyCodeTargetState(this.props.vm.editingTarget);
@@ -801,6 +805,30 @@ class MenuBar extends React.Component {
                             />
                         </div>
                     )}
+                    {this.props.googleDriveFile &&
+                        this.props.googleDriveFile.isGoogleDriveFile &&
+                        this.props.projectChanged &&
+                        this.props.googleDriveSaveDirectStatus !== 'saving' &&
+                        this.props.googleDriveSaveDirectStatus !== 'saved' && (
+                        <div className={styles.saveStatus}>
+                            <Button
+                                className={styles.saveDirectlyButton}
+                                title={this.props.googleDriveSaveDirectStatus === 'auth_error' ?
+                                    this.props.intl.formatMessage({
+                                        id: 'gui.menuBar.authExpired',
+                                        defaultMessage: 'Authentication expired. Click to save.'
+                                    }) :
+                                    null
+                                }
+                                onClick={this.handleSaveDirectlyToGoogleDrive}
+                            >
+                                <FormattedMessage
+                                    defaultMessage="Save directly"
+                                    id="gui.menuBar.saveDirectlyButton"
+                                />
+                            </Button>
+                        </div>
+                    )}
                     {this.props.googleDriveSaveDirectStatus === 'saving' && (
                         <div className={styles.saveStatus}>
                             <Spinner
@@ -981,10 +1009,17 @@ MenuBar.propTypes = {
     editMenuOpen: PropTypes.bool,
     enableCommunity: PropTypes.bool,
     fileMenuOpen: PropTypes.bool,
+    googleDriveFile: PropTypes.shape({
+        fileId: PropTypes.string,
+        fileName: PropTypes.string,
+        folderId: PropTypes.string,
+        isGoogleDriveFile: PropTypes.bool
+    }),
     googleDriveSaveDialogVisible: PropTypes.bool,
     googleDriveSaveDirectStatus: PropTypes.string,
     googleDriveSaveStatus: PropTypes.string,
     intl: intlShape,
+    isGoogleDriveFile: PropTypes.bool,
     isRtl: PropTypes.bool,
     isShared: PropTypes.bool,
     isShowingProject: PropTypes.bool,
@@ -1042,10 +1077,10 @@ MenuBar.propTypes = {
     onStartSelectingGoogleDrive: PropTypes.func,
     onStartSavingToGoogleDrive: PropTypes.func,
     onSaveDirectlyToGoogleDrive: PropTypes.func,
-    isGoogleDriveFile: PropTypes.bool,
     onStartSelectingUrlLoad: PropTypes.func,
     projectFilename: PropTypes.string,
     onToggleLoginOpen: PropTypes.func,
+    projectChanged: PropTypes.bool,
     projectTitle: PropTypes.string,
     renderLogin: PropTypes.func,
     sessionExists: PropTypes.bool,
@@ -1072,6 +1107,7 @@ const mapStateToProps = (state, ownProps) => {
         currentLocale: state.locales.locale,
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
+        googleDriveFile: state.scratchGui.googleDriveFile,
         isGoogleDriveFile: state.scratchGui.googleDriveFile.isGoogleDriveFile,
         isRtl: state.locales.isRtl,
         isUpdating: getIsUpdating(loadingState),
@@ -1079,6 +1115,7 @@ const mapStateToProps = (state, ownProps) => {
         locale: state.locales.locale,
         loginMenuOpen: loginMenuOpen(state),
         modeMenuOpen: modeMenuOpen(state),
+        projectChanged: state.scratchGui.projectChanged,
         projectTitle: state.scratchGui.projectTitle,
         sessionExists: state.session && typeof state.session.session !== 'undefined',
         settingsMenuOpen: settingsMenuOpen(state),

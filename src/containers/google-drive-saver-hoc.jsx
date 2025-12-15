@@ -8,6 +8,7 @@ import log from '../lib/log';
 import googleDriveAPI from '../lib/google-drive-api';
 import {projectTitleInitialState} from '../reducers/project-title';
 import {setGoogleDriveFile} from '../reducers/google-drive-file';
+import {setProjectUnchanged} from '../reducers/project-changed';
 import {
     closeFileMenu
 } from '../reducers/menus';
@@ -60,13 +61,33 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 'handleSaveToGoogleDrive',
                 'handleSaveDirectlyToGoogleDrive',
                 'handleCancelGoogleDriveSave',
-                'getProjectFilename'
+                'getProjectFilename',
+                'scheduleAutoSave',
+                'clearAutoSaveTimeout',
+                'tryToAutoSave',
+                'performSaveToGoogleDrive'
             ]);
             this.state = {
                 showSaveDialog: false,
                 saveStatus: 'idle', // 'idle' | 'saving' | 'saved'
-                saveDirectStatus: 'idle' // 'idle' | 'saving' | 'saved'
+                saveDirectStatus: 'idle', // 'idle' | 'saving' | 'saved' | 'auth_error'
+                autoSaveTimeoutId: null
             };
+            this.autoSaveIntervalSecs = 30; // Auto-save interval: 30 seconds
+            // DEBUG: Counter for simulating auth errors (0 = disabled, >0 = number of errors to simulate)
+            this.simulateAuthErrorCount = 0;
+        }
+
+        componentDidUpdate (prevProps) {
+            // Schedule auto-save when project changes
+            if (this.props.projectChanged && !prevProps.projectChanged) {
+                this.scheduleAutoSave();
+            }
+        }
+
+        componentWillUnmount () {
+            // Clear auto-save timeout when component unmounts
+            this.clearAutoSaveTimeout();
         }
 
         /**
@@ -79,6 +100,64 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 filenameTitle = projectTitleInitialState;
             }
             return `${filenameTitle.substring(0, 100)}.sb3`;
+        }
+
+        /**
+         * Clear auto-save timeout
+         */
+        clearAutoSaveTimeout () {
+            if (this.state.autoSaveTimeoutId !== null) {
+                clearTimeout(this.state.autoSaveTimeoutId);
+                this.setState({autoSaveTimeoutId: null});
+            }
+        }
+
+        /**
+         * Perform save to Google Drive and update UI
+         * @param {string} fileId - Google Drive file ID
+         * @param {string} fileName - File name
+         * @returns {Promise<void>} Promise that resolves when save is complete
+         */
+        async performSaveToGoogleDrive (fileId, fileName) {
+            // Generate project data
+            const content = await this.props.saveProjectSb3();
+
+            // Update existing file in Google Drive
+            await googleDriveAPI.updateFile(fileId, fileName, content);
+
+            // Mark project as unchanged after successful save
+            this.props.onSetProjectUnchanged();
+
+            // Set status to saved
+            this.setState({saveDirectStatus: 'saved'});
+
+            // Reset status to idle after 3 seconds
+            setTimeout(() => {
+                this.setState({saveDirectStatus: 'idle'});
+            }, 3000);
+        }
+
+        /**
+         * Schedule auto-save after interval
+         */
+        scheduleAutoSave () {
+            // Only auto-save if file is from Google Drive and not already saving
+            const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
+            if (isGoogleDriveFile && this.state.autoSaveTimeoutId === null &&
+                this.state.saveDirectStatus !== 'saving') {
+                const timeoutId = setTimeout(this.tryToAutoSave, this.autoSaveIntervalSecs * 1000);
+                this.setState({autoSaveTimeoutId: timeoutId});
+            }
+        }
+
+        /**
+         * Try to auto-save if conditions are met
+         */
+        tryToAutoSave () {
+            const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
+            if (this.props.projectChanged && isGoogleDriveFile) {
+                this.handleSaveDirectlyToGoogleDrive(false); // Auto-save: don't show auth dialog
+            }
         }
 
         /**
@@ -101,8 +180,9 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
 
         /**
          * Handle save directly to current Google Drive file (without dialog)
+         * @param {boolean} isUserInitiated - True if user explicitly clicked save button, false for auto-save
          */
-        async handleSaveDirectlyToGoogleDrive () {
+        async handleSaveDirectlyToGoogleDrive (isUserInitiated = true) {
             // Check if Google Drive file info exists
             if (!this.props.googleDriveFile || !this.props.googleDriveFile.isGoogleDriveFile) {
                 log.warn('No Google Drive file info available for direct save');
@@ -121,10 +201,22 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             // Close file menu if open
             this.props.closeFileMenu();
 
+            // Clear auto-save timeout before saving
+            this.clearAutoSaveTimeout();
+
             // Set status to saving
             this.setState({saveDirectStatus: 'saving'});
 
             try {
+                // DEBUG: Simulate authentication error for testing
+                if (this.simulateAuthErrorCount > 0) {
+                    this.simulateAuthErrorCount--;
+                    console.warn(`[DEBUG] Simulating auth error (remaining: ${this.simulateAuthErrorCount})`);
+                    const simulatedError = new Error('Simulated authentication error for testing');
+                    simulatedError.status = 401;
+                    throw simulatedError;
+                }
+
                 // Convert Ruby code to blocks
                 const converter = this.props.targetCodeToBlocks(this.props.intl);
                 if (!converter.result) {
@@ -134,29 +226,49 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
 
                 await converter.apply();
 
-                // Generate project data
-                const content = await this.props.saveProjectSb3();
-
-                // Update existing file in Google Drive
-                await googleDriveAPI.updateFile(fileId, fileName, content);
-
-                // Set status to saved
-                this.setState({saveDirectStatus: 'saved'});
-
-                // Reset status to idle after 3 seconds
-                setTimeout(() => {
-                    this.setState({saveDirectStatus: 'idle'});
-                }, 3000);
+                // Save to Google Drive and update UI
+                await this.performSaveToGoogleDrive(fileId, fileName);
             } catch (error) {
                 console.error('[GoogleDriveSaver] Direct save failed:', error);
                 log.error('Failed to save project to Google Drive:', error);
-                this.setState({saveDirectStatus: 'idle'});
 
-                // Show error message
-                const errorMessage = error && error.message ?
-                    error.message :
-                    this.props.intl.formatMessage(messages.updateError);
-                alert(errorMessage); // eslint-disable-line no-alert
+                // Check if error is authentication related
+                const isAuthError = (error && error.status === 401) ||
+                    (error && error.message && (
+                        error.message.toLowerCase().includes('auth') ||
+                        error.message.toLowerCase().includes('unauthorized')
+                    ));
+
+                if (isAuthError) {
+                    if (isUserInitiated) {
+                        // User clicked save button - attempt re-authentication
+                        try {
+                            // Request new access token (will show OAuth dialog)
+                            await googleDriveAPI.requestAccessToken();
+
+                            // Re-authentication successful - retry save
+                            await this.performSaveToGoogleDrive(fileId, fileName);
+                        } catch (reAuthError) {
+                            console.error('[GoogleDriveSaver] Re-authentication or retry save failed:', reAuthError);
+                            log.error('Failed to re-authenticate or save:', reAuthError);
+                            this.setState({saveDirectStatus: 'idle'});
+                            const errorMessage = reAuthError && reAuthError.message ?
+                                reAuthError.message :
+                                this.props.intl.formatMessage(messages.authError);
+                            alert(errorMessage); // eslint-disable-line no-alert
+                        }
+                    } else {
+                        // Auto-save - don't show auth dialog, just set auth error status
+                        this.setState({saveDirectStatus: 'auth_error'});
+                    }
+                } else {
+                    // Regular error - show alert and reset to idle
+                    this.setState({saveDirectStatus: 'idle'});
+                    const errorMessage = error && error.message ?
+                        error.message :
+                        this.props.intl.formatMessage(messages.updateError);
+                    alert(errorMessage); // eslint-disable-line no-alert
+                }
             }
         }
 
@@ -256,6 +368,8 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
         intl: intlShape.isRequired,
         locale: PropTypes.string,
         onSetGoogleDriveFile: PropTypes.func,
+        onSetProjectUnchanged: PropTypes.func,
+        projectChanged: PropTypes.bool,
         projectTitle: PropTypes.string,
         saveProjectSb3: PropTypes.func,
         targetCodeToBlocks: PropTypes.func
@@ -264,13 +378,15 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
     const mapStateToProps = state => ({
         googleDriveFile: state.scratchGui.googleDriveFile,
         locale: state.locales.locale,
+        projectChanged: state.scratchGui.projectChanged,
         projectTitle: state.scratchGui.projectTitle,
         saveProjectSb3: state.scratchGui.vm.saveProjectSb3.bind(state.scratchGui.vm)
     });
 
     const mapDispatchToProps = dispatch => ({
         closeFileMenu: () => dispatch(closeFileMenu()),
-        onSetGoogleDriveFile: (fileId, fileName, folderId) => dispatch(setGoogleDriveFile(fileId, fileName, folderId))
+        onSetGoogleDriveFile: (fileId, fileName, folderId) => dispatch(setGoogleDriveFile(fileId, fileName, folderId)),
+        onSetProjectUnchanged: () => dispatch(setProjectUnchanged())
     });
 
     return RubyToBlocksConverterHOC(injectIntl(connect(

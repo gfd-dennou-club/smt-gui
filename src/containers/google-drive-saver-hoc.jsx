@@ -72,18 +72,12 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 saveDirectStatus: 'idle', // 'idle' | 'saving' | 'saved' | 'auth_error'
                 autoSaveTimeoutId: null
             };
-            this.autoSaveIntervalSecs = 5; // Auto-save interval: 5 seconds (for debug)
+            this.autoSaveIntervalSecs = 30; // Auto-save interval: 30 seconds
         }
 
         componentDidUpdate (prevProps) {
             // Schedule auto-save when project changes
-            console.log('[GoogleDriveSaver AutoSave] componentDidUpdate', {
-                projectChanged: this.props.projectChanged,
-                prevProjectChanged: prevProps.projectChanged,
-                googleDriveFile: this.props.googleDriveFile
-            });
             if (this.props.projectChanged && !prevProps.projectChanged) {
-                console.log('[GoogleDriveSaver AutoSave] Project changed, scheduling auto-save');
                 this.scheduleAutoSave();
             }
         }
@@ -121,28 +115,10 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
         scheduleAutoSave () {
             // Only auto-save if file is from Google Drive and not already saving
             const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
-            console.log('[GoogleDriveSaver AutoSave] scheduleAutoSave', {
-                isGoogleDriveFile: isGoogleDriveFile,
-                googleDriveFile: this.props.googleDriveFile,
-                autoSaveTimeoutId: this.state.autoSaveTimeoutId,
-                saveDirectStatus: this.state.saveDirectStatus,
-                intervalSecs: this.autoSaveIntervalSecs
-            });
             if (isGoogleDriveFile && this.state.autoSaveTimeoutId === null &&
                 this.state.saveDirectStatus !== 'saving') {
                 const timeoutId = setTimeout(this.tryToAutoSave, this.autoSaveIntervalSecs * 1000);
                 this.setState({autoSaveTimeoutId: timeoutId});
-                console.log('[GoogleDriveSaver AutoSave] Timer scheduled', {
-                    timeoutId: timeoutId,
-                    willExecuteIn: `${this.autoSaveIntervalSecs} seconds`
-                });
-            } else {
-                const reason = isGoogleDriveFile ? (
-                    this.state.autoSaveTimeoutId === null ? (
-                        this.state.saveDirectStatus === 'saving' ? 'unknown' : 'currently saving'
-                    ) : 'timer already exists'
-                ) : 'not a Google Drive file';
-                console.log('[GoogleDriveSaver AutoSave] Auto-save NOT scheduled', {reason});
             }
         }
 
@@ -150,21 +126,9 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
          * Try to auto-save if conditions are met
          */
         tryToAutoSave () {
-            console.log('[GoogleDriveSaver AutoSave] tryToAutoSave called');
             const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
-            console.log('[GoogleDriveSaver AutoSave] tryToAutoSave conditions', {
-                projectChanged: this.props.projectChanged,
-                isGoogleDriveFile: isGoogleDriveFile,
-                googleDriveFile: this.props.googleDriveFile
-            });
             if (this.props.projectChanged && isGoogleDriveFile) {
-                console.log('[GoogleDriveSaver AutoSave] Executing auto-save');
                 this.handleSaveDirectlyToGoogleDrive();
-            } else {
-                const reason = this.props.projectChanged ? (
-                    isGoogleDriveFile ? 'unknown' : 'not a Google Drive file'
-                ) : 'project not changed';
-                console.log('[GoogleDriveSaver AutoSave] Auto-save NOT executed', {reason});
             }
         }
 
@@ -190,11 +154,9 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
          * Handle save directly to current Google Drive file (without dialog)
          */
         async handleSaveDirectlyToGoogleDrive () {
-            console.log('[GoogleDriveSaver AutoSave] handleSaveDirectlyToGoogleDrive called');
             // Check if Google Drive file info exists
             if (!this.props.googleDriveFile || !this.props.googleDriveFile.isGoogleDriveFile) {
                 log.warn('No Google Drive file info available for direct save');
-                console.log('[GoogleDriveSaver AutoSave] Save aborted - no Google Drive file info');
                 return;
             }
 

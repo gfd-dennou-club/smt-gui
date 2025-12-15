@@ -64,7 +64,8 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 'getProjectFilename',
                 'scheduleAutoSave',
                 'clearAutoSaveTimeout',
-                'tryToAutoSave'
+                'tryToAutoSave',
+                'performSaveToGoogleDrive'
             ]);
             this.state = {
                 showSaveDialog: false,
@@ -109,6 +110,31 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 clearTimeout(this.state.autoSaveTimeoutId);
                 this.setState({autoSaveTimeoutId: null});
             }
+        }
+
+        /**
+         * Perform save to Google Drive and update UI
+         * @param {string} fileId - Google Drive file ID
+         * @param {string} fileName - File name
+         * @returns {Promise<void>} Promise that resolves when save is complete
+         */
+        async performSaveToGoogleDrive (fileId, fileName) {
+            // Generate project data
+            const content = await this.props.saveProjectSb3();
+
+            // Update existing file in Google Drive
+            await googleDriveAPI.updateFile(fileId, fileName, content);
+
+            // Mark project as unchanged after successful save
+            this.props.onSetProjectUnchanged();
+
+            // Set status to saved
+            this.setState({saveDirectStatus: 'saved'});
+
+            // Reset status to idle after 3 seconds
+            setTimeout(() => {
+                this.setState({saveDirectStatus: 'idle'});
+            }, 3000);
         }
 
         /**
@@ -200,22 +226,8 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
 
                 await converter.apply();
 
-                // Generate project data
-                const content = await this.props.saveProjectSb3();
-
-                // Update existing file in Google Drive
-                await googleDriveAPI.updateFile(fileId, fileName, content);
-
-                // Mark project as unchanged after successful save
-                this.props.onSetProjectUnchanged();
-
-                // Set status to saved
-                this.setState({saveDirectStatus: 'saved'});
-
-                // Reset status to idle after 3 seconds
-                setTimeout(() => {
-                    this.setState({saveDirectStatus: 'idle'});
-                }, 3000);
+                // Save to Google Drive and update UI
+                await this.performSaveToGoogleDrive(fileId, fileName);
             } catch (error) {
                 console.error('[GoogleDriveSaver] Direct save failed:', error);
                 log.error('Failed to save project to Google Drive:', error);
@@ -234,20 +246,8 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                             // Request new access token (will show OAuth dialog)
                             await googleDriveAPI.requestAccessToken();
 
-                            // Re-authentication successful - regenerate project data and retry save
-                            const retryContent = await this.props.saveProjectSb3();
-                            await googleDriveAPI.updateFile(fileId, fileName, retryContent);
-
-                            // Mark project as unchanged after successful save
-                            this.props.onSetProjectUnchanged();
-
-                            // Set status to saved
-                            this.setState({saveDirectStatus: 'saved'});
-
-                            // Reset status to idle after 3 seconds
-                            setTimeout(() => {
-                                this.setState({saveDirectStatus: 'idle'});
-                            }, 3000);
+                            // Re-authentication successful - retry save
+                            await this.performSaveToGoogleDrive(fileId, fileName);
                         } catch (reAuthError) {
                             console.error('[GoogleDriveSaver] Re-authentication or retry save failed:', reAuthError);
                             log.error('Failed to re-authenticate or save:', reAuthError);

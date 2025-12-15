@@ -822,6 +822,23 @@ class MenuBar extends React.Component {
                             />
                         </div>
                     )}
+                    {this.props.googleDriveSaveDirectStatus === 'auth_error' && (
+                        <div className={styles.saveStatus}>
+                            <Button
+                                className={styles.saveDirectlyButton}
+                                onClick={this.props.onSaveDirectlyToGoogleDrive}
+                            >
+                                <FormattedMessage
+                                    defaultMessage="Save directly"
+                                    id="gui.menuBar.saveDirectlyButton"
+                                />
+                            </Button>
+                            <FormattedMessage
+                                defaultMessage="Authentication expired. Click to save."
+                                id="gui.menuBar.authExpired"
+                            />
+                        </div>
+                    )}
                     {this.props.sessionExists ? (
                         this.props.username ? (
                             // ************ user is logged in ************

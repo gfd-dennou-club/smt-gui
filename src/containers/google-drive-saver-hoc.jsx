@@ -60,13 +60,30 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 'handleSaveToGoogleDrive',
                 'handleSaveDirectlyToGoogleDrive',
                 'handleCancelGoogleDriveSave',
-                'getProjectFilename'
+                'getProjectFilename',
+                'scheduleAutoSave',
+                'clearAutoSaveTimeout',
+                'tryToAutoSave'
             ]);
             this.state = {
                 showSaveDialog: false,
                 saveStatus: 'idle', // 'idle' | 'saving' | 'saved'
-                saveDirectStatus: 'idle' // 'idle' | 'saving' | 'saved'
+                saveDirectStatus: 'idle', // 'idle' | 'saving' | 'saved' | 'auth_error'
+                autoSaveTimeoutId: null
             };
+            this.autoSaveIntervalSecs = 30; // Auto-save interval: 30 seconds
+        }
+
+        componentDidUpdate (prevProps) {
+            // Schedule auto-save when project changes
+            if (this.props.projectChanged && !prevProps.projectChanged) {
+                this.scheduleAutoSave();
+            }
+        }
+
+        componentWillUnmount () {
+            // Clear auto-save timeout when component unmounts
+            this.clearAutoSaveTimeout();
         }
 
         /**
@@ -79,6 +96,39 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 filenameTitle = projectTitleInitialState;
             }
             return `${filenameTitle.substring(0, 100)}.sb3`;
+        }
+
+        /**
+         * Clear auto-save timeout
+         */
+        clearAutoSaveTimeout () {
+            if (this.state.autoSaveTimeoutId !== null) {
+                clearTimeout(this.state.autoSaveTimeoutId);
+                this.setState({autoSaveTimeoutId: null});
+            }
+        }
+
+        /**
+         * Schedule auto-save after interval
+         */
+        scheduleAutoSave () {
+            // Only auto-save if file is from Google Drive and not already saving
+            const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
+            if (isGoogleDriveFile && this.state.autoSaveTimeoutId === null &&
+                this.state.saveDirectStatus !== 'saving') {
+                const timeoutId = setTimeout(this.tryToAutoSave, this.autoSaveIntervalSecs * 1000);
+                this.setState({autoSaveTimeoutId: timeoutId});
+            }
+        }
+
+        /**
+         * Try to auto-save if conditions are met
+         */
+        tryToAutoSave () {
+            const isGoogleDriveFile = this.props.googleDriveFile && this.props.googleDriveFile.isGoogleDriveFile;
+            if (this.props.projectChanged && isGoogleDriveFile) {
+                this.handleSaveDirectlyToGoogleDrive();
+            }
         }
 
         /**
@@ -121,6 +171,9 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             // Close file menu if open
             this.props.closeFileMenu();
 
+            // Clear auto-save timeout before saving
+            this.clearAutoSaveTimeout();
+
             // Set status to saving
             this.setState({saveDirectStatus: 'saving'});
 
@@ -150,13 +203,25 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             } catch (error) {
                 console.error('[GoogleDriveSaver] Direct save failed:', error);
                 log.error('Failed to save project to Google Drive:', error);
-                this.setState({saveDirectStatus: 'idle'});
 
-                // Show error message
-                const errorMessage = error && error.message ?
-                    error.message :
-                    this.props.intl.formatMessage(messages.updateError);
-                alert(errorMessage); // eslint-disable-line no-alert
+                // Check if error is authentication related
+                const isAuthError = (error && error.status === 401) ||
+                    (error && error.message && (
+                        error.message.toLowerCase().includes('auth') ||
+                        error.message.toLowerCase().includes('unauthorized')
+                    ));
+
+                if (isAuthError) {
+                    // Set auth error status - user needs to click to re-authenticate
+                    this.setState({saveDirectStatus: 'auth_error'});
+                } else {
+                    // Regular error - show alert and reset to idle
+                    this.setState({saveDirectStatus: 'idle'});
+                    const errorMessage = error && error.message ?
+                        error.message :
+                        this.props.intl.formatMessage(messages.updateError);
+                    alert(errorMessage); // eslint-disable-line no-alert
+                }
             }
         }
 
@@ -256,6 +321,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
         intl: intlShape.isRequired,
         locale: PropTypes.string,
         onSetGoogleDriveFile: PropTypes.func,
+        projectChanged: PropTypes.bool,
         projectTitle: PropTypes.string,
         saveProjectSb3: PropTypes.func,
         targetCodeToBlocks: PropTypes.func
@@ -264,6 +330,7 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
     const mapStateToProps = state => ({
         googleDriveFile: state.scratchGui.googleDriveFile,
         locale: state.locales.locale,
+        projectChanged: state.scratchGui.projectChanged,
         projectTitle: state.scratchGui.projectTitle,
         saveProjectSb3: state.scratchGui.vm.saveProjectSb3.bind(state.scratchGui.vm)
     });

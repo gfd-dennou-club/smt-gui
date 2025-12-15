@@ -73,6 +73,8 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
                 autoSaveTimeoutId: null
             };
             this.autoSaveIntervalSecs = 30; // Auto-save interval: 30 seconds
+            // DEBUG: Counter for simulating auth errors (0 = disabled, >0 = number of errors to simulate)
+            this.simulateAuthErrorCount = 2;
         }
 
         componentDidUpdate (prevProps) {
@@ -180,6 +182,15 @@ const GoogleDriveSaverHOC = function (WrappedComponent) {
             this.setState({saveDirectStatus: 'saving'});
 
             try {
+                // DEBUG: Simulate authentication error for testing
+                if (this.simulateAuthErrorCount > 0) {
+                    this.simulateAuthErrorCount--;
+                    console.warn(`[DEBUG] Simulating auth error (remaining: ${this.simulateAuthErrorCount})`);
+                    const simulatedError = new Error('Simulated authentication error for testing');
+                    simulatedError.status = 401;
+                    throw simulatedError;
+                }
+
                 // Convert Ruby code to blocks
                 const converter = this.props.targetCodeToBlocks(this.props.intl);
                 if (!converter.result) {

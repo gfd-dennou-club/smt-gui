@@ -1,8 +1,10 @@
 const SET_KOSHIEN_FILE_HANDLE = 'scratch-gui/koshien-file/SET_FILE_HANDLE';
 const CLEAR_KOSHIEN_FILE_HANDLE = 'scratch-gui/koshien-file/CLEAR_FILE_HANDLE';
+const INCREMENT_EXTENSION_LOAD = 'scratch-gui/koshien-file/INCREMENT_EXTENSION_LOAD';
 
 const initialState = {
-    fileHandle: null
+    fileHandle: null,
+    extensionLoadCounter: 0
 };
 
 const reducer = function (state, action) {
@@ -15,6 +17,10 @@ const reducer = function (state, action) {
     case CLEAR_KOSHIEN_FILE_HANDLE:
         return Object.assign({}, state, {
             fileHandle: null
+        });
+    case INCREMENT_EXTENSION_LOAD:
+        return Object.assign({}, state, {
+            extensionLoadCounter: state.extensionLoadCounter + 1
         });
     default:
         return state;
@@ -34,9 +40,16 @@ const clearKoshienFileHandle = function () {
     };
 };
 
+const incrementExtensionLoad = function () {
+    return {
+        type: INCREMENT_EXTENSION_LOAD
+    };
+};
+
 export {
     reducer as default,
     initialState as koshienFileInitialState,
     setKoshienFileHandle,
-    clearKoshienFileHandle
+    clearKoshienFileHandle,
+    incrementExtensionLoad
 };

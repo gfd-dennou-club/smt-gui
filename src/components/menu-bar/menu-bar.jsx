@@ -25,6 +25,7 @@ import AuthorInfo from './author-info.jsx';
 import AccountNav from '../../containers/account-nav.jsx';
 import LoginDropdown from './login-dropdown.jsx';
 import SB3Downloader from '../../containers/sb3-downloader.jsx';
+import RubyDownloader from '../../containers/ruby-downloader.jsx';
 import DeletionRestorer from '../../containers/deletion-restorer.jsx';
 import TurboMode from '../../containers/turbo-mode.jsx';
 import MenuBarHOC from '../../containers/menu-bar-hoc.jsx';
@@ -54,6 +55,7 @@ import {
     saveProjectAsCopy
 } from '../../reducers/project-state';
 import {clearGoogleDriveFile} from '../../reducers/google-drive-file';
+import {incrementExtensionLoad} from '../../reducers/koshien-file';
 import {
     openAboutMenu,
     closeAboutMenu,
@@ -67,6 +69,9 @@ import {
     openEditMenu,
     closeEditMenu,
     editMenuOpen,
+    openKoshienMenu,
+    closeKoshienMenu,
+    koshienMenuOpen,
     openLoginMenu,
     closeLoginMenu,
     loginMenuOpen,
@@ -108,6 +113,11 @@ const ariaMessages = defineMessages({
         id: 'gui.menuBar.debug',
         defaultMessage: 'Debug',
         description: 'accessibility text for the debug button'
+    },
+    koshien: {
+        id: 'gui.menuBar.koshien',
+        defaultMessage: 'Smalruby Koshien',
+        description: 'accessibility text for the koshien button'
     }
 });
 
@@ -195,14 +205,31 @@ class MenuBar extends React.Component {
             'getSaveToComputerHandler',
             'restoreOptionMessage',
             'handleClickLoadFromUrl',
-            'handleSaveDirectlyToGoogleDrive'
+            'handleSaveDirectlyToGoogleDrive',
+            'handleExtensionAdded'
         ]);
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
+
+        // Listen for extension load events
+        if (this.props.vm.runtime) {
+            this.props.vm.runtime.on('EXTENSION_ADDED', this.handleExtensionAdded);
+        }
     }
     componentWillUnmount () {
         document.removeEventListener('keydown', this.handleKeyPress);
+
+        // Remove extension listener
+        if (this.props.vm.runtime) {
+            this.props.vm.runtime.off('EXTENSION_ADDED', this.handleExtensionAdded);
+        }
+    }
+    handleExtensionAdded () {
+        // Dispatch Redux action to trigger re-render
+        if (this.props.onExtensionLoaded) {
+            this.props.onExtensionLoaded();
+        }
     }
     handleClickNew () {
         // if the project is dirty, and user owns the project, we will autosave.
@@ -773,6 +800,55 @@ class MenuBar extends React.Component {
                                 <FormattedMessage {...ariaMessages.debug} />
                             </span>
                         </div>
+                        {this.props.vm.extensionManager &&
+                            this.props.vm.extensionManager.isExtensionLoaded('koshien') && (
+                            <div
+                                className={classNames(styles.menuBarItem, styles.hoverable, {
+                                    [styles.active]: this.props.koshienMenuOpen
+                                })}
+                                onMouseUp={this.props.onClickKoshien}
+                            >
+                                <div className={classNames(styles.koshienMenu)}>
+                                    <FormattedMessage
+                                        defaultMessage="Smalruby Koshien"
+                                        description="Koshien menu item in the menu bar"
+                                        id="gui.menuBar.koshienMenu"
+                                    />
+                                </div>
+                                <MenuBarMenu
+                                    className={classNames(styles.menuBarMenu)}
+                                    open={this.props.koshienMenuOpen}
+                                    place={this.props.isRtl ? 'left' : 'right'}
+                                    onRequestClose={this.props.onRequestCloseKoshien}
+                                >
+                                    <MenuSection>
+                                        <RubyDownloader>{(className, downloadProjectCallback) => (
+                                            <MenuItem
+                                                className={className}
+                                                onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
+                                            >
+                                                <FormattedMessage
+                                                    defaultMessage="Save AI to your computer"
+                                                    description="Menu bar item for saving AI to your computer"
+                                                    id="gui.menuBar.saveAIToComputer"
+                                                />
+                                            </MenuItem>
+                                        )}</RubyDownloader>
+                                    </MenuSection>
+                                    <MenuSection>
+                                        <MenuItem
+                                            onClick={this.props.onRequestCloseKoshien}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Test AI"
+                                                description="Menu bar item for testing AI"
+                                                id="gui.menuBar.testAI"
+                                            />
+                                        </MenuItem>
+                                    </MenuSection>
+                                </MenuBarMenu>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -1008,6 +1084,7 @@ MenuBar.propTypes = {
     currentLocale: PropTypes.string.isRequired,
     editMenuOpen: PropTypes.bool,
     enableCommunity: PropTypes.bool,
+    extensionLoadCounter: PropTypes.number,
     fileMenuOpen: PropTypes.bool,
     googleDriveFile: PropTypes.shape({
         fileId: PropTypes.string,
@@ -1025,6 +1102,7 @@ MenuBar.propTypes = {
     isShowingProject: PropTypes.bool,
     isTotallyNormal: PropTypes.bool,
     isUpdating: PropTypes.bool,
+    koshienMenuOpen: PropTypes.bool,
     locale: PropTypes.string.isRequired,
     loginMenuOpen: PropTypes.bool,
     logo: PropTypes.string,
@@ -1046,6 +1124,7 @@ MenuBar.propTypes = {
     onClickAccount: PropTypes.func,
     onClickEdit: PropTypes.func,
     onClickFile: PropTypes.func,
+    onClickKoshien: PropTypes.func,
     onClickLogin: PropTypes.func,
     onClickLogo: PropTypes.func,
     onClickMode: PropTypes.func,
@@ -1054,6 +1133,7 @@ MenuBar.propTypes = {
     onClickSave: PropTypes.func,
     onClickSaveAsCopy: PropTypes.func,
     onClickSettings: PropTypes.func,
+    onExtensionLoaded: PropTypes.func,
     onLogOut: PropTypes.func,
     onOpenRegistration: PropTypes.func,
     onOpenTipLibrary: PropTypes.func,
@@ -1064,6 +1144,7 @@ MenuBar.propTypes = {
     onRequestCloseAccount: PropTypes.func,
     onRequestCloseEdit: PropTypes.func,
     onRequestCloseFile: PropTypes.func,
+    onRequestCloseKoshien: PropTypes.func,
     onRequestCloseLogin: PropTypes.func,
     onRequestCloseMode: PropTypes.func,
     onRequestCloseSettings: PropTypes.func,
@@ -1107,6 +1188,8 @@ const mapStateToProps = (state, ownProps) => {
         currentLocale: state.locales.locale,
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
+        koshienMenuOpen: koshienMenuOpen(state),
+        extensionLoadCounter: state.scratchGui.koshienFile.extensionLoadCounter,
         googleDriveFile: state.scratchGui.googleDriveFile,
         isGoogleDriveFile: state.scratchGui.googleDriveFile.isGoogleDriveFile,
         isRtl: state.locales.isRtl,
@@ -1142,6 +1225,8 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseFile: () => dispatch(closeFileMenu()),
     onClickEdit: () => dispatch(openEditMenu()),
     onRequestCloseEdit: () => dispatch(closeEditMenu()),
+    onClickKoshien: () => dispatch(openKoshienMenu()),
+    onRequestCloseKoshien: () => dispatch(closeKoshienMenu()),
     onClickLogin: () => dispatch(openLoginMenu()),
     onRequestCloseLogin: () => dispatch(closeLoginMenu()),
     onClickMode: () => dispatch(openModeMenu()),
@@ -1157,6 +1242,7 @@ const mapDispatchToProps = dispatch => ({
     onClickRemix: () => dispatch(remixProject()),
     onClickSave: () => dispatch(manualUpdateProject()),
     onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),
+    onExtensionLoaded: () => dispatch(incrementExtensionLoad()),
     onSeeCommunity: () => dispatch(setPlayer(true)),
     onSetTimeTravelMode: mode => dispatch(setTimeTravel(mode)),
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target))

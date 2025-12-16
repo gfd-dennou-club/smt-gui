@@ -9,9 +9,8 @@
     background: $ui-white;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex: 1;
     overflow: hidden;
-    height: 100%;
 }
 
 .iframe {

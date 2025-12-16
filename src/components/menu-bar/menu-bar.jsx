@@ -100,6 +100,7 @@ import aboutIcon from './icon--about.svg';
 import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
+import koshienIcon from './icon--koshien.png';
 
 import smalrubyLogo from './hatti.svg';
 
@@ -847,18 +848,22 @@ class MenuBar extends React.Component {
                         {this.props.vm.extensionManager &&
                             this.props.vm.extensionManager.isExtensionLoaded('koshien') && (
                             <div
-                                className={classNames(styles.menuBarItem, styles.hoverable, {
+                                className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable, {
                                     [styles.active]: this.props.koshienMenuOpen
                                 })}
                                 onMouseUp={this.props.onClickKoshien}
                             >
-                                <div className={classNames(styles.koshienMenu)}>
+                                <img
+                                    className={styles.helpIcon}
+                                    src={koshienIcon}
+                                />
+                                <span className={styles.collapsibleLabel}>
                                     <FormattedMessage
                                         defaultMessage="Smalruby Koshien"
                                         description="Koshien menu item in the menu bar"
                                         id="gui.menuBar.koshienMenu"
                                     />
-                                </div>
+                                </span>
                                 <MenuBarMenu
                                     className={classNames(styles.menuBarMenu)}
                                     open={this.props.koshienMenuOpen}

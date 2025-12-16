@@ -27,7 +27,10 @@ const KoshienTestModal = props => {
             id="koshienTestModal"
             onRequestClose={onRequestClose}
         >
-            <Box className={styles.body}>
+            <Box
+                className={styles.body}
+                grow={1}
+            >
                 <iframe
                     className={styles.iframe}
                     src="https://smalruby-koshien-web.netlab.jp/"

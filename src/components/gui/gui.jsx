@@ -33,6 +33,7 @@ import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 import BlockDisplayModal from '../../containers/block-display-modal.jsx';
 import URLLoaderModal from '../url-loader-modal/url-loader-modal.jsx';
+import KoshienTestModal from '../koshien-test-modal/koshien-test-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -137,6 +138,8 @@ const GUIComponent = props => {
         urlLoaderModalVisible,
         closeUrlLoaderModal,
         onUrlLoaderSubmit,
+        koshienTestModalVisible,
+        closeKoshienTestModal,
         vm,
         // Exclude Redux-related props from being passed to DOM
         setSelectedBlocks: _setSelectedBlocks,
@@ -197,6 +200,11 @@ const GUIComponent = props => {
                     <URLLoaderModal
                         onRequestClose={closeUrlLoaderModal}
                         onLoadUrl={onUrlLoaderSubmit}
+                    />
+                ) : null}
+                {koshienTestModalVisible ? (
+                    <KoshienTestModal
+                        onRequestClose={closeKoshienTestModal}
                     />
                 ) : null}
                 {loading ? (
@@ -497,6 +505,8 @@ GUIComponent.propTypes = {
     urlLoaderModalVisible: PropTypes.bool,
     closeUrlLoaderModal: PropTypes.func,
     onUrlLoaderSubmit: PropTypes.func,
+    koshienTestModalVisible: PropTypes.bool,
+    closeKoshienTestModal: PropTypes.func,
     vm: PropTypes.instanceOf(VM).isRequired
 };
 GUIComponent.defaultProps = {

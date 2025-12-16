@@ -34,7 +34,7 @@ import GoogleDriveSaverHOC from '../../containers/google-drive-saver-hoc.jsx';
 import GoogleDriveSaveDialog from '../google-drive-save-dialog/google-drive-save-dialog.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
-import {openTipsLibrary, openDebugModal} from '../../reducers/modals';
+import {openTipsLibrary, openDebugModal, openKoshienTestModal} from '../../reducers/modals';
 import {openBlockDisplayModal} from '../../reducers/block-display';
 import {setPlayer} from '../../reducers/mode';
 import {
@@ -900,7 +900,7 @@ class MenuBar extends React.Component {
                                     </MenuSection>
                                     <MenuSection>
                                         <MenuItem
-                                            onClick={this.props.onRequestCloseKoshien}
+                                            onClick={this.props.onOpenKoshienTestModal}
                                         >
                                             <FormattedMessage
                                                 defaultMessage="Test AI"
@@ -1224,6 +1224,7 @@ MenuBar.propTypes = {
     onOpenTipLibrary: PropTypes.func,
     onOpenDebugModal: PropTypes.func,
     onOpenBlockDisplayModal: PropTypes.func,
+    onOpenKoshienTestModal: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseAbout: PropTypes.func,
     onRequestCloseAccount: PropTypes.func,
@@ -1307,6 +1308,7 @@ const mapDispatchToProps = dispatch => ({
     onOpenTipLibrary: () => dispatch(openTipsLibrary()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
     onOpenBlockDisplayModal: () => dispatch(openBlockDisplayModal()),
+    onOpenKoshienTestModal: () => dispatch(openKoshienTestModal()),
     onClickAccount: () => dispatch(openAccountMenu()),
     onRequestCloseAccount: () => dispatch(closeAccountMenu()),
     onClickFile: () => dispatch(openFileMenu()),

@@ -1,4 +1,5 @@
 export default {
+    'gui.modal.reload': 'さいよみこみ',
     'gui.menuBar.loadFromUrl': 'Scratchからよみこむ',
     'gui.urlLoader.loadError': 'プロジェクトURLのよみこみにしっぱいしました。',
     'gui.urlLoader.invalidUrl': 'ゆうこうなScratchプロジェクトURLをにゅうりょくしてください。',

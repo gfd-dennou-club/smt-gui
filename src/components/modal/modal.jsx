@@ -64,6 +64,26 @@ const ModalComponent = props => (
                     ) : null}
                     {props.contentLabel}
                 </div>
+                {props.onReload ? (
+                    <div
+                        className={classNames(
+                            styles.headerItem,
+                            styles.headerItemReload
+                        )}
+                    >
+                        <Button
+                            className={styles.reloadButton}
+                            iconSrc={reloadIcon}
+                            onClick={props.onReload}
+                        >
+                            <FormattedMessage
+                                defaultMessage="Reload"
+                                description="Reload button in modal"
+                                id="gui.modal.reload"
+                            />
+                        </Button>
+                    </div>
+                ) : null}
                 <div
                     className={classNames(
                         styles.headerItem,
@@ -71,32 +91,17 @@ const ModalComponent = props => (
                     )}
                 >
                     {props.fullScreen ? (
-                        <React.Fragment>
-                            <Button
-                                className={styles.backButton}
-                                iconSrc={backIcon}
-                                onClick={props.onRequestClose}
-                            >
-                                <FormattedMessage
-                                    defaultMessage="Back"
-                                    description="Back button in modal"
-                                    id="gui.modal.back"
-                                />
-                            </Button>
-                            {props.onReload ? (
-                                <Button
-                                    className={styles.reloadButton}
-                                    iconSrc={reloadIcon}
-                                    onClick={props.onReload}
-                                >
-                                    <FormattedMessage
-                                        defaultMessage="Reload"
-                                        description="Reload button in modal"
-                                        id="gui.modal.reload"
-                                    />
-                                </Button>
-                            ) : null}
-                        </React.Fragment>
+                        <Button
+                            className={styles.backButton}
+                            iconSrc={backIcon}
+                            onClick={props.onRequestClose}
+                        >
+                            <FormattedMessage
+                                defaultMessage="Back"
+                                description="Back button in modal"
+                                id="gui.modal.back"
+                            />
+                        </Button>
                     ) : (
                         <CloseButton
                             size={CloseButton.SIZE_LARGE}

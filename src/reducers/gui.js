@@ -20,6 +20,7 @@ import projectStateReducer, {projectStateInitialState} from './project-state';
 import projectTitleReducer, {projectTitleInitialState} from './project-title';
 import fontsLoadedReducer, {fontsLoadedInitialState} from './fonts-loaded';
 import googleDriveFileReducer, {googleDriveFileInitialState} from './google-drive-file';
+import koshienFileReducer, {koshienFileInitialState} from './koshien-file';
 import restoreDeletionReducer, {restoreDeletionInitialState} from './restore-deletion';
 import rubyCodeReducer, {rubyCodeInitialState} from './ruby-code';
 import stageSizeReducer, {stageSizeInitialState} from './stage-size';
@@ -60,6 +61,7 @@ const guiInitialState = {
     projectTitle: projectTitleInitialState,
     fontsLoaded: fontsLoadedInitialState,
     googleDriveFile: googleDriveFileInitialState,
+    koshienFile: koshienFileInitialState,
     rubyCode: rubyCodeInitialState,
     restoreDeletion: restoreDeletionInitialState,
     targets: targetsInitialState,
@@ -164,6 +166,7 @@ const guiReducer = combineReducers({
     projectTitle: projectTitleReducer,
     fontsLoaded: fontsLoadedReducer,
     googleDriveFile: googleDriveFileReducer,
+    koshienFile: koshienFileReducer,
     restoreDeletion: restoreDeletionReducer,
     rubyCode: rubyCodeReducer,
     targets: targetReducer,

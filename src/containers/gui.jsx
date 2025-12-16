@@ -26,7 +26,9 @@ import {
     openExtensionLibrary,
     closeDebugModal,
     openUrlLoaderModal,
-    closeUrlLoaderModal
+    closeUrlLoaderModal,
+    openKoshienTestModal,
+    closeKoshienTestModal
 } from '../reducers/modals';
 
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
@@ -181,6 +183,7 @@ const mapStateToProps = state => {
         tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
         rubyTabVisible: state.scratchGui.editorTab.activeTabIndex === RUBY_TAB_INDEX,
         urlLoaderModalVisible: state.scratchGui.modals.urlLoaderModal,
+        koshienTestModalVisible: state.scratchGui.modals.koshienTestModal,
         vm: state.scratchGui.vm
     };
 };
@@ -196,7 +199,9 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseDebugModal: () => dispatch(closeDebugModal()),
     onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal()),
     openUrlLoaderModal: () => dispatch(openUrlLoaderModal()),
-    closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal())
+    closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal()),
+    openKoshienTestModal: () => dispatch(openKoshienTestModal()),
+    closeKoshienTestModal: () => dispatch(closeKoshienTestModal())
 });
 
 const ConnectedGUI = injectIntl(connect(

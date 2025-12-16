@@ -143,6 +143,32 @@ $sides: 20rem;
     transform: scaleX(-1);
 }
 
+.header-item-reload {
+    padding: 0;
+    z-index: 1;
+}
+
+[dir="ltr"] .header-item-reload {
+    margin-left: -4.75rem;
+}
+
+[dir="rtl"] .header-item-reload {
+    margin-right: -4.75rem;
+}
+
+.reload-button {
+    font-weight: normal;
+    font-size: 0.75rem;
+}
+
+[dir="ltr"] .reload-button {
+    padding-left: 0;
+}
+
+[dir="rtl"] .reload-button {
+    padding-right: 0;
+}
+
 .header-item-help {
     padding: 0;
     z-index: 1;

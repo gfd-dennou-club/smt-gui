@@ -13,6 +13,7 @@ const MODAL_SOUND_RECORDER = 'soundRecorder';
 const MODAL_CONNECTION = 'connectionModal';
 const MODAL_TIPS_LIBRARY = 'tipsLibrary';
 const MODAL_URL_LOADER = 'urlLoaderModal';
+const MODAL_KOSHIEN_TEST = 'koshienTestModal';
 
 const initialState = {
     [MODAL_BACKDROP_LIBRARY]: false,
@@ -26,7 +27,8 @@ const initialState = {
     [MODAL_SOUND_RECORDER]: false,
     [MODAL_CONNECTION]: false,
     [MODAL_TIPS_LIBRARY]: false,
-    [MODAL_URL_LOADER]: false
+    [MODAL_URL_LOADER]: false,
+    [MODAL_KOSHIEN_TEST]: false
 };
 
 const reducer = function (state, action) {
@@ -92,6 +94,9 @@ const openTipsLibrary = function () {
 const openUrlLoaderModal = function () {
     return openModal(MODAL_URL_LOADER);
 };
+const openKoshienTestModal = function () {
+    return openModal(MODAL_KOSHIEN_TEST);
+};
 const closeBackdropLibrary = function () {
     return closeModal(MODAL_BACKDROP_LIBRARY);
 };
@@ -128,6 +133,9 @@ const closeConnectionModal = function () {
 const closeUrlLoaderModal = function () {
     return closeModal(MODAL_URL_LOADER);
 };
+const closeKoshienTestModal = function () {
+    return closeModal(MODAL_KOSHIEN_TEST);
+};
 export {
     reducer as default,
     initialState as modalsInitialState,
@@ -143,6 +151,7 @@ export {
     openTipsLibrary,
     openConnectionModal,
     openUrlLoaderModal,
+    openKoshienTestModal,
     closeBackdropLibrary,
     closeCostumeLibrary,
     closeDebugModal,
@@ -154,5 +163,6 @@ export {
     closeTelemetryModal,
     closeTipsLibrary,
     closeConnectionModal,
-    closeUrlLoaderModal
+    closeUrlLoaderModal,
+    closeKoshienTestModal
 };

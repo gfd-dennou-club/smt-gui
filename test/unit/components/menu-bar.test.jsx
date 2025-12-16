@@ -4,6 +4,7 @@ import MenuBar from '../../../src/components/menu-bar/menu-bar';
 import {menuInitialState} from '../../../src/reducers/menus';
 import {LoadingState} from '../../../src/reducers/project-state';
 import {DEFAULT_THEME} from '../../../src/lib/themes';
+import {koshienFileInitialState} from '../../../src/reducers/koshien-file';
 
 import configureStore from 'redux-mock-store';
 import {Provider} from 'react-redux';
@@ -46,6 +47,7 @@ describe('MenuBar Component', () => {
                 folderId: null,
                 isGoogleDriveFile: false
             },
+            koshienFile: koshienFileInitialState,
             vm: new VM()
         }
     });

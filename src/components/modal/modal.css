@@ -143,6 +143,20 @@ $sides: 20rem;
     transform: scaleX(-1);
 }
 
+.reload-button {
+    font-weight: normal;
+    padding-right: 0;
+}
+
+[dir="ltr"] .reload-button {
+    padding-left: 1rem;
+}
+
+[dir="rtl"] .reload-button {
+    padding-right: 1rem;
+    padding-left: 0;
+}
+
 .header-item-help {
     padding: 0;
     z-index: 1;

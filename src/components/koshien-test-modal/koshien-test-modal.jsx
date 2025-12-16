@@ -17,6 +17,11 @@ const messages = defineMessages({
 
 const KoshienTestModal = props => {
     const {intl, onRequestClose} = props;
+    const [iframeKey, setIframeKey] = React.useState(0);
+
+    const handleReload = React.useCallback(() => {
+        setIframeKey(prevKey => prevKey + 1);
+    }, []);
 
     return (
         <Modal
@@ -25,6 +30,7 @@ const KoshienTestModal = props => {
             fullScreen
             headerClassName={styles.header}
             id="koshienTestModal"
+            onReload={handleReload}
             onRequestClose={onRequestClose}
         >
             <Box
@@ -32,6 +38,7 @@ const KoshienTestModal = props => {
                 grow={1}
             >
                 <iframe
+                    key={iframeKey}
                     className={styles.iframe}
                     src="https://smalruby-koshien-web.netlab.jp/"
                     title={intl.formatMessage(messages.title)}

@@ -10,6 +10,7 @@ import CloseButton from '../close-button/close-button.jsx';
 
 import backIcon from '../../lib/assets/icon--back.svg';
 import helpIcon from '../../lib/assets/icon--help.svg';
+import reloadIcon from '../../lib/assets/icon--reload.svg';
 
 import styles from './modal.css';
 
@@ -70,17 +71,32 @@ const ModalComponent = props => (
                     )}
                 >
                     {props.fullScreen ? (
-                        <Button
-                            className={styles.backButton}
-                            iconSrc={backIcon}
-                            onClick={props.onRequestClose}
-                        >
-                            <FormattedMessage
-                                defaultMessage="Back"
-                                description="Back button in modal"
-                                id="gui.modal.back"
-                            />
-                        </Button>
+                        <React.Fragment>
+                            <Button
+                                className={styles.backButton}
+                                iconSrc={backIcon}
+                                onClick={props.onRequestClose}
+                            >
+                                <FormattedMessage
+                                    defaultMessage="Back"
+                                    description="Back button in modal"
+                                    id="gui.modal.back"
+                                />
+                            </Button>
+                            {props.onReload ? (
+                                <Button
+                                    className={styles.reloadButton}
+                                    iconSrc={reloadIcon}
+                                    onClick={props.onReload}
+                                >
+                                    <FormattedMessage
+                                        defaultMessage="Reload"
+                                        description="Reload button in modal"
+                                        id="gui.modal.reload"
+                                    />
+                                </Button>
+                            ) : null}
+                        </React.Fragment>
                     ) : (
                         <CloseButton
                             size={CloseButton.SIZE_LARGE}
@@ -106,6 +122,7 @@ ModalComponent.propTypes = {
     headerImage: PropTypes.string,
     isRtl: PropTypes.bool,
     onHelp: PropTypes.func,
+    onReload: PropTypes.func,
     onRequestClose: PropTypes.func
 };
 

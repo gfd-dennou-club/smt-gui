@@ -58,8 +58,7 @@ import {clearGoogleDriveFile} from '../../reducers/google-drive-file';
 import {
     incrementExtensionLoad,
     setAiSaveStatus,
-    clearAiSaveStatus,
-    clearKoshienFileHandle
+    clearAiSaveStatus
 } from '../../reducers/koshien-file';
 import {
     openAboutMenu,
@@ -343,8 +342,6 @@ class MenuBar extends React.Component {
     }
     getSaveAIAsHandler (downloadProjectCallback) {
         return () => {
-            // Clear existing file handle to force file picker
-            this.props.onClearKoshienFileHandle();
             // Set AI save status to 'saving'
             this.props.onSetAiSaveStatus('saving');
             // Call download callback
@@ -883,7 +880,10 @@ class MenuBar extends React.Component {
                                                 </MenuItem>
                                             )}
                                         </RubyDownloader>
-                                        <RubyDownloader onSaveFinished={this.handleAISaveAsFinished}>
+                                        <RubyDownloader
+                                            forceFilePicker
+                                            onSaveFinished={this.handleAISaveAsFinished}
+                                        >
                                             {(className, downloadProjectCallback) => (
                                                 <MenuItem
                                                     className={className}
@@ -1245,7 +1245,6 @@ MenuBar.propTypes = {
     onSaveDirectlyToGoogleDrive: PropTypes.func,
     onSetAiSaveStatus: PropTypes.func,
     onClearAiSaveStatus: PropTypes.func,
-    onClearKoshienFileHandle: PropTypes.func,
     onStartSelectingUrlLoad: PropTypes.func,
     projectFilename: PropTypes.string,
     onToggleLoginOpen: PropTypes.func,
@@ -1334,7 +1333,6 @@ const mapDispatchToProps = dispatch => ({
     onExtensionLoaded: () => dispatch(incrementExtensionLoad()),
     onSetAiSaveStatus: status => dispatch(setAiSaveStatus(status)),
     onClearAiSaveStatus: () => dispatch(clearAiSaveStatus()),
-    onClearKoshienFileHandle: () => dispatch(clearKoshienFileHandle()),
     onSeeCommunity: () => dispatch(setPlayer(true)),
     onSetTimeTravelMode: mode => dispatch(setTimeTravel(mode)),
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target))

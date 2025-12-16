@@ -48,7 +48,8 @@ class RubyDownloader extends React.Component {
     async saveWithFileSystemAPI () {
         try {
             const content = this.saveRuby();
-            let fileHandle = this.props.koshienFileHandle;
+            // If forceFilePicker is true, ignore existing file handle
+            let fileHandle = this.props.forceFilePicker ? null : this.props.koshienFileHandle;
 
             // If no file handle exists, show save dialog
             if (!fileHandle) {
@@ -128,6 +129,7 @@ const getProjectFilename = (curTitle, defaultTitle) => {
 RubyDownloader.propTypes = {
     children: PropTypes.func,
     className: PropTypes.string,
+    forceFilePicker: PropTypes.bool,
     koshienFileHandle: PropTypes.object,
     onSaveFinished: PropTypes.func,
     onSetKoshienFileHandle: PropTypes.func,

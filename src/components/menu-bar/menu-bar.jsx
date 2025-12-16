@@ -55,7 +55,12 @@ import {
     saveProjectAsCopy
 } from '../../reducers/project-state';
 import {clearGoogleDriveFile} from '../../reducers/google-drive-file';
-import {incrementExtensionLoad} from '../../reducers/koshien-file';
+import {
+    incrementExtensionLoad,
+    setAiSaveStatus,
+    clearAiSaveStatus,
+    clearKoshienFileHandle
+} from '../../reducers/koshien-file';
 import {
     openAboutMenu,
     closeAboutMenu,
@@ -203,6 +208,10 @@ class MenuBar extends React.Component {
             'handleKeyPress',
             'handleRestoreOption',
             'getSaveToComputerHandler',
+            'getSaveAIHandler',
+            'getSaveAIAsHandler',
+            'handleAISaveFinished',
+            'handleAISaveAsFinished',
             'restoreOptionMessage',
             'handleClickLoadFromUrl',
             'handleSaveDirectlyToGoogleDrive',
@@ -313,6 +322,44 @@ class MenuBar extends React.Component {
                 this.props.onProjectTelemetryEvent('projectDidSave', metadata);
             }
         };
+    }
+    getSaveAIHandler (downloadProjectCallback) {
+        return () => {
+            // Set AI save status to 'saving'
+            this.props.onSetAiSaveStatus('saving');
+            // Call download callback
+            downloadProjectCallback();
+        };
+    }
+    handleAISaveFinished () {
+        // Close the Koshien menu
+        this.props.onRequestCloseKoshien();
+        // Set AI save status to 'saved'
+        this.props.onSetAiSaveStatus('saved');
+        // Clear status after 3 seconds
+        setTimeout(() => {
+            this.props.onClearAiSaveStatus();
+        }, 3000);
+    }
+    getSaveAIAsHandler (downloadProjectCallback) {
+        return () => {
+            // Clear existing file handle to force file picker
+            this.props.onClearKoshienFileHandle();
+            // Set AI save status to 'saving'
+            this.props.onSetAiSaveStatus('saving');
+            // Call download callback
+            downloadProjectCallback();
+        };
+    }
+    handleAISaveAsFinished () {
+        // Close the Koshien menu
+        this.props.onRequestCloseKoshien();
+        // Set AI save status to 'saved'
+        this.props.onSetAiSaveStatus('saved');
+        // Clear status after 3 seconds
+        setTimeout(() => {
+            this.props.onClearAiSaveStatus();
+        }, 3000);
     }
     handleClickLoadFromUrl () {
         if (this.props.onStartSelectingUrlLoad) {
@@ -822,18 +869,34 @@ class MenuBar extends React.Component {
                                     onRequestClose={this.props.onRequestCloseKoshien}
                                 >
                                     <MenuSection>
-                                        <RubyDownloader>{(className, downloadProjectCallback) => (
-                                            <MenuItem
-                                                className={className}
-                                                onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
-                                            >
-                                                <FormattedMessage
-                                                    defaultMessage="Save AI to your computer"
-                                                    description="Menu bar item for saving AI to your computer"
-                                                    id="gui.menuBar.saveAIToComputer"
-                                                />
-                                            </MenuItem>
-                                        )}</RubyDownloader>
+                                        <RubyDownloader onSaveFinished={this.handleAISaveFinished}>
+                                            {(className, downloadProjectCallback) => (
+                                                <MenuItem
+                                                    className={className}
+                                                    onClick={this.getSaveAIHandler(downloadProjectCallback)}
+                                                >
+                                                    <FormattedMessage
+                                                        defaultMessage="Save AI"
+                                                        description="Menu bar item for saving AI"
+                                                        id="gui.menuBar.saveAI"
+                                                    />
+                                                </MenuItem>
+                                            )}
+                                        </RubyDownloader>
+                                        <RubyDownloader onSaveFinished={this.handleAISaveAsFinished}>
+                                            {(className, downloadProjectCallback) => (
+                                                <MenuItem
+                                                    className={className}
+                                                    onClick={this.getSaveAIAsHandler(downloadProjectCallback)}
+                                                >
+                                                    <FormattedMessage
+                                                        defaultMessage="Save AI as..."
+                                                        description="Menu bar item for saving AI as a new file"
+                                                        id="gui.menuBar.saveAIAs"
+                                                    />
+                                                </MenuItem>
+                                            )}
+                                        </RubyDownloader>
                                     </MenuSection>
                                     <MenuSection>
                                         <MenuItem
@@ -923,6 +986,27 @@ class MenuBar extends React.Component {
                             <FormattedMessage
                                 defaultMessage="Project saved."
                                 id="gui.menuBar.savedToGoogleDrive"
+                            />
+                        </div>
+                    )}
+                    {this.props.aiSaveStatus === 'saving' && (
+                        <div className={styles.saveStatus}>
+                            <Spinner
+                                className={styles.saveStatusSpinner}
+                                level="info"
+                                small
+                            />
+                            <FormattedMessage
+                                defaultMessage="Saving AI..."
+                                id="gui.menuBar.aiSaving"
+                            />
+                        </div>
+                    )}
+                    {this.props.aiSaveStatus === 'saved' && (
+                        <div className={styles.saveStatus}>
+                            <FormattedMessage
+                                defaultMessage="AI saved."
+                                id="gui.menuBar.aiSaved"
                             />
                         </div>
                     )}
@@ -1095,6 +1179,7 @@ MenuBar.propTypes = {
     googleDriveSaveDialogVisible: PropTypes.bool,
     googleDriveSaveDirectStatus: PropTypes.string,
     googleDriveSaveStatus: PropTypes.string,
+    aiSaveStatus: PropTypes.string,
     intl: intlShape,
     isGoogleDriveFile: PropTypes.bool,
     isRtl: PropTypes.bool,
@@ -1158,6 +1243,9 @@ MenuBar.propTypes = {
     onStartSelectingGoogleDrive: PropTypes.func,
     onStartSavingToGoogleDrive: PropTypes.func,
     onSaveDirectlyToGoogleDrive: PropTypes.func,
+    onSetAiSaveStatus: PropTypes.func,
+    onClearAiSaveStatus: PropTypes.func,
+    onClearKoshienFileHandle: PropTypes.func,
     onStartSelectingUrlLoad: PropTypes.func,
     projectFilename: PropTypes.string,
     onToggleLoginOpen: PropTypes.func,
@@ -1190,6 +1278,7 @@ const mapStateToProps = (state, ownProps) => {
         editMenuOpen: editMenuOpen(state),
         koshienMenuOpen: koshienMenuOpen(state),
         extensionLoadCounter: state.scratchGui.koshienFile.extensionLoadCounter,
+        aiSaveStatus: state.scratchGui.koshienFile.aiSaveStatus,
         googleDriveFile: state.scratchGui.googleDriveFile,
         isGoogleDriveFile: state.scratchGui.googleDriveFile.isGoogleDriveFile,
         isRtl: state.locales.isRtl,
@@ -1243,6 +1332,9 @@ const mapDispatchToProps = dispatch => ({
     onClickSave: () => dispatch(manualUpdateProject()),
     onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),
     onExtensionLoaded: () => dispatch(incrementExtensionLoad()),
+    onSetAiSaveStatus: status => dispatch(setAiSaveStatus(status)),
+    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus()),
+    onClearKoshienFileHandle: () => dispatch(clearKoshienFileHandle()),
     onSeeCommunity: () => dispatch(setPlayer(true)),
     onSetTimeTravelMode: mode => dispatch(setTimeTravel(mode)),
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target))

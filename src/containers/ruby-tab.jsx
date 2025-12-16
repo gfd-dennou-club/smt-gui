@@ -25,6 +25,7 @@ import rubyIcon from './ruby-tab/icon--ruby.svg';
 import RubyDownloader from './ruby-downloader.jsx';
 import collectMetadata from '../lib/collect-metadata.js';
 import {closeFileMenu} from '../reducers/menus.js';
+import {setAiSaveStatus, clearAiSaveStatus} from '../reducers/koshien-file';
 import styles from './ruby-tab/ruby-tab.css';
 import ReactTooltip from 'react-tooltip';
 
@@ -32,7 +33,10 @@ class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'setAceEditorRef'
+            'setAceEditorRef',
+            'getSaveToComputerHandler',
+            'getSaveAIHandler',
+            'handleAISaveFinished'
         ]);
         this.mainTooltipId = 'ruby-downloader-tooltip';
     }
@@ -98,6 +102,24 @@ class RubyTab extends React.Component {
         };
     }
 
+    getSaveAIHandler (downloadProjectCallback) {
+        return () => {
+            // Set AI save status to 'saving'
+            this.props.onSetAiSaveStatus('saving');
+            // Call download callback
+            downloadProjectCallback();
+        };
+    }
+
+    handleAISaveFinished () {
+        // Set AI save status to 'saved'
+        this.props.onSetAiSaveStatus('saved');
+        // Clear status after 3 seconds
+        setTimeout(() => {
+            this.props.onClearAiSaveStatus();
+        }, 3000);
+    }
+
     render () {
         const {
             onChange,
@@ -142,21 +164,22 @@ class RubyTab extends React.Component {
                     onChange={onChange}
                 />
                 <div className={styles.wrapper}>
-                    <RubyDownloader>{(_, downloadProjectCallback) => (
-                        <button
-                            className={styles.button}
-                            onClick={this.getSaveToComputerHandler(downloadProjectCallback)}
-                            data-tip
-                            data-for={'ruby-downloader-tooltip'}
-                        >
-                            <img
-                                src={rubyIcon}
-                                alt="ruby download"
-                                className={styles.img}
-                            />
+                    <RubyDownloader onSaveFinished={this.handleAISaveFinished}>
+                        {(_, downloadProjectCallback) => (
+                            <button
+                                className={styles.button}
+                                onClick={this.getSaveAIHandler(downloadProjectCallback)}
+                                data-tip
+                                data-for={'ruby-downloader-tooltip'}
+                            >
+                                <img
+                                    src={rubyIcon}
+                                    alt="ruby download"
+                                    className={styles.img}
+                                />
 
-                        </button>
-                    )}
+                            </button>
+                        )}
                     </RubyDownloader>
                     <ReactTooltip
                         id={this.mainTooltipId}
@@ -184,6 +207,8 @@ RubyTab.propTypes = {
     onChange: PropTypes.func,
     onRequestCloseFile: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
+    onSetAiSaveStatus: PropTypes.func,
+    onClearAiSaveStatus: PropTypes.func,
     rubyCode: rubyCodeShape,
     targetCodeToBlocks: PropTypes.func,
     updateRubyCodeTargetState: PropTypes.func,
@@ -204,7 +229,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onChange: code => dispatch(updateRubyCode(code)),
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target)),
-    onRequestCloseFile: () => dispatch(closeFileMenu())
+    onRequestCloseFile: () => dispatch(closeFileMenu()),
+    onSetAiSaveStatus: status => dispatch(setAiSaveStatus(status)),
+    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus())
 });
 
 export default RubyToBlocksConverterHOC(injectIntl(connect(

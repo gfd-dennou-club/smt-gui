@@ -1,11 +1,6 @@
 @import "../../css/colors.css";
 @import "../../css/units.css";
 
-.modal-content {
-    width: 100vw;
-    height: 100vh;
-}
-
 .header {
     background-color: $looks-secondary;
 }
@@ -14,12 +9,14 @@
     background: $ui-white;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    flex-grow: 1;
     overflow: hidden;
+    height: 100%;
 }
 
 .iframe {
     width: 100%;
+    height: 100%;
     border: none;
     flex: 1;
     min-height: 0;

@@ -295,7 +295,7 @@ RubyGenerator.spriteNew = function (renderedTarget) {
     if (variables.length > 0) {
         const s = variables.map(i => {
             const h = {
-                name: this.quote_(i.name)
+                name: this.quote_(this.escapeVariableName(i.name))
             };
             if (i.value !== 0) {
                 h.value = this.scalarToCode(i.value);
@@ -307,7 +307,7 @@ RubyGenerator.spriteNew = function (renderedTarget) {
     if (lists.length > 0) {
         const s = lists.map(i => {
             const h = {
-                name: this.quote_(i.name)
+                name: this.quote_(this.escapeVariableName(i.name))
             };
             if (i.value.length > 0) {
                 h.value = this.listToCode(i.value);

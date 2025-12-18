@@ -355,5 +355,70 @@ describe('RubyGenerator', () => {
           ])`;
             expect(RubyGenerator.spriteNew(renderedTarget)).toEqual(expected);
         });
+
+        test('escape variable and list names with spaces', () => {
+            Object.assign(renderedTarget, {
+                variables: {
+                    id1: {
+                        name: 'my variable',
+                        type: SCALAR_TYPE,
+                        value: 10
+                    },
+                    id2: {
+                        name: 'my list',
+                        type: LIST_TYPE,
+                        value: [1, 2, 3]
+                    },
+                    id3: {
+                        name: 'variable with spaces',
+                        type: SCALAR_TYPE,
+                        value: 'test'
+                    }
+                }
+            });
+            const expected = `Sprite.new(${RubyGenerator.quote_(spriteName)},
+           x: ${renderedTarget.x},
+           y: ${renderedTarget.y},
+           direction: ${renderedTarget.direction},
+           visible: ${!!renderedTarget.visible},
+           size: ${renderedTarget.size},
+           current_costume: ${renderedTarget.currentCostume - 1},
+           costumes: [
+             {
+               asset_id: "01ae57fd339529445cb890978ef8a054",
+               name: "Costume1",
+               bitmap_resolution: 2,
+               data_format: "svg",
+               rotation_center_x: 47,
+               rotation_center_y: 55
+             },
+             {
+               asset_id: "3b6274510488d5b26447c1c266475801",
+               name: "Costume2",
+               bitmap_resolution: 1,
+               data_format: "png",
+               rotation_center_x: 65,
+               rotation_center_y: 61
+             }
+           ],
+           rotation_style: "left-right",
+           variables: [
+             {
+               name: "my_variable",
+               value: 10
+             },
+             {
+               name: "variable_with_spaces",
+               value: "test"
+             }
+           ],
+           lists: [
+             {
+               name: "my_list",
+               value: [1, 2, 3]
+             }
+           ])`;
+            expect(RubyGenerator.spriteNew(renderedTarget)).toEqual(expected);
+        });
     });
 });

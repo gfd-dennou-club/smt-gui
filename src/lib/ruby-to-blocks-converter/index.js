@@ -35,8 +35,7 @@ import VideoConverter from './video';
 import Text2SpeechConverter from './text2speech';
 import KoshienConverter from './koshien';
 
-//import SmtMicrocomConverter from './smt_microcom';
-import KaniroboConverter from './kanirobo';
+import MicrocomConverter from './microcom';
 
 const messages = defineMessages({
     couldNotConvertPrimitive: {
@@ -129,8 +128,7 @@ class RubyToBlocksConverter {
             MotionConverter,
             SensingConverter,
             MyBlocksConverter,
-//            SmtMicrocomConverter,
-            KaniroboConverter
+            MicrocomConverter
         ].forEach(x => x.register(this));
     }
 
@@ -591,7 +589,8 @@ class RubyToBlocksConverter {
             MakeyMakeyConverter,
             LooksConverter,
             SoundConverter,
-            SensingConverter
+            SensingConverter,
+            MicrocomConverter
         ];
 
         for (let i = 0; i < legacyConverters.length; i++) {
@@ -754,6 +753,10 @@ class RubyToBlocksConverter {
         return _.isArray(value) || (value && value.type === 'array');
     }
 
+    isHash (value) {
+        return this._isHash(value);
+    }
+
     _isHash (value) {
         return value && value.type === 'hash';
     }
@@ -853,6 +856,10 @@ class RubyToBlocksConverter {
 
     _isRubyExpression (block) {
         return this._isBlock(block) && block.opcode === 'ruby_expression';
+    }
+
+    _isRubyArgument(block) {
+        return this._isBlock(block) && block.opcode === 'argument_reporter_string_number';
     }
 
     getRubyExpression (block) {
@@ -1209,6 +1216,10 @@ class RubyToBlocksConverter {
         };
         this._context.procedures[name] = procedure;
         return procedure;
+    }
+
+    getSource(node) {
+        return this._getSource(node);
     }
 
     _getSource (node) {

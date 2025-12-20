@@ -12,7 +12,6 @@ const KaniroboConverter = {
     register: function (converter) {
 
 	//Class
-/*
         classNames.forEach((className) => {
 	    const createMicroBlock = node => converter.createRubyExpressionBlock(className, node);
             converter.registerOnSend('self', className, 0, (params) => {
@@ -21,60 +20,50 @@ const KaniroboConverter = {
                 return createMicroBlock(node);
             });
 	});
-*/
-	const str = "ADC";
-	const createMicroBlock = node => converter.createRubyExpressionBlock(str, node);
-        converter.registerOnSend('self', str, 0, params => {
-	    const {node} = params;
-	    return createMicroBlock(node);
+
+	// GPIO.new
+	converter.registerOnSend('::GPIO', 'new', 2, params => {
+            const { args, node } = params;
+	    console.log('GPIO.new');
+	    console.log(args[0]);
+	    console.log(args[1]);
+	    if (!converter.isNumber(args[0])) return null;
+	    if (!converter.isString(args[1])) return null;
+
+            const expression = `GPIO.new( ${args[0].value}, ${args[1].value} )`;
+            return converter.createRubyExpressionBlock(expression, node);
         });
 
-	converter.registerOnSend('ADC', 'new', 1, params => {
-            const { reciever, args, node } = params;
-	    console.log('ADC.new start')
-	    console.log("args");
-	    console.log(args);
-	    console.log("node");
-	    console.log(node);
-	    console.log("reciever");
-	    console.log(reciever);
+	// PWM.new
+	converter.registerOnSend('::PWM', 'new', 2, params => {
+            const { args, node } = params;
+	    if (!converter.isNumber(args[0])) return null;
+	    console.log( args[0] );
+	    console.log( args[1] );
 
+	    
+            const timer = args[1].get('sym:timer');
+            const channel = args[1].get('sym:channel');
+            const frequency = args[1].get('sym:frequency');
+
+            if (!converter.isNumber(args[0])) return null;
+            if (!converter.isNumber(timer)) return null;
+            if (!converter.isNumber(channel)) return null;
+            if (!converter.isNumber(frequency)) return null;
+
+            const expression = `PWM.new(${args[0].value}, timer:${timer.value}, channel:${channel.value}, frequency:${frequency.value})`;
+            return converter.createRubyExpressionBlock(expression, node);
+	});
+
+	// ADC.new
+	converter.registerOnSend('::ADC', 'new', 1, params => {
+            const { args, node } = params;
 	    if (!converter.isNumber(args[0])) return null;
 
             const expression = `ADC.new( ${args[0].value} )`;
-	    //未解決のブロックがあるという意味でいったん保留
-            //return converter.createRubyExpressionBlock(expression, node);
-
-	    const block = converter.changeRubyExpressionBlock(receiver, 'microcom_gpio_write', 'statement');
-	    converter._addNumberInput(block, 'PIN',  'math_integer', pin, 10);
-	    return block;
+            return converter.createRubyExpressionBlock(expression, node);
         });
-	// 以前の registerCallMethod と現在の registerOnSend は同じ？！
 
-	// ADC.new
-/*        converter.registerOnSend('ADC', 'new', 1, params => {
-	    const {receiver, args, node} = params;
-	    if (!converter._isNumberOrBlock(args[0])) return null;
-	    console.log( 'ADC.new LOG start' );
-	    console.log( receiver );
-	    console.log( args );
-	    console.log( node );
-	    console.log( 'ADC.new LOG end' );
-	    const expression = `ADC.new(${args[0].value})`;
-	    return converter.createRubyExpressionBlock(expression, node);
-        });
-*/
-/*
-        converter.CallMethod('ADC', 'new', 1, (params) => {
-            const { args, node } = params;
-            if (!converter.isNumber(args[0])) return null;
-
-            const expression = `ADC.new(${args[0].value})`;
-            return converter.createRubyExpressionBlock(expression, node);  //未解決のブロックがあるという意味でいったん保留
-        });
-*/		
-	
-	
 	//GPIO
 	for (let pin = 0; pin <= 40; pin++) {
 
@@ -89,6 +78,9 @@ const KaniroboConverter = {
             converter.registerOnSend(str, 'write', 1, params => {
 		const {receiver, args} = params;
 		if (!converter._isNumberOrBlock(args[0])) return null;
+
+		console.log( "gpio.write receiver" );
+		console.log( receiver );
 		
 		const block = converter.changeRubyExpressionBlock(receiver, 'microcom_gpio_write', 'statement');
 		converter._addNumberInput(block, 'VALUE', 'math_integer', args[0], 0);
@@ -206,128 +198,75 @@ const KaniroboConverter = {
             return block;
         });
 
+	//
 	converter.registerOnVasgn((scope, variable, rh) => {
             const expression = converter.getRubyExpression(rh);
-	    console.log( expression );
-//	    if (!expression) return null;
-	    
-	    console.log( 'START Vasgn' );
-	    console.log( "scope" );
-	    console.log( scope );
-	    console.log( "variable" );
-	    console.log( variable );
-	    console.log( 'variable.name' );
-	    console.log( variable.name );
-	    console.log( 'variable.id' );
-	    console.log( variable.id );
-	    console.log( 'variable.type' );
-	    console.log( variable.type );
-	    console.log( 'rh' );
-	    console.log( rh );
+	    console.log( expression ); // expression には右辺の値が入る
+	    if (!expression) return null;
 
-	    const block = converter.changeRubyExpressionBlock(rh, 'microcom_adc_init', 'statement');
-	    converter._addNumberInput(block, 'PIN', 'math_integer', 3, 10);
-	    return block;
-/*	    
-	    const tokens = rh.node.hash.split(',');
-	    console.log('tokens');
-	    console.log(tokens);
-	    
-	    for (let i = 0; i < tokens.length-2; i++) {
-		if (tokens[i] === 'int') {
-		    // 次の次のトークンが引数（例：21 → 10）
-		    tokens[i + 2] = Math.floor((tokens[i + 2] - 1) / 2);
-		}
+	    //クラス名の取り出し
+	    const className = expression.substring(0, expression.indexOf('.'));
+
+            switch (className) {
+		
+	    // GPIO.new
+            case 'GPIO': {
+                const match = expression.match(
+                    /^GPIO\.new\(\s*(\d+),\s*(\S+)\s*\)/
+                );
+		console.log( match[1] );
+		console.log( match[2] );
+		console.log( match[3] );
+		console.log( match[4] );
+		if (variable.name !== `pwm${match[1]}`) return null;
+		
+                const block = converter.changeRubyExpressionBlock(
+                    rh, 'microcom_gpio_init', 'statement'
+                );
+		converter._addNumberInput(block, 'PIN',   'math_integer', Number(match[1]), 10);
+		converter.addTextInput(block, 'DIRECTION', match[2], "GPIO::OUT");
+                return block;
 	    }
 
-	    // 除外したい値のリスト
-	    const excludeValues = ["hash", "const", "send", "lvar", "int", "A", "4", "7260", "7262"];
-	    
-	    // フィルターで除外
-	    const tokens2 = tokens.filter(token => !excludeValues.includes(token));
-	    console.log('tokens2');
-	    console.log(tokens2);
+	    // PWM.new
+            case 'PWM': {
+                const match = expression.match(
+                    /^PWM\.new\(\s*(\d+),\s*timer:\s*(\d+),\s*channel:\s*(\d+),\s*frequency:\s*(\d+)\s*\)/
+                );
+		console.log( match[1] );
+		console.log( match[2] );
+		console.log( match[3] );
+		console.log( match[4] );
+		if (variable.name !== `pwm${match[1]}`) return null;
 
-
-	    for (let i = 1; i < tokens2.length - 3; i++) {
-		if (tokens2[i] === 'pair' && tokens2[i+1] === 'sym') {
-		    tokens2[i+2] = tokens2[i+2] + ":" + tokens2[i+3];
-		    tokens2[i+3] = "DEL";
-		}
+                const block = converter.changeRubyExpressionBlock(
+                    rh, 'microcom_pwm_init', 'statement'
+                );
+		converter._addNumberInput(block, 'PIN',   'math_integer', Number(match[1]), 10);
+		converter._addNumberInput(block, 'TIMER', 'math_integer', Number(match[2]), 0);
+		converter._addNumberInput(block, 'CHAN',  'math_integer', Number(match[3]), 0);
+		converter._addNumberInput(block, 'FREQ',  'math_integer', Number(match[4]), 1000);
+                return block;
 	    }
-	    for (let i = 3; i < tokens2.length - 1; i++) {	    
-		if (/GPIO$/.test(tokens2[i])) {
-		    tokens2[i+1] = tokens2[i] + "::" + tokens2[i+1];
-		    tokens2[i] = "DEL";
-		}else if (tokens2[i] === '|') {
-		    tokens2[i+1] = tokens2[i-1] + tokens2[i] + tokens2[i+1];
-		    tokens2[i-1] = "DEL";
-		    tokens2[i] = "DEL";
-		}
-	    }
+		
+		
+	    // ADC.new
+	    case 'ADC': {
+		const match = expression.match(
+		    /^ADC\.new\(\s*(\d+)\s*\)/
+		);
 
-	    // 除外したい値のリスト
-	    const excludeValues2 = ["DEL", "pair", "sym"];
-	    
-	    // フィルターで除外
-	    const tokens3 = tokens2.filter(token2 => !excludeValues2.includes(token2));
-	    console.log('tokens3');
-	    console.log(tokens3);
-
-	    if ( /^servo/.test(variable.name) ) {
-		console.log("+++");
-		console.log(tokens3[2]);
-
-//		const block = converter._createBlock('kanirobo_servo2', 'statement');
-//		converter._addNumberInput(block, 'AGL', 'math_integer', tokens3[2], 1000);
-		const block = converter._createBlock('kanirobo_servo2', 'statement');
-		converter._addNumberInput(block, 'PIN', 'math_integer', tokens3[2], 1);
+		//左辺 (variable.name) と右辺 (expression) から得たピン番号が等しいことをチェック
+		if (variable.name !== `adc${match[1]}`) return null; 
+		const block = converter.changeRubyExpressionBlock(
+		    rh, 'microcom_adc_init', 'statement'
+		);
+		converter._addNumberInput(block, 'PIN', 'math_integer', Number(match[1]), 10);
 		return block;
 	    }
-
-	    //change でななく create にすべき．
-	    //change にするとそのブロック内で解決を図ろうとする
-	    const block = converter.createRubyExpressionBlock(receiver, 'microcom_adc_init', 'statement');
-	    converter._addNumberInput(block, 'PIN',   'math_integer', pin, 10);
-	    return block;
-*/
-        });
-
+	    }
+        });    
     }
-
 };
 
 export default KaniroboConverter;
-
-
-	
-
-/*
-        converter.registerCallMethod(PIN, "new", 2, (params) => {
-	    const { args, node } = params;
-	    if (!converter.isNumberOrBlock(args[0])) return null;
-	    if (args[0].value !== 25 && args[0].value !== 32) return null;
-	    // ToDo: GPIO::OUTについてもチェックができるといい
-	    
-	    const expression = `GPIO.new(${args[0].value}, GPIO::OUT)`;
-	    return converter.createRubyExpressionBlock(expression, node);
-        });	    
-
-	for (let i = 0; i <= 40; i++) {
-	    let pinNum = PIN + i;
-            converter.registerCallMethod("self", pinNum, 0, (params) => {
-		const { node } = params;		
-		return converter.createRubyExpressionBlock(pinNum, node);
-            });	    
-	}
-
-        converter.registerOnSend('sprite', 'pin', 1, params => {
-            const {args} = params;
-            if (!converter.isNumber(args[0])) return null;
-	    
-            const block = converter._createBlock('kanirobo_instance', 'value');
-	    converter._addNumberInput(block, 'GPIO', 'math_integer', args[0], 1000); 
-            return block;
-        });
-
-*/

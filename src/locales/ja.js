@@ -211,6 +211,9 @@ export default {
     "gui.rboard.name": "RBoard",
     "gui.rboard.description": "RBoard 用ブロック",
 
+    "gui.rboard0.name": "RBoard_old",
+    "gui.rboard0.description": "RBoard 用ブロック (old version)",
+
     "gui.menuBar.uploadToServer": "マイコンへ書き出し",
 
     //
@@ -313,7 +316,7 @@ export default {
     "microcom.adc_raw": "ADC: [PIN]ピンの値",
     "microcom.adc_volt": "ADC: [PIN]ピンの電圧",
     "microcom.i2c_init": "I2C: 初期化. SCL=[SCL]ピン, SDA=[SDA]ピン",
-    "microcom.i2c_write": "I2C: 出力. アドレス=[ADDR], コマンド=[COMM]",
+    "microcom.i2c_write": "I2C: 出力. アドレス=[ADDR], コマンド= [COMM1], [COMM2]",
     "microcom.i2c_read": "I2C: 入力. アドレス=[ADDR], バイト数=[BYTES]",
     "microcom.uart_init": "UART-[UART]: 初期化．通信速度=[RATE]",
     "microcom.uart_puts": "UART-[UART]: 出力. コマンド=[COMM]",
@@ -321,9 +324,10 @@ export default {
     "microcom.uart_txclear": "UART-[UART] TX クリア",
     "microcom.uart_rxclear": "UART-[UART] RX クリア",
     //
-    "peripherals.menuSCD30_temp": '温度',
-    "peripherals.menuSCD30_humi": '湿度',
-    "peripherals.menuSCD30_co2": 'CO2',
+    "peripherals.menu_temp": '温度',
+    "peripherals.menu_humi": '湿度',
+    "peripherals.menu_pres": '気圧',
+    "peripherals.menu_co2": 'CO2',
     "peripherals.menuILI934Xline_line1": "線",
     "peripherals.menuILI934Xline_fillrectangle": "四角",
     "peripherals.menuILI934Xline_rectangle": "四角(枠のみ)",
@@ -335,10 +339,26 @@ export default {
     "peripherals.menuILI934Xcolor_blue": "青",
     "peripherals.menuILI934Xcolor_green": "緑",
     "peripherals.menuILI934Xcolor_yellow": "黄",
-    "peripherals.scd30_status": 'SCD30: データ取得可能?',
-    "peripherals.scd30_measure": 'SCD30: [SENS]',
+    "peripherals.scd30_measure": 'SCD30: [OBS]',
+    "peripherals.scd30_measure": 'DPS310: [OBS]',
     "peripherals.ili934x_write_line": 'M5Stack モニター: 位置([X1], [Y1]) から位置([X2], [Y2]) へ [TYPE] を書く (色 [COLOR])',
     "peripherals.ili934x_write_circle": 'M5Stack モニター: 位置([X1], [Y1]) を中心に半径 [SIZE] の [TYPE] を書く (色 [COLOR])',
     "peripherals.ili934x_write_string": 'M5Stack モニター: 位置([X1], [Y1]) から文字サイズ[SIZE] で文字列 [MESS] を書く (色 [COLOR])',
-
+    // RBoard_old
+    "rboard0.gpio_output_init": "GPIO 出力: [NUM1] を使う",
+    "rboard0.gpio_output": "GPIO 出力: [NUM1] の値を [VALUE] にする",
+    "rboard0.gpio_input_init": "GPIO 入力: [NUM1] を使う",
+    "rboard0.gpio_input": "GPIO 入力: [NUM1] の値",
+    "rboard0.pwm_init": "PWM: [NUM1] を使う",
+    "rboard0.pwm_duty": "PWM: [NUM1] のデューティー比を [VALUE]% にする",
+    "rboard0.pwm_frequency": "PWM: [NUM1] の周波数を [VALUE] にする",
+    "rboard0.adc_init": "ADC: [NUM1] を使う",
+    "rboard0.adc_volt": "ADC: [VALUE] の値",
+    "rboard0.i2c_init": "I2C を使う",
+    "rboard0.i2c_write": "I2C 出力: アドレス 0x[NUM1], コマンド 0x[NUM2], 値 [NUM3]",
+    "rboard0.i2c_read":  "I2C 入力: アドレス 0x[NUM1], バイト数 [NUM2], コマンド 0x[NUM3]",
+    "rboard0.uart_init": "UART を使う．通信速度 [NUM]",
+    "rboard0.uart_write": "出力: UART 出力: [TEXT2]",
+    "rboard0.uart_read": "入力: UART 入力",
+    "rboard0.puts": "デバッグ出力: [TEXT]"
 };

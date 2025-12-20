@@ -181,7 +181,7 @@ export default function (Generator) {
 	    `lcd.cursor(0, ${line})\n` +
 	    `lcd.write_string("        ")\n` +
             `lcd.cursor(0, ${line})\n` +
-	    `lcd.write_string(${text}.to_s)\n`
+	    `lcd.write_string((${text}).to_s)\n`
 	);
     };
 
@@ -341,7 +341,7 @@ export default function (Generator) {
 
     Generator.mctboard_puts = function (block) {
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
-        return `puts( ${text} )\n`;
+        return `puts( (${text}).to_s )\n`;
     };
     
 }

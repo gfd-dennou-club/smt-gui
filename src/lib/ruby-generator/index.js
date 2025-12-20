@@ -37,6 +37,7 @@ import RBoardBlocks from './rboard.js'
 import MCTBoardBlocks from './mctboard.js'
 import MicroComBlocks from './microcom.js'
 import PeripheralsBlocks from './peripherals.js'
+import RBoard0Blocks from './rboard0.js'
 
 const SCALAR_TYPE = '';
 const LIST_TYPE = 'list';
@@ -498,5 +499,6 @@ RBoardBlocks(RubyGenerator);
 MCTBoardBlocks(RubyGenerator);
 MicroComBlocks(RubyGenerator);
 PeripheralsBlocks(RubyGenerator);
+RBoard0Blocks(RubyGenerator);
 
 export default RubyGenerator;

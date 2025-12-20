@@ -41,23 +41,40 @@ export default function (Generator) {
     };
 
     //
+    // i2c
+    // 
+//    Generator.peripherals_i2c_init = function () {
+//        return `i2c = I2C.new()\n`;
+//    };
+
+
+    //
     // SCD30
     //
     Generator.peripherals_scd30_init = function () {
-        //Generator.prepares_.i2c = Generator.mboard3_i2c_init(null);
+        Generator.prepares_.i2c = Generator.mctboard_i2c_init(null);
         return `scd30 = SCD30.new(i2c)\n`;
     };
     
-    Generator.peripherals_scd30_status = function () {
-        Generator.prepares_.i2c_scd30 = Generator.peripherals_scd30_init(null);
-        return [`scd30.is_ready?`, Generator.ORDER_ATOMIC];
-    };
-
     Generator.peripherals_scd30 = function (block) {
         Generator.prepares_.i2c_scd30 = Generator.peripherals_scd30_init(null);
-        const type = Generator.getFieldValue(block, 'TYPE') || null;
-        return [`scd30.${type}`, Generator.ORDER_ATOMIC];
+        const obs = Generator.getFieldValue(block, 'OBS') || null;
+        return [`scd30.${obs}`, Generator.ORDER_ATOMIC];
+    };
+
+    //
+    // DPS310
+    //
+    Generator.peripherals_dps310_init = function () {
+        Generator.prepares_.i2c = Generator.mctboard_i2c_init(null);
+        return `dps310 = DPS310.new(i2c)\n`;
     };
     
+    Generator.peripherals_dps310 = function (block) {
+        Generator.prepares_.i2c_dps310 = Generator.peripherals_dps310_init(null);
+        const obs = Generator.getFieldValue(block, 'OBS') || null;
+        return [`dps310.${obs}`, Generator.ORDER_ATOMIC];
+    };
+
 }
 

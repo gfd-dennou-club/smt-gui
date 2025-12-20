@@ -16,6 +16,9 @@ import microcomInsetIconURL from './smt/microcom-small.png';
 import peripherals              from './smt/peripherals.png';
 import peripheralsInsetIconURL  from './smt/peripherals-small.png';
 
+import rboard0               from './smt/rboard0.png'
+import rboard0InsetIconURL   from './smt/rboard0-small.png';
+
 const extensions = [
     {
         name: (
@@ -113,6 +116,26 @@ const extensions = [
                 defaultMessage="Peripherals (sensors)"
                 description="Description for the 'peripherals' extension"
                 id="gui.peripherals.description"
+            />
+        ),
+        featured: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="RBoard_old"
+                description="Name for the 'RBoard' extension (old version)"
+                id="gui.rboard0.name"
+            />
+        ),
+        extensionId: 'rboard0',
+        iconURL: rboard0,
+        insetIconURL: rboard0InsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="RBoard Blocks"
+                description="Description for the 'RBoard' extension (old version)"
+                id="gui.rboard0.description"
             />
         ),
         featured: true

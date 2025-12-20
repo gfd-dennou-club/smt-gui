@@ -9,7 +9,7 @@ import SensingSnippets from './sensing-snippets.json';
 import OperatorsSnippets from './operators-snippets.json';
 import VariablesSnippets from './variables-snippets.json';
 import ProcedureSnippets from './procedure-snippets.json';
-
+/*
 import MusicSnippets from './music-snippets.json';
 import PenSnippets from './pen-snippets.json';
 import VideoSensingSnippets from './video-sensing-snippets.json';
@@ -22,7 +22,7 @@ import MicrobitMoreSnippets from './microbit-more-snippets.json';
 import KoshienSnippets from './koshien-snippets.json';
 import MakeySnippets from './makey-snippets.json';
 import GdxForSnippets from './gdx_for-snippets.json';
-
+*/
 class SnippetsCompleter extends BaseCompleter {
     #completions = [];
 
@@ -39,7 +39,7 @@ class SnippetsCompleter extends BaseCompleter {
             OperatorsSnippets,
             VariablesSnippets,
             ProcedureSnippets,
-
+/*
             MusicSnippets,
             PenSnippets,
             VideoSensingSnippets,
@@ -52,6 +52,7 @@ class SnippetsCompleter extends BaseCompleter {
             KoshienSnippets,
             MakeySnippets,
             GdxForSnippets
+*/
         ];
         snippetsList.forEach(snippets => {
             for (const [caption, item] of Object.entries(snippets)) {

@@ -116,7 +116,7 @@ class RubyTab extends React.Component {
                 <AceEditor
                     annotations={errors}
                     editorProps={{$blockScrolling: true}}
-                    fontSize={16}
+                    fontSize={28}
                     height="inherit"
                     markers={markers}
                     mode="ruby"

@@ -210,6 +210,7 @@ class MenuBar extends React.Component {
             'getSaveToComputerHandler',
             'getSaveAIHandler',
             'getSaveAIAsHandler',
+            'getTestAIHandler',
             'handleAISaveFinished',
             'handleAISaveAsFinished',
             'handleAISaveError',
@@ -349,6 +350,19 @@ class MenuBar extends React.Component {
     }
     getSaveAIAsHandler (downloadProjectCallback) {
         return () => {
+            // Set AI save status to 'saving'
+            this.props.onSetAiSaveStatus('saving');
+            // Call download callback
+            downloadProjectCallback();
+        };
+    }
+    getTestAIHandler (downloadProjectCallback) {
+        return () => {
+            // Option B: Save after displaying the modal
+            // Open the Koshien test modal
+            this.props.onOpenKoshienTestModal();
+            // Close the Koshien menu
+            this.props.onRequestCloseKoshien();
             // Set AI save status to 'saving'
             this.props.onSetAiSaveStatus('saving');
             // Call download callback
@@ -918,15 +932,23 @@ class MenuBar extends React.Component {
                                         </RubyDownloader>
                                     </MenuSection>
                                     <MenuSection>
-                                        <MenuItem
-                                            onClick={this.props.onOpenKoshienTestModal}
+                                        <RubyDownloader
+                                            onSaveError={this.handleAISaveError}
+                                            onSaveFinished={this.handleAISaveFinished}
                                         >
-                                            <FormattedMessage
-                                                defaultMessage="Test AI"
-                                                description="Menu bar item for testing AI"
-                                                id="gui.menuBar.testAI"
-                                            />
-                                        </MenuItem>
+                                            {(className, downloadProjectCallback) => (
+                                                <MenuItem
+                                                    className={className}
+                                                    onClick={this.getTestAIHandler(downloadProjectCallback)}
+                                                >
+                                                    <FormattedMessage
+                                                        defaultMessage="Test AI"
+                                                        description="Menu bar item for testing AI"
+                                                        id="gui.menuBar.testAI"
+                                                    />
+                                                </MenuItem>
+                                            )}
+                                        </RubyDownloader>
                                     </MenuSection>
                                     <MenuSection>
                                         <MenuItem

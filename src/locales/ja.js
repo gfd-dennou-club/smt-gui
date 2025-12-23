@@ -13,6 +13,7 @@ export default {
     'gui.menuBar.saveAI': 'AIを保存',
     'gui.menuBar.saveAIAs': 'AIに名前をつけて保存...',
     'gui.menuBar.testAI': 'AIを試す',
+    'gui.menuBar.koshienEntryForm': '参加申し込み',
     'gui.menuBar.aiSaving': 'ルビーを保存中...',
     'gui.menuBar.aiSaved': 'ルビーが保存されました。',
     'gui.koshienTestModal.title': 'スモウルビー甲子園のAIを試す',

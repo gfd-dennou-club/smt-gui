@@ -187,5 +187,6 @@ export default {
     'gui.urlLoader.cancelButton': 'Cancel',
     'gui.urlLoader.urlExamplesTitle': 'URL Examples',
     'gui.urlLoader.urlExampleScratch': 'https://scratch.mit.edu/projects/{project_id}/',
-    'gui.urlLoader.urlExampleGoogleDrive': 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link'
+    'gui.urlLoader.urlExampleGoogleDrive': 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link',
+    'gui.modal.stop': 'Stop'
 };

@@ -1,5 +1,6 @@
 export default {
     'gui.modal.reload': '再読み込み',
+    'gui.modal.stop': '中止',
     'gui.menuBar.loadFromUrl': 'Scratchから読み込む',
     'gui.menuBar.loadFromGoogleDrive': 'Google ドライブから読み込む',
     'gui.menuBar.saveToGoogleDrive': 'Googleドライブにコピーを保存...',

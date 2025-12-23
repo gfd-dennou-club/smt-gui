@@ -130,6 +130,7 @@ class GoogleDriveAPI {
             // Create DocsView with .sb3 query filter, starting from root
             const docsView = new window.google.picker.DocsView()
                 .setIncludeFolders(true)
+                .setMode(window.google.picker.DocsViewMode.LIST)
                 .setQuery('.sb3')
                 .setParent('root'); // Start from root folder for hierarchical navigation
 

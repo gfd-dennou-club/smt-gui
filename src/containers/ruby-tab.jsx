@@ -36,7 +36,8 @@ class RubyTab extends React.Component {
             'setAceEditorRef',
             'getSaveToComputerHandler',
             'getSaveAIHandler',
-            'handleAISaveFinished'
+            'handleAISaveFinished',
+            'handleAISaveError'
         ]);
         this.mainTooltipId = 'ruby-downloader-tooltip';
     }
@@ -120,6 +121,11 @@ class RubyTab extends React.Component {
         }, 3000);
     }
 
+    handleAISaveError () {
+        // Clear AI save status
+        this.props.onClearAiSaveStatus();
+    }
+
     render () {
         const {
             onChange,
@@ -164,7 +170,10 @@ class RubyTab extends React.Component {
                     onChange={onChange}
                 />
                 <div className={styles.wrapper}>
-                    <RubyDownloader onSaveFinished={this.handleAISaveFinished}>
+                    <RubyDownloader
+                        onSaveError={this.handleAISaveError}
+                        onSaveFinished={this.handleAISaveFinished}
+                    >
                         {(_, downloadProjectCallback) => (
                             <button
                                 className={styles.button}

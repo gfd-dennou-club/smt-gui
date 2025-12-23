@@ -212,6 +212,7 @@ class MenuBar extends React.Component {
             'getSaveAIAsHandler',
             'handleAISaveFinished',
             'handleAISaveAsFinished',
+            'handleAISaveError',
             'restoreOptionMessage',
             'handleClickLoadFromUrl',
             'handleSaveDirectlyToGoogleDrive',
@@ -363,6 +364,10 @@ class MenuBar extends React.Component {
         setTimeout(() => {
             this.props.onClearAiSaveStatus();
         }, 3000);
+    }
+    handleAISaveError () {
+        // Clear AI save status
+        this.props.onClearAiSaveStatus();
     }
     handleClickLoadFromUrl () {
         if (this.props.onStartSelectingUrlLoad) {
@@ -876,7 +881,10 @@ class MenuBar extends React.Component {
                                     onRequestClose={this.props.onRequestCloseKoshien}
                                 >
                                     <MenuSection>
-                                        <RubyDownloader onSaveFinished={this.handleAISaveFinished}>
+                                        <RubyDownloader
+                                            onSaveError={this.handleAISaveError}
+                                            onSaveFinished={this.handleAISaveFinished}
+                                        >
                                             {(className, downloadProjectCallback) => (
                                                 <MenuItem
                                                     className={className}
@@ -892,6 +900,7 @@ class MenuBar extends React.Component {
                                         </RubyDownloader>
                                         <RubyDownloader
                                             forceFilePicker
+                                            onSaveError={this.handleAISaveError}
                                             onSaveFinished={this.handleAISaveAsFinished}
                                         >
                                             {(className, downloadProjectCallback) => (

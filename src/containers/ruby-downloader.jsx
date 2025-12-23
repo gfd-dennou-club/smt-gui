@@ -77,6 +77,9 @@ class RubyDownloader extends React.Component {
             if (err.name !== 'AbortError') {
                 console.error('Error saving file:', err);
             }
+            if (this.props.onSaveError) {
+                this.props.onSaveError(err);
+            }
         }
     }
     downloadProject () {
@@ -132,6 +135,7 @@ RubyDownloader.propTypes = {
     forceFilePicker: PropTypes.bool,
     koshienFileHandle: PropTypes.object,
     onSaveFinished: PropTypes.func,
+    onSaveError: PropTypes.func,
     onSetKoshienFileHandle: PropTypes.func,
     projectFilename: PropTypes.string,
     rubyCode: rubyCodeShape,

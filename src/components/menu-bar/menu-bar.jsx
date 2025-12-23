@@ -344,7 +344,7 @@ class MenuBar extends React.Component {
     }
     handleClickKoshienEntryForm () {
         this.props.onRequestCloseKoshien();
-        window.open('https://smalruby-koshien.netlab.jp/entry-form.html', '_blank');
+        window.open('https://smalruby-koshien.netlab.jp/entry-form.html', '_blank', 'noopener,noreferrer');
     }
     getSaveAIAsHandler (downloadProjectCallback) {
         return () => {

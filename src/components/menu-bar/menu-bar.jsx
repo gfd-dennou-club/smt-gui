@@ -215,7 +215,8 @@ class MenuBar extends React.Component {
             'restoreOptionMessage',
             'handleClickLoadFromUrl',
             'handleSaveDirectlyToGoogleDrive',
-            'handleExtensionAdded'
+            'handleExtensionAdded',
+            'handleClickKoshienEntryForm'
         ]);
     }
     componentDidMount () {
@@ -340,6 +341,10 @@ class MenuBar extends React.Component {
         setTimeout(() => {
             this.props.onClearAiSaveStatus();
         }, 3000);
+    }
+    handleClickKoshienEntryForm () {
+        this.props.onRequestCloseKoshien();
+        window.open('https://smalruby-koshien.netlab.jp/entry-form.html', '_blank', 'noopener,noreferrer');
     }
     getSaveAIAsHandler (downloadProjectCallback) {
         return () => {
@@ -911,6 +916,17 @@ class MenuBar extends React.Component {
                                                 defaultMessage="Test AI"
                                                 description="Menu bar item for testing AI"
                                                 id="gui.menuBar.testAI"
+                                            />
+                                        </MenuItem>
+                                    </MenuSection>
+                                    <MenuSection>
+                                        <MenuItem
+                                            onClick={this.handleClickKoshienEntryForm}
+                                        >
+                                            <FormattedMessage
+                                                defaultMessage="Entry Form"
+                                                description="Menu bar item for Smalruby Koshien entry form"
+                                                id="gui.menuBar.koshienEntryForm"
                                             />
                                         </MenuItem>
                                     </MenuSection>

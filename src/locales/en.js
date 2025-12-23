@@ -62,6 +62,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.alwaysVisibleTitle': 'Always Visible:',
     'gui.smalruby3.blockDisplayModal.blocksSubtitle': ' Blocks',
     'gui.menuBar.blockDisplay': 'Block Display...',
+    'gui.menuBar.koshienEntryForm': 'Entry Form',
 
     // Block Display Modal - Block Messages
     // Motion blocks

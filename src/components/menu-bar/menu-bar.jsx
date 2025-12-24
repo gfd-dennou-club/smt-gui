@@ -100,7 +100,7 @@ import aboutIcon from './icon--about.svg';
 import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
-import koshienIcon from './icon--koshien.png';
+import koshienIcon from './icon--koshien.svg';
 
 import smalrubyLogo from './hatti.svg';
 
@@ -879,7 +879,9 @@ class MenuBar extends React.Component {
                             >
                                 <img
                                     className={styles.helpIcon}
+                                    height="20"
                                     src={koshienIcon}
+                                    width="20"
                                 />
                                 <span className={styles.collapsibleLabel}>
                                     <FormattedMessage

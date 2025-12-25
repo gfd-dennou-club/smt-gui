@@ -1,11 +1,11 @@
 import BaseCompleter from './base-completer';
 
-import MotionSnippets from './motion-snippets.json';
-import LooksSnippets from './looks-snippets.json';
-import SoundSnippets from './sound-snippets.json';
-import EventsSnippets from './events-snippets.json';
+//import MotionSnippets from './motion-snippets.json';
+//import LooksSnippets from './looks-snippets.json';
+//import SoundSnippets from './sound-snippets.json';
+//import EventsSnippets from './events-snippets.json';
 import ControlSnippets from './control-snippets.json';
-import SensingSnippets from './sensing-snippets.json';
+//import SensingSnippets from './sensing-snippets.json';
 import OperatorsSnippets from './operators-snippets.json';
 import VariablesSnippets from './variables-snippets.json';
 import ProcedureSnippets from './procedure-snippets.json';
@@ -23,6 +23,8 @@ import KoshienSnippets from './koshien-snippets.json';
 import MakeySnippets from './makey-snippets.json';
 import GdxForSnippets from './gdx_for-snippets.json';
 */
+import MicrocomSnippets from './microcom.json'
+
 class SnippetsCompleter extends BaseCompleter {
     #completions = [];
 
@@ -30,15 +32,16 @@ class SnippetsCompleter extends BaseCompleter {
         super();
 
         const snippetsList = [
-            MotionSnippets,
-            LooksSnippets,
-            SoundSnippets,
-            EventsSnippets,
+//            MotionSnippets,
+//            LooksSnippets,
+//            SoundSnippets,
+//            EventsSnippets,
             ControlSnippets,
-            SensingSnippets,
+//            SensingSnippets,
             OperatorsSnippets,
             VariablesSnippets,
             ProcedureSnippets,
+	    MicrocomSnippets
 /*
             MusicSnippets,
             PenSnippets,

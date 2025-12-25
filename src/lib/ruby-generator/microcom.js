@@ -38,11 +38,9 @@ export default function (Generator) {
             Generator.valueToCode(block, "PIN", Generator.ORDER_NONE) || null;
         const timer =
             Generator.valueToCode(block, "TIMER", Generator.ORDER_NONE) || null;
-        const chan =
-            Generator.valueToCode(block, "CHAN", Generator.ORDER_NONE) || null;
         const freq =
             Generator.valueToCode(block, "FREQ", Generator.ORDER_NONE) || null;
-        return `pwm${pin} = PWM.new( ${pin}, timer:${timer}, channel:${chan}, frequency:${freq} )\n`;
+        return `pwm${pin} = PWM.new( ${pin}, timer:${timer}, frequency:${freq} )\n`;
     };
 
     Generator.microcom_pwm_duty = function (block) {
@@ -87,16 +85,11 @@ export default function (Generator) {
         return [`adc${pin}.read`, Generator.ORDER_ATOMIC];
     };
 
-    Generator.microcom_i2c_num = function (block) {
-        const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || 22;
-        return [`(${num}.to_i(16))`,  Generator.ORDER_ATOMIC];
-    };
-    
     Generator.microcom_i2c_init = function (block) {
         const scl =
-            Generator.valueToCode(block, "SCL", Generator.ORDER_NONE) || 23;
+            Generator.valueToCode(block, "SCL", Generator.ORDER_NONE) || 22;
         const sda =
-            Generator.valueToCode(block, "SDA", Generator.ORDER_NONE) || 22;
+            Generator.valueToCode(block, "SDA", Generator.ORDER_NONE) || 21;
         return `i2c = I2C.new( scl_pin:${scl}, sda_pin:${sda} )\n`;
     };
 
@@ -105,7 +98,7 @@ export default function (Generator) {
             Generator.valueToCode(block, "ADDR", Generator.ORDER_NONE) || null;
         const comm1 = Generator.valueToCode(block, 'COMM1', Generator.ORDER_NONE) || null;
         const comm2 = Generator.valueToCode(block, 'COMM2', Generator.ORDER_NONE) || null;
-        return `i2c.write( ${addr}, [${comm1}, ${comm2}] )\n`;
+        return `i2c.write( ${addr}, ${comm1}, ${comm2} )\n`;
     };
 
     Generator.microcom_i2c_read = function (block) {
@@ -148,6 +141,31 @@ export default function (Generator) {
         const uart =
             Generator.valueToCode(block, "UART", Generator.ORDER_NONE) || null;
         return `uart${uart}.rx_clear()\n`;
+    };
+
+    Generator.microcom_num16 = function (block) {
+        const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || null;
+        return [`${num}.to_i(16)`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_str16 = function (block) {
+        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
+        return [`${str}.to_s(16)`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_ord = function (block) {
+        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
+        return [`${str}.ord`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_bytes = function (block) {
+        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
+        return [`${str}.bytes`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_split = function (block) {
+        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
+        return [`${str}.split(',')`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_puts = function (block) {

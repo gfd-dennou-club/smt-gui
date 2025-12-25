@@ -89,15 +89,13 @@ const MicrocomConverter = {
             const { args, node } = params;
 
             const timer = args[1].get("sym:timer");
-            const channel = args[1].get("sym:channel");
             const frequency = args[1].get("sym:frequency");
 
             if (!converter.isNumber(args[0])) return null;
             if (!converter.isNumber(timer)) return null;
-            if (!converter.isNumber(channel)) return null;
             if (!converter.isNumber(frequency)) return null;
 
-            const expression = `PWM.new(${args[0].value}, timer:${timer.value}, channel:${channel.value}, frequency:${frequency.value})`;
+            const expression = `PWM.new(${args[0].value}, timer:${timer.value}, frequency:${frequency.value})`;
             return converter.createRubyExpressionBlock(expression, node);
         });
 
@@ -107,13 +105,13 @@ const MicrocomConverter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /^PWM\.new\(\s*(\d+),\s*timer:\s*(\d+),\s*channel:\s*(\d+),\s*frequency:\s*(\d+)\s*\)/
+                /^PWM\.new\(\s*(\d+),\s*timer:\s*(\d+),\s*frequency:\s*(\d+)\s*\)/
             );
 
             if (!match) return null;
             if (variable.name != `pwm${match[1]}`) return null;
 
-            const [, pin, timer, channel, frequency] = match;
+            const [, pin, timer, frequency] = match;
 
             const block = converter.changeRubyExpressionBlock(
                 rh,
@@ -132,13 +130,6 @@ const MicrocomConverter = {
                 "TIMER",
                 "math_integer",
                 Number(timer),
-                10
-            );
-            converter.addNumberInput(
-                block,
-                "CHAN",
-                "math_integer",
-                Number(channel),
                 10
             );
             converter.addNumberInput(
@@ -313,7 +304,7 @@ const MicrocomConverter = {
         });
 
         // uart
-        for (let pin = 0; pin <= 40; pin++) {
+        for (let pin = 0; pin <= 4; pin++) {
             converter.registerOnSend("self", "uart" + pin, 0, (params) => {
                 const { node } = params;
 
@@ -330,6 +321,56 @@ const MicrocomConverter = {
             converter._addTextInput(block, "TEXT", args[0], "test");
             return block;
         });
+	
+	// .to_i(16)
+        converter.registerOnSend(['string', 'block'], 'to_i', 1, params => {
+	    const {receiver} = params;
+
+            const block = converter._createBlock('microcom_num16', 'value');
+            converter._addTextInput(block, 'NUM', receiver, '77');
+            return block;
+        });
+
+	// .to_s(16)
+        converter.registerOnSend(['string', 'block'], 'to_s', 1, params => {
+	    console.log( params );
+	    const {receiver} = params;
+
+            const block = converter._createBlock('microcom_str16', 'value');
+	    converter._addTextInput(block, 'STR', receiver, '77');
+            return block;
+        });
+	
+	// .ord
+        converter.registerOnSend(['string', 'block'], 'ord', 0, params => {
+	    console.log( params );
+	    const {receiver} = params;
+
+            const block = converter._createBlock('microcom_ord', 'value');
+            converter._addTextInput(block, 'STR', receiver, 'A');
+            return block;
+        });
+
+	// .bytes
+        converter.registerOnSend(['string', 'block'], 'bytes', 0, params => {
+	    const {receiver} = params;
+
+            const block = converter._createBlock('microcom_bytes', 'value');
+            converter._addTextInput(block, 'STR', receiver, '77');
+            return block;
+        });
+
+	// .split
+        converter.registerOnSend(['string', 'block'], 'split', 1, params => {
+	    console.log( params );
+	    const {receiver} = params;
+
+            const block = converter._createBlock('microcom_split', 'value');
+            converter._addTextInput(block, 'STR', receiver, ',');
+//            converter._addTextInput(block, 'DELIMITER', receiver, ',');
+            return block;
+        });
+	
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
@@ -345,6 +386,10 @@ const MicrocomConverter = {
 
         if (!receiverName) return null;
 
+	console.log( name );
+	console.log( args );
+
+	
         switch (name) {
             // gpio.write i2c.write
             case "write": {
@@ -383,12 +428,15 @@ const MicrocomConverter = {
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
-                } else if (match[1] == "i2c" && args.length == 2) {
+                } else if (match[1] == "i2c" && args.length == 3) {
                     // i2c.write
-                    if (!this._isNumber(args[0])) return null;
-                    if (!this._isString(args[1])) return null;
-                    // ToDo: コマンドの詳しいチェック
+		    console.log( args );
+                    if (!this.isStringOrBlock(args[0])) return null;
+                    if (!this.isStringOrBlock(args[1])) return null;
+                    if (!this.isStringOrBlock(args[2])) return null;
 
+                    // ToDo: コマンドの詳しいチェック
+		    
                     const block = (() => {
                         if (this._isRubyExpression(receiver)) {
                             return this._changeRubyExpressionBlock(
@@ -404,14 +452,9 @@ const MicrocomConverter = {
                             );
                         }
                     })();
-                    this._addNumberInput(
-                        block,
-                        "ADDR",
-                        "math_integer",
-                        Number(args[0]),
-                        10
-                    );
-                    this._addTextInput(block, "COMM", args[1], "[0x00, 0x21]");
+                    this._addTextInput(block, "ADDR",  args[0], "77");
+                    this._addTextInput(block, "COMM1", args[1], "00");
+                    this._addTextInput(block, "COMM2", args[2], "21");
 
                     return block;
                 }
@@ -464,10 +507,11 @@ const MicrocomConverter = {
 
                     return block;
                 } else if (match[1] == "i2c" && args.length == 2) {
-                    if (!this._isNumber(args[0])) return null;
-                    if (!this._isNumber(args[1])) return null;
 
-                    const block = (() => {
+		    if (!this.isStringOrBlock(args[0]))  return null;
+                    if (!this._isNumber(args[1])) return null;
+		    
+		    const block = (() => {
                         if (this._isRubyExpression(receiver)) {
                             return this._changeRubyExpressionBlock(
                                 receiver,
@@ -481,14 +525,8 @@ const MicrocomConverter = {
                                 "value"
                             );
                         }
-                    })();
-                    this._addNumberInput(
-                        block,
-                        "ADDR",
-                        "math_integer",
-                        Number(args[0]),
-                        10
-                    );
+			})();
+		    this._addTextInput(block, "ADDR", args[0], "77");
                     this._addNumberInput(
                         block,
                         "BYTES",
@@ -642,79 +680,6 @@ const MicrocomConverter = {
                     return block;
                 }
                 break;
-            }
-            // i2c.writeto
-            case "writeto": {
-                if (receiverName == "i2c" && args.length == 2) {
-                    if (!this._isNumber(args[0])) return null;
-                    if (!this._isString(args[1])) return null;
-                    // ToDo: コマンドの詳しいチェック
-
-                    const block = (() => {
-                        if (this._isRubyExpression(receiver)) {
-                            return this._changeRubyExpressionBlock(
-                                receiver,
-                                "microcom_i2c_write",
-                                "statement"
-                            );
-                        } else {
-                            return this._changeBlock(
-                                receiver,
-                                "microcom_i2c_write",
-                                "statement"
-                            );
-                        }
-                    })();
-                    this._addNumberInput(
-                        block,
-                        "ADDR",
-                        "math_integer",
-                        Number(args[0]),
-                        10
-                    );
-                    this._addTextInput(block, "COMM", args[1], "[0x00, 0x21]");
-
-                    return block;
-                }
-            }
-            // i2c.readfrom
-            case "readfrom": {
-                if (receiverName == "i2c" && args.length == 2) {
-                    if (!this._isNumber(args[0])) return null;
-                    if (!this._isNumber(args[1])) return null;
-
-                    const block = (() => {
-                        if (this._isRubyExpression(receiver)) {
-                            return this._changeRubyExpressionBlock(
-                                receiver,
-                                "microcom_i2c_read",
-                                "value"
-                            );
-                        } else {
-                            return this._changeBlock(
-                                receiver,
-                                "microcom_i2c_read",
-                                "value"
-                            );
-                        }
-                    })();
-                    this._addNumberInput(
-                        block,
-                        "ADDR",
-                        "math_integer",
-                        Number(args[0]),
-                        10
-                    );
-                    this._addNumberInput(
-                        block,
-                        "BYTES",
-                        "math_integer",
-                        Number(args[1]),
-                        10
-                    );
-
-                    return block;
-                }
             }
             // uart.puts
             case "puts": {

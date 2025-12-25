@@ -43,8 +43,7 @@ const getInitialSelectedBlocks = () => {
             'operator_letter_of',
             'operator_length',
             'operator_contains',
-            'operator_mod',
-            'operator_round'
+            'operator_mod'
 	]
     };
     return onlyBlocks;

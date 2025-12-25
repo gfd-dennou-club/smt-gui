@@ -31,7 +31,7 @@ export default function (Generator) {
     Generator.rboard_adc_init = function (block) {
         return (
 	    `adc20 = ADC.new( 20 )\n` +
-	    `adc19 = ADC.new( 19 )\n`
+	    `adc18 = ADC.new( 18 )\n`
 	);
     };
 

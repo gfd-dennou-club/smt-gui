@@ -57,8 +57,8 @@ export default function (Generator) {
     //
     Generator.mctboard_sw_init = function (block){
         return (
-	    `sw34 = GPIO.new( 34, GPIO::IN|GPIO::PULL_UP ) \n` +
-	    `sw35 = GPIO.new( 35, GPIO::IN|GPIO::PULL_UP ) \n` +
+	    `sw34 = GPIO.new( 34, GPIO::IN ) \n` +
+	    `sw35 = GPIO.new( 35, GPIO::IN ) \n` +
 	    `sw18 = GPIO.new( 18, GPIO::IN|GPIO::PULL_UP ) \n` +
 	    `sw19 = GPIO.new( 19, GPIO::IN|GPIO::PULL_UP ) \n`
 	);

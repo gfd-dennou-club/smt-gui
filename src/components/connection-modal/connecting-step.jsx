@@ -20,7 +20,7 @@ const ConnectingStep = props => (
                         className={styles.peripheralActivityIcon}
                         src={props.connectionIconURL}
                     />
-                    {props.extensionId !== 'mesh' && (
+                    {props.extensionId !== 'mesh' && props.extensionId !== 'meshV2' && (
                         <img
                             className={styles.bluetoothConnectingIcon}
                             src={bluetoothIcon}

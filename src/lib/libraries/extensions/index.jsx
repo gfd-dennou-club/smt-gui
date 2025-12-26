@@ -56,6 +56,11 @@ import smalrubotS1InsetIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 import smalrubotS1ConnectionIconURL from './smalrubot-s1/smalrubot-s1-illustration.png';
 import smalrubotS1ConnectionSmallIconURL from './smalrubot-s1/smalrubot-s1-small.png';
 
+import meshV2IconURL from './mesh_v2/mesh.png';
+import meshV2InsetIconURL from './mesh_v2/mesh-small.png';
+import meshV2ConnectionIconURL from './mesh_v2/mesh-illustration.png';
+import meshV2ConnectionSmallIconURL from './mesh_v2/mesh-small.png';
+
 const extensions = [
     {
         name: (
@@ -396,6 +401,40 @@ const extensions = [
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/SmalrubotS1'
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Mesh V2"
+                description="Name for the 'Mesh V2' extension"
+                id="gui.smalruby3.extension.meshV2.name"
+            />
+        ),
+        extensionId: 'meshV2',
+        iconURL: meshV2IconURL,
+        insetIconURL: meshV2InsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="GraphQL-based Mesh V2 extension"
+                description="Description for the 'Mesh V2' extension"
+                id="gui.smalruby3.extension.meshV2.description"
+            />
+        ),
+        featured: true,
+        bluetoothRequired: false,
+        internetConnectionRequired: true,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: meshV2ConnectionIconURL,
+        connectionSmallIconURL: meshV2ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to Mesh V2 network."
+                id="gui.smalruby3.extension.meshV2.connectingMessage"
+            />
+        ),
+        helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/MeshV2'
     }
 ];
 

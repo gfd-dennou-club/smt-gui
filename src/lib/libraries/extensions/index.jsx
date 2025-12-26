@@ -410,7 +410,7 @@ const extensions = [
                 id="gui.smalruby3.extension.meshV2.name"
             />
         ),
-        extensionId: 'mesh_v2',
+        extensionId: 'meshV2',
         iconURL: meshV2IconURL,
         insetIconURL: meshV2InsetIconURL,
         description: (

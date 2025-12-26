@@ -41,6 +41,7 @@ export default {
     'mesh.registeredHost': 'ホストとしてメッシュにとうろくしました 【{ MESH_ID }】',
     'mesh.joinedMesh': 'メッシュにさんかしました 【{ MESH_ID }】',
     'gui.smalruby3.extension.mesh.connectingMessage': 'メッシュのネットワークにせつぞくしています',
+    'mesh.fireMeshEvent': '[BROADCAST_OPTION] をおくる',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1 (エス1)',
     'gui.smalruby3.extension.smalrubotS1.description': 'スモウルボットS1 (エス1) をせいぎょする。',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'スモウルボットS1 (エス1) にせつぞくしています。',

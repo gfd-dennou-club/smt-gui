@@ -67,7 +67,10 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.GTM_ENV_AUTH': `"${process.env.GTM_ENV_AUTH || ''}"`,
         'process.env.GTM_ID': process.env.GTM_ID ? `"${process.env.GTM_ID}"` : null,
         'process.env.GOOGLE_CLIENT_ID': `"${process.env.GOOGLE_CLIENT_ID || ''}"`,
-        'process.env.GOOGLE_API_KEY': `"${process.env.GOOGLE_API_KEY || ''}"`
+        'process.env.GOOGLE_API_KEY': `"${process.env.GOOGLE_API_KEY || ''}"`,
+        'process.env.MESH_GRAPHQL_ENDPOINT': `"${process.env.MESH_GRAPHQL_ENDPOINT || ''}"`,
+        'process.env.MESH_API_KEY': `"${process.env.MESH_API_KEY || ''}"`,
+        'process.env.MESH_AWS_REGION': `"${process.env.MESH_AWS_REGION || ''}"`
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [

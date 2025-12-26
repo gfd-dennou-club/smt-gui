@@ -86,6 +86,7 @@ export default {
     'mesh.registeredHostV2': 'ホストとしてメッシュ V2に登録しました 【{ MESH_ID }】',
     'mesh.joinedMeshV2': 'メッシュ V2に参加しました 【{ MESH_ID }】',
     'mesh.notConnectedV2': 'メッシュ V2に接続していません',
+    'mesh.fireMeshEvent': '[BROADCAST_OPTION] を送る',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1',
     'gui.smalruby3.extension.smalrubotS1.description': 'スモウルボットS1を制御する。',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'スモウルボットS1に接続しています。',

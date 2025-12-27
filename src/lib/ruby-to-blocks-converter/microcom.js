@@ -345,6 +345,16 @@ const MicrocomConverter = {
             return block;
         });
 	
+        // p
+        converter.registerOnSend("self", "p", 1, (params) => {
+            const { args } = params;
+            if (!converter._isNumberOrStringOrBlock(args[0])) return null;
+
+            const block = converter.createBlock("microcom_p", "statement");
+            converter._addTextInput(block, "TEXT", args[0], "test");
+            return block;
+        });
+	
 	// .to_i(16)
         converter.registerOnSend(['string', 'block', 'variable'], 'to_i', 1, params => {
 	    const {receiver} = params;

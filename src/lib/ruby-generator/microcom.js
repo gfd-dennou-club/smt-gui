@@ -212,4 +212,10 @@ export default function (Generator) {
             Generator.valueToCode(block, "TEXT", Generator.ORDER_NONE) || null;
         return `puts( ${text} )\n`;
     };
+
+    Generator.microcom_p = function (block) {
+        const text =
+            Generator.valueToCode(block, "TEXT", Generator.ORDER_NONE) || null;
+        return `p( ${text} )\n`;
+    };
 }

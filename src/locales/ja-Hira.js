@@ -226,6 +226,7 @@ export default {
     "kanirobo.sensor": "ライトセンサー[ID]の値",
     "kanirobo.servo": "サーボモーター[ID]を[AGL]度にする",
     "kanirobo.puts": "シリアル出力[TEXT]",
+    "kanirobo.p": "シリアル出力(デバッグ用)[TEXT]",    
     "kanirobo.servo2": "サーボモーターを[AGL]度にする",
     "kanirobo.servo3": "サーボモーターを[AGL]度にする",
 

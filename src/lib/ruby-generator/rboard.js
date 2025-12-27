@@ -71,6 +71,13 @@ export default function (Generator) {
         return `pwm${pin}.duty( ${duty} % 101 )\n`;
     };
 
+    Generator.rboard_pwm_frequency = function (block) {
+	Generator.prepares_.pwm = Generator.rboard_pwm_init(null);
+        const pin  = Generator.getFieldValue(block, 'PIN',  Generator.ORDER_NONE);
+	const freq = Generator.valueToCode(block, 'FREQ', Generator.ORDER_NONE) || 0;
+        return `pwm${pin}.frequency( ${freq} )\n`;
+    };
+
     Generator.rboard_adc_volt = function (block) {
 	Generator.prepares_.adc = Generator.rboard_adc_init(null);
         const pin = Generator.getFieldValue(block, 'PIN',  Generator.ORDER_NONE);

@@ -301,7 +301,8 @@ export default {
     "rboard.led_all": "GPIO: LED 1[ONOFF1] 2[ONOFF2] 3[ONOFF3] 4[ONOFF4]",
     "rboard.led": "GPIO: [PIN] [ONOFF]",
     "rboard.sw": "GPIO: SW_1 [ONOFF]?",
-    "rboard.pwm_duty": "PWM: [PIN] のデューティー比を [DUTY]% にする",
+    "rboard.pwm_duty": "PWM: [PIN] のデューティー比を[DUTY]% にする",
+    "rboard.pwm_frequency": "PWM: [PIN] の周波数を[FREQ]にする",
     "rboard.adc_volt": "ADC: [PIN] の電圧",
     //
     "microcom.name": "汎用",

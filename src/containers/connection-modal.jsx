@@ -19,6 +19,7 @@ class ConnectionModal extends React.Component {
             'handleConnected',
             'handleConnecting',
             'handleDisconnect',
+            'handleDisconnected',
             'handleError',
             'handleHelp',
             'handleSendUpdate',
@@ -33,10 +34,12 @@ class ConnectionModal extends React.Component {
     }
     componentDidMount () {
         this.props.vm.on('PERIPHERAL_CONNECTED', this.handleConnected);
+        this.props.vm.on('PERIPHERAL_DISCONNECTED', this.handleDisconnected);
         this.props.vm.on('PERIPHERAL_REQUEST_ERROR', this.handleError);
     }
     componentWillUnmount () {
         this.props.vm.removeListener('PERIPHERAL_CONNECTED', this.handleConnected);
+        this.props.vm.removeListener('PERIPHERAL_DISCONNECTED', this.handleDisconnected);
         this.props.vm.removeListener('PERIPHERAL_REQUEST_ERROR', this.handleError);
     }
     handleScanning () {
@@ -61,6 +64,12 @@ class ConnectionModal extends React.Component {
         } finally {
             this.props.onCancel();
         }
+    }
+    handleDisconnected () {
+        this.setState({
+            phase: PHASES.scanning,
+            connectedMessage: ''
+        });
     }
     handleCancel () {
         try {

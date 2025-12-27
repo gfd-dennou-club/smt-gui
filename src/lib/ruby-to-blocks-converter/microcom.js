@@ -16,44 +16,65 @@ const MicrocomConverter = {
         // GPIO.new
         converter.registerOnSend("::GPIO", "new", 2, (params) => {
             const { args, node } = params;
-
+	    
             if (!converter.isNumber(args[0])) return null;
             if (converter.isBlock(args[1])) {
                 const mode = converter.getSource(args[1].node);
-                if (!mode == "GPIO::IN|GPIO::PULL_UP") return null;
 
-                converter.removeBlock(args[1]);
+		if (mode === "GPIO::IN|GPIO::PULL_UP") {
 
-                const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
-                return converter.createRubyExpressionBlock(expression, node);
+                    converter.removeBlock(args[1]);
+                    const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
+                    return converter.createRubyExpressionBlock(expression, node);
+		    
+		}else if (mode == "GPIO::IN|GPIO::PULL_DOWN") {
+
+                    converter.removeBlock(args[1]);
+                    const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_DOWN )`;
+                    return converter.createRubyExpressionBlock(expression, node);
+
+		} else {
+
+		    return null;
+
+		}
+
             } else {
-                const mode = getClassConstant(args[1]);
-                if (mode != "::GPIO::OUT") return null;
 
-                const expression = `GPIO.new( ${args[0].value}, GPIO::OUT )`;
-                return converter.createRubyExpressionBlock(expression, node);
+                const mode = getClassConstant(args[1]);
+
+		if (mode === "::GPIO::OUT") {
+
+                    const expression = `GPIO.new( ${args[0].value}, GPIO::OUT )`;
+                    return converter.createRubyExpressionBlock(expression, node);
+
+		} else if (mode === "::GPIO::IN") {
+
+                    const expression = `GPIO.new( ${args[0].value}, GPIO::IN )`;
+                    return converter.createRubyExpressionBlock(expression, node);
+
+		} else {
+
+		    return null;
+
+		}
             }
         });
 
         // gpio = GPIO.new
         converter.registerOnVasgn((scope, variable, rh) => {
             const expression = converter.getRubyExpression(rh);
-            if (!expression) return null;
+
+	    if (!expression) return null;
 
             const match = expression.match(
                 /GPIO\.new\(\s*(\d+)\s*,\s*(.+?)\s*\)/
             );
+	    
             if (!match) return null;
             if (variable.name !== `gpio${match[1]}`) return null;
 
-            const opcode = (() => {
-                if (match[2] == "GPIO::OUT" && match[3] == null)
-                    return "microcom_gpio_output_init";
-                else if (match[2] == "GPIO::IN|GPIO::PULL_UP")
-                    return "microcom_gpio_input_init";
-                else return null;
-            })();
-            if (!opcode) return null;
+	    const opcode = "microcom_gpio_init";
 
             const block = converter.changeRubyExpressionBlock(
                 rh,
@@ -67,6 +88,8 @@ const MicrocomConverter = {
                 Number(match[1]),
                 10
             );
+	    //console.log( match[2] );
+            converter.addField(block, "DIRECTION", match[2]);
 
             return block;
         });
@@ -323,7 +346,7 @@ const MicrocomConverter = {
         });
 	
 	// .to_i(16)
-        converter.registerOnSend(['string', 'block'], 'to_i', 1, params => {
+        converter.registerOnSend(['string', 'block', 'variable'], 'to_i', 1, params => {
 	    const {receiver} = params;
 
             const block = converter._createBlock('microcom_num16', 'value');
@@ -332,45 +355,55 @@ const MicrocomConverter = {
         });
 
 	// .to_s(16)
-        converter.registerOnSend(['string', 'block'], 'to_s', 1, params => {
-	    console.log( params );
+        converter.registerOnSend(['string', 'block', 'variable'], 'to_s', 1, params => {
 	    const {receiver} = params;
 
-            const block = converter._createBlock('microcom_str16', 'value');
+            const block = converter._createBlock('microcom_tools', 'value');
 	    converter._addTextInput(block, 'STR', receiver, '77');
+            converter.addField(block, "TOOL", 'to_s(16)');
             return block;
         });
 	
 	// .ord
-        converter.registerOnSend(['string', 'block'], 'ord', 0, params => {
-	    console.log( params );
+        converter.registerOnSend(['string', 'block', 'variable'], 'ord', 0, params => {
 	    const {receiver} = params;
 
-            const block = converter._createBlock('microcom_ord', 'value');
+            const block = converter._createBlock('microcom_tools', 'value');
             converter._addTextInput(block, 'STR', receiver, 'A');
+	    converter.addField(block, "TOOL", 'ord');
             return block;
         });
 
 	// .bytes
-        converter.registerOnSend(['string', 'block'], 'bytes', 0, params => {
+        converter.registerOnSend(['string', 'block', 'variable'], 'bytes', 0, params => {
 	    const {receiver} = params;
 
-            const block = converter._createBlock('microcom_bytes', 'value');
+            const block = converter._createBlock('microcom_tools', 'value');
             converter._addTextInput(block, 'STR', receiver, '77');
+	    converter.addField(block, "TOOL", 'bytes');
             return block;
         });
 
 	// .split
-        converter.registerOnSend(['string', 'block'], 'split', 1, params => {
-	    console.log( params );
+        converter.registerOnSend(['string', 'block', 'variable'], 'split', 1, params => {
 	    const {receiver} = params;
 
-            const block = converter._createBlock('microcom_split', 'value');
+            const block = converter._createBlock('microcom_tools', 'value');
             converter._addTextInput(block, 'STR', receiver, ',');
-//            converter._addTextInput(block, 'DELIMITER', receiver, ',');
+	    converter.addField(block, "TOOL", 'split(",")');
             return block;
         });
 	
+	// .size
+        converter.registerOnSend(['string', 'block', 'variable'], 'size', 0, params => {
+	    const {receiver} = params;
+	    
+            const block = converter._createBlock('microcom_tools', 'value');
+            converter._addTextInput(block, 'STR', receiver, '77');
+	    converter.addField(block, "TOOL", 'size');
+            return block;
+        });
+
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
@@ -386,12 +419,11 @@ const MicrocomConverter = {
 
         if (!receiverName) return null;
 
-	console.log( name );
-	console.log( args );
+	//console.log( name );
+	//console.log( args );
 
-	
-        switch (name) {
-            // gpio.write i2c.write
+	switch (name) {
+            // gpio.write 
             case "write": {
                 const match = receiverName.match(/^(.+?)(\d*)$/);
 
@@ -428,38 +460,116 @@ const MicrocomConverter = {
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
-                } else if (match[1] == "i2c" && args.length == 3) {
-                    // i2c.write
-		    console.log( args );
-                    if (!this.isStringOrBlock(args[0])) return null;
-                    if (!this.isStringOrBlock(args[1])) return null;
-                    if (!this.isStringOrBlock(args[2])) return null;
-
-                    // ToDo: コマンドの詳しいチェック
 		    
-                    const block = (() => {
-                        if (this._isRubyExpression(receiver)) {
-                            return this._changeRubyExpressionBlock(
-                                receiver,
-                                "microcom_i2c_write",
-                                "statement"
-                            );
-                        } else {
-                            return this._changeBlock(
-                                receiver,
-                                "microcom_i2c_write",
-                                "statement"
-                            );
-                        }
-                    })();
-                    this._addTextInput(block, "ADDR",  args[0], "77");
-                    this._addTextInput(block, "COMM1", args[1], "00");
-                    this._addTextInput(block, "COMM2", args[2], "21");
+                } else if (match[1] == "i2c" && ( args.length == 2 || args.length == 3 )) {
 
-                    return block;
+		    let flag = 0;
+		    let blockname = "";
+		    
+                    // i2c.write
+                    if (!this.isNumber(args[0])) return null;
+                    if (!this.isNumber(args[1])) return null;
+
+                    //console.log( args[2] );
+		    
+                    if (this.isNumber(args[2]) || args[2] === undefined) {
+
+			blockname = "microcom_i2c_write";
+			
+		    } else {
+
+			blockname = "microcom_i2c_write2";
+			flag = 1;			
+
+		    }
+
+		    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+			    return this._changeRubyExpressionBlock(
+                                receiver,
+                                blockname,
+                                "statement"
+			    );
+                        } else {
+			    return this._changeBlock(
+                                receiver,
+                                blockname,
+                                "statement"
+			    );
+                        }
+		    })();
+		    
+		    //console.log( block );
+		    
+		    let addr1 = 0 ;
+		    let addr2 = 0 ;
+		    let addr3 = 0 ;
+		    let addr4 = 0 ;
+		    let addr5 = '-' ;
+		    let addr6 = '-' ;
+
+		    if  ( Number( args[0] ) < 17 ) {
+
+			addr1 = 0 ;
+			addr2 = (Number(args[0])).toString(16)[0] ;
+			
+		    } else if ( Number( args[0] ) < 256 ) {
+
+			addr1 = (Number(args[0])).toString(16)[0] ;
+			addr2 = (Number(args[0])).toString(16)[1] ;
+			
+		    } else {
+			return null;
+		    }
+
+		    this._addField(block, "ADDR1", String(addr1).toUpperCase() );
+		    this._addField(block, "ADDR2", String(addr2).toUpperCase() );
+
+		    if  ( Number( args[1] ) < 17 ) {
+
+			addr3 = 0 ;
+			addr4 = (Number(args[1])).toString(16)[0] ;
+			
+		    } else if ( Number( args[1] ) < 256 ) {
+
+			addr3 = (Number(args[1])).toString(16)[0] ;
+			addr4 = (Number(args[1])).toString(16)[1] ;
+			
+		    } else {
+			return null;
+		    }
+
+		    this._addField(block, "ADDR3", String(addr3).toUpperCase() );
+		    this._addField(block, "ADDR4", String(addr4).toUpperCase() );
+		    
+                    if (this._isNumber(args[2])) {
+
+			if  ( Number( args[2] ) < 17 ) {
+			    
+			    addr5 = 0 ;
+			    addr6 = (Number(args[2])).toString(16)[0] ;
+			    
+			} else if ( Number( args[2] ) < 256 ) {
+			    
+			    addr5 = (Number(args[2])).toString(16)[0] ;
+			    addr6 = (Number(args[2])).toString(16)[1] ;
+
+			}
+			
+			this._addField(block, "ADDR5", String(addr5).toUpperCase() );
+			this._addField(block, "ADDR6", String(addr6).toUpperCase() );
+			
+		    } else if (flag === 1) {
+
+			this._addTextInput(block, "HEX", args[2], "please input block");
+
+		    }
+
+		    return block;
                 }
                 break;
             }
+
             // gpio.read adc.read i2c.read
             case "read": {
                 const match = receiverName.match(/^(.+?)(\d*)$/);
@@ -486,6 +596,7 @@ const MicrocomConverter = {
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
+		    
                 } else if (match[1] == "adc" && args.length == 0) {
                     // adc.read
                     const block = (() => {
@@ -506,10 +617,14 @@ const MicrocomConverter = {
                     this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 
                     return block;
-                } else if (match[1] == "i2c" && args.length == 2) {
+		    
+                } else if (match[1] == "i2c" && (args.length == 2 || args.length == 3)){
 
-		    if (!this.isStringOrBlock(args[0]))  return null;
+		    
+		    if (!this._isNumber(args[0])) return null;
                     if (!this._isNumber(args[1])) return null;
+
+		    const num = Number( args[1] );		    
 		    
 		    const block = (() => {
                         if (this._isRubyExpression(receiver)) {
@@ -525,17 +640,55 @@ const MicrocomConverter = {
                                 "value"
                             );
                         }
-			})();
-		    this._addTextInput(block, "ADDR", args[0], "77");
-                    this._addNumberInput(
+		    })();
+
+		    let addr1 = 0 ;
+		    let addr2 = 0 ;
+		    let addr3 = '-' ;
+		    let addr4 = '-' ;
+		    
+		    if  ( Number( args[0] ) < 17 ) {
+
+			addr1 = 0 ;
+			addr2 = (Number(args[0])).toString(16)[0] ;
+			
+		    } else if ( Number( args[0] ) < 256 ) {
+
+			addr1 = (Number(args[0])).toString(16)[0] ;
+			addr2 = (Number(args[0])).toString(16)[1] ;
+			
+		    } else {
+			return null;
+		    }
+		    
+                    if (this._isNumber(args[2])) {
+			
+			if  ( Number( args[2] ) < 17 ) {
+			    
+			    addr3 = 0 ;
+			    addr4 = (Number(args[2])).toString(16)[0] ;
+			    
+			} else if ( Number( args[2] ) < 256 ) {
+			    
+			    addr3 = (Number(args[2])).toString(16)[0] ;
+			    addr4 = (Number(args[2])).toString(16)[1] ;
+			    
+			} 
+		    }
+
+		    
+		    this._addField(block, "ADDR1", String(addr1).toUpperCase() );
+		    this._addField(block, "ADDR2", String(addr2).toUpperCase() );
+		    this._addNumberInput(
                         block,
                         "BYTES",
                         "math_integer",
-                        Number(args[1]),
+                        num,
                         10
-                    );
-
-                    return block;
+		    );
+		    this._addField(block, "ADDR3", String(addr3).toUpperCase() );
+		    this._addField(block, "ADDR4", String(addr4).toUpperCase() );
+		    return block;
                 }
                 break;
             }
@@ -754,8 +907,8 @@ const MicrocomConverter = {
                 }
                 break;
             }
-            // uart.tx_clear
-            case "tx_clear": {
+            // uart.clear_tx_buffer
+            case "clear_tx_buffer": {
                 const match = receiverName.match(/^uart(\d+)$/);
 
                 if (match && args.length == 0) {
@@ -789,8 +942,8 @@ const MicrocomConverter = {
                 }
                 break;
             }
-            // uart.rx_clear
-            case "rx_clear": {
+            // uart.clear_rx_buffer
+            case "clear_rx_buffer": {
                 const match = receiverName.match(/^uart(\d+)$/);
 
                 if (match && args.length == 0) {

@@ -4,10 +4,12 @@
  * @return {RubyGenerator} same as param.
  */
 export default function (Generator) {
-    Generator.microcom_gpio_output_init = function (block) {
+    Generator.microcom_gpio_init = function (block) {
         const pin =
-            Generator.valueToCode(block, "PIN", Generator.ORDER_NONE) || null;
-        return `gpio${pin} = GPIO.new( ${pin}, GPIO::OUT )\n`;
+              Generator.valueToCode(block, "PIN", Generator.ORDER_NONE) || null;
+        const direction =
+	      Generator.getFieldValue(block, "DIRECTION",  Generator.ORDER_NONE) || null;
+        return `gpio${pin} = GPIO.new( ${pin}, ${direction} )\n`;
     };
 
     Generator.microcom_gpio_write = function (block) {
@@ -19,12 +21,6 @@ export default function (Generator) {
             Generator.ORDER_NONE
         );
         return `gpio${pin}.write( ${value} )\n`;
-    };
-
-    Generator.microcom_gpio_input_init = function (block) {
-        const pin =
-            Generator.valueToCode(block, "PIN", Generator.ORDER_NONE) || null;
-        return `gpio${pin} = GPIO.new( ${pin}, GPIO::IN|GPIO::PULL_UP )\n`;
     };
 
     Generator.microcom_gpio_read = function (block) {
@@ -94,19 +90,55 @@ export default function (Generator) {
     };
 
     Generator.microcom_i2c_write = function (block) {
-        const addr =
-            Generator.valueToCode(block, "ADDR", Generator.ORDER_NONE) || null;
-        const comm1 = Generator.valueToCode(block, 'COMM1', Generator.ORDER_NONE) || null;
-        const comm2 = Generator.valueToCode(block, 'COMM2', Generator.ORDER_NONE) || null;
-        return `i2c.write( ${addr}, ${comm1}, ${comm2} )\n`;
+	const addr1 =
+            Generator.getFieldValue(block, "ADDR1", Generator.ORDER_NONE) || null;
+        const addr2 =
+            Generator.getFieldValue(block, "ADDR2", Generator.ORDER_NONE) || null;
+	const addr3 =
+            Generator.getFieldValue(block, "ADDR3", Generator.ORDER_NONE) || null;
+        const addr4 =
+            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;	
+	const addr5 =
+            Generator.getFieldValue(block, "ADDR5", Generator.ORDER_NONE) || null;
+        const addr6 =
+            Generator.getFieldValue(block, "ADDR6", Generator.ORDER_NONE) || null;	
+	if (addr5 === '-' || addr6 == '-') {
+	    return `i2c.write( 0x${addr1}${addr2}, 0x${addr3}${addr4} )\n`;
+	}else{
+	    return `i2c.write( 0x${addr1}${addr2}, 0x${addr3}${addr4}, 0x${addr5}${addr6} )\n`;
+	}
     };
 
+    Generator.microcom_i2c_write2 = function (block) {
+	const addr1 =
+            Generator.getFieldValue(block, "ADDR1", Generator.ORDER_NONE) || null;
+        const addr2 =
+            Generator.getFieldValue(block, "ADDR2", Generator.ORDER_NONE) || null;
+	const addr3 =
+            Generator.getFieldValue(block, "ADDR3", Generator.ORDER_NONE) || null;
+        const addr4 =
+            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;	
+        const hex =
+            Generator.valueToCode(block, "HEX", Generator.ORDER_NONE) || null;
+	return `i2c.write( 0x${addr1}${addr2}, 0x${addr3}${addr4}, ${hex} )\n`;
+    };
+    
     Generator.microcom_i2c_read = function (block) {
-        const addr =
-            Generator.valueToCode(block, "ADDR", Generator.ORDER_NONE) || null;
+	const addr1 =
+            Generator.getFieldValue(block, "ADDR1", Generator.ORDER_NONE) || null;
+        const addr2 =
+            Generator.getFieldValue(block, "ADDR2", Generator.ORDER_NONE) || null;
         const bytes =
             Generator.valueToCode(block, "BYTES", Generator.ORDER_NONE) || 1;
-        return [`i2c.read( ${addr}, ${bytes} )`, Generator.ORDER_ATOMIC];
+	const addr3 =
+            Generator.getFieldValue(block, "ADDR3", Generator.ORDER_NONE) || null;
+        const addr4 =
+            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;	
+	if (addr3 === '-' || addr4 == '-') {
+	    return [`i2c.read( 0x${addr1}${addr2}, ${bytes} )`, Generator.ORDER_ATOMIC];
+	}else{
+	    return [`i2c.read( 0x${addr1}${addr2}, ${bytes}, 0x${addr3}${addr4} )`, Generator.ORDER_ATOMIC];
+	}
     };
 
     Generator.microcom_uart_init = function (block) {
@@ -134,20 +166,20 @@ export default function (Generator) {
     Generator.microcom_uart_txclear = function (block) {
         const uart =
             Generator.valueToCode(block, "UART", Generator.ORDER_NONE) || null;
-        return `uart${uart}.tx_clear()\n`;
+        return `uart${uart}.clear_tx_buffer()\n`;
     };
 
     Generator.microcom_uart_rxclear = function (block) {
         const uart =
             Generator.valueToCode(block, "UART", Generator.ORDER_NONE) || null;
-        return `uart${uart}.rx_clear()\n`;
+        return `uart${uart}.clear_rx_buffer()\n`;
     };
 
     Generator.microcom_num16 = function (block) {
         const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || null;
         return [`${num}.to_i(16)`, Generator.ORDER_ATOMIC];
     };
-
+/*
     Generator.microcom_str16 = function (block) {
         const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
         return [`${str}.to_s(16)`, Generator.ORDER_ATOMIC];
@@ -167,7 +199,14 @@ export default function (Generator) {
         const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
         return [`${str}.split(',')`, Generator.ORDER_ATOMIC];
     };
-
+*/
+    Generator.microcom_tools = function (block) {
+        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
+        const tool =
+	      Generator.getFieldValue(block, "TOOL",  Generator.ORDER_NONE) || null;
+        return [`${str}.${tool}`, Generator.ORDER_ATOMIC];
+    };
+    
     Generator.microcom_puts = function (block) {
         const text =
             Generator.valueToCode(block, "TEXT", Generator.ORDER_NONE) || null;

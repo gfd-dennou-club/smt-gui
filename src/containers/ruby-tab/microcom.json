@@ -3,9 +3,17 @@
 	"snippet": "GPIO.new(*, GPIO::OUT)",
 	"description": "GPIO: ピン * を出力として初期化"
     },
+    "GPIO.new(*, GPIO::IN)": {
+	"snippet": "GPIO.new(*, GPIO::IN)",
+	"description": "GPIO: ピン * を入力として初期化"
+    },
     "GPIO.new(*, GPIO::IN|GPIO::PULL_UP)": {
 	"snippet": "GPIO.new(*, GPIO::IN|GPIO::PULL_UP)",
-	"description": "GPIO: ピン * を入力として初期化"
+	"description": "GPIO: ピン * を入力として初期化 (プルアップあり)"
+    },
+    "GPIO.new(*, GPIO::IN|GPIO::PULL_DOWN)": {
+	"snippet": "GPIO.new(*, GPIO::IN|GPIO::PULL_DOWN)",
+	"description": "GPIO: ピン * を入力として初期化 (プルダウンあり)"
     },
     "gpio*.write( * )": {
 	"snippet": "gpio*.write( * )",
@@ -76,24 +84,28 @@
 	"description": "UART: 送信バッファのクリア"
     },
     ".to_i(16)": {
-	"snippet": ".to_i(16)",
+	"snippet": "to_i(16)",
 	"description": "10進数→16進数"
     },
     ".to_s(16)": {
-	"snippet": ".to_s(16)",
+	"snippet": "to_s(16)",
 	"description": "16進数表示"
     },
     ".ord": {
-	"snippet": ".ord",
+	"snippet": "ord",
 	"description": "文字コードに変換"
     },
     ".bytes": {
-	"snippet": ".bytes",
+	"snippet": "bytes",
 	"description": "文字列の数値配列化"
     },
     ".split(',')": {
-	"snippet": ".split(',')",
+	"snippet": "split(',')",
 	"description": "カンマ区切り分割"
+    },
+    ".size": {
+	"snippet": "size",
+	"description": "配列サイズ"
     },
     "puts": {
 	"snippet": "puts",

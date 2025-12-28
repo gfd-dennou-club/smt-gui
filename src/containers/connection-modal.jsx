@@ -65,11 +65,19 @@ class ConnectionModal extends React.Component {
             this.props.onCancel();
         }
     }
-    handleDisconnected () {
-        this.setState({
-            phase: PHASES.scanning,
-            connectedMessage: ''
-        });
+    handleDisconnected (data) {
+        if (this.props.extensionId === 'meshV2' &&
+            (!data || data.extensionId === 'meshV2')) {
+            this.setState({
+                phase: PHASES.connected,
+                connectedMessage: this.props.vm.getPeripheralConnectedMessage(this.props.extensionId)
+            });
+        } else {
+            this.setState({
+                phase: PHASES.scanning,
+                connectedMessage: ''
+            });
+        }
     }
     handleCancel () {
         try {

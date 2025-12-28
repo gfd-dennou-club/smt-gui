@@ -85,7 +85,7 @@ export default {
     'mesh.clientPeripheralNameV2': 'メッシュに参加する 【{ MESH_ID }】',
     'mesh.registeredHostV2': 'ホストとしてメッシュに登録しました 【{ MESH_ID }】{ EXPIRES_AT }',
     'mesh.joinedMeshV2': 'メッシュに参加しました 【{ MESH_ID }】',
-    'mesh.expiresAtV2': ' （有効期限 { TIME }）',
+    'mesh.expiresAtV2': ' （{ TIME }まで使えます）',
     'mesh.notConnectedV2': 'メッシュに接続していません',
     'mesh.fireMeshEvent': '[BROADCAST_OPTION] を送る',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1',

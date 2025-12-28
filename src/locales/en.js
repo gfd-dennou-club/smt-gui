@@ -36,7 +36,7 @@ export default {
     'mesh.clientPeripheralNameV2': 'Join Mesh [{ MESH_ID }]',
     'mesh.registeredHostV2': 'Registered Host Mesh [{ MESH_ID }]{ EXPIRES_AT }',
     'mesh.joinedMeshV2': 'Joined Mesh [{ MESH_ID }]',
-    'mesh.expiresAtV2': ' (Expires at { TIME })',
+    'mesh.expiresAtV2': ' (Available until { TIME })',
     'mesh.notConnectedV2': 'Not connected (Mesh)',
     'gui.smalruby3.extension.smalrubotS1.name': 'Smalrubot S1',
     'gui.smalruby3.extension.smalrubotS1.description': 'Control the Smalrubot S1.',

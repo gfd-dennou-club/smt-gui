@@ -39,7 +39,7 @@ export default {
     'mesh.clientPeripheralNameV2': 'メッシュにさんかする 【{ MESH_ID }】',
     'mesh.registeredHostV2': 'ホストとしてメッシュにとうろくしました 【{ MESH_ID }】{ EXPIRES_AT }',
     'mesh.joinedMeshV2': 'メッシュにさんかしました 【{ MESH_ID }】',
-    'mesh.expiresAtV2': ' （ゆうこうきげん { TIME }）',
+    'mesh.expiresAtV2': ' （{ TIME }までつかえます）',
     'mesh.notConnectedV2': 'メッシュにせつぞくしていません',
     'mesh.joinedMesh': 'メッシュにさんかしました 【{ MESH_ID }】',
     'mesh.fireMeshEvent': '[BROADCAST_OPTION] をおくる',

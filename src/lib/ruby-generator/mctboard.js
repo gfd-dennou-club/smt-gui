@@ -229,12 +229,12 @@ export default function (Generator) {
         const ssid = Generator.valueToCode(block, 'SSID', Generator.ORDER_NONE);
         const pass = Generator.valueToCode(block, 'PASS', Generator.ORDER_NONE);
         return (
-	    `wlan = WLAN.new('STA')\n` +
+	    `wlan = WLAN.new()\n` +
 	    `wlan.connect(${ssid}, ${pass}) \n`
 	);
     };
 
-    Generator.mctboard_wifi_connected = function () {
+    Generator.mctboard_wifi_isconnected = function () {
         return [`wlan.is_connected?`, Generator.ORDER_ATOMIC];
     };
 
@@ -251,7 +251,7 @@ export default function (Generator) {
     
     Generator.mctboard_http_get = function (block) {
         const url = Generator.valueToCode(block, 'URL', Generator.ORDER_NONE) || null;
-        return [`HTTP.get( ${url} )\n`, Generator.ORDER_ATOMIC]
+        return [`HTTP.get( ${url} )`, Generator.ORDER_ATOMIC]
     };
 
     Generator.mctboard_http_post = function (block) {
@@ -302,9 +302,8 @@ export default function (Generator) {
     Generator.mctboard_sd_init = function (block) {
         return (
 	    `spi = SPI.new(miso_pin:19, mosi_pin:23, clk_pin:18)\n` +
-	    `sdspi = SDSPI.new(spi, cs_pin:2)\n` +
-	    `filedir = "/sdcard" \n` +
-	    `sdspi.mount("/sdcard")\n`
+  	    `sdspi = SDSPI.new(spi, cs_pin:2, mount_point:'/sdcard')\n` +
+	    `filedir = "/sdcard" \n` 
 	);
     };
 

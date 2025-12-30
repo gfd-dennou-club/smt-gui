@@ -275,10 +275,75 @@ const MicrocomConverter = {
         // i2c
         converter.registerOnSend("self", "i2c", 0, (params) => {
             const { node } = params;
-
+//            return converter._createBlock('microcom_i2c', 'value');
             return converter.createRubyExpressionBlock("i2c", node);
         });
 
+        // SPI
+        // SPI.new
+        converter.registerOnSend("::SPI", "new", 1, (params) => {
+            const { args, node } = params;
+	    console.log(args);
+	    console.log(node);
+	    
+            if (!converter.isHash(args[0])) return null;
+            const miso = args[0].get("sym:miso_pin");	    
+            const mosi = args[0].get("sym:mosi_pin");
+            const clk  = args[0].get("sym:clk_pin");
+            if (!converter.isNumber(miso)) return null;
+            if (!converter.isNumber(mosi)) return null;
+            if (!converter.isNumber(clk))  return null;
+
+            const expression = `SPI.new( miso_pin:${miso.value}, mosi_pin:${mosi.value}, clk_pin:${clk.value})`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+        // spi = SPI.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+	    const expression = converter.getRubyExpression(rh);
+            if (!expression) return null;
+
+            const match = expression.match(
+                /^SPI\.new\(\s*miso_pin:\s*(\d+)\s*,\s*mosi_pin:\s*(\d+)\s*,\s*clk_pin:\s*(\d+)\s*\)/
+            );
+
+            if (!match) return null;
+            if (variable.name != "spi") return null;
+
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_spi_init",
+                "statement"
+            );
+            converter.addNumberInput(
+                block,
+                "MISO",
+                "math_integer",
+                Number(match[1])
+            );
+            converter.addNumberInput(
+                block,
+                "MOSI",
+                "math_integer",
+                Number(match[2])
+            );
+            converter.addNumberInput(
+                block,
+                "CLK",
+                "math_integer",
+                Number(match[3])
+            );
+
+            return block;
+        });
+
+        // spi
+        converter.registerOnSend("self", "spi", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("spi", node);
+        });
+	
         // UART
         // UART.new
         converter.registerOnSend("::UART", "new", 2, (params) => {
@@ -335,7 +400,219 @@ const MicrocomConverter = {
             });
         }
 
-        // puts
+        // WLAN
+        // WLAN.new
+        converter.registerOnSend("::WLAN", "new", 0, (params) => {
+            const { args, node } = params;
+
+            const expression = `WLAN.new( )`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+        // wlan = WLAN.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+	    const expression = converter.getRubyExpression(rh);
+            if (!expression) return null;
+
+            const match = expression.match(
+                /^WLAN\.new\(\s*\)/
+            );
+
+            if (!match) return null;
+            if (variable.name != "wlan") return null;
+
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_wifi_init",
+                "statement"
+            );
+            return block;
+        });
+
+        // wlan
+        converter.registerOnSend("self", "wlan", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("wlan", node);
+        });
+
+        // wlan.connect
+        converter.registerOnSend("wlan", "connect", 2, (params) => {
+            const { args, receiver } = params;
+            if (!converter._isStringOrBlock(args[0])) return null;
+            if (!converter._isStringOrBlock(args[1])) return null;
+
+            const block = converter._changeRubyExpressionBlock(
+                receiver,
+                "microcom_wifi_auth",
+                "statement"
+            );	   
+	    converter._addTextInput(block, "SSID", args[0], "test");
+	    converter._addTextInput(block, "PASS", args[1], "test");
+            return block;
+        });
+	
+        // wlan.is_connected?
+        converter.registerOnSend("wlan", "is_connected?", 0, (params) => {
+            const { receiver } = params;
+
+            const block = converter._changeRubyExpressionBlock(
+                receiver,
+                "microcom_wifi_isconnected",
+                "statement"
+            );
+            return block;
+        });
+
+        // HTTP
+        converter.registerOnSend("self", "::HTTP", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("::HTTP", node);
+        });
+
+	// HTTP.get
+        converter.registerOnSend("::HTTP", "get", 1, (params) => {
+            const { args } = params;
+            if (!converter._isStringOrBlock(args[0])) return null;
+	    
+	    const block = converter.createBlock("microcom_http_get", "value");
+            converter._addTextInput(block, "URL", args[0], "test");
+            return block;
+        });
+
+	// HTTP.post
+        converter.registerOnSend("::HTTP", "post", 2, (params) => {
+            const { args } = params;
+            if (!converter._isStringOrBlock(args[0])) return null;
+            if (!converter._isStringOrBlock(args[1])) return null;	    
+
+	    const block = converter.createBlock("microcom_http_post", "statement");
+            converter._addTextInput(block, "URL",  args[0], "test");
+            converter._addTextInput(block, "DATA", args[1], "test");
+            return block;
+        });
+
+        // SNTP
+        // SNTP.new
+        converter.registerOnSend("::SNTP", "new", 0, (params) => {
+            const { args, node } = params;
+
+            const expression = `SNTP.new( )`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+        // sntp = SNTP.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+	    const expression = converter.getRubyExpression(rh);
+            if (!expression) return null;
+
+            const match = expression.match(
+                /^SNTP\.new\(\s*\)/
+            );
+
+            if (!match) return null;
+            if (variable.name != "sntp") return null;
+
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_sntp_init",
+                "statement"
+            );
+            return block;
+        });
+
+        // sntp
+        converter.registerOnSend("self", "sntp", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("sntp", node);
+        });
+
+        // sntp.XXXX
+	const items = ['year', 'mon', 'mday', 'wday', 'hour', 'min', 'sec'];
+	items.forEach( function(item) {
+            converter.registerOnSend('sntp', item, 0, params => {
+		console.log( "----" );
+		console.log( item );
+		const { receiver } = params;
+		const block = converter._changeRubyExpressionBlock(
+                    receiver,
+                    "microcom_sntp_date",
+                    "statement"
+		);	   		
+		converter.addField(block, "TIME", item);
+		return block;
+            });
+	});
+
+        // DPS310
+        // DPS310.new
+        converter.registerOnSend("::DPS310", "new", 1, (params) => {
+            const { args, node } = params;
+
+            const expression = `DPS310.new( i2c )`;
+            return converter.createRubyExpressionBlock(expression, node);
+        });
+
+
+        // dps310 = DPS310.new
+        converter.registerOnVasgn((scope, variable, rh) => {
+	    const expression = converter.getRubyExpression(rh);
+	    if (!expression) return null;
+	    
+            const match = expression.match(
+                /^DPS310\.new\(\s*(.+?)\s*\)$/
+            );
+	    
+            if (!match) return null;
+            if (variable.name != "dps310") return null;
+	    
+            const block = converter.changeRubyExpressionBlock(
+                rh,
+                "microcom_i2c_dps310_init",
+                "statement"
+            );
+            return block;
+        });
+	
+        // dps310
+        converter.registerOnSend("self", "dps310", 0, (params) => {
+            const { node } = params;
+
+            return converter.createRubyExpressionBlock("dps310", node);
+        });
+
+
+        // dps310.measure
+        converter.registerOnSend('dps310', "measure", 0, params => {
+	    const { receiver } = params;
+	    const block = converter._changeRubyExpressionBlock(
+                receiver,
+                "microcom_i2c_dps310_measure",
+                "statement"
+	    );	   		
+	    return block;
+        });
+
+        // dps310.XXXX
+	const dps310items = ['temperature', 'pressure'];
+	dps310items.forEach( function(item) {
+            converter.registerOnSend('dps310', item, 0, params => {
+		console.log( "----" );
+		console.log( item );
+		const { receiver } = params;
+		const block = converter._changeRubyExpressionBlock(
+                    receiver,
+                    "microcom_i2c_dps310_read",
+                    "statement"
+		);	   		
+		converter.addField(block, "TARGET", item);
+		return block;
+            });
+	});
+	
+	// puts
         converter.registerOnSend("self", "puts", 1, (params) => {
             const { args } = params;
             if (!converter._isNumberOrStringOrBlock(args[0])) return null;
@@ -518,7 +795,7 @@ const MicrocomConverter = {
 		    let addr5 = '-' ;
 		    let addr6 = '-' ;
 
-		    if  ( Number( args[0] ) < 17 ) {
+		    if  ( Number( args[0] ) < 16 ) {
 
 			addr1 = 0 ;
 			addr2 = (Number(args[0])).toString(16)[0] ;
@@ -535,7 +812,7 @@ const MicrocomConverter = {
 		    this._addField(block, "ADDR1", String(addr1).toUpperCase() );
 		    this._addField(block, "ADDR2", String(addr2).toUpperCase() );
 
-		    if  ( Number( args[1] ) < 17 ) {
+		    if  ( Number( args[1] ) < 16 ) {
 
 			addr3 = 0 ;
 			addr4 = (Number(args[1])).toString(16)[0] ;
@@ -554,7 +831,7 @@ const MicrocomConverter = {
 		    
                     if (this._isNumber(args[2])) {
 
-			if  ( Number( args[2] ) < 17 ) {
+			if  ( Number( args[2] ) < 16 ) {
 			    
 			    addr5 = 0 ;
 			    addr6 = (Number(args[2])).toString(16)[0] ;
@@ -576,11 +853,79 @@ const MicrocomConverter = {
 		    }
 
 		    return block;
+
+                } else if (match[1] == "spi" && args.length == 2) {
+
+                    // spi.write
+                    if (!this.isNumber(args[0])) return null;
+                    if (!this.isNumber(args[1])) return null;
+
+                    console.log( args[0] );
+                    console.log( args[1] );
+		    
+		    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+			    return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_spi_write",
+                                "statement"
+			    );
+                        } else {
+			    return this._changeBlock(
+                                receiver,
+                                "microcom_spi_write",
+                                "statement"
+			    );
+                        }
+		    })();
+		    
+		    //console.log( block );
+		    
+		    let addr1 = 0 ;
+		    let addr2 = 0 ;
+		    let addr3 = 0 ;
+		    let addr4 = 0 ;
+
+		    if  ( Number( args[0] ) < 16 ) {
+
+			addr1 = 0 ;
+			addr2 = (Number(args[0])).toString(16)[0] ;
+			
+		    } else if ( Number( args[0] ) < 256 ) {
+
+			addr1 = (Number(args[0])).toString(16)[0] ;
+			addr2 = (Number(args[0])).toString(16)[1] ;
+			
+		    } else {
+			return null;
+		    }
+
+		    this._addField(block, "ADDR1", String(addr1).toUpperCase() );
+		    this._addField(block, "ADDR2", String(addr2).toUpperCase() );
+
+		    if  ( Number( args[1] ) < 16 ) {
+
+			addr3 = 0 ;
+			addr4 = (Number(args[1])).toString(16)[0] ;
+			
+		    } else if ( Number( args[1] ) < 256 ) {
+
+			addr3 = (Number(args[1])).toString(16)[0] ;
+			addr4 = (Number(args[1])).toString(16)[1] ;
+			
+		    } else {
+			return null;
+		    }
+
+		    this._addField(block, "ADDR3", String(addr3).toUpperCase() );
+		    this._addField(block, "ADDR4", String(addr4).toUpperCase() );
+		    
+		    return block;
                 }
                 break;
             }
 
-            // gpio.read adc.read i2c.read
+            // gpio.read adc.read i2c.read spi.read
             case "read": {
                 const match = receiverName.match(/^(.+?)(\d*)$/);
                 const pin = Number(match[2]);
@@ -657,7 +1002,7 @@ const MicrocomConverter = {
 		    let addr3 = '-' ;
 		    let addr4 = '-' ;
 		    
-		    if  ( Number( args[0] ) < 17 ) {
+		    if  ( Number( args[0] ) < 16 ) {
 
 			addr1 = 0 ;
 			addr2 = (Number(args[0])).toString(16)[0] ;
@@ -673,7 +1018,7 @@ const MicrocomConverter = {
 		    
                     if (this._isNumber(args[2])) {
 			
-			if  ( Number( args[2] ) < 17 ) {
+			if  ( Number( args[2] ) < 16 ) {
 			    
 			    addr3 = 0 ;
 			    addr4 = (Number(args[2])).toString(16)[0] ;
@@ -685,7 +1030,6 @@ const MicrocomConverter = {
 			    
 			} 
 		    }
-
 		    
 		    this._addField(block, "ADDR1", String(addr1).toUpperCase() );
 		    this._addField(block, "ADDR2", String(addr2).toUpperCase() );
@@ -698,6 +1042,36 @@ const MicrocomConverter = {
 		    );
 		    this._addField(block, "ADDR3", String(addr3).toUpperCase() );
 		    this._addField(block, "ADDR4", String(addr4).toUpperCase() );
+		    return block;
+		    
+                } else if (match[1] == "spi" && args.length == 1){
+		    
+		    if (!this._isNumber(args[0])) return null;
+		    const num = Number( args[0] );
+		    
+		    const block = (() => {
+                        if (this._isRubyExpression(receiver)) {
+                            return this._changeRubyExpressionBlock(
+                                receiver,
+                                "microcom_spi_read",
+                                "value"
+                            );
+                        } else {
+                            return this._changeBlock(
+                                receiver,
+                                "microcom_spi_read",
+                                "value"
+                            );
+                        }
+		    })();
+
+		    this._addNumberInput(
+                        block,
+                        "BYTES",
+                        "math_integer",
+                        num,
+                        10
+		    );
 		    return block;
                 }
                 break;

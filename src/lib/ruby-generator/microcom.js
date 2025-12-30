@@ -81,6 +81,10 @@ export default function (Generator) {
         return [`adc${pin}.read`, Generator.ORDER_ATOMIC];
     };
 
+//    Generator.microcom_i2c = function (block) {
+//        return ['i2c', Generator.ORDER_ATOMIC];
+//    };
+    
     Generator.microcom_i2c_init = function (block) {
         const scl =
             Generator.valueToCode(block, "SCL", Generator.ORDER_NONE) || 22;
@@ -133,12 +137,54 @@ export default function (Generator) {
 	const addr3 =
             Generator.getFieldValue(block, "ADDR3", Generator.ORDER_NONE) || null;
         const addr4 =
-            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;	
+            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;
 	if (addr3 === '-' || addr4 == '-') {
 	    return [`i2c.read( 0x${addr1}${addr2}, ${bytes} )`, Generator.ORDER_ATOMIC];
 	}else{
 	    return [`i2c.read( 0x${addr1}${addr2}, ${bytes}, 0x${addr3}${addr4} )`, Generator.ORDER_ATOMIC];
 	}
+    };
+
+    Generator.microcom_i2c_dps310_init = function (block) {
+        return `dps310 = DPS310.new( i2c )\n`;
+    };
+
+    Generator.microcom_i2c_dps310_measure = function (block) {
+        return `dps310.measure \n`;
+    };
+
+    Generator.microcom_i2c_dps310_read = function (block) {
+        const target =
+              Generator.getFieldValue(block, "TARGET", Generator.ORDER_NONE) || null;
+        return `dps310.${target} \n`;
+    };
+    
+    Generator.microcom_spi_init = function (block) {
+        const miso =
+            Generator.valueToCode(block, "MISO", Generator.ORDER_NONE) || 19;
+        const mosi =
+            Generator.valueToCode(block, "MOSI", Generator.ORDER_NONE) || 23;
+        const clk =
+            Generator.valueToCode(block, "CLK", Generator.ORDER_NONE) || 18;
+        return `spi = SPI.new( miso_pin:${miso}, mosi_pin:${mosi}, clk_pin:${clk} )\n`;
+    };
+
+    Generator.microcom_spi_write = function (block) {
+	const addr1 =
+            Generator.getFieldValue(block, "ADDR1", Generator.ORDER_NONE) || null;
+        const addr2 =
+            Generator.getFieldValue(block, "ADDR2", Generator.ORDER_NONE) || null;
+	const addr3 =
+            Generator.getFieldValue(block, "ADDR3", Generator.ORDER_NONE) || null;
+        const addr4 =
+            Generator.getFieldValue(block, "ADDR4", Generator.ORDER_NONE) || null;
+	return `spi.write( 0x${addr1}${addr2}, 0x${addr3}${addr4} )\n`;
+    };
+
+    Generator.microcom_spi_read = function (block) {
+        const bytes =
+            Generator.valueToCode(block, "BYTES", Generator.ORDER_NONE) || 1;
+	return [`spi.read( ${bytes} )`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microcom_uart_init = function (block) {
@@ -175,31 +221,56 @@ export default function (Generator) {
         return `uart${uart}.clear_rx_buffer()\n`;
     };
 
+    //
+    // Wi-Fi
+    //
+    Generator.microcom_wifi_init = function (block) {
+        return (
+	    `wlan = WLAN.new()\n` 
+	);
+    };
+
+    Generator.microcom_wifi_auth = function (block) {
+        const ssid = Generator.valueToCode(block, 'SSID', Generator.ORDER_NONE);
+        const pass = Generator.valueToCode(block, 'PASS', Generator.ORDER_NONE);
+        return (
+	    `wlan.connect(${ssid}, ${pass}) \n`
+	);
+    };
+
+    Generator.microcom_wifi_isconnected = function () {
+        return [`wlan.is_connected?`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.microcom_sntp_init = function () {
+        return (
+	    `sntp = SNTP.new() \n`
+	);
+    };
+
+    Generator.microcom_sntp_date = function (block) {
+        const time = Generator.getFieldValue(block, 'TIME') || null;
+        return [`sntp.${time}`, Generator.ORDER_ATOMIC];
+    };    
+    
+    Generator.microcom_http_get = function (block) {
+        const url = Generator.valueToCode(block, 'URL', Generator.ORDER_NONE) || null;
+        return [`HTTP.get( ${url} )`, Generator.ORDER_ATOMIC]
+    };
+
+    Generator.microcom_http_post = function (block) {
+        const url  = Generator.valueToCode(block, 'URL',  Generator.ORDER_NONE) || null;
+        const data = Generator.valueToCode(block, 'DATA', Generator.ORDER_NONE) || null;
+        return (
+	    `HTTP.post( ${url}, ${data} )\n` 
+	);
+    };
+
+    
     Generator.microcom_num16 = function (block) {
         const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || null;
         return [`${num}.to_i(16)`, Generator.ORDER_ATOMIC];
     };
-/*
-    Generator.microcom_str16 = function (block) {
-        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
-        return [`${str}.to_s(16)`, Generator.ORDER_ATOMIC];
-    };
-
-    Generator.microcom_ord = function (block) {
-        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
-        return [`${str}.ord`, Generator.ORDER_ATOMIC];
-    };
-
-    Generator.microcom_bytes = function (block) {
-        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
-        return [`${str}.bytes`, Generator.ORDER_ATOMIC];
-    };
-
-    Generator.microcom_split = function (block) {
-        const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
-        return [`${str}.split(',')`, Generator.ORDER_ATOMIC];
-    };
-*/
     Generator.microcom_tools = function (block) {
         const str = Generator.valueToCode(block, 'STR', Generator.ORDER_NONE) || null;
         const tool =

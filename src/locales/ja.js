@@ -87,7 +87,6 @@ export default {
     'mesh.joinedMeshV2': 'メッシュに参加しました 【{ MESH_ID }】',
     'mesh.expiresAtV2': ' （{ TIME }まで使えます）',
     'mesh.notConnectedV2': 'メッシュに接続していません',
-    'mesh.fireMeshEvent': '[BROADCAST_OPTION] を送る',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1',
     'gui.smalruby3.extension.smalrubotS1.description': 'スモウルボットS1を制御する。',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'スモウルボットS1に接続しています。',

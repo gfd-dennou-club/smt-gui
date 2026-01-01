@@ -300,7 +300,11 @@ class MenuBar extends React.Component {
 
         const connected = extension.connectionState === 'connected';
         const message = extension.menuMessage();
-        console.log('MenuBar: getMeshV2Status - connectionState:', extension.connectionState, 'connected:', connected, 'message:', message);
+        console.log('MenuBar: getMeshV2Status', {
+            connectionState: extension.connectionState,
+            connected,
+            message
+        });
 
         return {
             loaded: true,

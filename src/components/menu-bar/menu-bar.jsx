@@ -259,26 +259,38 @@ class MenuBar extends React.Component {
     }
     getMeshV2Status () {
         const vm = this.props.vm;
-        if (!vm.runtime || !vm.runtime.extensionManager) {
-            console.log('MenuBar: getMeshV2Status - vm.runtime or extensionManager missing');
+        
+        console.log('MenuBar: getMeshV2Status - vm:', vm);
+        if (!vm) return {loaded: false};
+
+        // In Smalruby 3 / Scratch 3, extensionManager is directly on the vm instance
+        const extensionManager = vm.extensionManager;
+        if (!extensionManager) {
+            console.log('MenuBar: getMeshV2Status - extensionManager missing on vm');
             return {loaded: false};
         }
 
-        const loadedExtensions = Array.from(vm.runtime.extensionManager._loadedExtensions.keys());
+        const loadedExtensions = Array.from(extensionManager._loadedExtensions.keys());
         console.log('MenuBar: getMeshV2Status - Loaded extensions:', loadedExtensions);
 
-        const isLoaded = vm.runtime.extensionManager.isExtensionLoaded('meshV2');
+        const isLoaded = extensionManager.isExtensionLoaded('meshV2');
         console.log('MenuBar: getMeshV2Status - isLoaded(meshV2):', isLoaded);
         
         if (!isLoaded) {
             return {loaded: false};
         }
 
-        // Get extension instance
-        const peripheralExtensions = Object.keys(vm.runtime.peripheralExtensions || {});
+        // peripheralExtensions is on vm.runtime
+        const runtime = vm.runtime;
+        if (!runtime || !runtime.peripheralExtensions) {
+            console.log('MenuBar: getMeshV2Status - runtime or peripheralExtensions missing');
+            return {loaded: true, connected: false};
+        }
+
+        const peripheralExtensions = Object.keys(runtime.peripheralExtensions || {});
         console.log('MenuBar: getMeshV2Status - Peripheral extensions:', peripheralExtensions);
 
-        const extension = vm.runtime.peripheralExtensions.meshV2;
+        const extension = runtime.peripheralExtensions.meshV2;
         console.log('MenuBar: getMeshV2Status - meshV2 extension instance:', extension);
 
         if (!extension) {

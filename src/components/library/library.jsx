@@ -10,7 +10,6 @@ import Divider from '../divider/divider.jsx';
 import Filter from '../filter/filter.jsx';
 import TagButton from '../../containers/tag-button.jsx';
 import Spinner from '../spinner/spinner.jsx';
-import {CATEGORIES} from '../../../src/lib/libraries/decks/index.jsx';
 
 import styles from './library.css';
 
@@ -24,28 +23,6 @@ const messages = defineMessages({
         id: 'gui.library.allTag',
         defaultMessage: 'All',
         description: 'Label for library tag to revert to all items after filtering by tag.'
-    },
-    // Strings here need to be defined statically
-    // https://formatjs.io/docs/getting-started/message-declaration/#pre-declaring-using-definemessage-for-later-consumption-less-recommended
-    [CATEGORIES.gettingStarted]: {
-        id: `gui.library.gettingStarted`,
-        defaultMessage: 'Getting Started',
-        description: 'Label for getting started category'
-    },
-    [CATEGORIES.basics]: {
-        id: `gui.library.basics`,
-        defaultMessage: 'Basics',
-        description: 'Label for basics category'
-    },
-    [CATEGORIES.intermediate]: {
-        id: `gui.library.intermediate`,
-        defaultMessage: 'Intermediate',
-        description: 'Label for intermediate category'
-    },
-    [CATEGORIES.prompts]: {
-        id: `gui.library.prompts`,
-        defaultMessage: 'Prompts',
-        description: 'Label for prompts category'
     }
 });
 
@@ -215,32 +192,7 @@ class LibraryComponent extends React.Component {
         />);
     }
     renderData (data) {
-        if (this.state.selectedTag !== ALL_TAG.tag || !this.props.withCategories) {
-            return data.map(item => this.renderElement(item));
-        }
-
-        const dataByCategory = Object.groupBy(data, el => el.category);
-        const categoriesOrder = Object.values(CATEGORIES);
-
-        return Object.entries(dataByCategory)
-            .sort(([key1], [key2]) => categoriesOrder.indexOf(key1) - categoriesOrder.indexOf(key2))
-            .map(([key, values]) =>
-                (<div
-                    key={key}
-                    className={styles.libraryCategory}
-                >
-                    {key === 'undefined' ?
-                        null :
-                        <span className={styles.libraryCategoryTitle}>
-                            {this.props.intl.formatMessage(messages[key])}
-                        </span>
-                    }
-                    <div
-                        className={styles.libraryCategoryItems}
-                    >
-                        {values.map(item => this.renderElement(item))}
-                    </div>
-                </div>));
+        return data.map(item => this.renderElement(item));
     }
     render () {
         return (
@@ -323,7 +275,6 @@ LibraryComponent.propTypes = {
         /* eslint-enable react/no-unused-prop-types, lines-around-comment */
     ),
     filterable: PropTypes.bool,
-    withCategories: PropTypes.bool,
     id: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
     onItemMouseEnter: PropTypes.func,

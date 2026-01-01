@@ -25,8 +25,6 @@ import Watermark from '../../containers/watermark.jsx';
 
 import Backpack from '../../containers/backpack.jsx';
 import WebGlModal from '../../containers/webgl-modal.jsx';
-import TipsLibrary from '../../containers/tips-library.jsx';
-import Cards from '../../containers/cards.jsx';
 import Alerts from '../../containers/alerts.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
@@ -73,7 +71,6 @@ const GUIComponent = props => {
         backpackVisible,
         blocksId,
         blocksTabVisible,
-        cardsVisible,
         canChangeLanguage,
         canChangeTheme,
         canCreateNew,
@@ -134,7 +131,6 @@ const GUIComponent = props => {
         targetIsStage,
         telemetryModalVisible,
         theme,
-        tipsLibraryVisible,
         urlLoaderModalVisible,
         closeUrlLoaderModal,
         onUrlLoaderSubmit,
@@ -216,12 +212,6 @@ const GUIComponent = props => {
                 {isRendererSupported ? null : (
                     <WebGlModal isRtl={isRtl} />
                 )}
-                {tipsLibraryVisible ? (
-                    <TipsLibrary />
-                ) : null}
-                {cardsVisible ? (
-                    <Cards />
-                ) : null}
                 {alertsVisible ? (
                     <Alerts className={styles.alertsContainer} />
                 ) : null}
@@ -453,7 +443,6 @@ GUIComponent.propTypes = {
     canSave: PropTypes.bool,
     canShare: PropTypes.bool,
     canUseCloud: PropTypes.bool,
-    cardsVisible: PropTypes.bool,
     children: PropTypes.node,
     blockDisplayModalVisible: PropTypes.bool,
     costumeLibraryVisible: PropTypes.bool,
@@ -501,7 +490,6 @@ GUIComponent.propTypes = {
     targetIsStage: PropTypes.bool,
     telemetryModalVisible: PropTypes.bool,
     theme: PropTypes.string,
-    tipsLibraryVisible: PropTypes.bool,
     urlLoaderModalVisible: PropTypes.bool,
     closeUrlLoaderModal: PropTypes.func,
     onUrlLoaderSubmit: PropTypes.func,

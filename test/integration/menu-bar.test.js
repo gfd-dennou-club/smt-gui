@@ -154,7 +154,7 @@ describe('Menu bar settings', () => {
             .window()
             .setSize(1024, 768);
 
-        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        const collapsibleMenus = ['Settings', 'File', 'Edit'];
         for (const menu of collapsibleMenus) {
             const settingsMenu = await findByText(menu, scope.menuBar);
             expect(await settingsMenu.isDisplayed()).toBe(false);
@@ -167,7 +167,7 @@ describe('Menu bar settings', () => {
             .window()
             .setSize(1200, 768);
 
-        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        const collapsibleMenus = ['Settings', 'File', 'Edit'];
         for (const menu of collapsibleMenus) {
             const settingsMenu = await findByText(menu, scope.menuBar);
             expect(await settingsMenu.isDisplayed()).toBe(true);
@@ -230,7 +230,7 @@ describe('Menu bar settings', () => {
             .window()
             .setSize(1024, 768);
 
-        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        const collapsibleMenus = ['Settings', 'File', 'Edit'];
         for (const menu of collapsibleMenus) {
             const settingsMenu = await findByText(menu, scope.menuBar);
             expect(await settingsMenu.isDisplayed()).toBe(false);
@@ -243,7 +243,7 @@ describe('Menu bar settings', () => {
             .window()
             .setSize(1200, 768);
 
-        const collapsibleMenus = ['Settings', 'File', 'Edit', 'Tutorials'];
+        const collapsibleMenus = ['Settings', 'File', 'Edit'];
         for (const menu of collapsibleMenus) {
             const settingsMenu = await findByText(menu, scope.menuBar);
             expect(await settingsMenu.isDisplayed()).toBe(true);

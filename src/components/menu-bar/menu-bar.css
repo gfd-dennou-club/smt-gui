@@ -228,7 +228,7 @@
 }
 
 @media only screen and (max-width: 1024px) {
-    .tutorials-label, .collapsible-label, .debug-label{
+    .collapsible-label, .debug-label{
         display: none;
     }
 

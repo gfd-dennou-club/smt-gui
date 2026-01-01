@@ -91,6 +91,7 @@ import collectMetadata from '../../lib/collect-metadata';
 
 import styles from './menu-bar.css';
 
+import helpIcon from '../../lib/assets/icon--tutorials.svg';
 import mystuffIcon from './icon--mystuff.png';
 import profileIcon from './profile-hatti.png';
 import remixIcon from './icon--remix.svg';
@@ -108,6 +109,11 @@ import {updateRubyCodeTarget} from '../../reducers/ruby-code';
 import sharedMessages from '../../lib/shared-messages';
 
 const ariaMessages = defineMessages({
+    learn: {
+        id: 'gui.menuBar.learn',
+        defaultMessage: 'Learn',
+        description: 'accessibility text for the learn button'
+    },
     debug: {
         id: 'gui.menuBar.debug',
         defaultMessage: 'Debug',
@@ -212,7 +218,8 @@ class MenuBar extends React.Component {
             'handleClickLoadFromUrl',
             'handleSaveDirectlyToGoogleDrive',
             'handleExtensionAdded',
-            'handleClickKoshienEntryForm'
+            'handleClickKoshienEntryForm',
+            'handleClickLearn'
         ]);
     }
     componentDidMount () {
@@ -341,6 +348,9 @@ class MenuBar extends React.Component {
     handleClickKoshienEntryForm () {
         this.props.onRequestCloseKoshien();
         window.open('https://smalruby-koshien.netlab.jp/entry-form.html', '_blank', 'noopener,noreferrer');
+    }
+    handleClickLearn () {
+        window.open('https://github.com/smalruby/smalruby.jp/wiki/study', '_blank', 'noopener,noreferrer');
     }
     getSaveAIAsHandler (downloadProjectCallback) {
         return () => {
@@ -835,6 +845,19 @@ class MenuBar extends React.Component {
                     </div>
                     <Divider className={classNames(styles.divider)} />
                     <div className={styles.fileGroup}>
+                        <div
+                            aria-label={this.props.intl.formatMessage(ariaMessages.learn)}
+                            className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable)}
+                            onClick={this.handleClickLearn}
+                        >
+                            <img
+                                className={styles.helpIcon}
+                                src={helpIcon}
+                            />
+                            <span className={styles.learnLabel}>
+                                <FormattedMessage {...ariaMessages.learn} />
+                            </span>
+                        </div>
                         <div
                             aria-label={this.props.intl.formatMessage(ariaMessages.debug)}
                             className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable)}

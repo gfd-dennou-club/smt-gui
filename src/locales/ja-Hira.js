@@ -77,6 +77,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.copyUrl': 'URLのこぴー',
     'gui.smalruby3.blockDisplayModal.saveToFile': 'ふぁいるにせってい',
     'gui.menuBar.blockDisplay': 'ブロックひょうじ...',
+    'gui.menuBar.learn': 'まなぶ',
     'gui.menuBar.koshienEntryForm': 'さんかもうしこみ',
 
     // Block Display Modal - Block Messages (Hiragana)

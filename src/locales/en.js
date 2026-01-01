@@ -30,7 +30,6 @@ export default {
     'mesh.joinedMesh': 'Joined Mesh [{ MESH_ID }]',
     'gui.smalruby3.extension.mesh.connectingMessage': 'Connecting',
     'gui.smalruby3.extension.meshV2.name': 'Mesh V2',
-    'gui.smalruby3.extension.meshV2.connectingMessage': 'Connecting to Mesh network',
     'mesh.hostPeripheralNameV2': 'Become Mesh Host [{ MESH_ID }]',
     'mesh.clientPeripheralNameV2': 'Join Mesh [{ MESH_ID }]',
     'mesh.notConnectedV2': 'Not connected (Mesh)',

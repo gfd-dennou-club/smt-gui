@@ -79,7 +79,6 @@ export default {
     'mesh.joinedMesh': 'メッシュに参加しました 【{ MESH_ID }】',
     'gui.smalruby3.extension.mesh.connectingMessage': 'メッシュのネットワークに接続しています',
     'gui.smalruby3.extension.meshV2.name': 'メッシュ V2',
-    'gui.smalruby3.extension.meshV2.connectingMessage': 'メッシュのネットワークに接続しています',
     'mesh.hostPeripheralNameV2': 'メッシュのホストになる 【{ MESH_ID }】',
     'mesh.clientPeripheralNameV2': 'メッシュに参加する 【{ MESH_ID }】',
     'mesh.notConnectedV2': 'メッシュに接続していません',

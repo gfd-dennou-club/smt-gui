@@ -395,8 +395,8 @@ const extensions = [
         connectingMessage: (
             <FormattedMessage
                 defaultMessage="Connecting"
-                description="Message to help people connect to Mesh V2 network."
-                id="gui.smalruby3.extension.meshV2.connectingMessage"
+                description="Message to help people connect to Mesh network."
+                id="gui.smalruby3.extension.mesh.connectingMessage"
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/MeshV2'

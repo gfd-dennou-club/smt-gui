@@ -123,6 +123,7 @@ export default {
     'gui.smalruby3.blockDisplayModal.copyUrl': 'URLのコピー',
     'gui.smalruby3.blockDisplayModal.saveToFile': 'ファイルに設定',
     'gui.menuBar.blockDisplay': 'ブロック表示...',
+    'gui.menuBar.learn': '学ぶ',
 
     // Block Display Modal - Block Messages
     // Motion blocks

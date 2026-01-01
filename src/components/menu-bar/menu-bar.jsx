@@ -76,6 +76,9 @@ import {
     openKoshienMenu,
     closeKoshienMenu,
     koshienMenuOpen,
+    openMeshV2Menu,
+    closeMeshV2Menu,
+    meshV2MenuOpen,
     openLoginMenu,
     closeLoginMenu,
     loginMenuOpen,
@@ -101,6 +104,8 @@ import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
 import koshienIcon from './icon--koshien.svg';
+import meshConnectedIcon from './icon--mesh-connected.png';
+import meshDisconnectedIcon from './icon--mesh-disconnected.png';
 
 import smalrubyLogo from './hatti.svg';
 
@@ -219,6 +224,7 @@ class MenuBar extends React.Component {
             'handleSaveDirectlyToGoogleDrive',
             'handleExtensionAdded',
             'handleClickKoshienEntryForm',
+            'handleMeshV2MenuClick',
             'handleClickLearn'
         ]);
     }
@@ -242,6 +248,42 @@ class MenuBar extends React.Component {
         // Dispatch Redux action to trigger re-render
         if (this.props.onExtensionLoaded) {
             this.props.onExtensionLoaded();
+        }
+    }
+    getMeshV2Status () {
+        const vm = this.props.vm;
+        if (!vm.runtime || !vm.runtime.extensionManager) {
+            return {loaded: false};
+        }
+
+        const isLoaded = vm.runtime.extensionManager.isExtensionLoaded('meshV2');
+        if (!isLoaded) {
+            return {loaded: false};
+        }
+
+        // Get extension instance
+        const extension = vm.runtime.ext_meshV2;
+        if (!extension) {
+            return {loaded: true, connected: false};
+        }
+
+        const connected = extension.connectionState === 'connected';
+        const message = extension.connectedMessage();
+
+        return {
+            loaded: true,
+            connected: connected,
+            message: message,
+            icon: connected ? meshConnectedIcon : meshDisconnectedIcon
+        };
+    }
+    handleMeshV2MenuClick () {
+        // Open connection modal
+        if (this.props.vm.runtime && this.props.vm.runtime.emit) {
+            this.props.vm.runtime.emit(
+                this.props.vm.runtime.constructor.PERIPHERAL_SCAN_START,
+                'meshV2'
+            );
         }
     }
     handleClickNew () {
@@ -968,6 +1010,48 @@ class MenuBar extends React.Component {
                                 </MenuBarMenu>
                             </div>
                         )}
+                        {(() => {
+                            const meshV2Status = this.getMeshV2Status();
+                            if (!meshV2Status.loaded) return null;
+
+                            return (
+                                <div
+                                    className={classNames(styles.menuBarItem, styles.hoverable, {
+                                        [styles.active]: this.props.meshV2MenuOpen
+                                    })}
+                                >
+                                    <img
+                                        className={styles.meshIcon}
+                                        src={meshV2Status.icon}
+                                    />
+                                    <div
+                                        className={classNames(
+                                            styles.collapsibleMenuBarItem
+                                        )}
+                                        onMouseUp={this.props.onClickMeshV2}
+                                    >
+                                        <span className={styles.collapsibleLabel}>
+                                            <FormattedMessage
+                                                defaultMessage="Mesh"
+                                                description="Label for Mesh V2 menu"
+                                                id="gui.menuBar.meshV2"
+                                            />
+                                        </span>
+                                        <img src={dropdownCaret} />
+                                        <MenuBarMenu
+                                            className={classNames(styles.menuBarMenu)}
+                                            open={this.props.meshV2MenuOpen}
+                                            place={this.props.isRtl ? 'left' : 'right'}
+                                            onRequestClose={this.props.onRequestCloseMeshV2}
+                                        >
+                                            <MenuItem onClick={this.handleMeshV2MenuClick}>
+                                                {meshV2Status.message}
+                                            </MenuItem>
+                                        </MenuBarMenu>
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
 
@@ -1247,6 +1331,7 @@ MenuBar.propTypes = {
     locale: PropTypes.string.isRequired,
     loginMenuOpen: PropTypes.bool,
     logo: PropTypes.string,
+    meshV2MenuOpen: PropTypes.bool,
     mode1920: PropTypes.bool,
     mode1990: PropTypes.bool,
     mode2020: PropTypes.bool,
@@ -1268,6 +1353,7 @@ MenuBar.propTypes = {
     onClickKoshien: PropTypes.func,
     onClickLogin: PropTypes.func,
     onClickLogo: PropTypes.func,
+    onClickMeshV2: PropTypes.func,
     onClickMode: PropTypes.func,
     onClickNew: PropTypes.func,
     onClickRemix: PropTypes.func,
@@ -1287,6 +1373,7 @@ MenuBar.propTypes = {
     onRequestCloseFile: PropTypes.func,
     onRequestCloseKoshien: PropTypes.func,
     onRequestCloseLogin: PropTypes.func,
+    onRequestCloseMeshV2: PropTypes.func,
     onRequestCloseMode: PropTypes.func,
     onRequestCloseSettings: PropTypes.func,
     onRequestOpenAbout: PropTypes.func,
@@ -1332,6 +1419,7 @@ const mapStateToProps = (state, ownProps) => {
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
         koshienMenuOpen: koshienMenuOpen(state),
+        meshV2MenuOpen: meshV2MenuOpen(state),
         extensionLoadCounter: state.scratchGui.koshienFile.extensionLoadCounter,
         aiSaveStatus: state.scratchGui.koshienFile.aiSaveStatus,
         googleDriveFile: state.scratchGui.googleDriveFile,
@@ -1371,6 +1459,8 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseEdit: () => dispatch(closeEditMenu()),
     onClickKoshien: () => dispatch(openKoshienMenu()),
     onRequestCloseKoshien: () => dispatch(closeKoshienMenu()),
+    onClickMeshV2: () => dispatch(openMeshV2Menu()),
+    onRequestCloseMeshV2: () => dispatch(closeMeshV2Menu()),
     onClickLogin: () => dispatch(openLoginMenu()),
     onRequestCloseLogin: () => dispatch(closeLoginMenu()),
     onClickMode: () => dispatch(openModeMenu()),

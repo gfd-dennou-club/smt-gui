@@ -219,6 +219,12 @@
     vertical-align: middle;
 }
 
+.mesh-icon {
+    width: 21px;
+    height: 21px;
+    margin-right: 0.5rem;
+}
+
 .collapsible-label {
     margin: 0 .5rem 0 .25rem;
 }

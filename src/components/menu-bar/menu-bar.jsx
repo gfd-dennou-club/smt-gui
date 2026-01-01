@@ -34,7 +34,8 @@ import GoogleDriveSaverHOC from '../../containers/google-drive-saver-hoc.jsx';
 import GoogleDriveSaveDialog from '../google-drive-save-dialog/google-drive-save-dialog.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
-import {openDebugModal, openKoshienTestModal} from '../../reducers/modals';
+import {openDebugModal, openKoshienTestModal, openConnectionModal} from '../../reducers/modals';
+import {setConnectionModalExtensionId} from '../../reducers/connection-modal';
 import {openBlockDisplayModal} from '../../reducers/block-display';
 import {setPlayer} from '../../reducers/mode';
 import {
@@ -309,16 +310,13 @@ class MenuBar extends React.Component {
         };
     }
     handleMeshV2MenuClick () {
+        console.log('MenuBar: handleMeshV2MenuClick triggered');
         // Close the Mesh V2 menu
         this.props.onRequestCloseMeshV2();
 
         // Open connection modal
-        if (this.props.vm.runtime && this.props.vm.runtime.emit) {
-            this.props.vm.runtime.emit(
-                this.props.vm.runtime.constructor.PERIPHERAL_SCAN_START,
-                'meshV2'
-            );
-        }
+        console.log('MenuBar: Opening connection modal for meshV2');
+        this.props.onOpenConnectionModal('meshV2');
     }
     handleClickNew () {
         // if the project is dirty, and user owns the project, we will autosave.
@@ -1478,6 +1476,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     autoUpdateProject: () => dispatch(autoUpdateProject()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
+    onOpenConnectionModal: id => {
+        dispatch(setConnectionModalExtensionId(id));
+        dispatch(openConnectionModal());
+    },
     onOpenBlockDisplayModal: () => dispatch(openBlockDisplayModal()),
     onOpenKoshienTestModal: () => dispatch(openKoshienTestModal()),
     onClickAccount: () => dispatch(openAccountMenu()),

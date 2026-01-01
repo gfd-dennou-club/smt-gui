@@ -234,6 +234,9 @@ class MenuBar extends React.Component {
         // Listen for extension load events
         if (this.props.vm.runtime) {
             this.props.vm.runtime.on('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
         }
     }
     componentWillUnmount () {
@@ -242,6 +245,9 @@ class MenuBar extends React.Component {
         // Remove extension listener
         if (this.props.vm.runtime) {
             this.props.vm.runtime.off('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
         }
     }
     handleExtensionAdded () {
@@ -262,13 +268,13 @@ class MenuBar extends React.Component {
         }
 
         // Get extension instance
-        const extension = vm.runtime.ext_meshV2;
+        const extension = vm.runtime.peripheralExtensions.meshV2;
         if (!extension) {
             return {loaded: true, connected: false};
         }
 
         const connected = extension.connectionState === 'connected';
-        const message = extension.connectedMessage();
+        const message = extension.menuMessage();
 
         return {
             loaded: true,
@@ -278,6 +284,9 @@ class MenuBar extends React.Component {
         };
     }
     handleMeshV2MenuClick () {
+        // Close the Mesh V2 menu
+        this.props.onRequestCloseMeshV2();
+
         // Open connection modal
         if (this.props.vm.runtime && this.props.vm.runtime.emit) {
             this.props.vm.runtime.emit(
@@ -913,6 +922,42 @@ class MenuBar extends React.Component {
                                 <FormattedMessage {...ariaMessages.debug} />
                             </span>
                         </div>
+                        {(() => {
+                            const meshV2Status = this.getMeshV2Status();
+                            if (!meshV2Status.loaded) return null;
+
+                            return (
+                                <div
+                                    className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable, {
+                                        [styles.active]: this.props.meshV2MenuOpen
+                                    })}
+                                    onMouseUp={this.props.onClickMeshV2}
+                                >
+                                    <img
+                                        className={styles.meshIcon}
+                                        src={meshV2Status.icon}
+                                    />
+                                    <span className={styles.collapsibleLabel}>
+                                        <FormattedMessage
+                                            defaultMessage="Mesh"
+                                            description="Label for Mesh V2 menu"
+                                            id="gui.menuBar.meshV2"
+                                        />
+                                    </span>
+                                    <img src={dropdownCaret} />
+                                    <MenuBarMenu
+                                        className={classNames(styles.menuBarMenu)}
+                                        open={this.props.meshV2MenuOpen}
+                                        place={this.props.isRtl ? 'left' : 'right'}
+                                        onRequestClose={this.props.onRequestCloseMeshV2}
+                                    >
+                                        <MenuItem onClick={this.handleMeshV2MenuClick}>
+                                            {meshV2Status.message}
+                                        </MenuItem>
+                                    </MenuBarMenu>
+                                </div>
+                            );
+                        })()}
                         {this.props.vm.extensionManager &&
                             this.props.vm.extensionManager.isExtensionLoaded('koshien') && (
                             <div
@@ -1010,48 +1055,6 @@ class MenuBar extends React.Component {
                                 </MenuBarMenu>
                             </div>
                         )}
-                        {(() => {
-                            const meshV2Status = this.getMeshV2Status();
-                            if (!meshV2Status.loaded) return null;
-
-                            return (
-                                <div
-                                    className={classNames(styles.menuBarItem, styles.hoverable, {
-                                        [styles.active]: this.props.meshV2MenuOpen
-                                    })}
-                                >
-                                    <img
-                                        className={styles.meshIcon}
-                                        src={meshV2Status.icon}
-                                    />
-                                    <div
-                                        className={classNames(
-                                            styles.collapsibleMenuBarItem
-                                        )}
-                                        onMouseUp={this.props.onClickMeshV2}
-                                    >
-                                        <span className={styles.collapsibleLabel}>
-                                            <FormattedMessage
-                                                defaultMessage="Mesh"
-                                                description="Label for Mesh V2 menu"
-                                                id="gui.menuBar.meshV2"
-                                            />
-                                        </span>
-                                        <img src={dropdownCaret} />
-                                        <MenuBarMenu
-                                            className={classNames(styles.menuBarMenu)}
-                                            open={this.props.meshV2MenuOpen}
-                                            place={this.props.isRtl ? 'left' : 'right'}
-                                            onRequestClose={this.props.onRequestCloseMeshV2}
-                                        >
-                                            <MenuItem onClick={this.handleMeshV2MenuClick}>
-                                                {meshV2Status.message}
-                                            </MenuItem>
-                                        </MenuBarMenu>
-                                    </div>
-                                </div>
-                            );
-                        })()}
                     </div>
                 </div>
 

@@ -251,6 +251,7 @@ class MenuBar extends React.Component {
         }
     }
     handleExtensionAdded () {
+        console.log('MenuBar: handleExtensionAdded triggered');
         // Dispatch Redux action to trigger re-render
         if (this.props.onExtensionLoaded) {
             this.props.onExtensionLoaded();
@@ -259,22 +260,34 @@ class MenuBar extends React.Component {
     getMeshV2Status () {
         const vm = this.props.vm;
         if (!vm.runtime || !vm.runtime.extensionManager) {
+            console.log('MenuBar: getMeshV2Status - vm.runtime or extensionManager missing');
             return {loaded: false};
         }
 
+        const loadedExtensions = Array.from(vm.runtime.extensionManager._loadedExtensions.keys());
+        console.log('MenuBar: getMeshV2Status - Loaded extensions:', loadedExtensions);
+
         const isLoaded = vm.runtime.extensionManager.isExtensionLoaded('meshV2');
+        console.log('MenuBar: getMeshV2Status - isLoaded(meshV2):', isLoaded);
+        
         if (!isLoaded) {
             return {loaded: false};
         }
 
         // Get extension instance
+        const peripheralExtensions = Object.keys(vm.runtime.peripheralExtensions || {});
+        console.log('MenuBar: getMeshV2Status - Peripheral extensions:', peripheralExtensions);
+
         const extension = vm.runtime.peripheralExtensions.meshV2;
+        console.log('MenuBar: getMeshV2Status - meshV2 extension instance:', extension);
+
         if (!extension) {
             return {loaded: true, connected: false};
         }
 
         const connected = extension.connectionState === 'connected';
         const message = extension.menuMessage();
+        console.log('MenuBar: getMeshV2Status - connectionState:', extension.connectionState, 'connected:', connected, 'message:', message);
 
         return {
             loaded: true,
@@ -523,6 +536,7 @@ class MenuBar extends React.Component {
         };
     }
     render () {
+        console.log('MenuBar: render called');
         const saveNowMessage = (
             <FormattedMessage
                 defaultMessage="Save now"

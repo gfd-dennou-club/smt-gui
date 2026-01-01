@@ -370,6 +370,40 @@ const extensions = [
     {
         name: (
             <FormattedMessage
+                defaultMessage="Mesh V2"
+                description="Name for the 'Mesh V2' extension"
+                id="gui.smalruby3.extension.meshV2.name"
+            />
+        ),
+        extensionId: 'meshV2',
+        iconURL: meshV2IconURL,
+        insetIconURL: meshV2InsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Allowing users to interact over a computer network."
+                description="Description for the 'Mesh' extension"
+                id="gui.smalruby3.extension.mesh.description"
+            />
+        ),
+        featured: true,
+        bluetoothRequired: false,
+        internetConnectionRequired: true,
+        launchPeripheralConnectionFlow: true,
+        useAutoScan: false,
+        connectionIconURL: meshV2ConnectionIconURL,
+        connectionSmallIconURL: meshV2ConnectionSmallIconURL,
+        connectingMessage: (
+            <FormattedMessage
+                defaultMessage="Connecting"
+                description="Message to help people connect to Mesh V2 network."
+                id="gui.smalruby3.extension.meshV2.connectingMessage"
+            />
+        ),
+        helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/MeshV2'
+    },
+    {
+        name: (
+            <FormattedMessage
                 defaultMessage="Smalrubot S1"
                 description="Name for the 'Smalrubot S1' extension"
                 id="gui.smalruby3.extension.smalrubotS1.name"
@@ -401,40 +435,6 @@ const extensions = [
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/SmalrubotS1'
-    },
-    {
-        name: (
-            <FormattedMessage
-                defaultMessage="Mesh V2"
-                description="Name for the 'Mesh V2' extension"
-                id="gui.smalruby3.extension.meshV2.name"
-            />
-        ),
-        extensionId: 'meshV2',
-        iconURL: meshV2IconURL,
-        insetIconURL: meshV2InsetIconURL,
-        description: (
-            <FormattedMessage
-                defaultMessage="GraphQL-based Mesh V2 extension"
-                description="Description for the 'Mesh V2' extension"
-                id="gui.smalruby3.extension.meshV2.description"
-            />
-        ),
-        featured: true,
-        bluetoothRequired: false,
-        internetConnectionRequired: true,
-        launchPeripheralConnectionFlow: true,
-        useAutoScan: false,
-        connectionIconURL: meshV2ConnectionIconURL,
-        connectionSmallIconURL: meshV2ConnectionSmallIconURL,
-        connectingMessage: (
-            <FormattedMessage
-                defaultMessage="Connecting"
-                description="Message to help people connect to Mesh V2 network."
-                id="gui.smalruby3.extension.meshV2.connectingMessage"
-            />
-        ),
-        helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/MeshV2'
     }
 ];
 

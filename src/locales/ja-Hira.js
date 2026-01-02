@@ -1,5 +1,6 @@
 export default {
     'gui.modal.reload': 'さいよみこみ',
+    'gui.menuBar.meshV2': 'メッシュ',
     'gui.menuBar.loadFromUrl': 'Scratchからよみこむ',
     'gui.urlLoader.loadError': 'プロジェクトURLのよみこみにしっぱいしました。',
     'gui.urlLoader.invalidUrl': 'ゆうこうなScratchプロジェクトURLをにゅうりょくしてください。',
@@ -43,6 +44,9 @@ export default {
     'mesh.registeredHost': 'ホストとしてメッシュにとうろくしました 【{ MESH_ID }】',
     'mesh.notConnected': 'メッシュにせつぞくしていません',
     'mesh.joinedMesh': 'メッシュにさんかしました 【{ MESH_ID }】',
+    'mesh.notConnectedMenu': '！せつぞくしていません',
+    'mesh.registeredHostMenu': '✔【{ MESH_ID }】 ⏳️{ EXPIRES_AT }まで',
+    'mesh.joinedMeshMenu': '✔【{ MESH_ID }】 ⏳️{ EXPIRES_AT }まで',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1 (エス1)',
     'gui.smalruby3.extension.smalrubotS1.description': 'スモウルボットS1 (エス1) をせいぎょする。',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'スモウルボットS1 (エス1) にせつぞくしています。',

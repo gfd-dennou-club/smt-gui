@@ -34,7 +34,8 @@ import GoogleDriveSaverHOC from '../../containers/google-drive-saver-hoc.jsx';
 import GoogleDriveSaveDialog from '../google-drive-save-dialog/google-drive-save-dialog.jsx';
 import SettingsMenu from './settings-menu.jsx';
 
-import {openDebugModal, openKoshienTestModal} from '../../reducers/modals';
+import {openDebugModal, openKoshienTestModal, openConnectionModal} from '../../reducers/modals';
+import {setConnectionModalExtensionId} from '../../reducers/connection-modal';
 import {openBlockDisplayModal} from '../../reducers/block-display';
 import {setPlayer} from '../../reducers/mode';
 import {
@@ -76,6 +77,9 @@ import {
     openKoshienMenu,
     closeKoshienMenu,
     koshienMenuOpen,
+    openMeshV2Menu,
+    closeMeshV2Menu,
+    meshV2MenuOpen,
     openLoginMenu,
     closeLoginMenu,
     loginMenuOpen,
@@ -101,6 +105,8 @@ import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 import debugIcon from '../debug-modal/icons/icon--debug.svg';
 import koshienIcon from './icon--koshien.svg';
+import meshConnectedIcon from './icon--mesh-connected.png';
+import meshDisconnectedIcon from './icon--mesh-disconnected.png';
 
 import smalrubyLogo from './hatti.svg';
 
@@ -219,6 +225,7 @@ class MenuBar extends React.Component {
             'handleSaveDirectlyToGoogleDrive',
             'handleExtensionAdded',
             'handleClickKoshienEntryForm',
+            'handleMeshV2MenuClick',
             'handleClickLearn'
         ]);
     }
@@ -228,6 +235,9 @@ class MenuBar extends React.Component {
         // Listen for extension load events
         if (this.props.vm.runtime) {
             this.props.vm.runtime.on('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
         }
     }
     componentWillUnmount () {
@@ -236,6 +246,9 @@ class MenuBar extends React.Component {
         // Remove extension listener
         if (this.props.vm.runtime) {
             this.props.vm.runtime.off('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
         }
     }
     handleExtensionAdded () {
@@ -243,6 +256,52 @@ class MenuBar extends React.Component {
         if (this.props.onExtensionLoaded) {
             this.props.onExtensionLoaded();
         }
+    }
+    getMeshV2Status () {
+        const vm = this.props.vm;
+        
+        if (!vm) return {loaded: false};
+
+        // In Smalruby 3 / Scratch 3, extensionManager is directly on the vm instance
+        const extensionManager = vm.extensionManager;
+        if (!extensionManager) {
+            return {loaded: false};
+        }
+
+        const isLoaded = extensionManager.isExtensionLoaded('meshV2');
+        
+        if (!isLoaded) {
+            return {loaded: false};
+        }
+
+        // peripheralExtensions is on vm.runtime
+        const runtime = vm.runtime;
+        if (!runtime || !runtime.peripheralExtensions) {
+            return {loaded: true, connected: false};
+        }
+
+        const extension = runtime.peripheralExtensions.meshV2;
+
+        if (!extension) {
+            return {loaded: true, connected: false};
+        }
+
+        const connected = extension.connectionState === 'connected';
+        const message = extension.menuMessage();
+
+        return {
+            loaded: true,
+            connected: connected,
+            message: message,
+            icon: connected ? meshConnectedIcon : meshDisconnectedIcon
+        };
+    }
+    handleMeshV2MenuClick () {
+        // Close the Mesh V2 menu
+        this.props.onRequestCloseMeshV2();
+
+        // Open connection modal
+        this.props.onOpenConnectionModal('meshV2');
     }
     handleClickNew () {
         // if the project is dirty, and user owns the project, we will autosave.
@@ -871,6 +930,42 @@ class MenuBar extends React.Component {
                                 <FormattedMessage {...ariaMessages.debug} />
                             </span>
                         </div>
+                        {(() => {
+                            const meshV2Status = this.getMeshV2Status();
+                            if (!meshV2Status.loaded) return null;
+
+                            return (
+                                <div
+                                    className={classNames(styles.menuBarItem, styles.noOffset, styles.hoverable, {
+                                        [styles.active]: this.props.meshV2MenuOpen
+                                    })}
+                                    onMouseUp={this.props.onClickMeshV2}
+                                >
+                                    <img
+                                        className={styles.meshIcon}
+                                        src={meshV2Status.icon}
+                                    />
+                                    <span className={styles.collapsibleLabel}>
+                                        <FormattedMessage
+                                            defaultMessage="Mesh"
+                                            description="Label for Mesh V2 menu"
+                                            id="gui.menuBar.meshV2"
+                                        />
+                                    </span>
+                                    <img src={dropdownCaret} />
+                                    <MenuBarMenu
+                                        className={classNames(styles.menuBarMenu)}
+                                        open={this.props.meshV2MenuOpen}
+                                        place={this.props.isRtl ? 'left' : 'right'}
+                                        onRequestClose={this.props.onRequestCloseMeshV2}
+                                    >
+                                        <MenuItem onClick={this.handleMeshV2MenuClick}>
+                                            {meshV2Status.message}
+                                        </MenuItem>
+                                    </MenuBarMenu>
+                                </div>
+                            );
+                        })()}
                         {this.props.vm.extensionManager &&
                             this.props.vm.extensionManager.isExtensionLoaded('koshien') && (
                             <div
@@ -1247,6 +1342,7 @@ MenuBar.propTypes = {
     locale: PropTypes.string.isRequired,
     loginMenuOpen: PropTypes.bool,
     logo: PropTypes.string,
+    meshV2MenuOpen: PropTypes.bool,
     mode1920: PropTypes.bool,
     mode1990: PropTypes.bool,
     mode2020: PropTypes.bool,
@@ -1268,6 +1364,7 @@ MenuBar.propTypes = {
     onClickKoshien: PropTypes.func,
     onClickLogin: PropTypes.func,
     onClickLogo: PropTypes.func,
+    onClickMeshV2: PropTypes.func,
     onClickMode: PropTypes.func,
     onClickNew: PropTypes.func,
     onClickRemix: PropTypes.func,
@@ -1277,8 +1374,9 @@ MenuBar.propTypes = {
     onExtensionLoaded: PropTypes.func,
     onLogOut: PropTypes.func,
     onOpenRegistration: PropTypes.func,
-    onOpenDebugModal: PropTypes.func,
     onOpenBlockDisplayModal: PropTypes.func,
+    onOpenConnectionModal: PropTypes.func,
+    onOpenDebugModal: PropTypes.func,
     onOpenKoshienTestModal: PropTypes.func,
     onProjectTelemetryEvent: PropTypes.func,
     onRequestCloseAbout: PropTypes.func,
@@ -1287,6 +1385,7 @@ MenuBar.propTypes = {
     onRequestCloseFile: PropTypes.func,
     onRequestCloseKoshien: PropTypes.func,
     onRequestCloseLogin: PropTypes.func,
+    onRequestCloseMeshV2: PropTypes.func,
     onRequestCloseMode: PropTypes.func,
     onRequestCloseSettings: PropTypes.func,
     onRequestOpenAbout: PropTypes.func,
@@ -1332,6 +1431,7 @@ const mapStateToProps = (state, ownProps) => {
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
         koshienMenuOpen: koshienMenuOpen(state),
+        meshV2MenuOpen: meshV2MenuOpen(state),
         extensionLoadCounter: state.scratchGui.koshienFile.extensionLoadCounter,
         aiSaveStatus: state.scratchGui.koshienFile.aiSaveStatus,
         googleDriveFile: state.scratchGui.googleDriveFile,
@@ -1361,6 +1461,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     autoUpdateProject: () => dispatch(autoUpdateProject()),
     onOpenDebugModal: () => dispatch(openDebugModal()),
+    onOpenConnectionModal: id => {
+        dispatch(setConnectionModalExtensionId(id));
+        dispatch(openConnectionModal());
+    },
     onOpenBlockDisplayModal: () => dispatch(openBlockDisplayModal()),
     onOpenKoshienTestModal: () => dispatch(openKoshienTestModal()),
     onClickAccount: () => dispatch(openAccountMenu()),
@@ -1371,6 +1475,8 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseEdit: () => dispatch(closeEditMenu()),
     onClickKoshien: () => dispatch(openKoshienMenu()),
     onRequestCloseKoshien: () => dispatch(closeKoshienMenu()),
+    onClickMeshV2: () => dispatch(openMeshV2Menu()),
+    onRequestCloseMeshV2: () => dispatch(closeMeshV2Menu()),
     onClickLogin: () => dispatch(openLoginMenu()),
     onRequestCloseLogin: () => dispatch(closeLoginMenu()),
     onClickMode: () => dispatch(openModeMenu()),

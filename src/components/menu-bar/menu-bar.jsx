@@ -252,7 +252,6 @@ class MenuBar extends React.Component {
         }
     }
     handleExtensionAdded () {
-        console.log('MenuBar: handleExtensionAdded triggered');
         // Dispatch Redux action to trigger re-render
         if (this.props.onExtensionLoaded) {
             this.props.onExtensionLoaded();
@@ -261,21 +260,15 @@ class MenuBar extends React.Component {
     getMeshV2Status () {
         const vm = this.props.vm;
         
-        console.log('MenuBar: getMeshV2Status - vm:', vm);
         if (!vm) return {loaded: false};
 
         // In Smalruby 3 / Scratch 3, extensionManager is directly on the vm instance
         const extensionManager = vm.extensionManager;
         if (!extensionManager) {
-            console.log('MenuBar: getMeshV2Status - extensionManager missing on vm');
             return {loaded: false};
         }
 
-        const loadedExtensions = Array.from(extensionManager._loadedExtensions.keys());
-        console.log('MenuBar: getMeshV2Status - Loaded extensions:', loadedExtensions);
-
         const isLoaded = extensionManager.isExtensionLoaded('meshV2');
-        console.log('MenuBar: getMeshV2Status - isLoaded(meshV2):', isLoaded);
         
         if (!isLoaded) {
             return {loaded: false};
@@ -284,15 +277,10 @@ class MenuBar extends React.Component {
         // peripheralExtensions is on vm.runtime
         const runtime = vm.runtime;
         if (!runtime || !runtime.peripheralExtensions) {
-            console.log('MenuBar: getMeshV2Status - runtime or peripheralExtensions missing');
             return {loaded: true, connected: false};
         }
 
-        const peripheralExtensions = Object.keys(runtime.peripheralExtensions || {});
-        console.log('MenuBar: getMeshV2Status - Peripheral extensions:', peripheralExtensions);
-
         const extension = runtime.peripheralExtensions.meshV2;
-        console.log('MenuBar: getMeshV2Status - meshV2 extension instance:', extension);
 
         if (!extension) {
             return {loaded: true, connected: false};
@@ -300,11 +288,6 @@ class MenuBar extends React.Component {
 
         const connected = extension.connectionState === 'connected';
         const message = extension.menuMessage();
-        console.log('MenuBar: getMeshV2Status', {
-            connectionState: extension.connectionState,
-            connected,
-            message
-        });
 
         return {
             loaded: true,
@@ -314,12 +297,10 @@ class MenuBar extends React.Component {
         };
     }
     handleMeshV2MenuClick () {
-        console.log('MenuBar: handleMeshV2MenuClick triggered');
         // Close the Mesh V2 menu
         this.props.onRequestCloseMeshV2();
 
         // Open connection modal
-        console.log('MenuBar: Opening connection modal for meshV2');
         this.props.onOpenConnectionModal('meshV2');
     }
     handleClickNew () {
@@ -550,7 +531,6 @@ class MenuBar extends React.Component {
         };
     }
     render () {
-        console.log('MenuBar: render called');
         const saveNowMessage = (
             <FormattedMessage
                 defaultMessage="Save now"

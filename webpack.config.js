@@ -71,7 +71,6 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.MESH_GRAPHQL_ENDPOINT': `"${process.env.MESH_GRAPHQL_ENDPOINT || ''}"`,
         'process.env.MESH_API_KEY': `"${process.env.MESH_API_KEY || ''}"`,
         'process.env.MESH_AWS_REGION': `"${process.env.MESH_AWS_REGION || ''}"`,
-        'process.env.MESH_MAX_CONNECTION_TIME_SECONDS': `"${process.env.MESH_MAX_CONNECTION_TIME_SECONDS || ''}"`,
         'process.env.MESH_DATA_UPDATE_INTERVAL_MS': `"${process.env.MESH_DATA_UPDATE_INTERVAL_MS || ''}"`,
         'process.env.MESH_EVENT_BATCH_INTERVAL_MS': `"${process.env.MESH_EVENT_BATCH_INTERVAL_MS || ''}"`,
         'process.env.MESH_HOST_HEARTBEAT_INTERVAL_SECONDS':

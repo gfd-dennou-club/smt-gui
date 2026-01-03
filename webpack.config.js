@@ -70,7 +70,11 @@ const baseConfig = new ScratchWebpackConfigBuilder(
         'process.env.GOOGLE_API_KEY': `"${process.env.GOOGLE_API_KEY || ''}"`,
         'process.env.MESH_GRAPHQL_ENDPOINT': `"${process.env.MESH_GRAPHQL_ENDPOINT || ''}"`,
         'process.env.MESH_API_KEY': `"${process.env.MESH_API_KEY || ''}"`,
-        'process.env.MESH_AWS_REGION': `"${process.env.MESH_AWS_REGION || ''}"`
+        'process.env.MESH_AWS_REGION': `"${process.env.MESH_AWS_REGION || ''}"`,
+        'process.env.MESH_CONNECTION_TIMEOUT_MS': `"${process.env.MESH_CONNECTION_TIMEOUT_MS || ''}"`,
+        'process.env.MESH_DATA_UPDATE_INTERVAL_MS': `"${process.env.MESH_DATA_UPDATE_INTERVAL_MS || ''}"`,
+        'process.env.MESH_EVENT_BATCH_INTERVAL_MS': `"${process.env.MESH_EVENT_BATCH_INTERVAL_MS || ''}"`,
+        'process.env.MESH_HOST_HEARTBEAT_INTERVAL_MS': `"${process.env.MESH_HOST_HEARTBEAT_INTERVAL_MS || ''}"`
     }))
     .addPlugin(new CopyWebpackPlugin({
         patterns: [

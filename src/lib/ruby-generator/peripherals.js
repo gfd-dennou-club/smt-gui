@@ -41,40 +41,119 @@ export default function (Generator) {
     };
 
     //
-    // i2c
-    // 
-//    Generator.peripherals_i2c_init = function () {
-//        return `i2c = I2C.new()\n`;
-//    };
-
-
+    // I2C Sensors
     //
-    // SCD30
-    //
-    Generator.peripherals_scd30_init = function () {
-        Generator.prepares_.i2c = Generator.mctboard_i2c_init(null);
-        return `scd30 = SCD30.new(i2c)\n`;
+    Generator.peripherals_i2c_sensor_init = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        return `${name} = ${sensor}.new(i2c)\n`;
+    };
+
+    Generator.peripherals_i2c_sensor_read = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        return `${name}.read\n`;
     };
     
-    Generator.peripherals_scd30 = function (block) {
-        Generator.prepares_.i2c_scd30 = Generator.peripherals_scd30_init(null);
-        const obs = Generator.getFieldValue(block, 'OBS') || null;
-        return [`scd30.${obs}`, Generator.ORDER_ATOMIC];
+    Generator.peripherals_i2c_sensor_value = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        const target = Generator.getFieldValue(block, 'TARGET') || null;
+        return [`${name}.${target}`, Generator.ORDER_ATOMIC];
     };
 
     //
-    // DPS310
+    // Wi-Fi
     //
-    Generator.peripherals_dps310_init = function () {
-        Generator.prepares_.i2c = Generator.mctboard_i2c_init(null);
-        return `dps310 = DPS310.new(i2c)\n`;
+    Generator.peripherals_wifi_init = function () {
+        return (
+	    `wlan = WLAN.new()\n`
+	);
     };
+
+    Generator.peripherals_wifi_connect = function (block) {
+        const ssid = Generator.valueToCode(block, 'SSID', Generator.ORDER_NONE);
+        const pass = Generator.valueToCode(block, 'PASS', Generator.ORDER_NONE);
+        return (
+	    `wlan.connect(${ssid}, ${pass}) \n`
+	);
+    };
+
+    Generator.peripherals_wifi_connected = function () {
+        return [`wlan.connected?`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.peripherals_sntp_init = function () {
+        return (
+	    `sntp = SNTP.new \n`
+	);
+    };
+
+    Generator.peripherals_sntp_read = function () {
+        return (
+	    `sntp.read \n`
+	);
+    };
+
+    Generator.peripherals_sntp_date = function (block) {
+        const time = Generator.getFieldValue(block, 'TIME') || null;
+        return [`sntp.${time}`, Generator.ORDER_ATOMIC];
+    };    
     
-    Generator.peripherals_dps310 = function (block) {
-        Generator.prepares_.i2c_dps310 = Generator.peripherals_dps310_init(null);
-        const obs = Generator.getFieldValue(block, 'OBS') || null;
-        return [`dps310.${obs}`, Generator.ORDER_ATOMIC];
+    Generator.peripherals_http_get = function (block) {
+        const url = Generator.valueToCode(block, 'URL', Generator.ORDER_NONE) || null;
+        return [`HTTP.get( ${url} )`, Generator.ORDER_ATOMIC]
     };
+
+    Generator.peripherals_http_post = function (block) {
+        const url  = Generator.valueToCode(block, 'URL',  Generator.ORDER_NONE) || null;
+        const data = Generator.valueToCode(block, 'DATA', Generator.ORDER_NONE) || null;
+        return [`HTTP.post( ${url}, ${data} )`, Generator.ORDER_ATOMIC];
+    };
+
+    //
+    // SD
+    //
+    Generator.peripherals_sd_init = function (block) {
+        const pin = Generator.valueToCode(block, 'PIN', Generator.ORDER_NONE) || null;
+	const dir = Generator.valueToCode(block, 'DIR', Generator.ORDER_NONE) || null;
+        return (
+  	    `sdspi = SDSPI.new(spi, cs_pin:${pin}, mount_point:${dir})\n` 
+	);
+    };
+
+    Generator.peripherals_sd_open = function (block) {
+        const file = Generator.valueToCode(block, 'FILE', Generator.ORDER_NONE) || null;
+        const mode = Generator.getFieldValue(block, 'MODE') || null;
+        return (
+	    `fp = File.open( filename, "${mode}")\n`
+	);
+    };
+
+    Generator.peripherals_sd_close = function () {
+        return (
+	    `fp.close\n`
+	);
+    };
+
+    Generator.peripherals_sd_puts = function (block) {
+        const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
+        return (
+	    `fp.puts(${text})\n`
+	);
+    };
+
+    Generator.peripherals_sd_read = function (block) {
+        const mode = Generator.getFieldValue(block, 'MODE') || null;
+        return [`fp.${mode}`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.peripherals_puts = function (block) {
+        const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
+        return `puts( (${text}).to_s )\n`;
+    };
+
+
 
 }
 

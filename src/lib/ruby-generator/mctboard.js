@@ -235,12 +235,18 @@ export default function (Generator) {
     };
 
     Generator.mctboard_wifi_isconnected = function () {
-        return [`wlan.is_connected?`, Generator.ORDER_ATOMIC];
+        return [`wlan.connected?`, Generator.ORDER_ATOMIC];
     };
 
     Generator.mctboard_sntp_init = function () {
         return (
 	    `sntp = SNTP.new \n`
+	);
+    };
+
+    Generator.mctboard_sntp_read = function () {
+        return (
+	    `sntp.read \n`
 	);
     };
 

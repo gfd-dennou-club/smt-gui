@@ -16,6 +16,12 @@ import microcomInsetIconURL from './smt/microcom-small.png';
 import peripherals              from './smt/peripherals.png';
 import peripheralsInsetIconURL  from './smt/peripherals-small.png';
 
+//import network               from './smt/network.png';
+//import networkInsetIconURL   from './smt/network-small.png';
+
+//import fileio               from './smt/fileio.png';
+//import fileioInsetIconURL   from './smt/fileio-small.png';
+
 import rboard0               from './smt/rboard0.png'
 import rboard0InsetIconURL   from './smt/rboard0-small.png';
 
@@ -93,7 +99,7 @@ const extensions = [
         insetIconURL: microcomInsetIconURL,
         description: (
             <FormattedMessage
-                defaultMessage="Micro Computer Blocks"
+                defaultMessage="Common I/O API Blocks"
                 description="Description for the 'Microcom' extension"
                 id="gui.microcom.description"
             />
@@ -120,6 +126,48 @@ const extensions = [
         ),
         featured: true
     },
+/*    
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="Network"
+                description="Name for the 'Network' extension"
+                id="gui.network.name"
+            />
+        ),
+        extensionId: 'network',
+        iconURL: network,
+        insetIconURL: networkInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="Network"
+                description="Description for the 'network' extension"
+                id="gui.network.description"
+            />
+        ),
+        featured: true
+    },    
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="File I/O"
+                description="Name for the 'fileio' extension"
+                id="gui.fileio.name"
+            />
+        ),
+        extensionId: 'fileio',
+        iconURL: fileio,
+        insetIconURL: fileioInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="File I/O"
+                description="Description for the 'fileio' extension"
+                id="gui.fileio.description"
+            />
+        ),
+        featured: true
+    },
+*/	
     {
         name: (
             <FormattedMessage

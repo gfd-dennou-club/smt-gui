@@ -106,7 +106,7 @@ export default function (Generator) {
     };
 
     Generator.koshien_object = function (block) {
-        const object = Generator.quote_(block.fields.OBJECT.value);
+        const object = Generator.quote_(Generator.getFieldValue(block, 'OBJECT') || 'unknown');
         return [`koshien.object(${object})`];
     };
 

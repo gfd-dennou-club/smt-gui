@@ -3,6 +3,10 @@
         "snippet": "koshien.connect_game(name: ${1:\"player1\"})",
         "description": "プレイヤー名を (player1) にして、ゲームサーバへ接続する"
     },
+    "koshien.set_message": {
+        "snippet": "koshien.set_message(${1:\"hello\"})",
+        "description": "メッセージを (hello) にする"
+    },
     "koshien.move_to": {
         "snippet": "koshien.move_to(${1:\"0:0\"})",
         "description": "座標 (0:0) に移動する"

@@ -44,6 +44,7 @@ describe('Ruby Tab: Koshien extension blocks', () => {
             koshien.locate_objects(result: list("$地形・アイテム"), sq_size: 3, cent: "1:2", objects: "ABCD")
             koshien.locate_objects(result: nil, sq_size: 3, cent: "1:2", objects: "ABCD")
             koshien.turn_over
+            koshien.set_message("こんにちは")
 
             koshien.position_of_x("0:1")
 

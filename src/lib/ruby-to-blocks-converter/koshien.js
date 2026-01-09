@@ -303,6 +303,16 @@ const KoshienConverter = {
             converter.addField(block, 'OBJECT', args[0]);
             return block;
         });
+
+        converter.registerOnSend(Koshien, 'set_message', 1, params => {
+            const {receiver, args} = params;
+
+            if (!converter.isStringOrBlock(args[0])) return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'koshien_setMessage', 'statement');
+            converter.addTextInput(block, 'MESSAGE', args[0], 'hello');
+            return block;
+        });
     }
 };
 

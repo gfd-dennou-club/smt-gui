@@ -399,7 +399,7 @@ const MicrocomConverter = {
                 return converter.createRubyExpressionBlock("uart" + pin, node);
             });
         }
-
+/*
         // WLAN
         // WLAN.new
         converter.registerOnSend("::WLAN", "new", 0, (params) => {
@@ -444,7 +444,7 @@ const MicrocomConverter = {
 
             const block = converter._changeRubyExpressionBlock(
                 receiver,
-                "microcom_wifi_auth",
+                "microcom_wifi_connect",
                 "statement"
             );	   
 	    converter._addTextInput(block, "SSID", args[0], "test");
@@ -452,13 +452,13 @@ const MicrocomConverter = {
             return block;
         });
 	
-        // wlan.is_connected?
-        converter.registerOnSend("wlan", "is_connected?", 0, (params) => {
+        // wlan.connected?
+        converter.registerOnSend("wlan", "connected?", 0, (params) => {
             const { receiver } = params;
 
             const block = converter._changeRubyExpressionBlock(
                 receiver,
-                "microcom_wifi_isconnected",
+                "microcom_wifi_connected",
                 "statement"
             );
             return block;
@@ -529,7 +529,19 @@ const MicrocomConverter = {
             return converter.createRubyExpressionBlock("sntp", node);
         });
 
-        // sntp.XXXX
+        // sntp.read
+        converter.registerOnSend("sntp", "read", 0, (params) => {
+            const { receiver } = params;
+	    
+            const block = converter._changeRubyExpressionBlock(
+                receiver,
+                "microcom_sntp_read",
+                "statement"
+            );
+            return block;
+        });
+
+	// sntp.XXXX
 	const items = ['year', 'mon', 'mday', 'wday', 'hour', 'min', 'sec'];
 	items.forEach( function(item) {
             converter.registerOnSend('sntp', item, 0, params => {
@@ -611,6 +623,7 @@ const MicrocomConverter = {
 		return block;
             });
 	});
+*/
 	
 	// puts
         converter.registerOnSend("self", "puts", 1, (params) => {

@@ -106,8 +106,13 @@ export default function (Generator) {
     };
 
     Generator.koshien_object = function (block) {
-        const object = Generator.quote_(Generator.getFieldValue(block, 'OBJECT') || 'unknown');
+        const object = Generator.quote_(block.fields.OBJECT.value);
         return [`koshien.object(${object})`];
+    };
+
+    Generator.koshien_setMessage = function (block) {
+        const message = Generator.valueToCode(block, 'MESSAGE', Generator.ORDER_NONE) || Generator.quote_('hello');
+        return `koshien.set_message(${message})\n`;
     };
 
     return Generator;

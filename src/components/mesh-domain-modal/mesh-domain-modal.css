@@ -40,8 +40,20 @@
     box-shadow: 0 0 0 1px $motion-primary;
 }
 
+.domain-input.input-error {
+    border-color: $error-primary;
+    box-shadow: 0 0 0 1px $error-primary;
+}
+
 .domain-input::placeholder {
     color: $text-primary-transparent;
+}
+
+.error-message {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: $error-primary;
+    line-height: 1.4;
 }
 
 .button-section {
@@ -88,4 +100,10 @@
 
 .save-button:active {
     background: $motion-tertiary;
+}
+
+.save-button.disabled {
+    background: $ui-black-transparent;
+    color: $text-primary-transparent;
+    cursor: not-allowed;
 }

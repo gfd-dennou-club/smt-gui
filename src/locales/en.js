@@ -42,6 +42,8 @@ export default {
     'mesh.domainSaveButton': 'Save',
     'mesh.domainCancelButton': 'Cancel',
     'mesh.domainConnectedAlert': 'Mesh V2 is connected. To change the domain, please disconnect first.',
+    'mesh.domainInvalidError': 'Domain name contains invalid characters.',
+    'mesh.domainTooLongError': 'Domain name is too long (max 256 characters).',
     'gui.smalruby3.extension.smalrubotS1.name': 'Smalrubot S1',
     'gui.smalruby3.extension.smalrubotS1.description': 'Control the Smalrubot S1.',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'Connecting the Smalrubot S1',

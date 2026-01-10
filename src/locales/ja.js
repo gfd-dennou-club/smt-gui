@@ -91,6 +91,8 @@ export default {
     'mesh.domainSaveButton': '保存',
     'mesh.domainCancelButton': 'キャンセル',
     'mesh.domainConnectedAlert': 'meshV2が接続中です。ドメインを変更するには、まず切断してください。',
+    'mesh.domainInvalidError': 'ドメイン名に使用できない文字が含まれています。',
+    'mesh.domainTooLongError': 'ドメイン名が長すぎます（最大256文字）。',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1',
     'gui.smalruby3.extension.smalrubotS1.description': 'スモウルボットS1を制御する。',
     'gui.smalruby3.extension.smalrubotS1.connectingMessage': 'スモウルボットS1に接続しています。',

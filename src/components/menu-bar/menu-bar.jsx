@@ -240,9 +240,42 @@ class MenuBar extends React.Component {
     }
     componentDidMount () {
         document.addEventListener('keydown', this.handleKeyPress);
+
+        // Listen for extension load events
+        if (this.props.vm.runtime) {
+            this.props.vm.runtime.on('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.on('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
+        }
+
+        this.syncMeshV2Domain();
+    }
+    componentDidUpdate (prevProps) {
+        if (this.props.extensionLoadCounter !== prevProps.extensionLoadCounter) {
+            this.syncMeshV2Domain();
+        }
     }
     componentWillUnmount () {
         document.removeEventListener('keydown', this.handleKeyPress);
+
+        // Remove extension listener
+        if (this.props.vm.runtime) {
+            this.props.vm.runtime.off('EXTENSION_ADDED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_CONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_DISCONNECTED', this.handleExtensionAdded);
+            this.props.vm.runtime.off('PERIPHERAL_REQUEST_ERROR', this.handleExtensionAdded);
+        }
+    }
+    syncMeshV2Domain () {
+        const extension = this.props.vm && this.props.vm.runtime &&
+            this.props.vm.runtime.peripheralExtensions &&
+            this.props.vm.runtime.peripheralExtensions.meshV2;
+        if (extension && extension.domain !== this.props.meshV2Domain) {
+            if (this.props.onSetMeshV2Domain) {
+                this.props.onSetMeshV2Domain(extension.domain);
+            }
+        }
     }
     handleExtensionAdded () {
         // Dispatch Redux action to trigger re-render

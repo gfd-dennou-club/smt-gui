@@ -1,64 +1,91 @@
+@import "../../css/colors.css";
+@import "../../css/units.css";
+
 .modal-content {
-    width: 480px;
+    width: 500px;
+    height: auto;
+    line-height: 1.75;
 }
 
 .header {
-    background-color: #00bcd4;
+    background-color: $motion-primary;
 }
 
 .body {
+    background: $ui-white;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
 }
 
 .input-section {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .domain-input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ccc;
+    border: 2px solid $ui-black-transparent;
     border-radius: 0.25rem;
-    font-size: 1rem;
+    font-size: 0.875rem;
+    font-family: inherit;
     outline: none;
+    box-sizing: border-box;
 }
 
 .domain-input:focus {
-    border-color: #00bcd4;
-    box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.2);
+    border-color: $motion-primary;
+    box-shadow: 0 0 0 1px $motion-primary;
+}
+
+.domain-input::placeholder {
+    color: $text-primary-transparent;
 }
 
 .button-section {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
+    margin-top: 0.5rem;
 }
 
-.save-button, .cancel-button {
-    padding: 0.5rem 1.5rem;
+.cancel-button,
+.save-button {
+    padding: 0.5rem 1rem;
+    border: none;
     border-radius: 0.25rem;
     font-size: 0.875rem;
     font-weight: bold;
     cursor: pointer;
-    border: none;
-}
-
-.save-button {
-    background-color: #00bcd4;
-    color: white;
-}
-
-.save-button:hover {
-    background-color: #0097a7;
+    transition: background-color 0.1s ease;
+    min-width: 80px;
 }
 
 .cancel-button {
-    background-color: #f5f5f5;
-    color: #333;
+    background: $ui-white;
+    color: $text-primary;
+    border: 1px solid $ui-black-transparent;
 }
 
 .cancel-button:hover {
-    background-color: #e0e0e0;
+    background: $ui-secondary;
+}
+
+.cancel-button:active {
+    background: $ui-black-transparent;
+}
+
+.save-button {
+    background: $motion-primary;
+    color: $ui-white;
+}
+
+.save-button:hover {
+    background: $motion-tertiary;
+}
+
+.save-button:active {
+    background: $motion-tertiary;
 }

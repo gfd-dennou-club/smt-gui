@@ -5,6 +5,7 @@ import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-int
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
+import meshIcon from '../menu-bar/icon--mesh-disconnected.png';
 
 import styles from './mesh-domain-modal.css';
 
@@ -75,6 +76,7 @@ class MeshDomainModal extends React.Component {
                 className={styles.modalContent}
                 contentLabel={intl.formatMessage(messages.title)}
                 headerClassName={styles.header}
+                headerImage={meshIcon}
                 id="meshDomainModal"
                 onRequestClose={onRequestClose}
             >

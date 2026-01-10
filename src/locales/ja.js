@@ -84,7 +84,7 @@ export default {
     'mesh.notConnectedMenu': '！未接続',
     'mesh.registeredHostMenu': '✔【{MESH_ID}】 ⏳️{EXPIRES_AT}まで',
     'mesh.joinedMeshMenu': '✔【{MESH_ID}】 ⏳️{EXPIRES_AT}まで',
-    'mesh.domain': 'ドメイン',
+    'mesh.domain': 'ドメイン: {domain}',
     'mesh.domainNotSet': '未設定',
     'mesh.domainModalTitle': 'meshV2 ドメイン設定',
     'mesh.domainPlaceholder': 'ドメイン名を入力...',

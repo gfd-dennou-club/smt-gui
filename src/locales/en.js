@@ -35,7 +35,7 @@ export default {
     'gui.smalruby3.extension.mesh.connectingMessage': 'Connecting',
     'gui.smalruby3.extension.meshV2.name': 'Mesh V2',
     'mesh.notConnected': 'Not connected (Mesh)',
-    'mesh.domain': 'Domain',
+    'mesh.domain': 'Domain: {domain}',
     'mesh.domainNotSet': 'Not set',
     'mesh.domainModalTitle': 'Mesh V2 Domain Settings',
     'mesh.domainPlaceholder': 'Enter domain name...',

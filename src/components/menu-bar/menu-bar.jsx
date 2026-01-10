@@ -1001,27 +1001,27 @@ class MenuBar extends React.Component {
                                         place={this.props.isRtl ? 'left' : 'right'}
                                         onRequestClose={this.props.onRequestCloseMeshV2}
                                     >
-                                        <MenuItem onClick={this.handleMeshV2MenuClick}>
-                                            {meshV2Status.message}
+                                        <MenuItem onClick={this.handleMeshDomainClick}>
+                                            <FormattedMessage
+                                                defaultMessage="Domain: {domain}"
+                                                description="Label for Mesh V2 domain"
+                                                id="mesh.domain"
+                                                values={{
+                                                    domain: this.props.meshV2Domain ? (
+                                                        this.props.meshV2Domain
+                                                    ) : (
+                                                        <FormattedMessage
+                                                            defaultMessage="Not set"
+                                                            description="Label for Mesh V2 domain not set"
+                                                            id="mesh.domainNotSet"
+                                                        />
+                                                    )
+                                                }}
+                                            />
                                         </MenuItem>
                                         <MenuSection>
-                                            <MenuItem onClick={this.handleMeshDomainClick}>
-                                                <FormattedMessage
-                                                    defaultMessage="Domain: {domain}"
-                                                    description="Label for Mesh V2 domain"
-                                                    id="mesh.domain"
-                                                    values={{
-                                                        domain: this.props.meshV2Domain ? (
-                                                            this.props.meshV2Domain
-                                                        ) : (
-                                                            <FormattedMessage
-                                                                defaultMessage="Not set"
-                                                                description="Label for Mesh V2 domain not set"
-                                                                id="mesh.domainNotSet"
-                                                            />
-                                                        )
-                                                    }}
-                                                />
+                                            <MenuItem onClick={this.handleMeshV2MenuClick}>
+                                                {meshV2Status.message}
                                             </MenuItem>
                                         </MenuSection>
                                     </MenuBarMenu>

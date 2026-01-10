@@ -1491,7 +1491,7 @@ const mapStateToProps = (state, ownProps) => {
         fileMenuOpen: fileMenuOpen(state),
         editMenuOpen: editMenuOpen(state),
         koshienMenuOpen: koshienMenuOpen(state),
-        meshV2Domain: state.scratchGui.meshV2.domain,
+        meshV2Domain: state.scratchGui.meshV2 ? state.scratchGui.meshV2.domain : null,
         meshV2MenuOpen: meshV2MenuOpen(state),
         extensionLoadCounter: state.scratchGui.koshienFile.extensionLoadCounter,
         aiSaveStatus: state.scratchGui.koshienFile.aiSaveStatus,

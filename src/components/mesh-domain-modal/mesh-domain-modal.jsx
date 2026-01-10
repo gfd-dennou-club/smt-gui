@@ -5,7 +5,7 @@ import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-int
 
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
-import meshIcon from '../menu-bar/icon--mesh-disconnected.png';
+import meshIcon from '../../lib/libraries/extensions/mesh/mesh-small.png';
 
 import styles from './mesh-domain-modal.css';
 

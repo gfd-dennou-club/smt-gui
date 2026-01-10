@@ -253,7 +253,9 @@ class MenuBar extends React.Component {
     syncMeshV2Domain () {
         const extension = this.props.vm.runtime.peripheralExtensions.meshV2;
         if (extension && extension.domain !== this.props.meshV2Domain) {
-            this.props.onSetMeshV2Domain(extension.domain);
+            if (this.props.onSetMeshV2Domain) {
+                this.props.onSetMeshV2Domain(extension.domain);
+            }
         }
     }
     handleExtensionAdded () {
@@ -263,54 +265,63 @@ class MenuBar extends React.Component {
         }
     }
     getMeshV2Status () {
-        const vm = this.props.vm;
-        
-        if (!vm) return {loaded: false};
+        try {
+            const vm = this.props.vm;
 
-        // In Smalruby 3 / Scratch 3, extensionManager is directly on the vm instance
-        const extensionManager = vm.extensionManager;
-        if (!extensionManager) {
+            if (!vm) return {loaded: false};
+
+            // In Smalruby 3 / Scratch 3, extensionManager is directly on the vm instance
+            const extensionManager = vm.extensionManager;
+            if (!extensionManager) {
+                return {loaded: false};
+            }
+
+            const isLoaded = extensionManager.isExtensionLoaded('meshV2');
+
+            if (!isLoaded) {
+                return {loaded: false};
+            }
+
+            // peripheralExtensions is on vm.runtime
+            const runtime = vm.runtime;
+            if (!runtime || !runtime.peripheralExtensions) {
+                return {loaded: true, connected: false};
+            }
+
+            const extension = runtime.peripheralExtensions.meshV2;
+
+            if (!extension) {
+                return {loaded: true, connected: false};
+            }
+
+            const connected = extension.connectionState === 'connected';
+            const message = extension.menuMessage();
+
+            return {
+                loaded: true,
+                connected: connected,
+                message: message,
+                icon: connected ? meshConnectedIcon : meshDisconnectedIcon
+            };
+        } catch (e) {
+            console.error('Mesh V2: Error in getMeshV2Status:', e); // eslint-disable-line no-console
             return {loaded: false};
         }
-
-        const isLoaded = extensionManager.isExtensionLoaded('meshV2');
-        
-        if (!isLoaded) {
-            return {loaded: false};
-        }
-
-        // peripheralExtensions is on vm.runtime
-        const runtime = vm.runtime;
-        if (!runtime || !runtime.peripheralExtensions) {
-            return {loaded: true, connected: false};
-        }
-
-        const extension = runtime.peripheralExtensions.meshV2;
-
-        if (!extension) {
-            return {loaded: true, connected: false};
-        }
-
-        const connected = extension.connectionState === 'connected';
-        const message = extension.menuMessage();
-
-        return {
-            loaded: true,
-            connected: connected,
-            message: message,
-            icon: connected ? meshConnectedIcon : meshDisconnectedIcon
-        };
     }
     handleMeshV2MenuClick () {
         // Close the Mesh V2 menu
-        this.props.onRequestCloseMeshV2();
+        if (this.props.onRequestCloseMeshV2) {
+            this.props.onRequestCloseMeshV2();
+        }
 
         // Open connection modal
         this.props.onOpenConnectionModal('meshV2');
     }
     handleMeshDomainClick () {
         // Close the Mesh V2 menu
-        this.props.onRequestCloseMeshV2();
+        if (this.props.onRequestCloseMeshV2) {
+            this.props.onRequestCloseMeshV2();
+        }
 
         const extension = this.props.vm.runtime.peripheralExtensions.meshV2;
         if (extension && (extension.connectionState === 'connected' || extension.connectionState === 'connecting')) {

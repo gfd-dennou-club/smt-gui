@@ -15,6 +15,7 @@ import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
 import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
 
 import SnippetsCompleter from './ruby-tab/snippets-completer';
+import {smalrubyLanguage} from './ruby-tab/smalruby-mode';
 
 import rubyIcon from './ruby-tab/icon--ruby.svg';
 import RubyDownloader from './ruby-downloader.jsx';
@@ -55,7 +56,7 @@ class RubyTab extends React.Component {
                         modified = false;
 
                         if (this.editorRef && this.monacoRef) {
-                            this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'ruby', []);
+                            this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', []);
                         }
 
                         if (!modified) {
@@ -83,7 +84,7 @@ class RubyTab extends React.Component {
                         message: err.text,
                         severity: this.monacoRef.MarkerSeverity.Error
                     }));
-                    this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'ruby', markers);
+                    this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
                     this.editorRef.setPosition({lineNumber: error.row + 1, column: error.column + 1});
                     this.editorRef.focus();
                 }
@@ -108,9 +109,13 @@ class RubyTab extends React.Component {
         this.editorRef = editor;
         this.monacoRef = monaco;
 
+        // Register Smalruby language
+        monaco.languages.register({id: 'smalruby'});
+        monaco.languages.setMonarchTokensProvider('smalruby', smalrubyLanguage);
+
         if (!this.completionProvider) {
             const completer = new SnippetsCompleter();
-            this.completionProvider = monaco.languages.registerCompletionItemProvider('ruby', {
+            this.completionProvider = monaco.languages.registerCompletionItemProvider('smalruby', {
                 provideCompletionItems: (model, position, context, token) => (
                     completer.provideCompletionItems(model, position, context, token, monaco)
                 )
@@ -177,7 +182,7 @@ class RubyTab extends React.Component {
                 >
                     <Editor
                         height="100%"
-                        language="ruby"
+                        language="smalruby"
                         onMount={this.handleEditorDidMount}
                         onChange={this.handleEditorChange}
                         options={{

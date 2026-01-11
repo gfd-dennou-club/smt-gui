@@ -181,6 +181,7 @@ const mapStateToProps = state => {
         telemetryModalVisible: state.scratchGui.modals.telemetryModal,
         rubyTabVisible: state.scratchGui.editorTab.activeTabIndex === RUBY_TAB_INDEX,
         urlLoaderModalVisible: state.scratchGui.modals.urlLoaderModal,
+        meshDomainModalVisible: state.scratchGui.modals.meshDomainModal,
         koshienTestModalVisible: state.scratchGui.modals.koshienTestModal,
         vm: state.scratchGui.vm
     };

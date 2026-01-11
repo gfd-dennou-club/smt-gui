@@ -9,6 +9,7 @@ import blockDragReducer, {blockDragInitialState} from './block-drag';
 import editorTabReducer, {editorTabInitialState} from './editor-tab';
 import hoveredTargetReducer, {hoveredTargetInitialState} from './hovered-target';
 import menuReducer, {menuInitialState} from './menus';
+import meshV2Reducer, {meshV2InitialState} from './mesh-v2';
 import micIndicatorReducer, {micIndicatorInitialState} from './mic-indicator';
 import modalReducer, {modalsInitialState} from './modals';
 import modeReducer, {modeInitialState} from './mode';
@@ -48,6 +49,7 @@ const guiInitialState = {
     hoveredTarget: hoveredTargetInitialState,
     stageSize: stageSizeInitialState,
     menus: menuInitialState,
+    meshV2: meshV2InitialState,
     micIndicator: micIndicatorInitialState,
     modals: modalsInitialState,
     monitors: monitorsInitialState,
@@ -133,6 +135,7 @@ const guiReducer = combineReducers({
     hoveredTarget: hoveredTargetReducer,
     stageSize: stageSizeReducer,
     menus: menuReducer,
+    meshV2: meshV2Reducer,
     micIndicator: micIndicatorReducer,
     modals: modalReducer,
     monitors: monitorReducer,

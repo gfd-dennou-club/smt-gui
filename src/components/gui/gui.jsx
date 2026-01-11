@@ -30,6 +30,7 @@ import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 import BlockDisplayModal from '../../containers/block-display-modal.jsx';
+import MeshDomainModal from '../../containers/mesh-domain-modal.jsx';
 import URLLoaderModal from '../url-loader-modal/url-loader-modal.jsx';
 import KoshienTestModal from '../koshien-test-modal/koshien-test-modal.jsx';
 
@@ -98,6 +99,7 @@ const GUIComponent = props => {
         isTotallyNormal,
         loading,
         logo,
+        meshDomainModalVisible,
         renderLogin,
         onClickAbout,
         onClickAccountNav,
@@ -140,6 +142,8 @@ const GUIComponent = props => {
         // Exclude Redux-related props from being passed to DOM
         setSelectedBlocks: _setSelectedBlocks,
         openUrlLoaderModal: _openUrlLoaderModal,
+        openKoshienTestModal: _openKoshienTestModal,
+        openMeshDomainModal: _openMeshDomainModal,
         ...componentProps
     } = omit(props, 'dispatch');
     if (children) {
@@ -197,6 +201,9 @@ const GUIComponent = props => {
                         onRequestClose={closeUrlLoaderModal}
                         onLoadUrl={onUrlLoaderSubmit}
                     />
+                ) : null}
+                {meshDomainModalVisible ? (
+                    <MeshDomainModal />
                 ) : null}
                 {koshienTestModalVisible ? (
                     <KoshienTestModal
@@ -458,6 +465,7 @@ GUIComponent.propTypes = {
     isTotallyNormal: PropTypes.bool,
     loading: PropTypes.bool,
     logo: PropTypes.string,
+    meshDomainModalVisible: PropTypes.bool,
     onActivateCostumesTab: PropTypes.func,
     onActivateRubyTab: PropTypes.func,
     onActivateSoundsTab: PropTypes.func,

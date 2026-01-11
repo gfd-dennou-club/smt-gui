@@ -257,3 +257,12 @@
 .save-status-spinner {
     flex-shrink: 0;
 }
+
+.mesh-v2-domain {
+    display: inline-block;
+    vertical-align: bottom;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

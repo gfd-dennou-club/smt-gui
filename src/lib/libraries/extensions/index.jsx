@@ -399,7 +399,7 @@ const extensions = [
                 id="gui.smalruby3.extension.mesh.connectingMessage"
             />
         ),
-        helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/MeshV2'
+        helpLink: 'https://github.com/smalruby/smalruby.app/wiki/Mesh'
     },
     {
         name: (

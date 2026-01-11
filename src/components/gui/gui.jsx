@@ -142,6 +142,8 @@ const GUIComponent = props => {
         // Exclude Redux-related props from being passed to DOM
         setSelectedBlocks: _setSelectedBlocks,
         openUrlLoaderModal: _openUrlLoaderModal,
+        openKoshienTestModal: _openKoshienTestModal,
+        openMeshDomainModal: _openMeshDomainModal,
         ...componentProps
     } = omit(props, 'dispatch');
     if (children) {

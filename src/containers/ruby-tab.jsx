@@ -14,6 +14,8 @@ import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
 
 import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
 
+import SnippetsCompleter from './ruby-tab/snippets-completer';
+
 import rubyIcon from './ruby-tab/icon--ruby.svg';
 import RubyDownloader from './ruby-downloader.jsx';
 import collectMetadata from '../lib/collect-metadata.js';
@@ -35,6 +37,8 @@ class RubyTab extends React.Component {
         ]);
         this.mainTooltipId = 'ruby-downloader-tooltip';
         this.editorRef = null;
+        this.monacoRef = null;
+        this.completionProvider = null;
     }
 
     componentDidUpdate (prevProps) {
@@ -49,6 +53,10 @@ class RubyTab extends React.Component {
                 if (converter.result) {
                     converter.apply().then(() => {
                         modified = false;
+
+                        if (this.editorRef && this.monacoRef) {
+                            this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'ruby', []);
+                        }
 
                         if (!modified) {
                             if ((this.props.isVisible && !prevProps.isVisible) ||
@@ -66,7 +74,16 @@ class RubyTab extends React.Component {
                     return;
                 }
                 const error = converter.errors[0];
-                if (this.editorRef) {
+                if (this.editorRef && this.monacoRef) {
+                    const markers = converter.errors.map(err => ({
+                        startLineNumber: err.row + 1,
+                        startColumn: err.column + 1,
+                        endLineNumber: err.row + 1,
+                        endColumn: (err.source ? err.column + err.source.length + 1 : 1000),
+                        message: err.text,
+                        severity: this.monacoRef.MarkerSeverity.Error
+                    }));
+                    this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'ruby', markers);
                     this.editorRef.setPosition({lineNumber: error.row + 1, column: error.column + 1});
                     this.editorRef.focus();
                 }
@@ -87,8 +104,18 @@ class RubyTab extends React.Component {
         }
     }
 
-    handleEditorDidMount (editor) {
+    handleEditorDidMount (editor, monaco) {
         this.editorRef = editor;
+        this.monacoRef = monaco;
+
+        if (!this.completionProvider) {
+            const completer = new SnippetsCompleter();
+            this.completionProvider = monaco.languages.registerCompletionItemProvider('ruby', {
+                provideCompletionItems: (model, position, context, token) => (
+                    completer.provideCompletionItems(model, position, context, token, monaco)
+                )
+            });
+        }
     }
 
     handleEditorChange (value) {

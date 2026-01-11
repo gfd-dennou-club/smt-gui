@@ -1,32 +1,32 @@
 class BaseCompleter {
-    getCompletions () {
-        throw new Error('Not implemented');
+    /**
+     * Convert an item to a Monaco CompletionItem.
+     * @param {object} item - The snippet item.
+     * @param {object} range - The range where the completion is requested.
+     * @param {object} monaco - The monaco instance.
+     * @returns {object} Monaco CompletionItem.
+     */
+    toCompletionItem (item, range, monaco) {
+        const snippet = item.snippet || item.value;
+        const description = item.description || item.caption;
+
+        return {
+            label: item.caption,
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            documentation: {
+                value: this.#toMarkdown(description, snippet)
+            },
+            insertText: snippet,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: 'Smalruby Snippet',
+            range: range
+        };
     }
 
-    getDocTooltip (item) {
-        if (!item.docHTML) {
-            let description = item.description;
-            let code;
-            if (item.type === 'snippet') {
-                const snippet = this.#removeSnippetVarAroundCode(item.snippet);
-                description = description || snippet;
-                code = snippet;
-            } else {
-                description = description || item.value;
-                code = item.value;
-            }
-            item.docHTML = [
-                '<b>', this.#escapeHTML(description), '</b>', '<hr></hr>',
-                '<code>', this.#escapeHTML(code), '</code>'
-            ].join('');
-        }
+    #toMarkdown (description, snippet) {
+        const cleanSnippet = this.#removeSnippetVarAroundCode(snippet);
+        return `**${description}**\n\n---\n\n\`\`\`ruby\n${cleanSnippet}\n\`\`\``;
     }
-
-    #escapeHTML = function (str) {
-        return (`${str}`).replace(/&/g, '&#38;').replace(/"/g, '&#34;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&#60;');
-    };
 
     #removeSnippetVarAroundCode = function (snippet) {
         return snippet.replace(/\$\{[0-9]+:?([^}]*?)\}/g, '$1');

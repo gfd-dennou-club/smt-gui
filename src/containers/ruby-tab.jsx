@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
-import AceEditor from 'react-ace';
+import Editor from '@monaco-editor/react';
 import {
     rubyCodeShape,
     updateRubyCode,
@@ -13,13 +13,6 @@ import VM from 'scratch-vm';
 import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
 
 import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
-
-import 'ace-builds/src-noconflict/mode-ruby';
-import 'ace-builds/src-noconflict/theme-clouds';
-import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/src-noconflict/ext-language_tools';
-
-import SnippetsCompleter from './ruby-tab/snippets-completer';
 
 import rubyIcon from './ruby-tab/icon--ruby.svg';
 import RubyDownloader from './ruby-downloader.jsx';
@@ -33,13 +26,15 @@ class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'setAceEditorRef',
+            'handleEditorDidMount',
+            'handleEditorChange',
             'getSaveToComputerHandler',
             'getSaveAIHandler',
             'handleAISaveFinished',
             'handleAISaveError'
         ]);
         this.mainTooltipId = 'ruby-downloader-tooltip';
+        this.editorRef = null;
     }
 
     componentDidUpdate (prevProps) {
@@ -63,15 +58,18 @@ class RubyTab extends React.Component {
                         }
 
                         if (this.props.isVisible && !prevProps.isVisible) {
-                            this.aceEditorRef.editor.renderer.updateFull();
-                            this.aceEditorRef.editor.focus();
+                            if (this.editorRef) {
+                                this.editorRef.focus();
+                            }
                         }
                     });
                     return;
                 }
                 const error = converter.errors[0];
-                this.aceEditorRef.editor.moveCursorTo(error.row, error.column);
-                this.aceEditorRef.editor.focus();
+                if (this.editorRef) {
+                    this.editorRef.setPosition({lineNumber: error.row + 1, column: error.column + 1});
+                    this.editorRef.focus();
+                }
             }
         }
 
@@ -83,13 +81,18 @@ class RubyTab extends React.Component {
         }
 
         if (this.props.isVisible && !prevProps.isVisible) {
-            this.aceEditorRef.editor.renderer.updateFull();
-            this.aceEditorRef.editor.focus();
+            if (this.editorRef) {
+                this.editorRef.focus();
+            }
         }
     }
 
-    setAceEditorRef (ref) {
-        this.aceEditorRef = ref;
+    handleEditorDidMount (editor) {
+        this.editorRef = editor;
+    }
+
+    handleEditorChange (value) {
+        this.props.onChange(value);
     }
 
     getSaveToComputerHandler (downloadProjectCallback) {
@@ -128,47 +131,42 @@ class RubyTab extends React.Component {
 
     render () {
         const {
-            onChange,
             rubyCode
         } = this.props;
         const {
-            code,
-            errors,
-            markers
+            code
         } = rubyCode;
-
-        const completers = [new SnippetsCompleter()];
 
         return (
             <>
-                <AceEditor
-                    annotations={errors}
-                    editorProps={{$blockScrolling: true}}
-                    fontSize={16}
-                    height="inherit"
-                    markers={markers}
-                    mode="ruby"
-                    name="ruby-editor"
-                    ref={this.setAceEditorRef}
-                    setOptions={{
-                        tabSize: 2,
-                        useSoftTabs: true,
-                        showInvisibles: true,
-                        enableAutoIndent: true,
-                        enableBasicAutocompletion: completers,
-                        enableLiveAutocompletion: true
-                    }}
+                <div
                     style={{
                         border: '1px solid hsla(0, 0%, 0%, 0.15)',
                         borderBottomRightRadius: '0.5rem',
                         borderTopRightRadius: '0.5rem',
-                        fontFamily: ['Monaco', 'Menlo', 'Consolas', 'source-code-pro', 'monospace']
+                        height: '100%',
+                        width: '100%'
                     }}
-                    theme="clouds"
-                    value={code}
-                    width="100%"
-                    onChange={onChange}
-                />
+                >
+                    <Editor
+                        height="100%"
+                        language="ruby"
+                        onMount={this.handleEditorDidMount}
+                        onChange={this.handleEditorChange}
+                        options={{
+                            automaticLayout: true,
+                            fontSize: 16,
+                            fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
+                            minimap: {enabled: false},
+                            renderWhitespace: 'all',
+                            scrollBeyondLastLine: false,
+                            tabSize: 2
+                        }}
+                        theme="vs"
+                        value={code}
+                        width="100%"
+                    />
+                </div>
                 <div className={styles.wrapper}>
                     <RubyDownloader
                         onSaveError={this.handleAISaveError}

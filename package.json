@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@microbit/microbit-universal-hex": "^0.2.2",
+    "@monaco-editor/react": "^4.7.0",
     "ace-builds": "^1.14.0",
     "arraybuffer-loader": "^1.0.6",
     "autoprefixer": "^9.0.1",

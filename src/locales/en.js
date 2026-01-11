@@ -44,7 +44,7 @@ export default {
     'mesh.domainConnectedAlert': 'Mesh V2 is connected. To change the domain, please disconnect first.',
     'mesh.domainInvalidError': 'Domain name contains invalid characters.',
     'mesh.domainTooLongError': 'Domain name is too long (max 256 characters).',
-    'mesh.domainDescription': 'If the host you want to join does not appear, everyone including the host should set the same domain (address on the internet). The address of a facility such as a school is ideal.',
+    'mesh.domainDescription': 'If the host is not displayed, please set the domain. The zip code of a facility such as a school is ideal.',
     'mesh.domainExampleTitle': 'Example',
     'mesh.domainExample': '100-0014',
     'gui.smalruby3.extension.smalrubotS1.name': 'Smalrubot S1',

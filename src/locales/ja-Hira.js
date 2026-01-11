@@ -56,7 +56,7 @@ export default {
     'mesh.domainConnectedAlert': 'meshV2がせつぞくちゅうです。ドメインをへんかんするには、まずせつぞくをきってください。',
     'mesh.domainInvalidError': 'ドメインめいに つかえない もじが ふくまれています。',
     'mesh.domainTooLongError': 'ドメインめいが ながすぎます（さいだい256もじ）。',
-    'mesh.domainDescription': 'さんかしたいホストが ひょうじされない ばあいは ホストもふくめた ぜんいんが おなじドメイン(インターネットじょうの じゅうしょ)を せっていしてください。がっこうなどの しせつの じゅうしょが さいてきです。',
+    'mesh.domainDescription': 'ホストが ひょうじされない ばあいは ドメインを せっていしてください。がっこうなどの しせつの ゆうびんばんごうが さいてきです。',
     'mesh.domainExampleTitle': 'れい',
     'mesh.domainExample': '100-0014',
     'gui.smalruby3.extension.smalrubotS1.name': 'スモウルボットS1 (エス1)',

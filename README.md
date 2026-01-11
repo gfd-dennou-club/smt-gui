@@ -1,6 +1,9 @@
 # smt-gui
-#### SmT GUI is forked from [smalruby3/smalruby-gui](https://github.com/smalruby/smalruby3-gui). 利用方法・開発方法の詳細は [smt-gui wiki](https://github.com/gfd-dennou-club/smt-gui/wiki) を参照のこと．
+#### SmT GUI is forked from [smalruby3/smalruby-gui](https://github.com/smalruby/smalruby3-gui). 
 
+## 利用方法・開発方法
+
+[smt-gui wiki](https://github.com/gfd-dennou-club/smt-gui/wiki) をご覧ください．
 
 ## 動作検証サイト
 

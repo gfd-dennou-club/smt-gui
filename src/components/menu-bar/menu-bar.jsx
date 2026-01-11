@@ -1007,10 +1007,14 @@ class MenuBar extends React.Component {
                                                 description="Label for Mesh V2 domain"
                                                 id="mesh.domain"
                                                 values={{
-                                                    domain: this.props.meshV2Domain || this.props.intl.formatMessage({
-                                                        id: 'mesh.domainNotSet',
-                                                        defaultMessage: 'Not set'
-                                                    })
+                                                    domain: (
+                                                        <span className={styles.meshV2Domain}>
+                                                            {this.props.meshV2Domain || this.props.intl.formatMessage({
+                                                                id: 'mesh.domainNotSet',
+                                                                defaultMessage: 'Not set'
+                                                            })}
+                                                        </span>
+                                                    )
                                                 }}
                                             />
                                         </MenuItem>

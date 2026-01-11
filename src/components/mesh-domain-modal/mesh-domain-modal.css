@@ -56,6 +56,45 @@
     line-height: 1.4;
 }
 
+.description-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.description-text {
+    font-size: 0.75rem;
+    color: $text-primary;
+    line-height: 1.5;
+}
+
+.example-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: -0.5rem;
+}
+
+.example-title {
+    font-size: 0.75rem;
+    color: $text-primary;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.example-text {
+    font-size: 0.75rem;
+    color: $text-primary-transparent;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.example-text::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: $text-primary-transparent;
+}
+
 .button-section {
     display: flex;
     justify-content: flex-end;

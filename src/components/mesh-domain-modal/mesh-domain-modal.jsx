@@ -40,6 +40,23 @@ const messages = defineMessages({
         defaultMessage: 'Domain name is too long (max 256 characters).',
         description: 'Error message for domain name exceeding 256 characters',
         id: 'mesh.domainTooLongError'
+    },
+    domainDescription: {
+        defaultMessage: 'If the host you want to join does not appear, ' +
+            'everyone including the host should set the same domain (address on the internet). ' +
+            'The address of a facility such as a school is ideal.',
+        description: 'Description for Mesh V2 domain setting',
+        id: 'mesh.domainDescription'
+    },
+    domainExampleTitle: {
+        defaultMessage: 'Example',
+        description: 'Title for Mesh V2 domain example',
+        id: 'mesh.domainExampleTitle'
+    },
+    domainExample: {
+        defaultMessage: '100-0014',
+        description: 'Example for Mesh V2 domain',
+        id: 'mesh.domainExample'
     }
 });
 
@@ -137,6 +154,21 @@ class MeshDomainModal extends React.Component {
                                 <FormattedMessage {...messages.domainInvalidError} />
                             </div>
                         )}
+                    </Box>
+
+                    <Box className={styles.descriptionSection}>
+                        <div className={styles.descriptionText}>
+                            <FormattedMessage {...messages.domainDescription} />
+                        </div>
+                    </Box>
+
+                    <Box className={styles.exampleSection}>
+                        <div className={styles.exampleTitle}>
+                            <FormattedMessage {...messages.domainExampleTitle} />
+                        </div>
+                        <div className={styles.exampleText}>
+                            <FormattedMessage {...messages.domainExample} />
+                        </div>
                     </Box>
 
                     <Box className={styles.buttonSection}>

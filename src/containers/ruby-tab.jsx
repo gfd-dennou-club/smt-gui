@@ -213,7 +213,6 @@ class RubyTab extends React.Component {
 
     render () {
         const {
-            onChange, // eslint-disable-line no-unused-vars
             rubyCode
         } = this.props;
         const {
@@ -225,33 +224,15 @@ class RubyTab extends React.Component {
             <>
                 <div
                     ref={this.setContainerRef}
-                    style={{
-                        border: '1px solid hsla(0, 0%, 0%, 0.15)',
-                        borderBottomRightRadius: '0.5rem',
-                        borderTopRightRadius: '0.5rem',
-                        height: '100%',
-                        width: '100%',
-                        minWidth: 0,
-                        overflow: 'hidden',
-                        position: 'relative'
-                    }}
+                    className={styles.editorContainer}
                 >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0
-                        }}
-                    >
+                    <div className={styles.editorWrapper}>
                         <Editor
                             height="100%"
                             language="smalruby"
                             onMount={this.handleEditorDidMount}
                             onChange={this.handleEditorChange}
                             options={{
-                                automaticLayout: true,
                                 fontSize: fontSize || DEFAULT_FONT_SIZE,
                                 fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
                                 minimap: {enabled: false},

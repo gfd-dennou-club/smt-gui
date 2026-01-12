@@ -97,3 +97,22 @@ $arrow-rounding: 0.125rem;
     right: $arrow-inset !important;
     transform: rotate(45deg) !important;
 }
+
+.editorContainer {
+    border: 1px solid hsla(0, 0%, 0%, 0.15);
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.editorWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

@@ -62,7 +62,7 @@ export const smalrubyLanguage = {
             [/@\w+/, 'variable.instance'],
 
             // Global variables
-            [/\\$\w+/, 'variable.global'],
+            [/\$\w+/, 'variable.global'],
 
             // Whitespace
             {include: '@whitespace'},
@@ -77,9 +77,9 @@ export const smalrubyLanguage = {
             }],
 
             // Numbers
-            [/\\d*\\.\\d+([eE][-+]?\\d+)?/, 'number.float'],
+            [/\d*\.\d+([eE][-+]?\d+)?/, 'number.float'],
             [/0[xX][0-9a-fA-F]+/, 'number.hex'],
-            [/\\d+/, 'number'],
+            [/\d+/, 'number'],
 
             // Strings
             [/"/, {token: 'string.quote', bracket: '@open', next: '@string'}],
@@ -91,7 +91,7 @@ export const smalrubyLanguage = {
         ],
 
         string: [
-            [/[^\\"]+/, 'string'],
+            [/[^\\"]/, 'string'],
             [/@escapes/, 'string.escape'],
             [/\\./, 'string.escape.invalid'],
             [/"/, {token: 'string.quote', bracket: '@close', next: '@pop'}]

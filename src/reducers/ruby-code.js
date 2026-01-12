@@ -7,13 +7,17 @@ const UPDATE_RUBYCODE_ERRORS = 'smalruby3-gui/ruby-code/UPDATE_RUBYCODE_ERRORS';
 const CONVERTED_RUBYCODE = 'smalruby3-gui/ruby-code/CONVERTED_RUBYCODE';
 const UPDATE_RUBY_FONT_SIZE = 'smalruby3-gui/ruby-code/UPDATE_RUBY_FONT_SIZE';
 
+const RUBY_FONT_SIZE_KEY = 'smalruby:rubyFontSize';
+const savedFontSize = typeof window !== 'undefined' && window.localStorage ?
+    window.localStorage.getItem(RUBY_FONT_SIZE_KEY) : null;
+
 const initialState = {
     target: null,
     code: '',
     modified: false,
     errors: [],
     markers: [],
-    fontSize: 16
+    fontSize: savedFontSize ? parseInt(savedFontSize, 10) : 16
 };
 
 const rubyCodeShape = PropTypes.shape({
@@ -71,6 +75,9 @@ const reducer = function (state, action) {
             markers: []
         });
     case UPDATE_RUBY_FONT_SIZE:
+        if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.setItem(RUBY_FONT_SIZE_KEY, action.fontSize);
+        }
         return Object.assign({}, state, {
             fontSize: action.fontSize
         });

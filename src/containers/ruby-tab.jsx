@@ -121,6 +121,10 @@ class RubyTab extends React.Component {
         if (this.resizeObserver) {
             this.resizeObserver.disconnect();
         }
+        if (this.completionProvider) {
+            this.completionProvider.dispose();
+            this.completionProvider = null;
+        }
     }
 
     setContainerRef (ref) {

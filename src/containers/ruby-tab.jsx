@@ -26,7 +26,7 @@ import {setAiSaveStatus, clearAiSaveStatus} from '../reducers/koshien-file';
 import styles from './ruby-tab/ruby-tab.css';
 import ReactTooltip from 'react-tooltip';
 
-const FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
+const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
 const DEFAULT_FONT_SIZE = 16;
 
 class RubyTab extends React.Component {
@@ -228,36 +228,7 @@ class RubyTab extends React.Component {
                         width="100%"
                     />
                 </div>
-                <div className={styles.wrapper}>
-                    <div className={styles.zoomWrapper}>
-                        <button
-                            className={styles.zoomButton}
-                            onClick={this.handleZoomIn}
-                        >
-                            <img
-                                src="./static/blocks-media/default/zoom-in.svg"
-                                className={styles.zoomIcon}
-                            />
-                        </button>
-                        <button
-                            className={styles.zoomButton}
-                            onClick={this.handleZoomOut}
-                        >
-                            <img
-                                src="./static/blocks-media/default/zoom-out.svg"
-                                className={styles.zoomIcon}
-                            />
-                        </button>
-                        <button
-                            className={styles.zoomButton}
-                            onClick={this.handleZoomReset}
-                        >
-                            <img
-                                src="./static/blocks-media/default/zoom-reset.svg"
-                                className={styles.zoomIcon}
-                            />
-                        </button>
-                    </div>
+                <div className={styles.downloadWrapper}>
                     <RubyDownloader
                         onSaveError={this.handleAISaveError}
                         onSaveFinished={this.handleAISaveFinished}
@@ -290,6 +261,35 @@ class RubyTab extends React.Component {
                             id="gui.smalruby3.menuBar.downloadRubyCodeToComputer"
                         />
                     </ReactTooltip>
+                </div>
+                <div className={styles.zoomControlsWrapper}>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomIn}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-in.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomOut}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-out.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomReset}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-reset.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
                 </div>
             </>
         );

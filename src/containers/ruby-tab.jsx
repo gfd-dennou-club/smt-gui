@@ -25,6 +25,7 @@ import {closeFileMenu} from '../reducers/menus.js';
 import {setAiSaveStatus, clearAiSaveStatus} from '../reducers/koshien-file';
 import styles from './ruby-tab/ruby-tab.css';
 import ReactTooltip from 'react-tooltip';
+import {loadMonacoLocale} from '../lib/monaco-i18n-helper';
 
 const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
 const DEFAULT_FONT_SIZE = 16;
@@ -50,9 +51,15 @@ class RubyTab extends React.Component {
         this.containerRef = null;
         this.resizeObserver = null;
         this.completionProvider = null;
+
+        loadMonacoLocale(props.locale);
     }
 
     componentDidUpdate (prevProps) {
+        if (this.props.locale !== prevProps.locale) {
+            loadMonacoLocale(this.props.locale);
+        }
+
         if (prevProps.isVisible && !this.props.isVisible) {
             if (this.editorRef && this.monacoRef) {
                 this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', []);
@@ -257,6 +264,7 @@ class RubyTab extends React.Component {
                 >
                     <div className={styles.editorWrapper}>
                         <Editor
+                            key={this.props.locale}
                             height="100%"
                             language="smalruby"
                             onMount={this.handleEditorDidMount}
@@ -369,7 +377,7 @@ const mapStateToProps = state => ({
     rubyCode: state.scratchGui.rubyCode,
     vm: state.scratchGui.vm,
     projectTitle: state.scratchGui.projectTitle,
-    locale: state.locales.local
+    locale: state.locales.locale
 });
 
 const mapDispatchToProps = dispatch => ({

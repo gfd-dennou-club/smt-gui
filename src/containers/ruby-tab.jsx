@@ -35,6 +35,7 @@ class RubyTab extends React.Component {
         bindAll(this, [
             'handleEditorDidMount',
             'handleEditorChange',
+            'handleResize',
             'handleZoomIn',
             'handleZoomOut',
             'handleZoomReset',
@@ -47,6 +48,10 @@ class RubyTab extends React.Component {
         this.editorRef = null;
         this.monacoRef = null;
         this.completionProvider = null;
+    }
+
+    componentDidMount () {
+        window.addEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate (prevProps) {
@@ -76,6 +81,7 @@ class RubyTab extends React.Component {
                         if (this.props.isVisible && !prevProps.isVisible) {
                             if (this.editorRef) {
                                 this.editorRef.focus();
+                                this.editorRef.layout();
                             }
                         }
                     });
@@ -108,8 +114,13 @@ class RubyTab extends React.Component {
         if (this.props.isVisible && !prevProps.isVisible) {
             if (this.editorRef) {
                 this.editorRef.focus();
+                this.editorRef.layout();
             }
         }
+    }
+
+    componentWillUnmount () {
+        window.removeEventListener('resize', this.handleResize);
     }
 
     handleEditorDidMount (editor, monaco) {
@@ -132,6 +143,12 @@ class RubyTab extends React.Component {
 
     handleEditorChange (value) {
         this.props.onChange(value);
+    }
+
+    handleResize () {
+        if (this.editorRef) {
+            this.editorRef.layout();
+        }
     }
 
     handleZoomIn () {
@@ -206,7 +223,10 @@ class RubyTab extends React.Component {
                         borderBottomRightRadius: '0.5rem',
                         borderTopRightRadius: '0.5rem',
                         height: '100%',
-                        width: '100%'
+                        width: '100%',
+                        minWidth: 0,
+                        overflow: 'hidden',
+                        position: 'relative'
                     }}
                 >
                     <Editor

@@ -21,7 +21,8 @@ const {
 const rubyHelper = new RubyHelper(seleniumHelper);
 const {
     fillInRubyProgram,
-    currentRubyProgram
+    currentRubyProgram,
+    waitForErrorOnLine
 } = rubyHelper;
 
 const uri = path.resolve(__dirname, '../../build/index.html');
@@ -72,9 +73,7 @@ describe('convert Code from Ruby', () => {
                 '//*[contains(@class, "alert_alert-message")]/' +
                     'span[text()="Could not convert Ruby to Code. Please fix Ruby!"]'
             );
-            await findByXpath(
-                '//*[contains(@class, "ace_gutter-cell") and contains(@class, "ace_error") and text()="1"]'
-            );
+            await waitForErrorOnLine(1);
         });
 
         test('clicked Go', async () => {
@@ -84,9 +83,7 @@ describe('convert Code from Ruby', () => {
                 '//*[contains(@class, "alert_alert-message")]/' +
                     'span[text()="Could not convert Ruby to Code. Please fix Ruby!"]'
             );
-            await findByXpath(
-                '//*[contains(@class, "ace_gutter-cell") and contains(@class, "ace_error") and text()="1"]'
-            );
+            await waitForErrorOnLine(1);
         });
 
         test('clicked "Download to your computer" menu', async () => {
@@ -97,9 +94,7 @@ describe('convert Code from Ruby', () => {
                 '//*[contains(@class, "alert_alert-message")]/' +
                     'span[text()="Could not convert Ruby to Code. Please fix Ruby!"]'
             );
-            await findByXpath(
-                '//*[contains(@class, "ace_gutter-cell") and contains(@class, "ace_error") and text()="1"]'
-            );
+            await waitForErrorOnLine(1);
         });
 
         test('changed sprite', async () => {
@@ -120,9 +115,7 @@ describe('convert Code from Ruby', () => {
                 '//*[contains(@class, "alert_alert-message")]/' +
                     'span[text()="Could not convert Ruby to Code. Please fix Ruby!"]'
             );
-            await findByXpath(
-                '//*[contains(@class, "ace_gutter-cell") and contains(@class, "ace_error") and text()="1"]'
-            );
+            await waitForErrorOnLine(1);
         });
 
         test('recover with "Generate Ruby from Code" menu', async () => {

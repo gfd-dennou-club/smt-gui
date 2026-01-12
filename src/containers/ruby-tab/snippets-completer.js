@@ -62,8 +62,29 @@ class SnippetsCompleter extends BaseCompleter {
         });
     }
 
-    getCompletions (editor, session, pos, prefix, callback) {
-        callback(null, this.#completions);
+    /**
+     * Provide completion items for Monaco Editor.
+     * @param {object} model - Monaco text model.
+     * @param {object} position - Current cursor position.
+     * @param {object} context - Completion context.
+     * @param {object} token - Cancellation token.
+     * @param {object} monaco - The monaco instance.
+     * @returns {object} Completion items.
+     */
+    provideCompletionItems (model, position, context, token, monaco) {
+        const word = model.getWordUntilPosition(position);
+        const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
+        };
+
+        const suggestions = this.#completions.map(item => this.toCompletionItem(item, range, monaco));
+
+        return {
+            suggestions: suggestions
+        };
     }
 }
 

@@ -3,23 +3,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
-import AceEditor from 'react-ace';
+import Editor from '@monaco-editor/react';
 import {
     rubyCodeShape,
     updateRubyCode,
-    updateRubyCodeTarget
+    updateRubyCodeTarget,
+    updateRubyFontSize
 } from '../reducers/ruby-code';
 import VM from 'scratch-vm';
 import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
 
 import RubyToBlocksConverterHOC from '../lib/ruby-to-blocks-converter-hoc.jsx';
 
-import 'ace-builds/src-noconflict/mode-ruby';
-import 'ace-builds/src-noconflict/theme-clouds';
-import 'ace-builds/src-noconflict/ext-searchbox';
-import 'ace-builds/src-noconflict/ext-language_tools';
-
 import SnippetsCompleter from './ruby-tab/snippets-completer';
+import {smalrubyLanguage} from './ruby-tab/smalruby-mode';
 
 import rubyIcon from './ruby-tab/icon--ruby.svg';
 import RubyDownloader from './ruby-downloader.jsx';
@@ -28,21 +25,66 @@ import {closeFileMenu} from '../reducers/menus.js';
 import {setAiSaveStatus, clearAiSaveStatus} from '../reducers/koshien-file';
 import styles from './ruby-tab/ruby-tab.css';
 import ReactTooltip from 'react-tooltip';
+import {loadMonacoLocale} from '../lib/monaco-i18n-helper';
+
+const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
+const DEFAULT_FONT_SIZE = 16;
 
 class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'setAceEditorRef',
+            'setContainerRef',
+            'handleEditorDidMount',
+            'handleEditorChange',
+            'handleZoomIn',
+            'handleZoomOut',
+            'handleZoomReset',
             'getSaveToComputerHandler',
             'getSaveAIHandler',
             'handleAISaveFinished',
             'handleAISaveError'
         ]);
         this.mainTooltipId = 'ruby-downloader-tooltip';
+        this.editorRef = null;
+        this.monacoRef = null;
+        this.containerRef = null;
+        this.resizeObserver = null;
+        this.completionProvider = null;
+
+        loadMonacoLocale(props.locale);
     }
 
     componentDidUpdate (prevProps) {
+        if (this.props.locale !== prevProps.locale) {
+            loadMonacoLocale(this.props.locale);
+        }
+
+        if (prevProps.isVisible && !this.props.isVisible) {
+            if (this.editorRef && this.monacoRef) {
+                this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', []);
+                // Close any active widgets (peek view, hover, etc.)
+                this.editorRef.trigger('source', 'closeMarkersNavigation');
+            }
+        }
+
+        if (this.props.rubyCode.errors !== prevProps.rubyCode.errors) {
+            if (this.editorRef && this.monacoRef) {
+                const markers = this.props.rubyCode.errors.map(err => ({
+                    startLineNumber: err.row + 1,
+                    startColumn: err.column + 1,
+                    endLineNumber: err.row + 1,
+                    endColumn: (err.source ? err.column + err.source.length + 1 : 1000),
+                    message: err.text,
+                    severity: this.monacoRef.MarkerSeverity.Error
+                }));
+                this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
+                if (markers.length > 0) {
+                    this.editorRef.trigger('source', 'editor.action.marker.next');
+                }
+            }
+        }
+
         let modified = this.props.rubyCode.modified;
         if (modified) {
             const targetId = this.props.rubyCode.target ? this.props.rubyCode.target.id : null;
@@ -55,6 +97,10 @@ class RubyTab extends React.Component {
                     converter.apply().then(() => {
                         modified = false;
 
+                        if (this.editorRef && this.monacoRef) {
+                            this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', []);
+                        }
+
                         if (!modified) {
                             if ((this.props.isVisible && !prevProps.isVisible) ||
                                 (this.props.editingTarget && this.props.editingTarget !== prevProps.editingTarget)) {
@@ -63,15 +109,29 @@ class RubyTab extends React.Component {
                         }
 
                         if (this.props.isVisible && !prevProps.isVisible) {
-                            this.aceEditorRef.editor.renderer.updateFull();
-                            this.aceEditorRef.editor.focus();
+                            if (this.editorRef) {
+                                this.editorRef.focus();
+                                this.editorRef.layout();
+                            }
                         }
                     });
                     return;
                 }
                 const error = converter.errors[0];
-                this.aceEditorRef.editor.moveCursorTo(error.row, error.column);
-                this.aceEditorRef.editor.focus();
+                if (this.editorRef && this.monacoRef) {
+                    const markers = converter.errors.map(err => ({
+                        startLineNumber: err.row + 1,
+                        startColumn: err.column + 1,
+                        endLineNumber: err.row + 1,
+                        endColumn: (err.source ? err.column + err.source.length + 1 : 1000),
+                        message: err.text,
+                        severity: this.monacoRef.MarkerSeverity.Error
+                    }));
+                    this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
+                    this.editorRef.setPosition({lineNumber: error.row + 1, column: error.column + 1});
+                    this.editorRef.focus();
+                    this.editorRef.trigger('source', 'editor.action.marker.next');
+                }
             }
         }
 
@@ -83,13 +143,78 @@ class RubyTab extends React.Component {
         }
 
         if (this.props.isVisible && !prevProps.isVisible) {
-            this.aceEditorRef.editor.renderer.updateFull();
-            this.aceEditorRef.editor.focus();
+            if (this.editorRef) {
+                this.editorRef.focus();
+                this.editorRef.layout();
+            }
         }
     }
 
-    setAceEditorRef (ref) {
-        this.aceEditorRef = ref;
+    componentWillUnmount () {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+        if (this.completionProvider) {
+            this.completionProvider.dispose();
+            this.completionProvider = null;
+        }
+    }
+
+    setContainerRef (ref) {
+        this.containerRef = ref;
+    }
+
+    handleEditorDidMount (editor, monaco) {
+        this.editorRef = editor;
+        this.monacoRef = monaco;
+
+        window.monacoEditor = editor;
+        window.monaco = monaco;
+
+        // Register Smalruby language
+        monaco.languages.register({id: 'smalruby'});
+        monaco.languages.setMonarchTokensProvider('smalruby', smalrubyLanguage);
+
+        if (!this.completionProvider) {
+            const completer = new SnippetsCompleter();
+            this.completionProvider = monaco.languages.registerCompletionItemProvider('smalruby', {
+                provideCompletionItems: (model, position, context, token) => (
+                    completer.provideCompletionItems(model, position, context, token, monaco)
+                )
+            });
+        }
+
+        if (this.containerRef) {
+            this.resizeObserver = new ResizeObserver(() => {
+                editor.layout();
+            });
+            this.resizeObserver.observe(this.containerRef);
+        }
+    }
+
+    handleEditorChange (value) {
+        this.props.onChange(value);
+    }
+
+    handleZoomIn () {
+        const currentSize = this.props.rubyCode.fontSize || DEFAULT_FONT_SIZE;
+        const nextSize = FONT_SIZES.find(s => s > currentSize);
+        if (nextSize) {
+            this.props.onFontSizeChange(nextSize);
+        }
+    }
+
+    handleZoomOut () {
+        const currentSize = this.props.rubyCode.fontSize || DEFAULT_FONT_SIZE;
+        const prevSize = FONT_SIZES.slice().reverse()
+            .find(s => s < currentSize);
+        if (prevSize) {
+            this.props.onFontSizeChange(prevSize);
+        }
+    }
+
+    handleZoomReset () {
+        this.props.onFontSizeChange(DEFAULT_FONT_SIZE);
     }
 
     getSaveToComputerHandler (downloadProjectCallback) {
@@ -128,55 +253,49 @@ class RubyTab extends React.Component {
 
     render () {
         const {
-            onChange,
             rubyCode
         } = this.props;
         const {
             code,
-            errors,
-            markers
+            fontSize
         } = rubyCode;
-
-        const completers = [new SnippetsCompleter()];
 
         return (
             <>
-                <AceEditor
-                    annotations={errors}
-                    editorProps={{$blockScrolling: true}}
-                    fontSize={16}
-                    height="inherit"
-                    markers={markers}
-                    mode="ruby"
-                    name="ruby-editor"
-                    ref={this.setAceEditorRef}
-                    setOptions={{
-                        tabSize: 2,
-                        useSoftTabs: true,
-                        showInvisibles: true,
-                        enableAutoIndent: true,
-                        enableBasicAutocompletion: completers,
-                        enableLiveAutocompletion: true
-                    }}
-                    style={{
-                        border: '1px solid hsla(0, 0%, 0%, 0.15)',
-                        borderBottomRightRadius: '0.5rem',
-                        borderTopRightRadius: '0.5rem',
-                        fontFamily: ['Monaco', 'Menlo', 'Consolas', 'source-code-pro', 'monospace']
-                    }}
-                    theme="clouds"
-                    value={code}
-                    width="100%"
-                    onChange={onChange}
-                />
-                <div className={styles.wrapper}>
+                <div
+                    ref={this.setContainerRef}
+                    className={styles.editorContainer}
+                >
+                    <div className={styles.editorWrapper}>
+                        <Editor
+                            key={this.props.locale}
+                            height="100%"
+                            language="smalruby"
+                            onMount={this.handleEditorDidMount}
+                            onChange={this.handleEditorChange}
+                            options={{
+                                fontSize: fontSize || DEFAULT_FONT_SIZE,
+                                fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
+                                minimap: {enabled: false},
+                                renderWhitespace: 'all',
+                                scrollBeyondLastLine: true,
+                                tabSize: 2,
+                                fixedOverflowWidgets: true
+                            }}
+                            theme="vs"
+                            value={code}
+                            width="100%"
+                        />
+                    </div>
+                </div>
+                <div className={styles.downloadWrapper}>
                     <RubyDownloader
                         onSaveError={this.handleAISaveError}
                         onSaveFinished={this.handleAISaveFinished}
                     >
                         {(_, downloadProjectCallback) => (
                             <button
-                                className={styles.button}
+                                className={styles.downloadButton}
                                 onClick={this.getSaveAIHandler(downloadProjectCallback)}
                                 data-tip
                                 data-for={'ruby-downloader-tooltip'}
@@ -184,7 +303,7 @@ class RubyTab extends React.Component {
                                 <img
                                     src={rubyIcon}
                                     alt="ruby download"
-                                    className={styles.img}
+                                    className={styles.downloadIcon}
                                 />
 
                             </button>
@@ -192,7 +311,7 @@ class RubyTab extends React.Component {
                     </RubyDownloader>
                     <ReactTooltip
                         id={this.mainTooltipId}
-                        place="left"
+                        place="top"
                         effect="solid"
                         className={styles.tooltip}
                     >
@@ -202,6 +321,35 @@ class RubyTab extends React.Component {
                             id="gui.smalruby3.menuBar.downloadRubyCodeToComputer"
                         />
                     </ReactTooltip>
+                </div>
+                <div className={styles.zoomControlsWrapper}>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomIn}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-in.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomOut}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-out.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
+                    <button
+                        className={styles.zoomButton}
+                        onClick={this.handleZoomReset}
+                    >
+                        <img
+                            src="./static/blocks-media/default/zoom-reset.svg"
+                            className={styles.zoomIcon}
+                        />
+                    </button>
                 </div>
             </>
         );
@@ -218,6 +366,7 @@ RubyTab.propTypes = {
     onProjectTelemetryEvent: PropTypes.func,
     onSetAiSaveStatus: PropTypes.func,
     onClearAiSaveStatus: PropTypes.func,
+    onFontSizeChange: PropTypes.func,
     rubyCode: rubyCodeShape,
     targetCodeToBlocks: PropTypes.func,
     updateRubyCodeTargetState: PropTypes.func,
@@ -232,7 +381,7 @@ const mapStateToProps = state => ({
     rubyCode: state.scratchGui.rubyCode,
     vm: state.scratchGui.vm,
     projectTitle: state.scratchGui.projectTitle,
-    locale: state.locales.local
+    locale: state.locales.locale
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -240,7 +389,8 @@ const mapDispatchToProps = dispatch => ({
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target)),
     onRequestCloseFile: () => dispatch(closeFileMenu()),
     onSetAiSaveStatus: status => dispatch(setAiSaveStatus(status)),
-    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus())
+    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus()),
+    onFontSizeChange: fontSize => dispatch(updateRubyFontSize(fontSize))
 });
 
 export default RubyToBlocksConverterHOC(injectIntl(connect(

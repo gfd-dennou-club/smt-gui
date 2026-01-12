@@ -15,7 +15,7 @@ const OperatorsConverter = {
             return converter._changeBlock(args[0], 'operator_random', 'value');
         });
 
-        converter.registerOnSend(['string', 'block'], '[]', 1, params => {
+        converter.registerOnSend(['string', 'block', 'variable'], '[]', 1, params => {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 

@@ -160,9 +160,13 @@ const VariablesConverter = {
             const {receiver, args} = params;
             if (!converter._isNumberOrBlock(args[0])) return null;
 
-            const block = converter._changeBlock(receiver, 'data_itemoflist', 'value');
-            converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
-            return block;
+            if (converter._isBlock(receiver) && converter.isListBlock(receiver)) {
+                const block = converter._changeBlock(receiver, 'data_itemoflist', 'value');
+                converter._addNumberInput(block, 'INDEX', 'math_integer', args[0], 1);
+                return block;
+            }
+
+            return null;
         });
 
         converter.registerOnSend('variable', 'index', 1, params => {

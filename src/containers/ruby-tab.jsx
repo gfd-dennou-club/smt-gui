@@ -33,9 +33,9 @@ class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
+            'setContainerRef',
             'handleEditorDidMount',
             'handleEditorChange',
-            'handleResize',
             'handleZoomIn',
             'handleZoomOut',
             'handleZoomReset',
@@ -47,11 +47,9 @@ class RubyTab extends React.Component {
         this.mainTooltipId = 'ruby-downloader-tooltip';
         this.editorRef = null;
         this.monacoRef = null;
+        this.containerRef = null;
+        this.resizeObserver = null;
         this.completionProvider = null;
-    }
-
-    componentDidMount () {
-        window.addEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate (prevProps) {
@@ -120,7 +118,13 @@ class RubyTab extends React.Component {
     }
 
     componentWillUnmount () {
-        window.removeEventListener('resize', this.handleResize);
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+    }
+
+    setContainerRef (ref) {
+        this.containerRef = ref;
     }
 
     handleEditorDidMount (editor, monaco) {
@@ -139,15 +143,12 @@ class RubyTab extends React.Component {
                 )
             });
         }
-    }
 
-    handleEditorChange (value) {
-        this.props.onChange(value);
-    }
-
-    handleResize () {
-        if (this.editorRef) {
-            this.editorRef.layout();
+        if (this.containerRef) {
+            this.resizeObserver = new ResizeObserver(() => {
+                editor.layout();
+            });
+            this.resizeObserver.observe(this.containerRef);
         }
     }
 
@@ -208,6 +209,7 @@ class RubyTab extends React.Component {
 
     render () {
         const {
+            onChange, // eslint-disable-line no-unused-vars
             rubyCode
         } = this.props;
         const {
@@ -218,6 +220,7 @@ class RubyTab extends React.Component {
         return (
             <>
                 <div
+                    ref={this.setContainerRef}
                     style={{
                         border: '1px solid hsla(0, 0%, 0%, 0.15)',
                         borderBottomRightRadius: '0.5rem',

@@ -152,6 +152,10 @@ class RubyTab extends React.Component {
         }
     }
 
+    handleEditorChange (value) {
+        this.props.onChange(value);
+    }
+
     handleZoomIn () {
         const currentSize = this.props.rubyCode.fontSize || DEFAULT_FONT_SIZE;
         const nextSize = FONT_SIZES.find(s => s > currentSize);

@@ -278,7 +278,7 @@ class RubyTab extends React.Component {
                                 fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
                                 minimap: {enabled: false},
                                 renderWhitespace: 'all',
-                                scrollBeyondLastLine: false,
+                                scrollBeyondLastLine: true,
                                 tabSize: 2,
                                 fixedOverflowWidgets: true
                             }}

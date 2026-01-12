@@ -7,7 +7,8 @@ import Editor from '@monaco-editor/react';
 import {
     rubyCodeShape,
     updateRubyCode,
-    updateRubyCodeTarget
+    updateRubyCodeTarget,
+    updateRubyFontSize
 } from '../reducers/ruby-code';
 import VM from 'scratch-vm';
 import {BLOCKS_TAB_INDEX} from '../reducers/editor-tab';
@@ -31,6 +32,7 @@ class RubyTab extends React.Component {
         bindAll(this, [
             'handleEditorDidMount',
             'handleEditorChange',
+            'handleFontSizeChange',
             'getSaveToComputerHandler',
             'getSaveAIHandler',
             'handleAISaveFinished',
@@ -127,6 +129,10 @@ class RubyTab extends React.Component {
         this.props.onChange(value);
     }
 
+    handleFontSizeChange (event) {
+        this.props.onFontSizeChange(Number(event.target.value));
+    }
+
     getSaveToComputerHandler (downloadProjectCallback) {
         return () => {
             this.props.onRequestCloseFile();
@@ -166,7 +172,8 @@ class RubyTab extends React.Component {
             rubyCode
         } = this.props;
         const {
-            code
+            code,
+            fontSize
         } = rubyCode;
 
         return (
@@ -187,7 +194,7 @@ class RubyTab extends React.Component {
                         onChange={this.handleEditorChange}
                         options={{
                             automaticLayout: true,
-                            fontSize: 16,
+                            fontSize: fontSize || 16,
                             fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
                             minimap: {enabled: false},
                             renderWhitespace: 'all',
@@ -200,6 +207,21 @@ class RubyTab extends React.Component {
                     />
                 </div>
                 <div className={styles.wrapper}>
+                    <div className={styles.fontSizeWrapper}>
+                        <select
+                            className={styles.fontSizeSelect}
+                            value={fontSize}
+                            onChange={this.handleFontSizeChange}
+                        >
+                            <option value={12}>{12}</option>
+                            <option value={14}>{14}</option>
+                            <option value={16}>{16}</option>
+                            <option value={18}>{18}</option>
+                            <option value={20}>{20}</option>
+                            <option value={24}>{24}</option>
+                            <option value={32}>{32}</option>
+                        </select>
+                    </div>
                     <RubyDownloader
                         onSaveError={this.handleAISaveError}
                         onSaveFinished={this.handleAISaveFinished}
@@ -248,6 +270,7 @@ RubyTab.propTypes = {
     onProjectTelemetryEvent: PropTypes.func,
     onSetAiSaveStatus: PropTypes.func,
     onClearAiSaveStatus: PropTypes.func,
+    onFontSizeChange: PropTypes.func,
     rubyCode: rubyCodeShape,
     targetCodeToBlocks: PropTypes.func,
     updateRubyCodeTargetState: PropTypes.func,
@@ -270,7 +293,8 @@ const mapDispatchToProps = dispatch => ({
     updateRubyCodeTargetState: target => dispatch(updateRubyCodeTarget(target)),
     onRequestCloseFile: () => dispatch(closeFileMenu()),
     onSetAiSaveStatus: status => dispatch(setAiSaveStatus(status)),
-    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus())
+    onClearAiSaveStatus: () => dispatch(clearAiSaveStatus()),
+    onFontSizeChange: fontSize => dispatch(updateRubyFontSize(fontSize))
 });
 
 export default RubyToBlocksConverterHOC(injectIntl(connect(

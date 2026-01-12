@@ -31,6 +31,21 @@
     width: 2rem;
 }
 
+.fontSizeWrapper {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.fontSizeSelect {
+    border-radius: 0.5rem;
+    padding: 0.2rem;
+    border: 1px solid hsla(0, 0%, 0%, 0.15);
+    background-color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
 .tooltip {
   background-color: $extensions-primary !important;
   opacity: 1 !important;

@@ -14,24 +14,17 @@
 }
 .wrapper {
   position: absolute;
-  width: 2.75rem;
+  width: 2.75rem; /* 44px */
   height: auto;
-  bottom: 1rem;
-  right: 1rem;
-}
-.button:hover {
-  transform: scale(1.1);
-  border-radius: 100%;
-  box-shadow: 0 0 0 6px $looks-transparent;
-  background-color: $extensions-primary;
-}
-
-.img {
-    width: 2rem;
+  bottom: 12px;
+  right: 27px; /* 12px (MARGIN_SIDE) + 15px (scrollbar thickness) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .zoomWrapper {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px; /* MARGIN_BETWEEN */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,11 +32,11 @@
 
 .zoomButton {
     z-index: $z-index-add-button;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 36px;
+    height: 36px;
     border: none;
     background-color: transparent;
-    margin-bottom: 0.25rem;
+    margin-bottom: 8px; /* MARGIN_BETWEEN */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,9 +44,13 @@
     padding: 0;
 }
 
+.zoomButton:last-child {
+    margin-bottom: 0;
+}
+
 .zoomIcon {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 36px;
+    height: 36px;
 }
 
 .tooltip {

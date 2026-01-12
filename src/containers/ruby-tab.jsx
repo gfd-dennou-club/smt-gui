@@ -33,6 +33,7 @@ class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
+            'setContainerRef',
             'handleEditorDidMount',
             'handleEditorChange',
             'handleZoomIn',
@@ -46,6 +47,8 @@ class RubyTab extends React.Component {
         this.mainTooltipId = 'ruby-downloader-tooltip';
         this.editorRef = null;
         this.monacoRef = null;
+        this.containerRef = null;
+        this.resizeObserver = null;
         this.completionProvider = null;
     }
 
@@ -76,6 +79,7 @@ class RubyTab extends React.Component {
                         if (this.props.isVisible && !prevProps.isVisible) {
                             if (this.editorRef) {
                                 this.editorRef.focus();
+                                this.editorRef.layout();
                             }
                         }
                     });
@@ -108,8 +112,19 @@ class RubyTab extends React.Component {
         if (this.props.isVisible && !prevProps.isVisible) {
             if (this.editorRef) {
                 this.editorRef.focus();
+                this.editorRef.layout();
             }
         }
+    }
+
+    componentWillUnmount () {
+        if (this.resizeObserver) {
+            this.resizeObserver.disconnect();
+        }
+    }
+
+    setContainerRef (ref) {
+        this.containerRef = ref;
     }
 
     handleEditorDidMount (editor, monaco) {
@@ -127,6 +142,14 @@ class RubyTab extends React.Component {
                     completer.provideCompletionItems(model, position, context, token, monaco)
                 )
             });
+        }
+
+        // Handle dynamic resizing
+        if (this.containerRef) {
+            this.resizeObserver = new ResizeObserver(() => {
+                editor.layout();
+            });
+            this.resizeObserver.observe(this.containerRef);
         }
     }
 
@@ -201,13 +224,15 @@ class RubyTab extends React.Component {
         return (
             <>
                 <div
+                    ref={this.setContainerRef}
                     style={{
                         border: '1px solid hsla(0, 0%, 0%, 0.15)',
                         borderBottomRightRadius: '0.5rem',
                         borderTopRightRadius: '0.5rem',
                         height: '100%',
                         width: '100%',
-                        minWidth: 0
+                        minWidth: 0,
+                        overflow: 'hidden'
                     }}
                 >
                     <Editor

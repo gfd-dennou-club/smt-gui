@@ -42,10 +42,8 @@
     z-index: $z-index-add-button;
     width: 2.25rem;
     height: 2.25rem;
-    border: 1px solid hsla(0, 0%, 0%, 0.15);
-    border-radius: 100%;
-    background-color: rgba(255, 255, 255, 0.75);
-    transition: transform, background-color 0.2s;
+    border: none;
+    background-color: transparent;
     margin-bottom: 0.25rem;
     display: flex;
     justify-content: center;
@@ -54,14 +52,9 @@
     padding: 0;
 }
 
-.zoomButton:hover {
-    background-color: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
-}
-
 .zoomIcon {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
 }
 
 .tooltip {

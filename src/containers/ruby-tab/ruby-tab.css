@@ -31,19 +31,37 @@
     width: 2rem;
 }
 
-.fontSizeWrapper {
+.zoomWrapper {
     margin-bottom: 0.5rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
-.fontSizeSelect {
-    border-radius: 0.5rem;
-    padding: 0.2rem;
+.zoomButton {
+    z-index: $z-index-add-button;
+    width: 2.25rem;
+    height: 2.25rem;
     border: 1px solid hsla(0, 0%, 0%, 0.15);
-    background-color: white;
-    font-size: 0.8rem;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.75);
+    transition: transform, background-color 0.2s;
+    margin-bottom: 0.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    padding: 0;
+}
+
+.zoomButton:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+}
+
+.zoomIcon {
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 .tooltip {

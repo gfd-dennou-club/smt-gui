@@ -26,13 +26,18 @@ import {setAiSaveStatus, clearAiSaveStatus} from '../reducers/koshien-file';
 import styles from './ruby-tab/ruby-tab.css';
 import ReactTooltip from 'react-tooltip';
 
+const FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
+const DEFAULT_FONT_SIZE = 16;
+
 class RubyTab extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
             'handleEditorDidMount',
             'handleEditorChange',
-            'handleFontSizeChange',
+            'handleZoomIn',
+            'handleZoomOut',
+            'handleZoomReset',
             'getSaveToComputerHandler',
             'getSaveAIHandler',
             'handleAISaveFinished',
@@ -129,8 +134,25 @@ class RubyTab extends React.Component {
         this.props.onChange(value);
     }
 
-    handleFontSizeChange (event) {
-        this.props.onFontSizeChange(Number(event.target.value));
+    handleZoomIn () {
+        const currentSize = this.props.rubyCode.fontSize || DEFAULT_FONT_SIZE;
+        const nextSize = FONT_SIZES.find(s => s > currentSize);
+        if (nextSize) {
+            this.props.onFontSizeChange(nextSize);
+        }
+    }
+
+    handleZoomOut () {
+        const currentSize = this.props.rubyCode.fontSize || DEFAULT_FONT_SIZE;
+        const prevSize = FONT_SIZES.slice().reverse()
+            .find(s => s < currentSize);
+        if (prevSize) {
+            this.props.onFontSizeChange(prevSize);
+        }
+    }
+
+    handleZoomReset () {
+        this.props.onFontSizeChange(DEFAULT_FONT_SIZE);
     }
 
     getSaveToComputerHandler (downloadProjectCallback) {
@@ -194,7 +216,7 @@ class RubyTab extends React.Component {
                         onChange={this.handleEditorChange}
                         options={{
                             automaticLayout: true,
-                            fontSize: fontSize || 16,
+                            fontSize: fontSize || DEFAULT_FONT_SIZE,
                             fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
                             minimap: {enabled: false},
                             renderWhitespace: 'all',
@@ -207,20 +229,34 @@ class RubyTab extends React.Component {
                     />
                 </div>
                 <div className={styles.wrapper}>
-                    <div className={styles.fontSizeWrapper}>
-                        <select
-                            className={styles.fontSizeSelect}
-                            value={fontSize}
-                            onChange={this.handleFontSizeChange}
+                    <div className={styles.zoomWrapper}>
+                        <button
+                            className={styles.zoomButton}
+                            onClick={this.handleZoomIn}
                         >
-                            <option value={12}>{12}</option>
-                            <option value={14}>{14}</option>
-                            <option value={16}>{16}</option>
-                            <option value={18}>{18}</option>
-                            <option value={20}>{20}</option>
-                            <option value={24}>{24}</option>
-                            <option value={32}>{32}</option>
-                        </select>
+                            <img
+                                src="./static/blocks-media/default/zoom-in.svg"
+                                className={styles.zoomIcon}
+                            />
+                        </button>
+                        <button
+                            className={styles.zoomButton}
+                            onClick={this.handleZoomOut}
+                        >
+                            <img
+                                src="./static/blocks-media/default/zoom-out.svg"
+                                className={styles.zoomIcon}
+                            />
+                        </button>
+                        <button
+                            className={styles.zoomButton}
+                            onClick={this.handleZoomReset}
+                        >
+                            <img
+                                src="./static/blocks-media/default/zoom-reset.svg"
+                                className={styles.zoomIcon}
+                            />
+                        </button>
                     </div>
                     <RubyDownloader
                         onSaveError={this.handleAISaveError}

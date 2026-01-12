@@ -24,8 +24,8 @@
 
 .downloadWrapper {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    bottom: 22px;
+    right: 70px; /* 22px (zoom margin) + 36px (zoom width) + 12px (gap) */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -92,10 +92,10 @@ $arrow-rounding: 0.125rem;
     width: $arrow-size !important;
 }
 
-.tooltip:global(.place-left):after {
-    margin-top: $arrow-inset !important;
-    right: $arrow-inset !important;
-    transform: rotate(45deg) !important;
+.tooltip:global(.place-top):after {
+    margin-left: $arrow-inset !important;
+    bottom: $arrow-inset !important;
+    transform: rotate(135deg) !important;
 }
 
 .editorContainer {

@@ -311,7 +311,7 @@ class RubyTab extends React.Component {
                     </RubyDownloader>
                     <ReactTooltip
                         id={this.mainTooltipId}
-                        place="left"
+                        place="top"
                         effect="solid"
                         className={styles.tooltip}
                     >

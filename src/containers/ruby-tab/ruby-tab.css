@@ -2,7 +2,7 @@
 @import "../../css/units.css";
 @import "../../css/z-index.css";
 
-.button {
+.downloadButton {
     z-index: $z-index-add-button;
     width: 2.75rem;
     height: 2.75rem;
@@ -10,7 +10,16 @@
     border-radius: 100%;
     background-color: $looks-secondary;
     box-shadow: 0 0 0 4px $looks-transparent;
-    transition: transform, box-shadow 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.downloadIcon {
+    width: 28px;
+    height: 28px;
 }
 .wrapper {
   position: absolute;

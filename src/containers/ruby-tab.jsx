@@ -264,7 +264,7 @@ class RubyTab extends React.Component {
                     >
                         {(_, downloadProjectCallback) => (
                             <button
-                                className={styles.button}
+                                className={styles.downloadButton}
                                 onClick={this.getSaveAIHandler(downloadProjectCallback)}
                                 data-tip
                                 data-for={'ruby-downloader-tooltip'}
@@ -272,7 +272,7 @@ class RubyTab extends React.Component {
                                 <img
                                     src={rubyIcon}
                                     alt="ruby download"
-                                    className={styles.img}
+                                    className={styles.downloadIcon}
                                 />
 
                             </button>

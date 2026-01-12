@@ -232,24 +232,34 @@ class RubyTab extends React.Component {
                         position: 'relative'
                     }}
                 >
-                    <Editor
-                        height="100%"
-                        language="smalruby"
-                        onMount={this.handleEditorDidMount}
-                        onChange={this.handleEditorChange}
-                        options={{
-                            automaticLayout: true,
-                            fontSize: fontSize || DEFAULT_FONT_SIZE,
-                            fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
-                            minimap: {enabled: false},
-                            renderWhitespace: 'all',
-                            scrollBeyondLastLine: false,
-                            tabSize: 2
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0
                         }}
-                        theme="vs"
-                        value={code}
-                        width="100%"
-                    />
+                    >
+                        <Editor
+                            height="100%"
+                            language="smalruby"
+                            onMount={this.handleEditorDidMount}
+                            onChange={this.handleEditorChange}
+                            options={{
+                                automaticLayout: true,
+                                fontSize: fontSize || DEFAULT_FONT_SIZE,
+                                fontFamily: 'Monaco, Menlo, Consolas, "source-code-pro", monospace',
+                                minimap: {enabled: false},
+                                renderWhitespace: 'all',
+                                scrollBeyondLastLine: false,
+                                tabSize: 2
+                            }}
+                            theme="vs"
+                            value={code}
+                            width="100%"
+                        />
+                    </div>
                 </div>
                 <div className={styles.downloadWrapper}>
                     <RubyDownloader

@@ -15,10 +15,9 @@
 .wrapper {
   position: absolute;
   width: 2.75rem;
-  height: 2.75rem;
+  height: auto;
   bottom: 1rem;
   right: 1rem;
-  border-radius: 100%;
 }
 .button:hover {
   transform: scale(1.1);

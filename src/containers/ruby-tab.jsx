@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
-import Editor from '@monaco-editor/react';
+import Editor, {loader} from '@monaco-editor/react';
 import {
     rubyCodeShape,
     updateRubyCode,
@@ -29,6 +29,24 @@ import ReactTooltip from 'react-tooltip';
 const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
 const DEFAULT_FONT_SIZE = 16;
 
+const configureMonacoLocale = locale => {
+    const config = {
+        paths: {
+            vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs'
+        }
+    };
+
+    if (locale === 'ja' || locale === 'ja-Hira') {
+        config['vs/nls'] = {
+            availableLanguages: {
+                '*': 'ja'
+            }
+        };
+    }
+
+    loader.config(config);
+};
+
 class RubyTab extends React.Component {
     constructor (props) {
         super(props);
@@ -50,9 +68,23 @@ class RubyTab extends React.Component {
         this.containerRef = null;
         this.resizeObserver = null;
         this.completionProvider = null;
+
+        configureMonacoLocale(props.locale);
     }
 
     componentDidUpdate (prevProps) {
+        if (this.props.locale !== prevProps.locale) {
+            configureMonacoLocale(this.props.locale);
+        }
+
+        if (prevProps.isVisible && !this.props.isVisible) {
+            if (this.editorRef && this.monacoRef) {
+                this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', []);
+                // Close any active widgets (peek view, hover, etc.)
+                this.editorRef.trigger('source', 'closeMarkersNavigation');
+            }
+        }
+
         if (this.props.rubyCode.errors !== prevProps.rubyCode.errors) {
             if (this.editorRef && this.monacoRef) {
                 const markers = this.props.rubyCode.errors.map(err => ({
@@ -249,6 +281,7 @@ class RubyTab extends React.Component {
                 >
                     <div className={styles.editorWrapper}>
                         <Editor
+                            key={this.props.locale}
                             height="100%"
                             language="smalruby"
                             onMount={this.handleEditorDidMount}
@@ -259,7 +292,8 @@ class RubyTab extends React.Component {
                                 minimap: {enabled: false},
                                 renderWhitespace: 'all',
                                 scrollBeyondLastLine: false,
-                                tabSize: 2
+                                tabSize: 2,
+                                fixedOverflowWidgets: true
                             }}
                             theme="vs"
                             value={code}

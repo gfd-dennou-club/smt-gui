@@ -33,8 +33,8 @@
 
 .zoomControlsWrapper {
     position: absolute;
-    bottom: 12px;
-    right: 27px; /* 12px (MARGIN_SIDE) + 15px (scrollbar thickness) */
+    bottom: 22px;
+    right: 22px; /* 12px (MARGIN_SIDE) + 10px (scrollbar thickness) */
     display: flex;
     flex-direction: column;
     align-items: center;

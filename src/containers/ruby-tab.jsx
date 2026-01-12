@@ -53,6 +53,20 @@ class RubyTab extends React.Component {
     }
 
     componentDidUpdate (prevProps) {
+        if (this.props.rubyCode.errors !== prevProps.rubyCode.errors) {
+            if (this.editorRef && this.monacoRef) {
+                const markers = this.props.rubyCode.errors.map(err => ({
+                    startLineNumber: err.row + 1,
+                    startColumn: err.column + 1,
+                    endLineNumber: err.row + 1,
+                    endColumn: (err.source ? err.column + err.source.length + 1 : 1000),
+                    message: err.text,
+                    severity: this.monacoRef.MarkerSeverity.Error
+                }));
+                this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
+            }
+        }
+
         let modified = this.props.rubyCode.modified;
         if (modified) {
             const targetId = this.props.rubyCode.target ? this.props.rubyCode.target.id : null;
@@ -134,6 +148,9 @@ class RubyTab extends React.Component {
     handleEditorDidMount (editor, monaco) {
         this.editorRef = editor;
         this.monacoRef = monaco;
+
+        window.monacoEditor = editor;
+        window.monaco = monaco;
 
         // Register Smalruby language
         monaco.languages.register({id: 'smalruby'});

@@ -79,6 +79,9 @@ class RubyTab extends React.Component {
                     severity: this.monacoRef.MarkerSeverity.Error
                 }));
                 this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
+                if (markers.length > 0) {
+                    this.editorRef.trigger('source', 'editor.action.marker.next');
+                }
             }
         }
 
@@ -127,6 +130,7 @@ class RubyTab extends React.Component {
                     this.monacoRef.editor.setModelMarkers(this.editorRef.getModel(), 'smalruby', markers);
                     this.editorRef.setPosition({lineNumber: error.row + 1, column: error.column + 1});
                     this.editorRef.focus();
+                    this.editorRef.trigger('source', 'editor.action.marker.next');
                 }
             }
         }

@@ -206,8 +206,7 @@ class RubyTab extends React.Component {
                         borderBottomRightRadius: '0.5rem',
                         borderTopRightRadius: '0.5rem',
                         height: '100%',
-                        width: '100%',
-                        minWidth: 0
+                        width: '100%'
                     }}
                 >
                     <Editor

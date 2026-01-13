@@ -10,6 +10,8 @@ import CloseButton from '../close-button/close-button.jsx';
 
 import backIcon from '../../lib/assets/icon--back.svg';
 import helpIcon from '../../lib/assets/icon--help.svg';
+import reloadIcon from '../../lib/assets/icon--reload.svg';
+import stopIcon from '../close-button/icon--close.svg';
 
 import styles from './modal.css';
 
@@ -24,6 +26,7 @@ const ModalComponent = props => (
         onRequestClose={props.onRequestClose}
     >
         <Box
+            className={styles.box}
             dir={props.isRtl ? 'rtl' : 'ltr'}
             direction="column"
             grow={1}
@@ -63,6 +66,46 @@ const ModalComponent = props => (
                     ) : null}
                     {props.contentLabel}
                 </div>
+                {props.loading && props.onStop ? (
+                    <div
+                        className={classNames(
+                            styles.headerItem,
+                            styles.headerItemReload
+                        )}
+                    >
+                        <Button
+                            className={styles.reloadButton}
+                            iconClassName={styles.stopIcon}
+                            iconSrc={stopIcon}
+                            onClick={props.onStop}
+                        >
+                            <FormattedMessage
+                                defaultMessage="Stop"
+                                description="Stop button in modal"
+                                id="gui.modal.stop"
+                            />
+                        </Button>
+                    </div>
+                ) : (props.onReload ? (
+                    <div
+                        className={classNames(
+                            styles.headerItem,
+                            styles.headerItemReload
+                        )}
+                    >
+                        <Button
+                            className={styles.reloadButton}
+                            iconSrc={reloadIcon}
+                            onClick={props.onReload}
+                        >
+                            <FormattedMessage
+                                defaultMessage="Reload"
+                                description="Reload button in modal"
+                                id="gui.modal.reload"
+                            />
+                        </Button>
+                    </div>
+                ) : null)}
                 <div
                     className={classNames(
                         styles.headerItem,
@@ -89,6 +132,11 @@ const ModalComponent = props => (
                     )}
                 </div>
             </div>
+            {props.loading ? (
+                <div className={styles.progressBar}>
+                    <div className={styles.progressBarValue} />
+                </div>
+            ) : null}
             {props.children}
         </Box>
     </ReactModal>
@@ -105,7 +153,10 @@ ModalComponent.propTypes = {
     headerClassName: PropTypes.string,
     headerImage: PropTypes.string,
     isRtl: PropTypes.bool,
+    loading: PropTypes.bool,
     onHelp: PropTypes.func,
+    onReload: PropTypes.func,
+    onStop: PropTypes.func,
     onRequestClose: PropTypes.func
 };
 

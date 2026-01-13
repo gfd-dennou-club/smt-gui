@@ -6,13 +6,19 @@ import {projectTitleInitialState} from '../reducers/project-title';
 import RubyGenerator from '../lib/ruby-generator';
 import VM from 'scratch-vm';
 import {rubyCodeShape} from '../reducers/ruby-code';
+import {setKoshienFileHandle, clearKoshienFileHandle} from '../reducers/koshien-file';
 
 class RubyDownloader extends React.Component {
     constructor (props) {
         super(props);
         bindAll(this, [
-            'downloadProject'
+            'downloadProject',
+            'saveWithFileSystemAPI',
+            'supportsFileSystemAPI'
         ]);
+    }
+    supportsFileSystemAPI () {
+        return 'showSaveFilePicker' in window;
     }
     saveRuby () {
         const idToTarget = {};
@@ -39,7 +45,51 @@ class RubyDownloader extends React.Component {
             type: 'text/x-ruby-script'
         });
     }
+    async saveWithFileSystemAPI () {
+        try {
+            const content = this.saveRuby();
+            // If forceFilePicker is true, ignore existing file handle
+            let fileHandle = this.props.forceFilePicker ? null : this.props.koshienFileHandle;
+
+            // If no file handle exists, show save dialog
+            if (!fileHandle) {
+                fileHandle = await window.showSaveFilePicker({
+                    suggestedName: this.props.projectFilename,
+                    types: [{
+                        description: 'Ruby Script',
+                        accept: {'text/x-ruby-script': ['.rb']}
+                    }]
+                });
+                // Store the file handle for future saves
+                this.props.onSetKoshienFileHandle(fileHandle);
+            }
+
+            // Write to the file
+            const writable = await fileHandle.createWritable();
+            await writable.write(content);
+            await writable.close();
+
+            if (this.props.onSaveFinished) {
+                this.props.onSaveFinished();
+            }
+        } catch (err) {
+            // User cancelled the save dialog or permission denied
+            if (err.name !== 'AbortError') {
+                console.error('Error saving file:', err);
+            }
+            if (this.props.onSaveError) {
+                this.props.onSaveError(err);
+            }
+        }
+    }
     downloadProject () {
+        // Use File System Access API if available (Chrome/Edge)
+        if (this.supportsFileSystemAPI()) {
+            this.saveWithFileSystemAPI();
+            return;
+        }
+
+        // Fallback to traditional download for other browsers
         const downloadLink = document.createElement('a');
         document.body.appendChild(downloadLink);
 
@@ -82,7 +132,11 @@ const getProjectFilename = (curTitle, defaultTitle) => {
 RubyDownloader.propTypes = {
     children: PropTypes.func,
     className: PropTypes.string,
+    forceFilePicker: PropTypes.bool,
+    koshienFileHandle: PropTypes.object,
     onSaveFinished: PropTypes.func,
+    onSaveError: PropTypes.func,
+    onSetKoshienFileHandle: PropTypes.func,
     projectFilename: PropTypes.string,
     rubyCode: rubyCodeShape,
     sprites: PropTypes.objectOf(PropTypes.shape({
@@ -99,6 +153,7 @@ RubyDownloader.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+    koshienFileHandle: state.scratchGui.koshienFile.fileHandle,
     projectFilename: getProjectFilename(state.scratchGui.projectTitle, projectTitleInitialState),
     sprites: state.scratchGui.targets.sprites,
     stage: state.scratchGui.targets.stage,
@@ -106,7 +161,12 @@ const mapStateToProps = state => ({
     rubyCode: state.scratchGui.rubyCode
 });
 
+const mapDispatchToProps = dispatch => ({
+    onSetKoshienFileHandle: fileHandle => dispatch(setKoshienFileHandle(fileHandle)),
+    onClearKoshienFileHandle: () => dispatch(clearKoshienFileHandle())
+});
+
 export default connect(
     mapStateToProps,
-    () => ({}) // omit dispatch prop
+    mapDispatchToProps
 )(RubyDownloader);

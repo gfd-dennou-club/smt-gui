@@ -27,4 +27,7 @@ npm-*
 # for act
 .secrets
 
+# Environment variables (contains sensitive API keys)
+.env
+
 /tmp

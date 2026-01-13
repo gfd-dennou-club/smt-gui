@@ -26,7 +26,9 @@ import {
     openExtensionLibrary,
     closeDebugModal,
     openUrlLoaderModal,
-    closeUrlLoaderModal
+    closeUrlLoaderModal,
+    openKoshienTestModal,
+    closeKoshienTestModal
 } from '../reducers/modals';
 
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
@@ -159,7 +161,6 @@ const mapStateToProps = state => {
         alertsVisible: state.scratchGui.alerts.visible,
         backdropLibraryVisible: state.scratchGui.modals.backdropLibrary,
         blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
-        cardsVisible: state.scratchGui.cards.visible,
         connectionModalVisible: state.scratchGui.modals.connectionModal,
         costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
         costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
@@ -178,9 +179,10 @@ const mapStateToProps = state => {
             state.scratchGui.targets.stage.id === state.scratchGui.targets.editingTarget
         ),
         telemetryModalVisible: state.scratchGui.modals.telemetryModal,
-        tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
         rubyTabVisible: state.scratchGui.editorTab.activeTabIndex === RUBY_TAB_INDEX,
         urlLoaderModalVisible: state.scratchGui.modals.urlLoaderModal,
+        meshDomainModalVisible: state.scratchGui.modals.meshDomainModal,
+        koshienTestModalVisible: state.scratchGui.modals.koshienTestModal,
         vm: state.scratchGui.vm
     };
 };
@@ -196,7 +198,9 @@ const mapDispatchToProps = dispatch => ({
     onRequestCloseDebugModal: () => dispatch(closeDebugModal()),
     onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal()),
     openUrlLoaderModal: () => dispatch(openUrlLoaderModal()),
-    closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal())
+    closeUrlLoaderModal: () => dispatch(closeUrlLoaderModal()),
+    openKoshienTestModal: () => dispatch(openKoshienTestModal()),
+    closeKoshienTestModal: () => dispatch(closeKoshienTestModal())
 });
 
 const ConnectedGUI = injectIntl(connect(

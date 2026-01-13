@@ -9,6 +9,9 @@ class RubyHelper {
         bindAll(this, [
             'fillInRubyProgram',
             'currentRubyProgram',
+            'getErrors',
+            'getErrorOnLine',
+            'waitForErrorOnLine',
             'dismissAlertsIfPresent',
             'expectInterconvertBetweenCodeAndRuby'
         ]);
@@ -23,12 +26,35 @@ class RubyHelper {
     }
 
     currentRubyProgram () {
-        return this.driver.executeScript(`return ace.edit('ruby-editor').getValue();`);
+        return this.driver.executeScript(`return window.monacoEditor.getValue();`);
     }
 
     fillInRubyProgram (code) {
         code = code.replace(/\n/g, '\\n').replace(/'/g, "\\'");
-        return this.driver.executeScript(`ace.edit('ruby-editor').setValue('${code}');`);
+        return this.driver.executeScript(`window.monacoEditor.setValue('${code}');`);
+    }
+
+    getErrors () {
+        return this.driver.executeScript(`
+            return window.monaco.editor.getModelMarkers({}).map(m => ({
+                line: m.startLineNumber,
+                column: m.startColumn,
+                message: m.message,
+                severity: m.severity
+            }));
+        `);
+    }
+
+    async getErrorOnLine (line) {
+        const errors = await this.getErrors();
+        return errors.find(e => e.line === line);
+    }
+
+    async waitForErrorOnLine (line) {
+        return this.driver.wait(async () => {
+            const error = await this.getErrorOnLine(line);
+            return !!error;
+        }, 5000);
     }
 
     async dismissAlertsIfPresent () {

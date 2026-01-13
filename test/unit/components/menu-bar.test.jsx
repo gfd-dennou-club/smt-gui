@@ -4,6 +4,7 @@ import MenuBar from '../../../src/components/menu-bar/menu-bar';
 import {menuInitialState} from '../../../src/reducers/menus';
 import {LoadingState} from '../../../src/reducers/project-state';
 import {DEFAULT_THEME} from '../../../src/lib/themes';
+import {koshienFileInitialState} from '../../../src/reducers/koshien-file';
 
 import configureStore from 'redux-mock-store';
 import {Provider} from 'react-redux';
@@ -26,6 +27,27 @@ describe('MenuBar Component', () => {
             timeTravel: {
                 year: 'NOW'
             },
+            targets: {
+                sprites: {},
+                stage: {},
+                editingTarget: null,
+                highlightedTargetId: null,
+                highlightedTargetTime: null
+            },
+            rubyCode: {
+                target: null,
+                code: '',
+                modified: false,
+                errors: [],
+                markers: []
+            },
+            googleDriveFile: {
+                fileId: null,
+                fileName: null,
+                folderId: null,
+                isGoogleDriveFile: false
+            },
+            koshienFile: koshienFileInitialState,
             vm: new VM()
         }
     });

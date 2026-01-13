@@ -12,8 +12,8 @@ import styles from './url-loader-modal.css';
 
 const messages = defineMessages({
     title: {
-        defaultMessage: 'Load from URL',
-        description: 'Title for the URL loader modal',
+        defaultMessage: 'Load from Scratch',
+        description: 'Title for the Scratch loader modal',
         id: 'gui.urlLoader.title'
     },
     urlPlaceholder: {
@@ -27,14 +27,9 @@ const messages = defineMessages({
         id: 'gui.urlLoader.urlExamplesTitle'
     },
     urlExampleScratch: {
-        defaultMessage: 'https://scratch.mit.edu/projects/{project_id}/',
-        description: 'Example URL format for Scratch projects',
+        defaultMessage: 'https://scratch.mit.edu/projects/1234567/',
+        description: 'Example URL for Scratch projects',
         id: 'gui.urlLoader.urlExampleScratch'
-    },
-    urlExampleGoogleDrive: {
-        defaultMessage: 'https://drive.google.com/file/d/{file_id}/view?usp=drive_link',
-        description: 'Example URL format for Google Drive files',
-        id: 'gui.urlLoader.urlExampleGoogleDrive'
     },
     openButton: {
         defaultMessage: 'Open',
@@ -147,11 +142,6 @@ class URLLoaderModal extends React.Component {
                             <li className={styles.exampleItem}>
                                 <FormattedMessage
                                     {...messages.urlExampleScratch}
-                                />
-                            </li>
-                            <li className={styles.exampleItem}>
-                                <FormattedMessage
-                                    {...messages.urlExampleGoogleDrive}
                                 />
                             </li>
                         </ul>

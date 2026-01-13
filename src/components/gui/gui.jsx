@@ -25,14 +25,14 @@ import Watermark from '../../containers/watermark.jsx';
 
 import Backpack from '../../containers/backpack.jsx';
 import WebGlModal from '../../containers/webgl-modal.jsx';
-import TipsLibrary from '../../containers/tips-library.jsx';
-import Cards from '../../containers/cards.jsx';
 import Alerts from '../../containers/alerts.jsx';
 import DragLayer from '../../containers/drag-layer.jsx';
 import ConnectionModal from '../../containers/connection-modal.jsx';
 import TelemetryModal from '../telemetry-modal/telemetry-modal.jsx';
 import BlockDisplayModal from '../../containers/block-display-modal.jsx';
+import MeshDomainModal from '../../containers/mesh-domain-modal.jsx';
 import URLLoaderModal from '../url-loader-modal/url-loader-modal.jsx';
+import KoshienTestModal from '../koshien-test-modal/koshien-test-modal.jsx';
 
 import layout, {STAGE_SIZE_MODES} from '../../lib/layout-constants';
 import {resolveStageSize} from '../../lib/screen-utils';
@@ -72,7 +72,6 @@ const GUIComponent = props => {
         backpackVisible,
         blocksId,
         blocksTabVisible,
-        cardsVisible,
         canChangeLanguage,
         canChangeTheme,
         canCreateNew,
@@ -100,6 +99,7 @@ const GUIComponent = props => {
         isTotallyNormal,
         loading,
         logo,
+        meshDomainModalVisible,
         renderLogin,
         onClickAbout,
         onClickAccountNav,
@@ -133,13 +133,17 @@ const GUIComponent = props => {
         targetIsStage,
         telemetryModalVisible,
         theme,
-        tipsLibraryVisible,
         urlLoaderModalVisible,
         closeUrlLoaderModal,
         onUrlLoaderSubmit,
+        koshienTestModalVisible,
+        closeKoshienTestModal,
         vm,
         // Exclude Redux-related props from being passed to DOM
         setSelectedBlocks: _setSelectedBlocks,
+        openUrlLoaderModal: _openUrlLoaderModal,
+        openKoshienTestModal: _openKoshienTestModal,
+        openMeshDomainModal: _openMeshDomainModal,
         ...componentProps
     } = omit(props, 'dispatch');
     if (children) {
@@ -198,6 +202,14 @@ const GUIComponent = props => {
                         onLoadUrl={onUrlLoaderSubmit}
                     />
                 ) : null}
+                {meshDomainModalVisible ? (
+                    <MeshDomainModal />
+                ) : null}
+                {koshienTestModalVisible ? (
+                    <KoshienTestModal
+                        onRequestClose={closeKoshienTestModal}
+                    />
+                ) : null}
                 {loading ? (
                     <Loader />
                 ) : null}
@@ -207,12 +219,6 @@ const GUIComponent = props => {
                 {isRendererSupported ? null : (
                     <WebGlModal isRtl={isRtl} />
                 )}
-                {tipsLibraryVisible ? (
-                    <TipsLibrary />
-                ) : null}
-                {cardsVisible ? (
-                    <Cards />
-                ) : null}
                 {alertsVisible ? (
                     <Alerts className={styles.alertsContainer} />
                 ) : null}
@@ -444,7 +450,6 @@ GUIComponent.propTypes = {
     canSave: PropTypes.bool,
     canShare: PropTypes.bool,
     canUseCloud: PropTypes.bool,
-    cardsVisible: PropTypes.bool,
     children: PropTypes.node,
     blockDisplayModalVisible: PropTypes.bool,
     costumeLibraryVisible: PropTypes.bool,
@@ -460,6 +465,7 @@ GUIComponent.propTypes = {
     isTotallyNormal: PropTypes.bool,
     loading: PropTypes.bool,
     logo: PropTypes.string,
+    meshDomainModalVisible: PropTypes.bool,
     onActivateCostumesTab: PropTypes.func,
     onActivateRubyTab: PropTypes.func,
     onActivateSoundsTab: PropTypes.func,
@@ -492,10 +498,11 @@ GUIComponent.propTypes = {
     targetIsStage: PropTypes.bool,
     telemetryModalVisible: PropTypes.bool,
     theme: PropTypes.string,
-    tipsLibraryVisible: PropTypes.bool,
     urlLoaderModalVisible: PropTypes.bool,
     closeUrlLoaderModal: PropTypes.func,
     onUrlLoaderSubmit: PropTypes.func,
+    koshienTestModalVisible: PropTypes.bool,
+    closeKoshienTestModal: PropTypes.func,
     vm: PropTypes.instanceOf(VM).isRequired
 };
 GUIComponent.defaultProps = {

@@ -2,7 +2,6 @@ import {applyMiddleware, compose, combineReducers} from 'redux';
 import alertsReducer, {alertsInitialState} from './alerts';
 import assetDragReducer, {assetDragInitialState} from './asset-drag';
 import blockDisplayReducer, {initialState as blockDisplayInitialState} from './block-display';
-import cardsReducer, {cardsInitialState} from './cards';
 import colorPickerReducer, {colorPickerInitialState} from './color-picker';
 import connectionModalReducer, {connectionModalInitialState} from './connection-modal';
 import customProceduresReducer, {customProceduresInitialState} from './custom-procedures';
@@ -10,6 +9,7 @@ import blockDragReducer, {blockDragInitialState} from './block-drag';
 import editorTabReducer, {editorTabInitialState} from './editor-tab';
 import hoveredTargetReducer, {hoveredTargetInitialState} from './hovered-target';
 import menuReducer, {menuInitialState} from './menus';
+import meshV2Reducer, {meshV2InitialState} from './mesh-v2';
 import micIndicatorReducer, {micIndicatorInitialState} from './mic-indicator';
 import modalReducer, {modalsInitialState} from './modals';
 import modeReducer, {modeInitialState} from './mode';
@@ -19,6 +19,8 @@ import projectChangedReducer, {projectChangedInitialState} from './project-chang
 import projectStateReducer, {projectStateInitialState} from './project-state';
 import projectTitleReducer, {projectTitleInitialState} from './project-title';
 import fontsLoadedReducer, {fontsLoadedInitialState} from './fonts-loaded';
+import googleDriveFileReducer, {googleDriveFileInitialState} from './google-drive-file';
+import koshienFileReducer, {koshienFileInitialState} from './koshien-file';
 import restoreDeletionReducer, {restoreDeletionInitialState} from './restore-deletion';
 import rubyCodeReducer, {rubyCodeInitialState} from './ruby-code';
 import stageSizeReducer, {stageSizeInitialState} from './stage-size';
@@ -32,8 +34,6 @@ import vmStatusReducer, {vmStatusInitialState} from './vm-status';
 import workspaceMetricsReducer, {workspaceMetricsInitialState} from './workspace-metrics';
 import throttle from 'redux-throttle';
 
-import decks from '../lib/libraries/decks/index.jsx';
-
 const guiMiddleware = compose(applyMiddleware(throttle(300, {leading: true, trailing: true})));
 
 const guiInitialState = {
@@ -41,7 +41,6 @@ const guiInitialState = {
     assetDrag: assetDragInitialState,
     blockDisplay: blockDisplayInitialState,
     blockDrag: blockDragInitialState,
-    cards: cardsInitialState,
     colorPicker: colorPickerInitialState,
     connectionModal: connectionModalInitialState,
     customProcedures: customProceduresInitialState,
@@ -50,6 +49,7 @@ const guiInitialState = {
     hoveredTarget: hoveredTargetInitialState,
     stageSize: stageSizeInitialState,
     menus: menuInitialState,
+    meshV2: meshV2InitialState,
     micIndicator: micIndicatorInitialState,
     modals: modalsInitialState,
     monitors: monitorsInitialState,
@@ -58,6 +58,8 @@ const guiInitialState = {
     projectState: projectStateInitialState,
     projectTitle: projectTitleInitialState,
     fontsLoaded: fontsLoadedInitialState,
+    googleDriveFile: googleDriveFileInitialState,
+    koshienFile: koshienFileInitialState,
     rubyCode: rubyCodeInitialState,
     restoreDeletion: restoreDeletionInitialState,
     targets: targetsInitialState,
@@ -108,25 +110,6 @@ const initEmbedded = function (currentState) {
     );
 };
 
-const initTutorialCard = function (currentState, deckId) {
-    return Object.assign(
-        {},
-        currentState,
-        {
-            cards: {
-                visible: true,
-                content: decks,
-                activeDeckId: deckId,
-                expanded: true,
-                step: 0,
-                x: 0,
-                y: 0,
-                dragging: false
-            }
-        }
-    );
-};
-
 const initTelemetryModal = function (currentState) {
     return Object.assign(
         {},
@@ -144,7 +127,6 @@ const guiReducer = combineReducers({
     assetDrag: assetDragReducer,
     blockDisplay: blockDisplayReducer,
     blockDrag: blockDragReducer,
-    cards: cardsReducer,
     colorPicker: colorPickerReducer,
     connectionModal: connectionModalReducer,
     customProcedures: customProceduresReducer,
@@ -153,6 +135,7 @@ const guiReducer = combineReducers({
     hoveredTarget: hoveredTargetReducer,
     stageSize: stageSizeReducer,
     menus: menuReducer,
+    meshV2: meshV2Reducer,
     micIndicator: micIndicatorReducer,
     modals: modalReducer,
     monitors: monitorReducer,
@@ -161,6 +144,8 @@ const guiReducer = combineReducers({
     projectState: projectStateReducer,
     projectTitle: projectTitleReducer,
     fontsLoaded: fontsLoadedReducer,
+    googleDriveFile: googleDriveFileReducer,
+    koshienFile: koshienFileReducer,
     restoreDeletion: restoreDeletionReducer,
     rubyCode: rubyCodeReducer,
     targets: targetReducer,
@@ -180,6 +165,5 @@ export {
     initEmbedded,
     initFullScreen,
     initPlayer,
-    initTelemetryModal,
-    initTutorialCard
+    initTelemetryModal
 };

@@ -2,7 +2,7 @@
 @import "../../css/units.css";
 @import "../../css/z-index.css";
 
-.button {
+.downloadButton {
     z-index: $z-index-add-button;
     width: 2.75rem;
     height: 2.75rem;
@@ -10,25 +10,57 @@
     border-radius: 100%;
     background-color: $looks-secondary;
     box-shadow: 0 0 0 4px $looks-transparent;
-    transition: transform, box-shadow 0.5s;
-}
-.wrapper {
-  position: absolute;
-  width: 2.75rem;
-  height: 2.75rem;
-  bottom: 1rem;
-  right: 1rem;
-  border-radius: 100%;
-}
-.button:hover {
-  transform: scale(1.1);
-  border-radius: 100%;
-  box-shadow: 0 0 0 6px $looks-transparent;
-  background-color: $extensions-primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
 }
 
-.img {
-    width: 2rem;
+.downloadIcon {
+    width: 28px;
+    height: 28px;
+}
+
+.downloadWrapper {
+    position: absolute;
+    bottom: 22px;
+    right: 70px; /* 22px (zoom margin) + 36px (zoom width) + 12px (gap) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.zoomControlsWrapper {
+    position: absolute;
+    bottom: 22px;
+    right: 22px; /* 12px (MARGIN_SIDE) + 10px (scrollbar thickness) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.zoomButton {
+    z-index: $z-index-add-button;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background-color: transparent;
+    margin-bottom: 8px; /* MARGIN_BETWEEN */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.zoomButton:last-child {
+    margin-bottom: 0;
+}
+
+.zoomIcon {
+    width: 36px;
+    height: 36px;
 }
 
 .tooltip {
@@ -60,8 +92,27 @@ $arrow-rounding: 0.125rem;
     width: $arrow-size !important;
 }
 
-.tooltip:global(.place-left):after {
-    margin-top: $arrow-inset !important;
-    right: $arrow-inset !important;
-    transform: rotate(45deg) !important;
+.tooltip:global(.place-top):after {
+    margin-left: $arrow-inset !important;
+    bottom: $arrow-inset !important;
+    transform: rotate(135deg) !important;
+}
+
+.editorContainer {
+    border: 1px solid hsla(0, 0%, 0%, 0.15);
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.editorWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

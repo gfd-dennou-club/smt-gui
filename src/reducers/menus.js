@@ -5,6 +5,8 @@ const MENU_ABOUT = 'aboutMenu';
 const MENU_ACCOUNT = 'accountMenu';
 const MENU_EDIT = 'editMenu';
 const MENU_FILE = 'fileMenu';
+const MENU_KOSHIEN = 'koshienMenu';
+const MENU_MESH_V2 = 'meshV2Menu';
 const MENU_LANGUAGE = 'languageMenu';
 const MENU_LOGIN = 'loginMenu';
 const MENU_MODE = 'modeMenu';
@@ -56,6 +58,8 @@ const rootMenu = new Menu('root')
     .addChild(new Menu(MENU_FILE))
     .addChild(new Menu(MENU_EDIT))
     .addChild(new Menu(MENU_MODE))
+    .addChild(new Menu(MENU_KOSHIEN))
+    .addChild(new Menu(MENU_MESH_V2))
     .addChild(new Menu(MENU_SETTINGS))
     .addChild(new Menu(MENU_LOGIN))
     .addChild(new Menu(MENU_ACCOUNT))
@@ -66,6 +70,8 @@ const initialState = {
     [MENU_ACCOUNT]: false,
     [MENU_EDIT]: false,
     [MENU_FILE]: false,
+    [MENU_KOSHIEN]: false,
+    [MENU_MESH_V2]: false,
     [MENU_LANGUAGE]: false,
     [MENU_LOGIN]: false,
     [MENU_MODE]: false,
@@ -146,6 +152,14 @@ const openThemeMenu = () => openMenu(MENU_THEME);
 const closeThemeMenu = () => closeMenu(MENU_THEME);
 const themeMenuOpen = state => state.scratchGui.menus[MENU_THEME];
 
+const openKoshienMenu = () => openMenu(MENU_KOSHIEN);
+const closeKoshienMenu = () => closeMenu(MENU_KOSHIEN);
+const koshienMenuOpen = state => state.scratchGui.menus[MENU_KOSHIEN];
+
+const openMeshV2Menu = () => openMenu(MENU_MESH_V2);
+const closeMeshV2Menu = () => closeMenu(MENU_MESH_V2);
+const meshV2MenuOpen = state => state.scratchGui.menus[MENU_MESH_V2];
+
 export {
     reducer as default,
     initialState as menuInitialState,
@@ -161,6 +175,12 @@ export {
     openFileMenu,
     closeFileMenu,
     fileMenuOpen,
+    openKoshienMenu,
+    closeKoshienMenu,
+    koshienMenuOpen,
+    openMeshV2Menu,
+    closeMeshV2Menu,
+    meshV2MenuOpen,
     openLanguageMenu,
     closeLanguageMenu,
     languageMenuOpen,

@@ -1,62 +1,77 @@
 {
     "pen.clear": {
         "snippet": "Pen.clear",
-        "description": "全部消す"
+        "description": "全部消す",
+        "type": "method"
     },
     "pen.stamp": {
         "snippet": "pen.stamp",
-        "description": "スタンプ"
+        "description": "スタンプ",
+        "type": "method"
     },
     "pen.down": {
         "snippet": "pen.down",
-        "description": "ペンを下ろす"
+        "description": "ペンを下ろす",
+        "type": "method"
     },
     "pen.up": {
         "snippet": "pen.up",
-        "description": "ペンを上げる"
+        "description": "ペンを上げる",
+        "type": "method"
     },
     "pen.color=#": {
         "snippet": "pen.color = \"#${1:7a2d74}\"",
-        "description": "ペンの色を (#7a2d74) にする"
+        "description": "ペンの色を (#7a2d74) にする",
+        "type": "method"
     },
     "pen.color+=": {
         "snippet": "pen.color += ${1:10}",
-        "description": "ペンの [色▼] を (10) ずつ変える"
+        "description": "ペンの [色▼] を (10) ずつ変える",
+        "type": "method"
     },
     "pen.saturation+=": {
         "snippet": "pen.saturation += ${1:10}",
-        "description": "ペンの [鮮やかさ▼] を (10) ずつ変える"
+        "description": "ペンの [鮮やかさ▼] を (10) ずつ変える",
+        "type": "method"
     },
     "pen.brightness+=": {
         "snippet": "pen.brightness += ${1:10}",
-        "description": "ペンの [明るさ▼] を (10) ずつ変える"
+        "description": "ペンの [明るさ▼] を (10) ずつ変える",
+        "type": "method"
     },
     "pen.transparency+=": {
         "snippet": "pen.transparency += ${1:10}",
-        "description": "ペンの [透明度▼] を (10) ずつ変える"
+        "description": "ペンの [透明度▼] を (10) ずつ変える",
+        "type": "method"
     },
     "pen.color=": {
         "snippet": "pen.color = ${1:50}",
-        "description": "ペンの [色▼] を (50) にする"
+        "description": "ペンの [色▼] を (50) にする",
+        "type": "method"
     },
     "pen.saturation=": {
         "snippet": "pen.saturation = ${1:50}",
-        "description": "ペンの [鮮やかさ▼] を (50) にする"
+        "description": "ペンの [鮮やかさ▼] を (50) にする",
+        "type": "method"
     },
     "pen.brightness=": {
         "snippet": "pen.brightness = ${1:50}",
-        "description": "ペンの [明るさ▼] を (50) にする"
+        "description": "ペンの [明るさ▼] を (50) にする",
+        "type": "method"
     },
     "pen.transparency=": {
         "snippet": "pen.transparency = ${1:50}",
-        "description": "ペンの [透明度▼] を (50) にする"
+        "description": "ペンの [透明度▼] を (50) にする",
+        "type": "method"
     },
     "pen.size+=": {
         "snippet": "pen.size += ${1:1}",
-        "description": "ペンの太さを (1) ずつ変える"
+        "description": "ペンの太さを (1) ずつ変える",
+        "type": "method"
     },
     "pen.size=": {
         "snippet": "pen.size = ${1:1}",
-        "description": "ペンの太さを (1) にする"
+        "description": "ペンの太さを (1) にする",
+        "type": "method"
     }
 }

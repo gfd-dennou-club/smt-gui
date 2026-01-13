@@ -1,186 +1,232 @@
 {
     "music.play_drum": {
         "snippet": "play_drum(drum: ${1:1}, beats: ${2:0.25})",
-        "description": "((1)スネアドラム▼) のドラムを (0.25) 拍鳴らす"
+        "description": "((1)スネアドラム▼) のドラムを (0.25) 拍鳴らす",
+        "type": "method"
     },
     "music.d-snare": {
         "snippet": "1",
-        "description": "(1) スネアドラム"
+        "description": "(1) スネアドラム",
+        "type": "constant"
     },
     "music.d-bass": {
         "snippet": "2",
-        "description": "(2) バスドラム"
+        "description": "(2) バスドラム",
+        "type": "constant"
     },
     "music.d-side-stick": {
         "snippet": "3",
-        "description": "(3) サイドスティック"
+        "description": "(3) サイドスティック",
+        "type": "constant"
     },
     "music.d-crash-cymbal": {
         "snippet": "4",
-        "description": "(4) クラッシュシンバル"
+        "description": "(4) クラッシュシンバル",
+        "type": "constant"
     },
     "music.d-open-hihat": {
         "snippet": "5",
-        "description": "(5) オープンハイハット"
+        "description": "(5) オープンハイハット",
+        "type": "constant"
     },
     "music.d-closed-hihat": {
         "snippet": "6",
-        "description": "(6) クローズハイハット"
+        "description": "(6) クローズハイハット",
+        "type": "constant"
     },
     "music.d-tambourine": {
         "snippet": "7",
-        "description": "(7) タンバリン"
+        "description": "(7) タンバリン",
+        "type": "constant"
     },
     "music.d-hand-clap": {
         "snippet": "8",
-        "description": "(8) 手拍子"
+        "description": "(8) 手拍子",
+        "type": "constant"
     },
     "music.d-claves": {
         "snippet": "9",
-        "description": "(9) クラーベ"
+        "description": "(9) クラーベ",
+        "type": "constant"
     },
     "music.d-wood-block": {
         "snippet": "10",
-        "description": "(10) ウッドブロック"
+        "description": "(10) ウッドブロック",
+        "type": "constant"
     },
     "music.d-cowbell": {
         "snippet": "11",
-        "description": "(11) カウベル"
+        "description": "(11) カウベル",
+        "type": "constant"
     },
     "music.d-triangle": {
         "snippet": "12",
-        "description": "(12) トライアングル"
+        "description": "(12) トライアングル",
+        "type": "constant"
     },
     "music.d-bongo": {
         "snippet": "13",
-        "description": "(13) ボンゴ"
+        "description": "(13) ボンゴ",
+        "type": "constant"
     },
     "music.d-conga": {
         "snippet": "14",
-        "description": "(14) コンガ"
+        "description": "(14) コンガ",
+        "type": "constant"
     },
     "music.d-cabasa": {
         "snippet": "15",
-        "description": "(15) カバサ"
+        "description": "(15) カバサ",
+        "type": "constant"
     },
     "music.d-guiro": {
         "snippet": "16",
-        "description": "(16) ギロ"
+        "description": "(16) ギロ",
+        "type": "constant"
     },
     "music.d-vibraslap": {
         "snippet": "17",
-        "description": "(17) ビブラスラップ"
+        "description": "(17) ビブラスラップ",
+        "type": "constant"
     },
     "music.d-cuica": {
         "snippet": "18",
-        "description": "(18) クイーカ"
+        "description": "(18) クイーカ",
+        "type": "constant"
     },
     "music.rest": {
         "snippet": "rest(${1:0.25})",
-        "description": "(0.25) 拍休む"
+        "description": "(0.25) 拍休む",
+        "type": "method"
     },
     "music.play_note": {
         "snippet": "play_note(note: ${1:60}, beats: ${2:0.25})",
-        "description": "(60) の音符を (0.25) 拍鳴らす"
+        "description": "(60) の音符を (0.25) 拍鳴らす",
+        "type": "method"
     },
     "music.instrument=": {
         "snippet": "self.instrument = ${1:1}",
-        "description": "楽器を ((1)ピアノ▼) にする"
+        "description": "楽器を ((1)ピアノ▼) にする",
+        "type": "method"
     },
     "music.i-piano": {
         "snippet": "1",
-        "description": "(1) ピアノ"
+        "description": "(1) ピアノ",
+        "type": "constant"
     },
     "music.i-electric-piano": {
         "snippet": "2",
-        "description": "(2) 電子ピアノ"
+        "description": "(2) 電子ピアノ",
+        "type": "constant"
     },
     "music.i-organ": {
         "snippet": "3",
-        "description": "(3) オルガン"
+        "description": "(3) オルガン",
+        "type": "constant"
     },
     "music.i-guitar": {
         "snippet": "4",
-        "description": "(4) ギター"
+        "description": "(4) ギター",
+        "type": "constant"
     },
     "music.i-electric-guitar": {
         "snippet": "5",
-        "description": "(5) エレキギター"
+        "description": "(5) エレキギター",
+        "type": "constant"
     },
     "music.i-bass": {
         "snippet": "6",
-        "description": "(6) ベース"
+        "description": "(6) ベース",
+        "type": "constant"
     },
     "music.i-pizzicato": {
         "snippet": "7",
-        "description": "(7) ピチカート"
+        "description": "(7) ピチカート",
+        "type": "constant"
     },
     "music.i-cello": {
         "snippet": "8",
-        "description": "(8) チェロ"
+        "description": "(8) チェロ",
+        "type": "constant"
     },
     "music.i-trombone": {
         "snippet": "9",
-        "description": "(9) トロンボーン"
+        "description": "(9) トロンボーン",
+        "type": "constant"
     },
     "music.i-clarinet": {
         "snippet": "10",
-        "description": "(10) クラリネット"
+        "description": "(10) クラリネット",
+        "type": "constant"
     },
     "music.i-saxophone": {
         "snippet": "11",
-        "description": "(11) サクソフォン"
+        "description": "(11) サクソフォン",
+        "type": "constant"
     },
     "music.i-flute": {
         "snippet": "12",
-        "description": "(12) フルート"
+        "description": "(12) フルート",
+        "type": "constant"
     },
     "music.i-wooden-flute": {
         "snippet": "13",
-        "description": "(13) 木管フルート"
+        "description": "(13) 木管フルート",
+        "type": "constant"
     },
     "music.i-bassoon": {
         "snippet": "14",
-        "description": "(14) バスーン"
+        "description": "(14) バスーン",
+        "type": "constant"
     },
     "music.i-choir": {
         "snippet": "15",
-        "description": "(15) 合唱団"
+        "description": "(15) 合唱団",
+        "type": "constant"
     },
     "music.i-vibraphone": {
         "snippet": "16",
-        "description": "(16) ビブラフォン"
+        "description": "(16) ビブラフォン",
+        "type": "constant"
     },
     "music.i-music-box": {
         "snippet": "17",
-        "description": "(17) ミュージックボックス"
+        "description": "(17) ミュージックボックス",
+        "type": "constant"
     },
     "music.i-steel-drum": {
         "snippet": "18",
-        "description": "(18) スチールドラム"
+        "description": "(18) スチールドラム",
+        "type": "constant"
     },
     "music.i-marimba": {
         "snippet": "19",
-        "description": "(19) マリンバ"
+        "description": "(19) マリンバ",
+        "type": "constant"
     },
     "music.i-synth-lead": {
         "snippet": "20",
-        "description": "(20) シンセリード"
+        "description": "(20) シンセリード",
+        "type": "constant"
     },
     "music.i-synth-pad": {
         "snippet": "21",
-        "description": "(21) シンセパッド"
+        "description": "(21) シンセパッド",
+        "type": "constant"
     },
     "music.tempo=": {
         "snippet": "self.tempo = ${1:60}",
-        "description": "テンポを (60) にする"
+        "description": "テンポを (60) にする",
+        "type": "method"
     },
     "music.tempo+=": {
         "snippet": "self.tempo += ${1:20}",
-        "description": "テンポを (20) ずつ変える"
+        "description": "テンポを (20) ずつ変える",
+        "type": "method"
     },
     "music.tempo": {
         "snippet": "tempo",
-        "description": "テンポ"
+        "description": "テンポ",
+        "type": "variable"
     }
 }

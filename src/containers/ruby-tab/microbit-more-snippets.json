@@ -30,8 +30,7 @@
         "type": "event"
     },
     "microbit_more.display_pattern": {
-        "snippet": "microbit_more.display_pattern(\n\t\"${1:.1.1.}\",\n\t\"${2:1.1.1}\",\n\t\"${3:1...1}\",\n\t\"${4:.1.1.}\",\n\t\"${5:..1..}\"
-)",
+        "snippet": "microbit_more.display_pattern(\n\t\"${1:.1.1.}\",\n\t\"${2:1.1.1}\",\n\t\"${3:1...1}\",\n\t\"${4:.1.1.}\",\n\t\"${5:..1..}\"\n)",
         "description": "パターン (♡▼) を表示する",
         "type": "method"
     },

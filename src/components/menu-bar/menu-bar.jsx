@@ -735,6 +735,7 @@ class MenuBar extends React.Component {
                                             </MenuItem>
                                         )}</SB3Downloader>
                                     </MenuSection>
+				    {/*
                                     <MenuSection>
                                         <MenuItem
                                             onClick={this.handleClickLoadFromUrl}
@@ -746,6 +747,7 @@ class MenuBar extends React.Component {
                                             />
                                         </MenuItem>
                                     </MenuSection>
+				     */}
                                     <MenuSection>
                                         <RubyUploader>
                                             {(
@@ -763,6 +765,7 @@ class MenuBar extends React.Component {
                                                 </MenuItem>
                                             )}
                                         </RubyUploader>
+					{/*
                                         <MenuItem
                                             onClick={this.props.onStartSelectingGoogleDrive}
                                         >
@@ -791,6 +794,7 @@ class MenuBar extends React.Component {
                                                 id="gui.menuBar.saveToGoogleDrive"
                                             />
                                         </MenuItem>
+					 */}
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>

@@ -28,7 +28,7 @@ import ReactTooltip from 'react-tooltip';
 import {loadMonacoLocale} from '../lib/monaco-i18n-helper';
 
 const FONT_SIZES = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48];
-const DEFAULT_FONT_SIZE = 16;
+const DEFAULT_FONT_SIZE = 32;
 
 class RubyTab extends React.Component {
     constructor (props) {

@@ -1,86 +1,107 @@
 {
     "say-for": {
         "snippet": "say(\"${1:こんにちは!}\", ${2:2})",
-        "description": "(こんにちは!) と (2) 秒言う"
+        "description": "(こんにちは!) と (2) 秒言う",
+        "type": "method"
     },
     "say": {
         "snippet": "say(\"${1:こんにちは!}\")",
-        "description": "(こんにちは!) と言う"
+        "description": "(こんにちは!) と言う",
+        "type": "method"
     },
     "think-for": {
         "snippet": "think(\"${1:うーん...}\", ${2:2})",
-        "description": "(うーん...) と (2) 秒考える"
+        "description": "(うーん...) と (2) 秒考える",
+        "type": "method"
     },
     "think": {
         "snippet": "think(\"${1:うーん...}\")",
-        "description": "(うーん...) と考える"
+        "description": "(うーん...) と考える",
+        "type": "method"
     },
     "switch_costume": {
         "snippet": "switch_costume(\"${1:コスチューム1}\")",
-        "description": "コスチュームを (コスチューム1▼) にする"
+        "description": "コスチュームを (コスチューム1▼) にする",
+        "type": "method"
     },
     "next_costume": {
         "snippet": "next_costume",
-        "description": "次のコスチュームにする"
+        "description": "次のコスチュームにする",
+        "type": "method"
     },
     "switch_backdrop": {
         "snippet": "switch_backdrop(\"${1:背景1}\")",
-        "description": "背景を (背景1▼) にする"
+        "description": "背景を (背景1▼) にする",
+        "type": "method"
     },
     "next_backdrop": {
         "snippet": "next_backdrop",
-        "description": "次の背景にする"
+        "description": "次の背景にする",
+        "type": "method"
     },
     "size+=": {
         "snippet": "self.size += ${1:10}",
-        "description": "大きさを (10) ずつ変える"
+        "description": "大きさを (10) ずつ変える",
+        "type": "method"
     },
     "size=": {
         "snippet": "self.size = ${1:100}",
-        "description": "大きさを (100) %にする"
+        "description": "大きさを (100) %にする",
+        "type": "method"
     },
     "change_effect_by": {
         "snippet": "change_effect_by(\"${1:color}\", ${2:25})",
-        "description": "[色▼] の効果を (25) ずつかえる"
+        "description": "[色▼] の効果を (25) ずつかえる",
+        "type": "method"
     },
     "set_effect": {
         "snippet": "set_effect(\"${1:color}\", ${2:0})",
-        "description": "[色▼] の効果を (0) にする"
+        "description": "[色▼] の効果を (0) にする",
+        "type": "method"
     },
     "clear_graphic_effects": {
         "snippet": "clear_graphic_effects",
-        "description": "画像効果をなくす"
+        "description": "画像効果をなくす",
+        "type": "method"
     },
     "show": {
         "snippet": "show",
-        "description": "表示する"
+        "description": "表示する",
+        "type": "method"
     },
     "hide": {
         "snippet": "hide",
-        "description": "隠す"
+        "description": "隠す",
+        "type": "method"
     },
     "go_layers": {
         "snippet": "go_layers(${1:1}, \"${2:forward}\")",
-        "description": "(1) 層 [手前に出す▼]"
+        "description": "(1) 層 [手前に出す▼]",
+        "type": "method"
     },
     "costume_number": {
         "snippet": "costume_number",
-        "description": "コスチュームの [番号▼]"
+        "description": "コスチュームの [番号▼]",
+        "type": "variable"
     },
     "costume_name": {
         "snippet": "costume_name",
-        "description": "コスチュームの [名前▼]"
+        "description": "コスチュームの [名前▼]",
+        "type": "variable"
     },
     "backdrop_number": {
         "snippet": "backdrop_number",
-        "description": "背景の [番号▼]"
+        "description": "背景の [番号▼]",
+        "type": "variable"
     },
     "backdrop_name": {
         "snippet": "backdrop_name",
-        "description": "背景の [名前▼]"
+        "description": "背景の [名前▼]",
+        "type": "variable"
     },
     "size": {
         "snippet": "size",
-        "description": "大きさ"
+        "description": "大きさ",
+        "type": "variable"
     }
 }

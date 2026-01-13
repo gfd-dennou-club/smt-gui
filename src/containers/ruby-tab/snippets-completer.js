@@ -56,7 +56,7 @@ class SnippetsCompleter extends BaseCompleter {
         snippetsList.forEach(snippets => {
             for (const [caption, item] of Object.entries(snippets)) {
                 item.caption = caption;
-                item.type = 'snippet';
+                item.type = item.type || 'snippet';
                 this.#completions.push(item);
             }
         });

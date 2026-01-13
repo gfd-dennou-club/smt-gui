@@ -1,94 +1,117 @@
 {
     "move": {
         "snippet": "move(${1:10})",
-        "description": "(10) 歩動かす"
+        "description": "(10) 歩動かす",
+        "type": "method"
     },
     "turn_right": {
         "snippet": "turn_right(${1:15})",
-        "description": "時計回りに (15) 度回す"
+        "description": "時計回りに (15) 度回す",
+        "type": "method"
     },
     "turn_left": {
         "snippet": "turn_left(${1:15})",
-        "description": "反時計回りに (15) 度回す"
+        "description": "反時計回りに (15) 度回す",
+        "type": "method"
     },
     "go_to": {
         "snippet": "go_to(\"${1:_random_}\")",
-        "description": "(どこかの場所▼) へ行く"
+        "description": "(どこかの場所▼) へ行く",
+        "type": "method"
     },
     "_random_": {
         "snippet": "_random_",
-        "description": "どこかの場所"
+        "description": "どこかの場所",
+        "type": "constant"
     },
     "_mouse_": {
         "snippet": "_mouse_",
-        "description": "マウスのポインター"
+        "description": "マウスのポインター",
+        "type": "constant"
     },
     "go_to-xy": {
         "snippet": "go_to([${1:0}, ${2:0}])",
-        "description": "x座標を (0) 、y座標を (0) にする"
+        "description": "x座標を (0) 、y座標を (0) にする",
+        "type": "method"
     },
     "glide": {
         "snippet": "glide(\"${1:_random_}\", secs: ${2:1})",
-        "description": "(1) 秒で (どこかの場所▼) へ行く"
+        "description": "(1) 秒で (どこかの場所▼) へ行く",
+        "type": "method"
     },
     "glide-xy": {
         "snippet": "glide([${1:0}, ${2:0}], secs: ${3:1})",
-        "description": "(1) 秒でx座標を (0) に、y座標を (0) にする"
+        "description": "(1) 秒でx座標を (0) に、y座標を (0) にする",
+        "type": "method"
     },
     "direction=": {
         "snippet": "self.direction = ${1:90}",
-        "description": "(90) 度に向ける"
+        "description": "(90) 度に向ける",
+        "type": "method"
     },
     "point_towards": {
         "snippet": "point_towards(\"${1:_mouse_}\")",
-        "description": "(マウスのポインター▼) へ向ける"
+        "description": "(マウスのポインター▼) へ向ける",
+        "type": "method"
     },
     "x+=": {
         "snippet": "self.x += ${1:10}",
-        "description": "x座標を (10) ずつ変える"
+        "description": "x座標を (10) ずつ変える",
+        "type": "method"
     },
     "x=": {
         "snippet": "self.x = ${1:0}",
-        "description": "x座標を (0) にする"
+        "description": "x座標を (0) にする",
+        "type": "method"
     },
     "y+=": {
         "snippet": "self.y += ${1:10}",
-        "description": "y座標を (10) ずつ変える"
+        "description": "y座標を (10) ずつ変える",
+        "type": "method"
     },
     "y=": {
         "snippet": "self.y = ${1:0}",
-        "description": "y座標を (0) にする"
+        "description": "y座標を (0) にする",
+        "type": "method"
     },
     "bounce_if_on_edge": {
         "snippet": "bounce_if_on_edge",
-        "description": "もし端についたら、跳ね返る"
+        "description": "もし端についたら、跳ね返る",
+        "type": "method"
     },
     "rotation_style=": {
         "snippet": "self.rotation_style = \"${1:left-right}\"",
-        "description": "回転方法を [左右のみ▼] にする"
+        "description": "回転方法を [左右のみ▼] にする",
+        "type": "method"
     },
     "left-right": {
         "snippet": "left-right",
-        "description": "左右のみ"
+        "description": "左右のみ",
+        "type": "constant"
     },
     "don't_rotate": {
         "snippet": "don't rotate",
-        "description": "回転しない"
+        "description": "回転しない",
+        "type": "constant"
     },
     "all_around": {
         "snippet": "all around",
-        "description": "自由に回転"
+        "description": "自由に回転",
+        "type": "constant"
     },
     "x": {
         "snippet": "x",
-        "description": "x座標"
+        "description": "x座標",
+        "type": "variable"
     },
     "y": {
         "snippet": "y",
-        "description": "y座標"
+        "description": "y座標",
+        "type": "variable"
     },
     "direction": {
         "snippet": "direction",
-        "description": "向き"
+        "description": "向き",
+        "type": "variable"
     }
 }

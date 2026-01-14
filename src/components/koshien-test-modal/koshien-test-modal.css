@@ -21,3 +21,16 @@
     flex: 1;
     min-height: 0;
 }
+
+.reload-button {
+    font-weight: normal;
+    font-size: 0.75rem;
+}
+
+.stop-icon {
+    position: relative;
+    margin: 0.25rem;
+    user-select: none;
+    transform-origin: 50%;
+    transform: rotate(45deg);
+}

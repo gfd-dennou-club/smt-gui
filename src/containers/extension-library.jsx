@@ -71,12 +71,17 @@ class ExtensionLibrary extends React.PureComponent {
         const extensionsParam = query.get('extensions') || '';
         const showMeshV2 = extensionsParam.split(',').includes('meshV2');
 
+        const showAllExtensionsParam = query.get('showAllExtensions');
+        const showAllExtensions = showAllExtensionsParam === 'true' ? true :
+            showAllExtensionsParam === 'false' ? false :
+                this.props.showAllExtensions;
+
         const extensionLibraryThumbnailData = extensionLibraryContent
             .filter(extension => {
                 if (extension.extensionId === 'meshV2' && !showMeshV2) {
                     return false;
                 }
-                if (!this.props.showAllExtensions && extension.defaultHidden) {
+                if (!showAllExtensions && extension.defaultHidden) {
                     return false;
                 }
                 return true;
@@ -86,10 +91,17 @@ class ExtensionLibrary extends React.PureComponent {
                 ...extension
             }));
 
+        const checkboxLabel = this.props.intl.formatMessage({
+            defaultMessage: 'Show all extensions',
+            description: 'Checkbox label to show all extensions including hidden ones',
+            id: 'gui.extensionLibrary.showAllExtensions'
+        });
+
         const headerActions = (
             <label className={styles.showAllExtensionsLabel}>
                 <input
-                    checked={this.props.showAllExtensions}
+                    aria-label={checkboxLabel}
+                    checked={showAllExtensions}
                     className={styles.showAllExtensionsCheckbox}
                     type="checkbox"
                     onChange={this.handleToggleShowAllExtensions}

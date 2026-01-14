@@ -15,7 +15,7 @@ const version = 'v2-0.2.5';
 const entry = {
     get name () {
         return `${formatMessage({
-            defaultMessage: 'MicroBit More',
+            defaultMessage: 'micro:bit',
             description: 'Name of this extension',
             id: 'mbitMore.entry.name'
         })} (${version})`;
@@ -26,7 +26,7 @@ const entry = {
     insetIconURL: microbitMoreInsetIconURL,
     get description () {
         return formatMessage({
-            defaultMessage: 'Play with all functions of micro:bit.',
+            defaultMessage: 'Play with all functions of micro:bit with Microbit More.',
             description: "Description for the 'Microbit More' extension",
             id: 'mbitMore.entry.description'
         });

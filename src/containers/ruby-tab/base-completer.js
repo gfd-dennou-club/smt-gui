@@ -12,7 +12,7 @@ class BaseCompleter {
 
         return {
             label: item.caption,
-            kind: monaco.languages.CompletionItemKind.Snippet,
+            kind: this.#getCompletionItemKind(item.type, monaco),
             documentation: {
                 value: this.#toMarkdown(description, snippet)
             },
@@ -21,6 +21,30 @@ class BaseCompleter {
             detail: 'Smalruby Snippet',
             range: range
         };
+    }
+
+    #getCompletionItemKind (type, monaco) {
+        switch (type) {
+        case 'method':
+            return monaco.languages.CompletionItemKind.Method;
+        case 'function':
+            return monaco.languages.CompletionItemKind.Function;
+        case 'variable':
+            return monaco.languages.CompletionItemKind.Variable;
+        case 'value':
+            return monaco.languages.CompletionItemKind.Value;
+        case 'constant':
+            return monaco.languages.CompletionItemKind.Constant;
+        case 'enum_member':
+            return monaco.languages.CompletionItemKind.EnumMember;
+        case 'keyword':
+            return monaco.languages.CompletionItemKind.Keyword;
+        case 'event':
+            return monaco.languages.CompletionItemKind.Event;
+        case 'snippet':
+        default:
+            return monaco.languages.CompletionItemKind.Snippet;
+        }
     }
 
     #toMarkdown (description, snippet) {

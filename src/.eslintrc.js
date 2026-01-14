@@ -32,6 +32,14 @@ module.exports = {
             rules: {
                 'import/no-commonjs': 'off'
             }
+        },
+        {
+            files: ['containers/ruby-tab/*.json'],
+            extends: ['plugin:jsonc/recommended-with-json'],
+            parser: 'jsonc-eslint-parser',
+            rules: {
+                'max-len': 'off'
+            }
         }
     ],
     settings: {

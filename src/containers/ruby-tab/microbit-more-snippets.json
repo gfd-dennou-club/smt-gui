@@ -1,126 +1,157 @@
 {
     "microbit_more.when_microbit": {
         "snippet": "microbit_more.when_microbit(\"${1:connected}\") do\n\t${2}\nend",
-        "description": "micro:bit と [つながった▼] とき"
+        "description": "micro:bit と [つながった▼] とき",
+        "type": "event"
     },
     "microbit_more.when_button_is": {
         "snippet": "microbit_more.when_button_is(\"${1:A}\", \"${2:down}\") do\n\t${3}\nend",
-        "description": "ボタン [A▼] が [押された▼] とき"
+        "description": "ボタン [A▼] が [押された▼] とき",
+        "type": "event"
     },
     "microbit_more.button_pressed?": {
         "snippet": "microbit_more.button_pressed?(\"${1:A}\")",
-        "description": "ボタン [A▼] が押されている"
+        "description": "ボタン [A▼] が押されている",
+        "type": "value"
     },
     "microbit_more.when_pin_is": {
         "snippet": "microbit_more.when_pin_is(\"${1:LOGO}\", \"${2:touched}\") do\n\t${3}\nend",
-        "description": "ピン [ロゴ▼] が [タッチされた▼] とき"
+        "description": "ピン [ロゴ▼] が [タッチされた▼] とき",
+        "type": "event"
     },
     "microbit_more.pin_is_touched?": {
         "snippet": "microbit_more.pin_is_touched?(\"${1:LOGO}\")",
-        "description": "ピン [ログ▼] がタッチされている"
+        "description": "ピン [ログ▼] がタッチされている",
+        "type": "value"
     },
     "microbit_more.when": {
         "snippet": "microbit_more.when(\"${1:shake}\") do\n\t${2}\nend",
-        "description": "[ゆさぶられた▼] とき"
+        "description": "[ゆさぶられた▼] とき",
+        "type": "event"
     },
     "microbit_more.display_pattern": {
         "snippet": "microbit_more.display_pattern(\n\t\"${1:.1.1.}\",\n\t\"${2:1.1.1}\",\n\t\"${3:1...1}\",\n\t\"${4:.1.1.}\",\n\t\"${5:..1..}\"\n)",
-        "description": "パターン (♡▼) を表示する"
+        "description": "パターン (♡▼) を表示する",
+        "type": "function"
     },
     "microbit_more.display_text_delay": {
         "snippet": "microbit_more.display_text_delay(\"${1:Hello!}\", ${2:120})",
-        "description": "文字 (Hello!) を (120) ミリ秒間隔で流す"
+        "description": "文字 (Hello!) を (120) ミリ秒間隔で流す",
+        "type": "function"
     },
     "microbit_more.clear_display": {
         "snippet": "microbit_more.clear_display",
-        "description": "画面を消す"
+        "description": "画面を消す",
+        "type": "function"
     },
     "microbit_more.light_intensity": {
         "snippet": "microbit_more.light_intensity",
-        "description": "明るさ"
+        "description": "明るさ",
+        "type": "variable"
     },
     "microbit_more.temperature": {
         "snippet": "microbit_more.temperature",
-        "description": "温度"
+        "description": "温度",
+        "type": "variable"
     },
     "microbit_more.angle_with_north": {
         "snippet": "microbit_more.angle_with_north",
-        "description": "北からの角度"
+        "description": "北からの角度",
+        "type": "variable"
     },
     "microbit_more.pitch": {
         "snippet": "microbit_more.pitch",
-        "description": "ピッチ"
+        "description": "ピッチ",
+        "type": "variable"
     },
     "microbit_more.roll": {
         "snippet": "microbit_more.roll",
-        "description": "ロール"
+        "description": "ロール",
+        "type": "variable"
     },
     "microbit_more.sound_level": {
         "snippet": "microbit_more.sound_level",
-        "description": "音の大きさ"
+        "description": "音の大きさ",
+        "type": "variable"
     },
     "microbit_more.magnetic_force": {
         "snippet": "microbit_more.magnetic_force(\"${1:absolute}\")",
-        "description": "磁力 [大きさ▼]"
+        "description": "磁力 [大きさ▼]",
+        "type": "variable"
     },
     "microbit_more.acceleration": {
         "snippet": "microbit_more.acceleration(\"${1:x}\")",
-        "description": "加速度 [x▼]"
+        "description": "加速度 [x▼]",
+        "type": "variable"
     },
     "microbit_more.analog_value": {
         "snippet": "microbit_more.analog_value(\"${1:P0}\")",
-        "description": "ピン [P0▼] のアナログレベル"
+        "description": "ピン [P0▼] のアナログレベル",
+        "type": "variable"
     },
     "microbit_more.set_pin_to_input_pull": {
         "snippet": "microbit_more.set_pin_to_input_pull(\"P0\", \"up\")",
-        "description": "ピン [P0▼] を [プルアップ▼] 入力にする"
+        "description": "ピン [P0▼] を [プルアップ▼] 入力にする",
+        "type": "function"
     },
     "microbit_more.is_pin_high?": {
         "snippet": "microbit_more.is_pin_high?(\"${1:P0}\")",
-        "description": "ピン [P0▼] がハイである"
+        "description": "ピン [P0▼] がハイである",
+        "type": "value"
     },
     "microbit_more.set_digital": {
         "snippet": "microbit_more.set_digital(\"${1:P0}\", \"${2:Low}\")",
-        "description": "ピン [P0▼] をデジタル出力 [ロー▼] にする"
+        "description": "ピン [P0▼] をデジタル出力 [ロー▼] にする",
+        "type": "function"
     },
     "microbit_more.set_analog": {
         "snippet": "microbit_more.set_analog(\"${1:P0}\", ${2:0})",
-        "description": "ピン [P0▼] をアナログ出力 [LEVEL] %にする"
+        "description": "ピン [P0▼] をアナログ出力 [LEVEL] %にする",
+        "type": "function"
     },
     "microbit_more.set_servo": {
         "snippet": "microbit_more.set_servo(\"${1:P0}\", ${2:0})",
-        "description": "ピン [P0▼] をサーボ (0) 度にする"
+        "description": "ピン [P0▼] をサーボ (0) 度にする",
+        "type": "function"
     },
     "microbit_more.play_tone": {
         "snippet": "microbit_more.play_tone(${1:440}, ${2:100})",
-        "description": "(440) Hzの音を (100) %の大きさで鳴らす"
+        "description": "(440) Hzの音を (100) %の大きさで鳴らす",
+        "type": "function"
     },
     "microbit_more.stop_tone": {
         "snippet": "microbit_more.stop_tone",
-        "description": "音を止める"
+        "description": "音を止める",
+        "type": "function"
     },
     "microbit_more.listen_event_on": {
         "snippet": "microbit_more.listen_event_on(\"${1:none}\", \"${2:P0}\")",
-        "description": "ピン [P0▼] の [イベントを受けない▼]"
+        "description": "ピン [P0▼] の [イベントを受けない▼]",
+        "type": "function"
     },
     "microbit_more.when_catch_at_pin": {
         "snippet": "microbit_more.when_catch_at_pin(\"${1:low pulse}\", \"${2:P0}\") do\n\t${3}\nend",
-        "description": "ピン [P0▼] で [ローパルス▼] イベントが起きたとき"
+        "description": "ピン [P0▼] で [ローパルス▼] イベントが起きたとき",
+        "type": "event"
     },
     "microbit_more.value_of": {
         "snippet": "microbit_more.value_of(\"${1:low pulse}\", \"${2:P0}\")",
-        "description": "ピン [P0▼] の [ローパルスの期間▼]"
+        "description": "ピン [P0▼] の [ローパルスの期間▼]",
+        "type": "function"
     },
     "microbit_more.when_data_received_from_microbit": {
         "snippet": "microbit_more.when_data_received_from_microbit(\"${1:label-01}\") do\n\t${2}\nend",
-        "description": "micro:bit からラベル (label-01) のデータを受け取ったとき"
+        "description": "micro:bit からラベル (label-01) のデータを受け取ったとき",
+        "type": "event"
     },
     "microbit_more.data": {
         "snippet": "microbit_more.data[\"${1:label-01}\"]",
-        "description": "ラベル (label-01) のデータ"
+        "description": "ラベル (label-01) のデータ",
+        "type": "variable"
     },
     "microbit_more.send_data_to_microbit": {
         "snippet": "microbit_more.send_data_to_microbit(\"${1:data}\", \"${2:label-01}\")",
-        "description": "micro:bit へデータ (data) にラベル (label-01) を付けて送る"
+        "description": "micro:bit へデータ (data) にラベル (label-01) を付けて送る",
+        "type": "function"
     }
 }

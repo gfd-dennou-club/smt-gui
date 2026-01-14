@@ -7,47 +7,47 @@
     "$=": {
         "snippet": "$${1:変数} = ${2:0}",
         "description": "[変数▼] を (0) にする",
-        "type": "method"
+        "type": "function"
     },
     "$+=": {
         "snippet": "$${1:変数} += ${2:1}",
         "description": "[変数▼] を (1) ずつ変える",
-        "type": "method"
+        "type": "function"
     },
     "show_variable": {
         "snippet": "show_variable(\"$${1:変数}\")",
         "description": "変数 [変数▼] を表示する",
-        "type": "method"
+        "type": "function"
     },
     "hide_variable": {
         "snippet": "hide_variable(\"$${1:変数}\")",
         "description": "変数 [変数▼] を隠す",
-        "type": "method"
+        "type": "function"
     },
     "list.push": {
         "snippet": "list(\"$${1:リスト}\").push(\"${2:なにか}\")",
         "description": "(なにか) を [リスト▼] に追加する",
-        "type": "method"
+        "type": "function"
     },
     "list.delete_at": {
         "snippet": "list(\"$${1:リスト}\").delete_at(${2:1})",
         "description": "[リスト▼] の (1) 番目を削除する",
-        "type": "method"
+        "type": "function"
     },
     "list.clear": {
         "snippet": "list(\"$${1:リスト}\").clear",
         "description": "[リスト▼] のすべてを削除する",
-        "type": "method"
+        "type": "function"
     },
     "list.insert": {
         "snippet": "list(\"$${1:リスト}\").insert(${2:1}, \"${3:なにか}\")",
         "description": "[リスト▼] の (1) 番目に (なにか) を挿入する",
-        "type": "method"
+        "type": "function"
     },
     "list[]=": {
         "snippet": "list(\"$${1:リスト}\")[${2:1}] = \"${3:なにか}\"",
         "description": "[リスト▼] の (1) 番目を (なにか) で置き換える",
-        "type": "method"
+        "type": "function"
     },
     "list": {
         "snippet": "list(\"$${1:リスト}\")",
@@ -57,31 +57,31 @@
     "list[]": {
         "snippet": "list(\"$${1:リスト}\")[${2:1}]",
         "description": "[リスト▼] の (1) 番目",
-        "type": "method"
+        "type": "variable"
     },
     "list.index": {
         "snippet": "list(\"$${1:リスト}\").index(\"${2:なにか}\")",
         "description": "[リスト▼] 中の (なにか) の場所",
-        "type": "method"
+        "type": "variable"
     },
     "list.length": {
         "snippet": "list(\"$${1:リスト}\").length",
         "description": "[リスト▼] の長さ",
-        "type": "method"
+        "type": "variable"
     },
     "list.include?": {
         "snippet": "list(\"$${1:リスト}\").include?(\"${2:なにか}\")",
         "description": "[リスト▼] に (なにか) が含まれる",
-        "type": "method"
+        "type": "value"
     },
     "show_list": {
         "snippet": "show_list(\"$${1:リスト}\")",
         "description": "リスト [リスト▼] を表示する",
-        "type": "method"
+        "type": "function"
     },
     "hide_list": {
         "snippet": "hide_list(\"$${1:リスト}\")",
         "description": "リスト [リスト▼] を隠す",
-        "type": "method"
+        "type": "function"
     }
 }

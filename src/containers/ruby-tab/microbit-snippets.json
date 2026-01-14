@@ -7,7 +7,7 @@
     "microbit.button_pressed?": {
         "snippet": "microbit.button_pressed?(\"A\")",
         "description": "ボタン (A▼) が押された",
-        "type": "method"
+        "type": "function"
     },
     "microbit.when": {
         "snippet": "microbit.when(\"moved\") do\n\t${2}\nend",
@@ -17,12 +17,13 @@
     "microbit.display_text": {
         "snippet": "microbit.display_text(\"こんにちは!\")",
         "description": "(こんにちは!) を表示する",
-        "type": "method"
+        "type": "function"
     },
     "microbit.display": {
-        "snippet": "microbit.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"\n)",
+        "snippet": "microbit.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"
+)",
         "description": "(♡▼) を表示する",
-        "type": "method"
+        "type": "function"
     },
     "microbit.when_tilted": {
         "snippet": "microbit.when_tilted(\"any\") do\n\t${2}\nend",
@@ -32,12 +33,12 @@
     "microbit.tilted?": {
         "snippet": "microbit.tilted?(\"any\")",
         "description": "(どれかの向き▼) に傾いた",
-        "type": "method"
+        "type": "value"
     },
     "microbit.tilt_angle": {
         "snippet": "microbit.tilt_angle(\"front\")",
         "description": "(前▼) 方向の傾き",
-        "type": "method"
+        "type": "variable"
     },
     "microbit.when_pin_connected": {
         "snippet": "microbit.when_pin_connected(${1:0}) do\n\t${2}\nend",

@@ -22,26 +22,26 @@
     "gdx_for.acceleration": {
         "snippet": "gdx_for.acceleration(\"${1:x}\")",
         "description": "(x▼) 方向への加速度",
-        "type": "method"
+        "type": "variable"
     },
     "gdx_for.tilted?": {
         "snippet": "gdx_for.tilted?(\"${1:any}\")",
         "description": "(どれかの向き▼) に傾いた",
-        "type": "method"
+        "type": "value"
     },
     "gdx_for.tilt_angle": {
         "snippet": "gdx_for.tilt_angle(\"${1:front}\")",
         "description": "(前▼) 方向の傾き",
-        "type": "method"
+        "type": "variable"
     },
     "gdx_for.falling?": {
         "snippet": "gdx_for.falling?",
         "description": "落下中",
-        "type": "method"
+        "type": "value"
     },
     "gdx_for.spin_speed": {
         "snippet": "gdx_for.spin_speed(\"${1:z}\")",
         "description": "(z▼) 回転のはやさ",
-        "type": "method"
+        "type": "variable"
     }
 }

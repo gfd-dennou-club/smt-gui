@@ -7,16 +7,16 @@
     "video_sensing.video": {
         "snippet": "video_sensing.video_on(\"${1:motion}\", \"${2:this sprite}\")",
         "description": "(スプライト▼) のビデオの (モーション▼)",
-        "type": "method"
+        "type": "variable"
     },
     "video_sensing.turn_video": {
         "snippet": "video_sensing.video_turn(\"${1:on}\")",
         "description": "ビデオを (入▼) にする",
-        "type": "method"
+        "type": "function"
     },
     "video_sensing.video_transparency=": {
         "snippet": "video_sensing.video_transparency = ${1:50}",
         "description": "ビデオの透明度を (50) にする",
-        "type": "method"
+        "type": "function"
     }
 }

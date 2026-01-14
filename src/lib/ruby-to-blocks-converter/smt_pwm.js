@@ -1,16 +1,4 @@
 /**
- * クラス定数のフルネームを取得するヘルパー
- */
-const getClassConstant = (block) => {
-    const value = block.value;
-    if (!value) return null;
-
-    const scope = value.scope;
-    const name = value.name;
-    return `${scope}::${name}`;
-};
-
-/**
  * converter for PWM
  */
 const SmT_PWM_Converter = {
@@ -37,7 +25,7 @@ const SmT_PWM_Converter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /^PWM\.new\(\s*(\d+)\s*,\s*timer:\s*(\d+)\s*,\s*frequency:\s*(\d+)\s*\)/
+                /^PWM\.new\s*\(\s*(\d+)\s*,\s*timer:\s*(\d+)\s*,\s*frequency:\s*(\d+)\s*\)/
             );
             if (!match) return null;
             if (variable.name != `pwm${match[1]}`) return null;
@@ -53,31 +41,16 @@ const SmT_PWM_Converter = {
             return block;
         });
 
-        // --- pwmX のレシーバの登録 (0-40) ---
-        for (let pin = 0; pin <= 40; pin++) {
-            const str = "pwm" + pin;
-            converter.registerOnSend("self", str, 0, (params) => {
-                return converter.createRubyExpressionBlock(str, params.node);
-            });
-	}
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
 
+        const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 
         const match = receiverName.match(/^pwm(\d+)$/);
-
 	if (!match) return null;
+	
         const pin = Number(match[1]);
 	
 	switch (name) {
@@ -87,17 +60,9 @@ const SmT_PWM_Converter = {
                 if (args.length != 1) return null; 
                 if (!this._isNumber(args[0])) return null;
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_pwm_duty", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_pwm_duty", "statement"
-                        );
-                    }
-                })();
+                const block = this._changeBlock(
+                    receiver, "microcom_pwm_duty", "statement"
+                );
                 this._addNumberInput(block, "PIN", "math_integer", pin, 10);
                 this._addNumberInput(block, "DUTY","math_number", args[0], 10);
 
@@ -108,23 +73,12 @@ const SmT_PWM_Converter = {
             // pwm.frequency
             case "frequency": {
 
-                const pin = Number(match[1]);
-
                 if (args.length != 1) return null; 
                 if (!this._isNumber(args[0])) return null;
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_pwm_frequency", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_pwm_frequency", "statement"
-                        );
-                    }
-                })();
-		
+                const block = this._changeBlock(
+                    receiver, "microcom_pwm_frequency", "statement"
+                );
                 this._addNumberInput(block, "PIN", "math_integer", pin, 10);
                 this._addNumberInput(block, "FREQ", "math_number", args[0], 10);
 
@@ -138,18 +92,9 @@ const SmT_PWM_Converter = {
                 if (args.length != 1) return null; 
                 if (!this._isNumber(args[0])) return null;
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_pwm_pulse", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-			    receiver, "microcom_pwm_pulse", "statement"
-                        );
-                    }
-                })();
-
+                const block = this._changeBlock(
+		    receiver, "microcom_pwm_pulse", "statement"
+                );
                 this._addNumberInput(block, "PIN", "math_integer", pin, 10);
                 this._addNumberInput(block, "PULSE", "math_number", args[0], 10);
 		

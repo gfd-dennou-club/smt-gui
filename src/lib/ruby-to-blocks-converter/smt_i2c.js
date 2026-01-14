@@ -1,12 +1,3 @@
-const getClassConstant = (block) => {
-    const value = block.value;
-    if (!value) return null;
-
-    const scope = value.scope;
-    const name = value.name;
-    return `${scope}::${name}`;
-};
-
 /**
  * converter for I2C
  */
@@ -33,53 +24,28 @@ const SmT_I2C_Converter = {
             if (!expression) return null;
 	    
             const match = expression.match(
-                /^I2C\.new\(\s*scl_pin:\s*(\d+)\s*,\s*sda_pin:\s*(\d+)\s*\)/
+                /^I2C\.new\s*\(\s*scl_pin:\s*(\d+)\s*,\s*sda_pin:\s*(\d+)\s*\)/
             );
 
             if (!match) return null;
             if (variable.name != "i2c") return null;
 
             const block = converter.changeRubyExpressionBlock(
-                rh,
-                "microcom_i2c_init",
-                "statement"
+                rh, "microcom_i2c_init", "statement"
             );
-            converter.addNumberInput(
-                block,
-                "SCL",
-                "math_integer",
-                Number(match[1])
-            );
-            converter.addNumberInput(
-                block,
-                "SDA",
-                "math_integer",
-                Number(match[2])
-            );
-
+            converter.addNumberInput(block, "SCL", "math_integer", Number(match[1]));
+            converter.addNumberInput(block, "SDA", "math_integer", Number(match[2]));
             return block;
         });
 
-        // --- i2c レシーバの登録 ---
-        converter.registerOnSend("self", "i2c", 0, (params) => {
-            return converter.createRubyExpressionBlock(str, params.node);
-        });
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
 
+        const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 	
-        const match = receiverName.match(/^i2c/);
+        const match = receiverName.match(/^i2c$/);
 	if (!match) return null;
 
 	switch (name) {
@@ -102,17 +68,9 @@ const SmT_I2C_Converter = {
 		    flag = 1;			
 		}
 
-		const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-			return this._changeRubyExpressionBlock(
-                            receiver, blockname, "statement"
-			);
-                    } else {
-			return this._changeBlock(
-                            receiver, blockname, "statement"
-			);
-                    }
-		})();
+		const block = this._changeBlock(
+                    receiver, blockname, "statement"
+		);
 		
 		let addr1 = 0 ;
 		let addr2 = 0 ;
@@ -168,24 +126,15 @@ const SmT_I2C_Converter = {
             case "read": {
 		
                 if (args.length != 2 && args.length != 3) return null;
-
 		    
 		if (!this._isNumber(args[0])) return null;
                 if (!this._isNumber(args[1])) return null;
 		
 		const num = Number( args[1] );		    
 		
-		const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_i2c_read", "value"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_i2c_read", "value"
-                        );
-                    }
-		})();
+		const block = this._changeBlock(
+                    receiver, "microcom_i2c_read", "value"
+                );
 
 		let addr1 = 0 ;
 		let addr2 = 0 ;

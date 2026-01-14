@@ -1,12 +1,3 @@
-const getClassConstant = (block) => {
-    const value = block.value;
-    if (!value) return null;
-
-    const scope = value.scope;
-    const name = value.name;
-    return `${scope}::${name}`;
-};
-
 /**
  * Microcom converter
  */
@@ -38,7 +29,7 @@ const SmT_Network_Converter = {
             );
             return block;
         });
-
+/*
         // wlan
         converter.registerOnSend("self", "wlan", 0, (params) => {
             const { node } = params;
@@ -69,7 +60,7 @@ const SmT_Network_Converter = {
             );
             return block;
             });
-
+*/
 
         // HTTP
         converter.registerOnSend("self", "::HTTP", 0, (params) => {
@@ -176,7 +167,6 @@ const SmT_Network_Converter = {
         if (!receiverName) return null;
 
         const match = receiverName.match(/^wlan$/);
-
 	if (!match) return null;
 	
 	switch (name) {

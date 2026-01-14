@@ -1,13 +1,7 @@
-const getClassConstant = (block) => {
-  const value = block?.value;
-  if (!value) return null;
+/*
+ * I2C sensor 
+ */
 
-    const scope = value.scope;
-  const name  = value.name;
-  return `${scope}::${name}`;
-};
-
-// センサーリスト
 const I2C_SENSORS = ['BME688', 'BMP280', 'DPS310', 'SCD30', 'SCD41', 'SHT30', 'SHT35', 'SHT40', 'VL53L0X'];
 const I2C_SENSORS_L = I2C_SENSORS.map(sensor => sensor.toLowerCase()); // ['bme688','bmp280',...]
 const I2C_SENSORS_TARGET = ['read', 'pressure', 'temperature', 'humidity', 'co2', 'distance'];
@@ -18,7 +12,7 @@ const SmT_I2C_Sensors_Converter = {
 	I2C_SENSORS.forEach((sensorName) => {
 	    const className = `::${sensorName}`;       // 例: ::SHT35
 	    const varName = sensorName.toLowerCase();  // 例: sht35
-
+	    
 	    // --- クラスの .new の変換 ---
 	    converter.registerOnSend(className, "new", 1, (params) => {
 		const { node } = params;
@@ -62,15 +56,8 @@ const SmT_I2C_Sensors_Converter = {
     
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 	console.log("---xxx---");
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
+
+        const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 
 	// 正規表現で「センサー名」にマッチするかチェック
@@ -88,32 +75,16 @@ const SmT_I2C_Sensors_Converter = {
 	if (args.length != 0) return null;
 	
 	if (name === "read") {
-	    const block = (() => {
-                if (this._isRubyExpression(receiver)) {
-                    return this._changeRubyExpressionBlock(
-                        receiver, "peripherals_i2c_sensor_read", "statement"
-                    );
-                } else {
-                    return this._changeBlock(
-                        receiver, "peripherals_i2c_sensor_read", "statement"
-                    );
-                }
-	    })();
+	    const block = this._changeBlock(
+                receiver, "peripherals_i2c_sensor_read", "statement"
+            );
 	    this._addField(block, "SENSOR", matchedSensor);
 	    return block;
 
         } else {
-	    const block = (() => {
-                if (this._isRubyExpression(receiver)) {
-                    return this._changeRubyExpressionBlock(
-                        receiver, "peripherals_i2c_sensor_value", "value"
-                    );
-                } else {
-                    return this._changeBlock(
-                        receiver, "peripherals_i2c_sensor_value", "value"
-                    );
-                }
-	    })();
+	    const block = this._changeBlock(
+                receiver, "peripherals_i2c_sensor_value", "value"
+            );
 	    this._addField(block, "SENSOR", matchedSensor);
 	    this._addField(block, "TARGET", name);
 	    return block;

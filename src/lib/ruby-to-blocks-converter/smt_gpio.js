@@ -54,7 +54,7 @@ const SmT_GPIO_Converter = {
             const expression = converter.getRubyExpression(rh);
             if (!expression) return null;
 
-            const match = expression.match(/GPIO\.new\(\s*(\d+)\s*,\s*(.+?)\s*\)/);
+            const match = expression.match(/GPIO\.new\s*\(\s*(\d+)\s*,\s*(.+?)\s*\)/);
             if (!match) return null;
 
             // 変数名が gpio10 のようになっているか確認
@@ -68,31 +68,16 @@ const SmT_GPIO_Converter = {
             return block;
         });
 
-        // --- gpioX レシーバーの登録 (0-40) ---
-        for (let pin = 0; pin <= 40; pin++) {
-            const str = "gpio" + pin;
-            converter.registerOnSend("self", str, 0, (params) => {
-                return converter.createRubyExpressionBlock(str, params.node);
-            });
-        }
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
 
+        const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 	
         const match = receiverName.match(/^gpio(\d+)$/);
-
 	if (!match) return null;
+
         const pin = Number(match[1]);
 	
 	switch (name) {
@@ -104,17 +89,9 @@ const SmT_GPIO_Converter = {
                 if (!this._isNumber(args[0])) return null;
                 if (args[0].value !== 0 && args[0].value !== 1) return null;
 		
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_gpio_write", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_gpio_write", "statement"
-                        );
-                    }
-                })();		
+                const block = this._changeBlock(
+                    receiver, "microcom_gpio_write", "statement"
+                );
                 this._addNumberInput(block, "VALUE", "math_integer", args[0], 0);
                 this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 		
@@ -125,20 +102,10 @@ const SmT_GPIO_Converter = {
             // gpio.read
             case "read": {
 		if (args.length != 0) null;
-
-		console.log( this._isRubyExpression(receiver) );
 		
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_gpio_read", "value"
-			);
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_gpio_read", "value"
-                        );
-                    }
-                })();		
+                const block = this._changeBlock(
+                    receiver, "microcom_gpio_read", "value"
+                );
                 this._addNumberInput(block, "PIN", "math_integer", pin, 10);
 		
                 return block;

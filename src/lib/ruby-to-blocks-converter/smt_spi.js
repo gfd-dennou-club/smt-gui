@@ -1,12 +1,3 @@
-const getClassConstant = (block) => {
-    const value = block.value;
-    if (!value) return null;
-
-    const scope = value.scope;
-    const name = value.name;
-    return `${scope}::${name}`;
-};
-
 /**
  * converter for SPI
  */
@@ -50,25 +41,11 @@ const SmT_SPI_Converter = {
             return block;
         });
 
-        // --- spi レシーバの登録 ---
-        converter.registerOnSend("self", "spi", 0, (params) => {
-            const { node } = params;
-            return converter.createRubyExpressionBlock("spi", node);
-        });
-
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
 
+        const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 	
         const match = receiverName.match(/^spi/);
@@ -82,18 +59,10 @@ const SmT_SPI_Converter = {
                 if (!this.isNumber(args[0])) return null;
                 if (!this.isNumber(args[1])) return null;
 		
-		const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-			return this._changeRubyExpressionBlock(
-                            receiver, "microcom_spi_write", "statement"
-			);
-                    } else {
-			return this._changeBlock(
-                            receiver, "microcom_spi_write", "statement"
-			);
-                    }
-		})();
-		
+		const block = this._changeBlock(
+                    receiver, "microcom_spi_write", "statement"
+		);
+
 		let addr1 = 0 ;
 		let addr2 = 0 ;
 		let addr3 = 0 ;
@@ -133,18 +102,9 @@ const SmT_SPI_Converter = {
 		if (!this._isNumber(args[0])) return null;
 		const num = Number( args[0] );
 		    
-		const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_spi_read", "value"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_spi_read", "value"
-                        );
-                    }
-		})();
-		
+		const block = this._changeBlock(
+                    receiver, "microcom_spi_read", "value"
+                );
 		this._addNumberInput(block, "BYTES", "math_integer", num, 10);
 		return block;
                 break;

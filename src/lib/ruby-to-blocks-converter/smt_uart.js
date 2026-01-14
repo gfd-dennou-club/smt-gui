@@ -1,12 +1,3 @@
-const getClassConstant = (block) => {
-    const value = block.value;
-    if (!value) return null;
-
-    const scope = value.scope;
-    const name = value.name;
-    return `${scope}::${name}`;
-};
-
 /**
  * converter for UART
  */
@@ -46,28 +37,16 @@ const SmT_UART_Converter = {
             return block;
         });
 
-        // --- uart のレシーバの登録 ---
-        for (let pin = 0; pin <= 4; pin++) {
-            converter.registerOnSend("self", "uart" + pin, 0, (params) => {
-                const { node } = params;
-                return converter.createRubyExpressionBlock("uart" + pin, node);
-            });
-        }
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-        const receiverName = (() => {
-            if (this._isRubyExpression(receiver)) {
-                return this._getRubyExpression(receiver);
-            } else if (this._isRubyArgument(receiver)) {
-                return receiver.fields.VALUE.value;
-            } else {
-                return null;
-            }
-        })();
+
+        const receiverName = receiver.fields.VALUE.value;
+	if (!receiverName) return null;
 
 	const match = receiverName.match(/^uart(\d+)$/);
 	if (!match) return null;
+
         const pin = Number(match[1]);	
 	
 	switch (name) {
@@ -77,17 +56,9 @@ const SmT_UART_Converter = {
                 if (args.length != 1) return null;
                 if (!this._isString(args[0])) return null;
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_uart_puts", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_uart_puts", "statement"
-                        );
-                    }
-                })();
+                const block = this._changeBlock(
+                    receiver, "microcom_uart_puts", "statement"
+                );
 		this._addNumberInput(block, "UART", "math_integer", pin, 10);
                 this._addTextInput(block, "COMM", args[0], "Output String");
                 return block;
@@ -99,17 +70,9 @@ const SmT_UART_Converter = {
                 if (args.length != 0) return null;
                 const pin = Number(match[1]);
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_uart_gets", "value"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_uart_gets", "value"
-                        );
-                    }
-                })();
+                const block = this._changeBlock(
+                    receiver, "microcom_uart_gets", "value"
+                );
 		this._addNumberInput(block, "UART", "math_integer", pin, 10);
 		return block;
                 break;
@@ -120,17 +83,9 @@ const SmT_UART_Converter = {
                 if (args.length != 0) return null;
                 const pin = Number(match[1]);
 
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_uart_txclear", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_uart_txclear", "statement"
-                        );
-                    }
-                })();
+                const block = this._changeBlock(
+                    receiver, "microcom_uart_txclear", "statement"
+                );
 		this._addNumberInput(block, "UART", "math_integer", pin, 10);
                 return block;
                 break;
@@ -141,17 +96,9 @@ const SmT_UART_Converter = {
                 if (args.length != 0) return null;
                 const pin = Number(match[1]);
 		
-                const block = (() => {
-                    if (this._isRubyExpression(receiver)) {
-                        return this._changeRubyExpressionBlock(
-                            receiver, "microcom_uart_rxclear", "statement"
-                        );
-                    } else {
-                        return this._changeBlock(
-                            receiver, "microcom_uart_rxclear", "statement"
-                        );
-                    }
-                })();		
+                const block = this._changeBlock(
+                    receiver, "microcom_uart_rxclear", "statement"
+                );
                 this._addNumberInput(block, "UART", "math_integer", pin, 10);
                 return block;
                 break;

@@ -209,5 +209,6 @@ export default {
     'gui.smalruby3.blockDisplayModal.operator_contains': '(りんご) に (り) がふくまれる',
     'gui.smalruby3.blockDisplayModal.operator_mod': '(　) を (　) でわったあまり',
     'gui.smalruby3.blockDisplayModal.operator_round': '(　) をししゃごにゅう',
-    'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [ぜったいち▼]'
+    'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [ぜったいち▼]',
+    'gui.extensionLibrary.showAllExtensions': 'すべてのかくちょうきのうをひょうじ'
 };

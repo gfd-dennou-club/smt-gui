@@ -66,6 +66,16 @@ const ModalComponent = props => (
                     ) : null}
                     {props.contentLabel}
                 </div>
+                {props.headerActions ? (
+                    <div
+                        className={classNames(
+                            styles.headerItem,
+                            styles.headerItemActions
+                        )}
+                    >
+                        {props.headerActions}
+                    </div>
+                ) : null}
                 {props.loading && props.onStop ? (
                     <div
                         className={classNames(
@@ -150,6 +160,7 @@ ModalComponent.propTypes = {
         PropTypes.object
     ]).isRequired,
     fullScreen: PropTypes.bool,
+    headerActions: PropTypes.node,
     headerClassName: PropTypes.string,
     headerImage: PropTypes.string,
     isRtl: PropTypes.bool,

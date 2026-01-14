@@ -7,6 +7,7 @@ import connectionModalReducer, {connectionModalInitialState} from './connection-
 import customProceduresReducer, {customProceduresInitialState} from './custom-procedures';
 import blockDragReducer, {blockDragInitialState} from './block-drag';
 import editorTabReducer, {editorTabInitialState} from './editor-tab';
+import extensionFilterReducer, {extensionFilterInitialState} from './extension-filter';
 import hoveredTargetReducer, {hoveredTargetInitialState} from './hovered-target';
 import menuReducer, {menuInitialState} from './menus';
 import meshV2Reducer, {meshV2InitialState} from './mesh-v2';
@@ -45,6 +46,7 @@ const guiInitialState = {
     connectionModal: connectionModalInitialState,
     customProcedures: customProceduresInitialState,
     editorTab: editorTabInitialState,
+    extensionFilter: extensionFilterInitialState,
     mode: modeInitialState,
     hoveredTarget: hoveredTargetInitialState,
     stageSize: stageSizeInitialState,
@@ -131,6 +133,7 @@ const guiReducer = combineReducers({
     connectionModal: connectionModalReducer,
     customProcedures: customProceduresReducer,
     editorTab: editorTabReducer,
+    extensionFilter: extensionFilterReducer,
     mode: modeReducer,
     hoveredTarget: hoveredTargetReducer,
     stageSize: stageSizeReducer,

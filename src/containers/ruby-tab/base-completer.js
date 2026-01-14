@@ -33,6 +33,8 @@ class BaseCompleter {
             return monaco.languages.CompletionItemKind.Variable;
         case 'constant':
             return monaco.languages.CompletionItemKind.Constant;
+        case 'enum_member':
+            return monaco.languages.CompletionItemKind.EnumMember;
         case 'keyword':
             return monaco.languages.CompletionItemKind.Keyword;
         case 'event':

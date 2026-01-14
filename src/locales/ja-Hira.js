@@ -340,7 +340,7 @@ export default {
     "microcom.i2c_write": "I2C出力: I2Cアドレス= (0x[ADDR1][ADDR2]), コマンド= (0x[ADDR3][ADDR4]), (0x[ADDR5][ADDR6])",
     "microcom.i2c_write2": "I2C出力: I2Cアドレス= (0x[ADDR1][ADDR2]), コマンド= (0x[ADDR3][ADDR4]), ([HEX])",
     "microcom.i2c_read": "I2C入力: I2Cアドレス= (0x[ADDR1][ADDR2]), 読み込みバイト数 = [BYTES] From (0x[ADDR3][ADDR4])",
-    "microcom.spi_init": "SPI: 初期化. MISO=[MISO]ピン, MOSI=[SCL]ピン, CLK=[CLK]ピン",
+    "microcom.spi_init": "SPI: 初期化. MISO=[MISO]ピン, MOSI=[MOSI]ピン, CLK=[CLK]ピン",
     "microcom.spi_write": "SPI出力: コマンド= (0x[ADDR1][ADDR2]), (0x[ADDR3][ADDR4])",
     "microcom.spi_read": "SPI入力: 読み込みバイト数 = [BYTES]",
     "microcom.uart_init": "UART-[UART]: 初期化．通信速度=[RATE]",

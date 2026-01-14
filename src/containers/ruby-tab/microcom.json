@@ -35,7 +35,7 @@
 	"snippet": "pwm*.frequency(*)",
 	"description": "PWM: ピン * の周波数を設定する"
     },
-    "pwm*.pulse_with_us": {
+    "pwm*.pulse_width_us": {
 	"snippet": "pwm*.pulse_with_us(*)",
 	"description": "PWM: ピン * のパルス幅を設定する"
     },

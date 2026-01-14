@@ -246,5 +246,6 @@ export default {
     'gui.smalruby3.blockDisplayModal.operator_contains': '(りんご) に (り) が含まれる',
     'gui.smalruby3.blockDisplayModal.operator_mod': '(　) を (　) で割った余り',
     'gui.smalruby3.blockDisplayModal.operator_round': '(　) を四捨五入',
-    'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [絶対値▼]'
+    'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [絶対値▼]',
+    'gui.extensionLibrary.showAllExtensions': 'すべての拡張機能を表示'
 };

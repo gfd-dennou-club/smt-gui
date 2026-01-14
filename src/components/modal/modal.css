@@ -156,6 +156,20 @@ $sides: 20rem;
     margin-right: -4.75rem;
 }
 
+/* Header actions (generic) */
+.header-item-actions {
+    padding: 0;
+    z-index: 1;
+}
+
+[dir="ltr"] .header-item-actions {
+    margin-left: -4.75rem;
+}
+
+[dir="rtl"] .header-item-actions {
+    margin-right: -4.75rem;
+}
+
 .reload-button {
     font-weight: normal;
     font-size: 0.75rem;

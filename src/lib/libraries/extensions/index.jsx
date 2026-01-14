@@ -61,6 +61,9 @@ import meshV2InsetIconURL from './mesh_v2/mesh-small.png';
 import meshV2ConnectionIconURL from './mesh_v2/mesh-illustration.png';
 import meshV2ConnectionSmallIconURL from './mesh_v2/mesh-small.png';
 
+import microbitMore from './microbitMore/index.jsx';
+import koshien from './koshien/index.jsx';
+
 const extensions = [
     {
         name: (
@@ -179,7 +182,8 @@ const extensions = [
                 id="gui.extension.makeymakey.description"
             />
         ),
-        featured: true
+        featured: true,
+        defaultHidden: true
     },
     {
         name: 'micro:bit',
@@ -195,6 +199,7 @@ const extensions = [
             />
         ),
         featured: true,
+        defaultHidden: true,
         disabled: false,
         bluetoothRequired: true,
         internetConnectionRequired: true,
@@ -211,6 +216,7 @@ const extensions = [
         ),
         helpLink: 'https://scratch.mit.edu/microbit'
     },
+    microbitMore,
     {
         name: 'LEGO MINDSTORMS EV3',
         extensionId: 'ev3',
@@ -225,6 +231,7 @@ const extensions = [
             />
         ),
         featured: true,
+        defaultHidden: true,
         disabled: false,
         bluetoothRequired: true,
         internetConnectionRequired: true,
@@ -255,6 +262,7 @@ const extensions = [
             />
         ),
         featured: true,
+        defaultHidden: true,
         disabled: false,
         bluetoothRequired: true,
         internetConnectionRequired: true,
@@ -286,6 +294,7 @@ const extensions = [
             />
         ),
         featured: true,
+        defaultHidden: true,
         disabled: false,
         bluetoothRequired: true,
         internetConnectionRequired: true,
@@ -317,6 +326,7 @@ const extensions = [
             />
         ),
         featured: true,
+        defaultHidden: true,
         disabled: false,
         bluetoothRequired: true,
         internetConnectionRequired: true,
@@ -435,14 +445,8 @@ const extensions = [
             />
         ),
         helpLink: 'https://github.com/smalruby/smalruby3-gui/wiki/SmalrubotS1'
-    }
+    },
+    koshien
 ];
-
-// Injected for extra extensions
-import microbitMore from './microbitMore/index.jsx';
-extensions.push(microbitMore);
-
-import koshien from './koshien/index.jsx';
-extensions.push(koshien);
 
 export default extensions;

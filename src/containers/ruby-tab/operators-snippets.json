@@ -35,7 +35,7 @@
         "type": "variable"
     },
     "string.include?": {
-        "snippet": "\"${1:りんご}\".include?\"(\"${2:り}\")\"",
+        "snippet": "\"${1:りんご}\".include?(\"$\"{2:り}\")",
         "description": "(りんご) に (り) が含まれる",
         "type": "value"
     },

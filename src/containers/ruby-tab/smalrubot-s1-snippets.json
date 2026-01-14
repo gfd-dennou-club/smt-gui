@@ -30,7 +30,7 @@
         "type": "enum_member"
     },
     "smalrubot_s1.action-in": {
-        "snippet": "smalrubot_s1.action(\"${1:forward}\", \"${2:0.5}\")",
+        "snippet": "smalrubot_s1.action(\"${1:forward}\", ${2:0.5})",
         "description": "(0.5) 秒 [進める▼]",
         "type": "function"
     },

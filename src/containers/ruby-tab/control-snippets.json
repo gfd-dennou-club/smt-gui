@@ -35,17 +35,17 @@
         "type": "snippet"
     },
     "stop-all": {
-        "snippet": "stop(\"all\")",
+        "snippet": "stop(\"${1:all}\")",
         "description": "[すべてを止める▼]",
         "type": "function"
     },
     "stop-this": {
-        "snippet": "stop(\"this script\")",
+        "snippet": "stop(\"${1:this script}\")",
         "description": "[このスクリプトを止める▼]",
         "type": "function"
     },
     "stop-other": {
-        "snippet": "stop(\"other scripts in sprite\")",
+        "snippet": "stop(\"${1:other scripts in sprite}\")",
         "description": "[スプライトの他のスクリプトを止める▼]",
         "type": "function"
     },
@@ -55,7 +55,7 @@
         "type": "event"
     },
     "create_clone": {
-        "snippet": "create_clone(\"_myself_\")",
+        "snippet": "create_clone(\"${1:_myself_}\")",
         "description": "(自分自身▼) のクローンを作る",
         "type": "function"
     },

@@ -45,12 +45,12 @@
         "type": "function"
     },
     "koshien.map_all": {
-        "snippet": \"$すべてのマップ情報 = koshien.map_all\",
+        "snippet": "$すべてのマップ情報 = koshien.map_all",
         "description": "すべてのマップ情報",
         "type": "variable"
     },
     "koshien.map_from": {
-        "snippet": \"$マップ情報 = koshien.map_from(${1:\"0:0\"}, ${2:$すべてのマップ情報})\",
+        "snippet": "$マップ情報 = koshien.map_from(${1:\"0:0\"}, ${2:$すべてのマップ情報})",
         "description": "座標 (0:0) のマップ情報を [すべてのマップ情報] から読み込む",
         "type": "variable"
     },

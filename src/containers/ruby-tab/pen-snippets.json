@@ -20,7 +20,7 @@
         "type": "function"
     },
     "pen.color=#": {
-        "snippet": "pen.color = \"#${1:7a2d74}"",
+        "snippet": "pen.color = \"#${1:7a2d74}\"",
         "description": "ペンの色を (#7a2d74) にする",
         "type": "function"
     },

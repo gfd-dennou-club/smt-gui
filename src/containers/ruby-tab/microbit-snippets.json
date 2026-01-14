@@ -20,8 +20,7 @@
         "type": "function"
     },
     "microbit.display": {
-        "snippet": "microbit.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"
-)",
+        "snippet": "microbit.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"\n)",
         "description": "(♡▼) を表示する",
         "type": "function"
     },

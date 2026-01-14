@@ -5,7 +5,7 @@
         "type": "event"
     },
     "when_key_pressed": {
-        "snippet": "when_key_pressed(\" ${1:space}\") do\n\t${2}\nend",
+        "snippet": "when_key_pressed(\"${1:space}\") do\n\t${2}\nend",
         "description": "[スペース▼] キーが押されたとき",
         "type": "event"
     },
@@ -15,28 +15,28 @@
         "type": "event"
     },
     "when_backdrop_switches": {
-        "snippet": "when_backdrop_switches(\" ${1:背景1}\") do\n\t${2}\nend",
+        "snippet": "when_backdrop_switches(\"${1:背景1}\") do\n\t${2}\nend",
         "description": "背景が [背景1▼] になったとき",
         "type": "event"
     },
     "when_greater_than": {
-        "snippet": "when_greater_than(\" ${1:loudness}\", ${2:10}) do\n\t${3}\nend",
+        "snippet": "when_greater_than(\"${1:loudness}\", ${2:10}) do\n\t${3}\nend",
         "description": "[音量▼] > (10) のとき",
         "type": "event"
     },
     "when_receive": {
-        "snippet": "when_receive(\" ${1:メッセージ1}\") do\n\t${2}\nend",
+        "snippet": "when_receive(\"${1:メッセージ1}\") do\n\t${2}\nend",
         "description": "[メッセージ1▼] を受け取ったとき",
         "type": "event"
     },
     "broadcast": {
-        "snippet": "broadcast(\" ${1:メッセージ1}\")",
+        "snippet": "broadcast(\"${1:メッセージ1}\")",
         "description": "(メッセージ1) を送る",
-        "type": "method"
+        "type": "function"
     },
     "broadcast_and_wait": {
-        "snippet": "broadcast_and_wait(\" ${1:メッセージ1}\")",
+        "snippet": "broadcast_and_wait(\"${1:メッセージ1}\")",
         "description": "(メッセージ1) を送って待つ",
-        "type": "method"
+        "type": "function"
     }
 }

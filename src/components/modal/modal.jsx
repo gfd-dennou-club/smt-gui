@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
 import ReactModal from 'react-modal';
 import {FormattedMessage} from 'react-intl';
 
@@ -10,8 +9,6 @@ import CloseButton from '../close-button/close-button.jsx';
 
 import backIcon from '../../lib/assets/icon--back.svg';
 import helpIcon from '../../lib/assets/icon--help.svg';
-import reloadIcon from '../../lib/assets/icon--reload.svg';
-import stopIcon from '../close-button/icon--close.svg';
 
 import styles from './modal.css';
 
@@ -76,46 +73,6 @@ const ModalComponent = props => (
                         {props.headerActions}
                     </div>
                 ) : null}
-                {props.loading && props.onStop ? (
-                    <div
-                        className={classNames(
-                            styles.headerItem,
-                            styles.headerItemReload
-                        )}
-                    >
-                        <Button
-                            className={styles.reloadButton}
-                            iconClassName={styles.stopIcon}
-                            iconSrc={stopIcon}
-                            onClick={props.onStop}
-                        >
-                            <FormattedMessage
-                                defaultMessage="Stop"
-                                description="Stop button in modal"
-                                id="gui.modal.stop"
-                            />
-                        </Button>
-                    </div>
-                ) : (props.onReload ? (
-                    <div
-                        className={classNames(
-                            styles.headerItem,
-                            styles.headerItemReload
-                        )}
-                    >
-                        <Button
-                            className={styles.reloadButton}
-                            iconSrc={reloadIcon}
-                            onClick={props.onReload}
-                        >
-                            <FormattedMessage
-                                defaultMessage="Reload"
-                                description="Reload button in modal"
-                                id="gui.modal.reload"
-                            />
-                        </Button>
-                    </div>
-                ) : null)}
                 <div
                     className={classNames(
                         styles.headerItem,
@@ -166,8 +123,6 @@ ModalComponent.propTypes = {
     isRtl: PropTypes.bool,
     loading: PropTypes.bool,
     onHelp: PropTypes.func,
-    onReload: PropTypes.func,
-    onStop: PropTypes.func,
     onRequestClose: PropTypes.func
 };
 

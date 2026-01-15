@@ -1,5 +1,5 @@
 /**
- * Define Ruby code generator for I2C_UART Blocks
+ * Define Ruby code generator for MicroController
  * @param {RubyGenerator} Generator The RubyGenerator
  * @return {RubyGenerator} same as param.
  */
@@ -81,10 +81,6 @@ export default function (Generator) {
         return [`adc${pin}.read`, Generator.ORDER_ATOMIC];
     };
 
-//    Generator.microcom_i2c = function (block) {
-//        return ['i2c', Generator.ORDER_ATOMIC];
-//    };
-    
     Generator.microcom_i2c_init = function (block) {
         const scl =
             Generator.valueToCode(block, "SCL", Generator.ORDER_NONE) || 22;
@@ -145,20 +141,6 @@ export default function (Generator) {
 	}
     };
 
-    Generator.microcom_i2c_dps310_init = function (block) {
-        return `dps310 = DPS310.new( i2c )\n`;
-    };
-
-    Generator.microcom_i2c_dps310_measure = function (block) {
-        return `dps310.measure \n`;
-    };
-
-    Generator.microcom_i2c_dps310_read = function (block) {
-        const target =
-              Generator.getFieldValue(block, "TARGET", Generator.ORDER_NONE) || null;
-        return `dps310.${target} \n`;
-    };
-    
     Generator.microcom_spi_init = function (block) {
         const miso =
             Generator.valueToCode(block, "MISO", Generator.ORDER_NONE) || 19;
@@ -220,52 +202,6 @@ export default function (Generator) {
             Generator.valueToCode(block, "UART", Generator.ORDER_NONE) || null;
         return `uart${uart}.clear_rx_buffer()\n`;
     };
-
-    //
-    // Wi-Fi
-    //
-    Generator.microcom_wifi_init = function (block) {
-        return (
-	    `wlan = WLAN.new()\n` 
-	);
-    };
-
-    Generator.microcom_wifi_auth = function (block) {
-        const ssid = Generator.valueToCode(block, 'SSID', Generator.ORDER_NONE);
-        const pass = Generator.valueToCode(block, 'PASS', Generator.ORDER_NONE);
-        return (
-	    `wlan.connect(${ssid}, ${pass}) \n`
-	);
-    };
-
-    Generator.microcom_wifi_isconnected = function () {
-        return [`wlan.is_connected?`, Generator.ORDER_ATOMIC];
-    };
-
-    Generator.microcom_sntp_init = function () {
-        return (
-	    `sntp = SNTP.new() \n`
-	);
-    };
-
-    Generator.microcom_sntp_date = function (block) {
-        const time = Generator.getFieldValue(block, 'TIME') || null;
-        return [`sntp.${time}`, Generator.ORDER_ATOMIC];
-    };    
-    
-    Generator.microcom_http_get = function (block) {
-        const url = Generator.valueToCode(block, 'URL', Generator.ORDER_NONE) || null;
-        return [`HTTP.get( ${url} )`, Generator.ORDER_ATOMIC]
-    };
-
-    Generator.microcom_http_post = function (block) {
-        const url  = Generator.valueToCode(block, 'URL',  Generator.ORDER_NONE) || null;
-        const data = Generator.valueToCode(block, 'DATA', Generator.ORDER_NONE) || null;
-        return (
-	    `HTTP.post( ${url}, ${data} )\n` 
-	);
-    };
-
     
     Generator.microcom_num16 = function (block) {
         const num = Generator.valueToCode(block, 'NUM', Generator.ORDER_NONE) || null;

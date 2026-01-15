@@ -60,6 +60,43 @@ export default function (Generator) {
 	const name   = sensor.toLowerCase();
         const target = Generator.getFieldValue(block, 'TARGET') || null;
         return [`${name}.${target}`, Generator.ORDER_ATOMIC];
+   };
+
+    //
+    // RTC    
+    //
+    Generator.peripherals_rtc_init = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        return `${name} = ${sensor}.new(i2c)\n`;
+    };
+
+    Generator.peripherals_rtc_write = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+	const year = Generator.valueToCode(block, 'YEAR', Generator.ORDER_NONE) || 'nil';
+	const mon  = Generator.valueToCode(block, 'MON',  Generator.ORDER_NONE) || 'nil';
+	const day  = Generator.valueToCode(block, 'DAY',  Generator.ORDER_NONE) || 'nil';
+	const wday = Generator.valueToCode(block, 'WDAY', Generator.ORDER_NONE) || 'nil';
+	const hour = Generator.valueToCode(block, 'HOUR', Generator.ORDER_NONE) || 'nil';
+	const min  = Generator.valueToCode(block, 'MIN',  Generator.ORDER_NONE) || 'nil';
+	const sec  = Generator.valueToCode(block, 'SEC',  Generator.ORDER_NONE) || 'nil';
+        return (
+	    `${name}.write( [${year}, ${mon}, ${day}, ${wday}, ${hour}, ${min}, ${sec}] )\n`
+	);
+    };
+    
+    Generator.peripherals_rtc_read = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        return `${name}.read\n`;
+    };
+
+    Generator.peripherals_rtc_value = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        const target = Generator.getFieldValue(block, 'TARGET') || null;
+        return [`${name}.${target}`, Generator.ORDER_ATOMIC];
     };
 
     //
@@ -82,7 +119,7 @@ export default function (Generator) {
     Generator.peripherals_wifi_connected = function () {
         return [`wlan.connected?`, Generator.ORDER_ATOMIC];
     };
-
+    
     Generator.peripherals_sntp_init = function () {
         return (
 	    `sntp = SNTP.new \n`
@@ -95,9 +132,9 @@ export default function (Generator) {
 	);
     };
 
-    Generator.peripherals_sntp_date = function (block) {
-        const time = Generator.getFieldValue(block, 'TIME') || null;
-        return [`sntp.${time}`, Generator.ORDER_ATOMIC];
+    Generator.peripherals_sntp_value = function (block) {
+        const target = Generator.getFieldValue(block, 'TARGET') || null;
+        return [`sntp.${target}`, Generator.ORDER_ATOMIC];
     };    
     
     Generator.peripherals_http_get = function (block) {
@@ -143,7 +180,7 @@ export default function (Generator) {
 	);
     };
 
-    Generator.peripherals_sd_read = function (block) {
+    Generator.peripherals_sd_gets = function (block) {
         const mode = Generator.getFieldValue(block, 'MODE') || null;
         return [`fp.${mode}`, Generator.ORDER_ATOMIC];
     };

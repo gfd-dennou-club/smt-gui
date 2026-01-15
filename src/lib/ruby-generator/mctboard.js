@@ -197,13 +197,13 @@ export default function (Generator) {
 
     Generator.mctboard_rtc_set = function (block) {
 	Generator.prepares_.i2c_rtc = Generator.mctboard_i2c_rtc_init(null);
-        const year = Generator.valueToCode(block, 'YEAR') || null;
-        const mon  = Generator.valueToCode(block, 'MON')  || null;
-        const day  = Generator.valueToCode(block, 'DAY')  || null;
-        const wday = Generator.valueToCode(block, 'WDAY') || null;
-        const hour = Generator.valueToCode(block, 'HOUR') || null;
-        const min  = Generator.valueToCode(block, 'MIN')  || null;
-        const sec  = Generator.valueToCode(block, 'SEC')  || null;
+	const year = Generator.valueToCode(block, 'YEAR', Generator.ORDER_NONE) || 'nil';
+	const mon  = Generator.valueToCode(block, 'MON',  Generator.ORDER_NONE) || 'nil';
+	const day  = Generator.valueToCode(block, 'DAY',  Generator.ORDER_NONE) || 'nil';
+	const wday = Generator.valueToCode(block, 'WDAY', Generator.ORDER_NONE) || 'nil';
+	const hour = Generator.valueToCode(block, 'HOUR', Generator.ORDER_NONE) || 'nil';
+	const min  = Generator.valueToCode(block, 'MIN',  Generator.ORDER_NONE) || 'nil';
+	const sec  = Generator.valueToCode(block, 'SEC',  Generator.ORDER_NONE) || 'nil';
         return (
 	    `rtc.write( [${year}, ${mon}, ${day}, ${wday}, ${hour}, ${min}, ${sec}] )\n`
 	);
@@ -338,7 +338,7 @@ export default function (Generator) {
 	);
     };
 
-    Generator.mctboard_sd_read = function (block) {
+    Generator.mctboard_sd_gets = function (block) {
 	Generator.prepares_.sd = Generator.mctboard_sd_init(null);
         const mode = Generator.getFieldValue(block, 'MODE') || null;
         return [`fp.${mode}`, Generator.ORDER_ATOMIC];

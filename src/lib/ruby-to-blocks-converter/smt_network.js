@@ -1,6 +1,9 @@
 /**
- * Microcom converter
+ * converter for network
  */
+
+const SNTP_TARGET = ['read', 'year', 'mon', 'mday', 'wday', 'hour', 'min', 'sec'];
+
 const SmT_Network_Converter = {
     register: function (converter) {
 
@@ -90,8 +93,7 @@ const SmT_Network_Converter = {
             converter._addTextInput(block, "DATA", args[1], "test");
             return block;
         });
-/*
-        // SNTP
+
         // SNTP.new
         converter.registerOnSend("::SNTP", "new", 0, (params) => {
             const { args, node } = params;
@@ -106,7 +108,7 @@ const SmT_Network_Converter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /^SNTP\.new\(\s*\)/
+                /^SNTP\.new\s*\(\s*\)/
             );
 
             if (!match) return null;
@@ -127,42 +129,10 @@ const SmT_Network_Converter = {
             return converter.createRubyExpressionBlock("sntp", node);
         });
 
-        // sntp.read
-        converter.registerOnSend("sntp", "read", 0, (params) => {
-            const { receiver } = params;
-	    
-            const block = converter._changeRubyExpressionBlock(
-                receiver,
-                "peripherals_sntp_read",
-                "statement"
-            );
-            return block;
-        });
-
-	// sntp.XXXX
-	const items = ['year', 'mon', 'mday', 'wday', 'hour', 'min', 'sec'];
-	items.forEach( function(item) {
-            converter.registerOnSend('sntp', item, 0, params => {
-		console.log( "----" );
-		console.log( item );
-		const { receiver } = params;
-		const block = converter._changeRubyExpressionBlock(
-                    receiver,
-                    "peripherals_sntp_date",
-                    "statement"
-		);	   		
-		converter.addField(block, "TIME", item);
-		return block;
-            });
-	});
-
-*/
-
     },
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 
-	// lvar (ローカル変数) である前提
 	const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 
@@ -197,6 +167,45 @@ const SmT_Network_Converter = {
 		break;
 	    }
 	}
+	return null;
+    },
+
+    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
+
+	const receiverName = receiver.fields.VALUE.value;
+        if (!receiverName) return null;
+
+        const match = receiverName.match(/^sntp$/);
+	if (!match) return null;
+
+	const targetPattern = new RegExp(`^(${SNTP_TARGET.join('|')})`);
+	const match2 = name.match(targetPattern);
+	if (!match2) return null;
+	
+	switch (name) {
+	    
+            // sntp.read
+            case "read": {
+
+		console.log("read!!")
+		if (args.length != 0) return null; 
+                const block = this._changeBlock(
+		    receiver, "peripherals_sntp_read", "statement"
+                );
+                return block;
+                break;
+            }
+
+  	    default: {
+		if (args.length != 0) return null;
+		const block = this._changeBlock(
+                    receiver, "peripherals_sntp_value", "value"
+		);
+		this._addField(block, "TARGET", name);
+		return block;
+		break;
+	    }
+	}		     
 	return null;
     },
 };

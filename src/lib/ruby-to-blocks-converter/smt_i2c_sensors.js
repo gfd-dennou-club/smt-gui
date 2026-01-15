@@ -2,6 +2,7 @@
  * I2C sensor 
  */
 
+//sensors including RTC
 const I2C_SENSORS = ['BME688', 'BMP280', 'DPS310', 'SCD30', 'SCD41', 'SHT30', 'SHT35', 'SHT40', 'VL53L0X'];
 const I2C_SENSORS_L = I2C_SENSORS.map(sensor => sensor.toLowerCase()); // ['bme688','bmp280',...]
 const I2C_SENSORS_TARGET = ['read', 'pressure', 'temperature', 'humidity', 'co2', 'distance'];
@@ -55,7 +56,6 @@ const SmT_I2C_Sensors_Converter = {
     },
     
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
-	console.log("---xxx---");
 
         const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
@@ -74,21 +74,26 @@ const SmT_I2C_Sensors_Converter = {
 
 	if (args.length != 0) return null;
 	
-	if (name === "read") {
-	    const block = this._changeBlock(
-                receiver, "peripherals_i2c_sensor_read", "statement"
-            );
-	    this._addField(block, "SENSOR", matchedSensor);
-	    return block;
-
-        } else {
-	    const block = this._changeBlock(
-                receiver, "peripherals_i2c_sensor_value", "value"
-            );
-	    this._addField(block, "SENSOR", matchedSensor);
-	    this._addField(block, "TARGET", name);
-	    return block;
-
+	switch (name){
+	    
+	    case "read": {
+	        const block = this._changeBlock(
+                    receiver, "peripherals_i2c_sensor_read", "statement"
+		);
+		this._addField(block, "SENSOR", matchedSensor);
+		return block;
+		break;
+	    }
+	    
+	    default: {
+		const block = this._changeBlock(
+                    receiver, "peripherals_i2c_sensor_value", "value"
+		);
+		this._addField(block, "SENSOR", matchedSensor);
+		this._addField(block, "TARGET", name);
+		return block;
+		break;
+	    }
 	}
         return null;
     },

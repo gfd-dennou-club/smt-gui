@@ -40,24 +40,51 @@ export default function (Generator) {
         return [`microbit_more.pin_is_touched?(${name})`, Generator.ORDER_FUNCTION_CALL];
     };
 
+    Generator.microbitMore_whenPinConnected = function (block) {
+        block.isStatement = true;
+        const pin = Generator.getFieldValue(block, 'PIN', 'P0').replace('P', '');
+        return `microbit_more.when_pin_connected(${pin}) do\n`;
+    };
+
     const GestureLabel = {
-        TILT_UP: 'tilt up',
-        TILT_DOWN: 'tilt down',
-        TILT_LEFT: 'tilt left',
-        TILT_RIGHT: 'tilt right',
+        TILT_UP: 'tilted_front',
+        TILT_DOWN: 'tilted_back',
+        TILT_LEFT: 'tilted_left',
+        TILT_RIGHT: 'tilted_right',
         FACE_UP: 'face up',
         FACE_DOWN: 'face down',
         FREEFALL: 'freefall',
         G3: '3G',
         G6: '6G',
         G8: '8G',
-        SHAKE: 'shake'
+        SHAKE: 'shake',
+        MOVED: 'moved',
+        TILTED: 'tilted_any'
     };
     Generator.microbitMore_whenGesture = function (block) {
         block.isStatement = true;
         const gesture = Generator.getFieldValue(block, 'GESTURE', 'SHAKE');
         const gestureLabel = Generator.quote_(GestureLabel[gesture]);
         return `microbit_more.when(${gestureLabel}) do\n`;
+    };
+
+    const TiltedDirectionLabel = {
+        ANY: 'any',
+        TILT_UP: 'front',
+        TILT_DOWN: 'back',
+        TILT_LEFT: 'left',
+        TILT_RIGHT: 'right'
+    };
+    Generator.microbitMore_isTilted = function (block) {
+        const direction = Generator.getFieldValue(block, 'DIRECTION', 'ANY');
+        const directionLabel = Generator.quote_(TiltedDirectionLabel[direction]);
+        return [`microbit_more.tilted?(${directionLabel})`, Generator.ORDER_FUNCTION_CALL];
+    };
+
+    Generator.microbitMore_getTiltAngle = function (block) {
+        const direction = Generator.getFieldValue(block, 'DIRECTION', 'FRONT').toLowerCase();
+        const directionLabel = Generator.quote_(direction);
+        return [`microbit_more.tilt_angle(${directionLabel})`, Generator.ORDER_FUNCTION_CALL];
     };
 
     const makeMatrixArgs = function (matrix) {

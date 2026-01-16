@@ -210,5 +210,11 @@ export default {
     'gui.smalruby3.blockDisplayModal.operator_mod': '(　) を (　) でわったあまり',
     'gui.smalruby3.blockDisplayModal.operator_round': '(　) をししゃごにゅう',
     'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [ぜったいち▼]',
-    'gui.extensionLibrary.showAllExtensions': 'すべてのかくちょうきのうをひょうじ'
+    'gui.extensionLibrary.showAllExtensions': 'すべてのかくちょうきのうをひょうじ',
+
+    // MicroBit More - Tilt gesture labels (override to match microbit extension)
+    'mbitMore.gesturesMenu.tiltUp': 'うえにかたむいた',
+    'mbitMore.gesturesMenu.tiltDown': 'したにかたむいた',
+    'mbitMore.gesturesMenu.tiltLeft': 'ひだりにかたむいた',
+    'mbitMore.gesturesMenu.tiltRight': 'みぎにかたむいた'
 };

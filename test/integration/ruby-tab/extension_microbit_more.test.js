@@ -51,6 +51,15 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
             microbit_more.when_pin_is("P2", "tapped") do
             end
 
+            microbit_more.when_pin_connected(0) do
+            end
+
+            microbit_more.when_pin_connected(1) do
+            end
+
+            microbit_more.when_pin_connected(2) do
+            end
+
             microbit_more.pin_is_touched?("LOGO")
 
             microbit_more.pin_is_touched?("P2")
@@ -60,6 +69,34 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
 
             microbit_more.when("6G") do
             end
+
+            microbit_more.when("moved") do
+            end
+
+            microbit_more.when("tilted_any") do
+            end
+
+            microbit_more.when("tilted_front") do
+            end
+
+            microbit_more.when("tilted_back") do
+            end
+
+            microbit_more.when("tilted_left") do
+            end
+
+            microbit_more.when("tilted_right") do
+            end
+
+            microbit_more.tilted?("any")
+
+            microbit_more.tilted?("front")
+
+            microbit_more.tilted?("back")
+
+            microbit_more.tilted?("left")
+
+            microbit_more.tilted?("right")
 
             microbit_more.display_pattern(
               ".1.1.",
@@ -88,6 +125,14 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
             microbit_more.pitch
 
             microbit_more.roll
+
+            microbit_more.tilt_angle("front")
+
+            microbit_more.tilt_angle("back")
+
+            microbit_more.tilt_angle("left")
+
+            microbit_more.tilt_angle("right")
 
             microbit_more.sound_level
 

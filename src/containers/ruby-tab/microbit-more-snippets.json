@@ -11,7 +11,7 @@
     },
     "microbit_more.button_pressed?": {
         "snippet": "microbit_more.button_pressed?(\"${1:A}\")",
-        "description": "ボタン [A▼] が押されている",
+        "description": "ボタン [A▼] が押された",
         "type": "value"
     },
     "microbit_more.when_pin_is": {
@@ -24,10 +24,25 @@
         "description": "ピン [ログ▼] がタッチされている",
         "type": "value"
     },
-    "microbit_more.when": {
-        "snippet": "microbit_more.when(\"${1:shake}\") do\n\t${2}\nend",
-        "description": "[ゆさぶられた▼] とき",
+    "microbit_more.when_pin_connected": {
+        "snippet": "microbit_more.when_pin_connected(${1:0}) do\n\t${2}\nend",
+        "description": "ピン [0▼] がつながったとき",
         "type": "event"
+    },
+    "microbit_more.when": {
+        "snippet": "microbit_more.when(\"${1:moved}\") do\n\t${2}\nend",
+        "description": "[動いた▼] とき",
+        "type": "event"
+    },
+    "microbit_more.tilted?": {
+        "snippet": "microbit_more.tilted?(\"${1:any}\")",
+        "description": "[どれかの向き▼] に傾いた",
+        "type": "value"
+    },
+    "microbit_more.tilt_angle": {
+        "snippet": "microbit_more.tilt_angle(\"${1:front}\")",
+        "description": "[前▼] 方向の傾き",
+        "type": "variable"
     },
     "microbit_more.display_pattern": {
         "snippet": "microbit_more.display_pattern(\n\t\"${1:.1.1.}\",\n\t\"${2:1.1.1}\",\n\t\"${3:1...1}\",\n\t\"${4:.1.1.}\",\n\t\"${5:..1..}\"\n)",

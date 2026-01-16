@@ -30,17 +30,19 @@ const TouchEventMenu = {
 };
 
 const GestureMenu = {
-    TILT_UP: 'tilt up',
-    TILT_DOWN: 'tilt down',
-    TILT_LEFT: 'tilt left',
-    TILT_RIGHT: 'tilt right',
+    TILT_UP: 'tilted_front',
+    TILT_DOWN: 'tilted_back',
+    TILT_LEFT: 'tilted_left',
+    TILT_RIGHT: 'tilted_right',
     FACE_UP: 'face up',
     FACE_DOWN: 'face down',
     FREEFALL: 'freefall',
     G3: '3G',
     G6: '6G',
     G8: '8G',
-    SHAKE: 'shake'
+    SHAKE: 'shake',
+    MOVED: 'moved',
+    TILTED: 'tilted_any'
 };
 const GestureMenuLower = Object.entries(GestureMenu).map(x => x[1].toLowerCase());
 const GestureMenuValue = Object.entries(GestureMenu).map(x => x[0]);
@@ -96,6 +98,32 @@ const ConnectionStateMenu = [
     'connected',
     'disconnected'
 ];
+
+const TouchPinIDMenu = {
+    0: 'P0',
+    1: 'P1',
+    2: 'P2'
+};
+const TouchPinIDMenuLower = Object.keys(TouchPinIDMenu);
+const TouchPinIDMenuValue = Object.values(TouchPinIDMenu);
+
+const TiltDirectionMenu = {
+    any: 'ANY',
+    front: 'TILT_UP',
+    back: 'TILT_DOWN',
+    left: 'TILT_LEFT',
+    right: 'TILT_RIGHT'
+};
+const TiltDirectionMenuLower = Object.keys(TiltDirectionMenu);
+const TiltDirectionMenuValue = Object.values(TiltDirectionMenu);
+
+const TiltAngleDirectionMenu = [
+    'FRONT',
+    'BACK',
+    'LEFT',
+    'RIGHT'
+];
+const TiltAngleDirectionMenuLower = TiltAngleDirectionMenu.map(x => x.toLowerCase());
 
 /**
  * MicrobitMore converter
@@ -228,6 +256,59 @@ const MicrobitMoreConverter = {
             const block = converter.changeRubyExpressionBlock(receiver, 'microbitMore_whenGesture', 'hat');
             converter.addField(block, 'GESTURE', args[0]);
             converter.setParent(rubyBlock, block);
+            return block;
+        });
+
+        converter.registerOnSendWithBlock(MicrobitMore, 'when_pin_connected', 1, 0, params => {
+            const {receiver, args, rubyBlock} = params;
+
+            if (converter.isNumber(args[0])) {
+                const index = TouchPinIDMenuLower.indexOf(args[0].toString());
+                if (index < 0) return null;
+
+                args[0] = new Primitive('str', TouchPinIDMenuValue[index], args[0].node);
+            } else {
+                return null;
+            }
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'microbitMore_whenPinConnected', 'hat');
+            converter.addField(block, 'PIN', args[0]);
+            converter.setParent(rubyBlock, block);
+            return block;
+        });
+
+        converter.registerOnSend(MicrobitMore, 'tilted?', 1, params => {
+            const {receiver, args} = params;
+
+            if (converter.isString(args[0])) {
+                const index = TiltDirectionMenuLower.indexOf(args[0].toString().toLowerCase());
+                if (index < 0) return null;
+
+                args[0] = new Primitive('str', TiltDirectionMenuValue[index], args[0].node);
+            } else {
+                return null;
+            }
+
+            const block =
+                  converter.changeRubyExpressionBlock(receiver, 'microbitMore_isTilted', 'value_boolean');
+            converter.addField(block, 'DIRECTION', args[0]);
+            return block;
+        });
+
+        converter.registerOnSend(MicrobitMore, 'tilt_angle', 1, params => {
+            const {receiver, args} = params;
+
+            if (converter.isString(args[0])) {
+                const index = TiltAngleDirectionMenuLower.indexOf(args[0].toString().toLowerCase());
+                if (index < 0) return null;
+
+                args[0] = new Primitive('str', TiltAngleDirectionMenu[index], args[0].node);
+            } else {
+                return null;
+            }
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'microbitMore_getTiltAngle', 'value');
+            converter.addField(block, 'DIRECTION', args[0]);
             return block;
         });
 

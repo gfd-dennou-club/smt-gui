@@ -247,5 +247,11 @@ export default {
     'gui.smalruby3.blockDisplayModal.operator_mod': '(　) を (　) で割った余り',
     'gui.smalruby3.blockDisplayModal.operator_round': '(　) を四捨五入',
     'gui.smalruby3.blockDisplayModal.operator_mathop': '(　) の [絶対値▼]',
-    'gui.extensionLibrary.showAllExtensions': 'すべての拡張機能を表示'
+    'gui.extensionLibrary.showAllExtensions': 'すべての拡張機能を表示',
+
+    // MicroBit More - Tilt gesture labels (override to match microbit extension)
+    'mbitMore.gesturesMenu.tiltUp': '上に傾いた',
+    'mbitMore.gesturesMenu.tiltDown': '下に傾いた',
+    'mbitMore.gesturesMenu.tiltLeft': '左に傾いた',
+    'mbitMore.gesturesMenu.tiltRight': '右に傾いた'
 };

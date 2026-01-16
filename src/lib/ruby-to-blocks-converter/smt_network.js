@@ -21,24 +21,25 @@ const SmT_Network_Converter = {
             if (!expression) return null;
 
             const match = expression.match(
-                /^WLAN\.new\(\s*\)/
+                /^WLAN\.new\s*\(\s*\)/
             );
-
             if (!match) return null;
             if (variable.name != "wlan") return null;
 
-            const block = converter.changeRubyExpressionBlock(
+	    const block = converter.changeRubyExpressionBlock(
                 rh, "peripherals_wifi_init", "statement"
             );
+
+	    console.log("ok");	    
             return block;
         });
-/*
+
         // wlan
         converter.registerOnSend("self", "wlan", 0, (params) => {
             const { node } = params;
             return converter.createRubyExpressionBlock("wlan", node);
         });
-
+/*
         // wlan.connect
         converter.registerOnSend("wlan", "connect", 2, (params) => {
 	    console.log("--- wlan.connect ---");
@@ -78,9 +79,9 @@ const SmT_Network_Converter = {
             if (!converter._isStringOrBlock(args[0])) return null;
 	    
 	    const block = converter.createBlock("peripherals_http_get", "value");
-            converter._addTextInput(block, "URL", args[0], "test");
-            return block;
-        });
+	    converter._addTextInput(block, "URL", args[0], "test");
+	    return block;
+	});
 
 	// HTTP.post
         converter.registerOnSend("::HTTP", "post", 2, (params) => {
@@ -94,47 +95,17 @@ const SmT_Network_Converter = {
             return block;
         });
 
-        // SNTP.new
-        converter.registerOnSend("::SNTP", "new", 0, (params) => {
-            const { args, node } = params;
-
-            const expression = `SNTP.new( )`;
-            return converter.createRubyExpressionBlock(expression, node);
-        });
-
-        // sntp = SNTP.new
-        converter.registerOnVasgn((scope, variable, rh) => {
-	    const expression = converter.getRubyExpression(rh);
-            if (!expression) return null;
-
-            const match = expression.match(
-                /^SNTP\.new\s*\(\s*\)/
-            );
-
-            if (!match) return null;
-            if (variable.name != "sntp") return null;
-
-            const block = converter.changeRubyExpressionBlock(
-                rh,
-                "peripherals_sntp_init",
-                "statement"
-            );
-            return block;
-        });
-
-        // sntp
-        converter.registerOnSend("self", "sntp", 0, (params) => {
-            const { node } = params;
-
-            return converter.createRubyExpressionBlock("sntp", node);
-        });
-
     },
-
+    
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 
+	console.log( receiver );
+	
 	const receiverName = receiver.fields.VALUE.value;
-        if (!receiverName) return null;
+
+	console.log( receiverName );
+
+	if (!receiverName) return null;
 
         const match = receiverName.match(/^wlan$/);
 	if (!match) return null;
@@ -170,44 +141,7 @@ const SmT_Network_Converter = {
 	return null;
     },
 
-    onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 
-	const receiverName = receiver.fields.VALUE.value;
-        if (!receiverName) return null;
-
-        const match = receiverName.match(/^sntp$/);
-	if (!match) return null;
-
-	const targetPattern = new RegExp(`^(${SNTP_TARGET.join('|')})`);
-	const match2 = name.match(targetPattern);
-	if (!match2) return null;
-	
-	switch (name) {
-	    
-            // sntp.read
-            case "read": {
-
-		console.log("read!!")
-		if (args.length != 0) return null; 
-                const block = this._changeBlock(
-		    receiver, "peripherals_sntp_read", "statement"
-                );
-                return block;
-                break;
-            }
-
-  	    default: {
-		if (args.length != 0) return null;
-		const block = this._changeBlock(
-                    receiver, "peripherals_sntp_value", "value"
-		);
-		this._addField(block, "TARGET", name);
-		return block;
-		break;
-	    }
-	}		     
-	return null;
-    },
 };
 
 export default SmT_Network_Converter;

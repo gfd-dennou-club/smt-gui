@@ -162,6 +162,7 @@ class RubyToBlocksConverter {
             extensionIDs: new Set(),
 
             blocks: {},
+            comments: {},
             blockTypes: {},
             localVariables: {},
             variables: {},
@@ -283,9 +284,15 @@ class RubyToBlocksConverter {
             Object.keys(target.blocks._blocks).forEach(blockId => {
                 target.blocks.deleteBlock(blockId);
             });
+            target.comments = {};
 
             Object.keys(this._context.blocks).forEach(blockId => {
                 target.blocks.createBlock(this._context.blocks[blockId]);
+            });
+
+            Object.keys(this._context.comments).forEach(commentId => {
+                const comment = this._context.comments[commentId];
+                target.createComment(comment.id, comment.blockId, comment.text, comment.x, comment.y, comment.width, comment.height, comment.minimized);
             });
 
             this.vm.emitWorkspaceUpdate();
@@ -878,6 +885,25 @@ class RubyToBlocksConverter {
         return null;
     }
 
+    createComment (text, blockId) {
+        return this._createComment(text, blockId);
+    }
+
+    _createComment (text, blockId) {
+        const id = Blockly.utils.genUid();
+        this._context.comments[id] = {
+            id: id,
+            text: text,
+            blockId: blockId,
+            x: 0,
+            y: 0,
+            width: 200,
+            height: 200,
+            minimized: false
+        };
+        return id;
+    }
+
     createBlock (opcode, type, attributes = {}) {
         return this._createBlock(opcode, type, attributes);
     }
@@ -895,6 +921,9 @@ class RubyToBlocksConverter {
             x: void 0,
             y: void 0
         }, attributes);
+        if (attributes.comment) {
+            block.comment = this._createComment(attributes.comment, block.id);
+        }
         this._context.blocks[block.id] = block;
         this._context.blockTypes[block.id] = type;
         return block;

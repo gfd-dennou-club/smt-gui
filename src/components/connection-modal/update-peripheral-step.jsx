@@ -139,26 +139,32 @@ class UpdatePeripheralStep extends React.Component {
             if (this.props.extensionId === 'microbitMore') {
                 resultsContent = (
                     <Box className={styles.scratchLinkError}>
-                        <FormattedMessage
-                            className={styles.centeredRow}
-                            defaultMessage="MicrobitMore update successful!"
-                            description="Message to indicate that the MicrobitMore update was successful"
-                            id="gui.connection.updatePeripheral.microbitMoreUpdateSuccessful"
-                        />
-                        <FormattedMessage
-                            className={classNames(styles.centeredRow, styles.importantInstruction)}
-                            defaultMessage="Tilt your micro:bit to light up all 25 LEDs to complete."
-                            description="Instructions to tilt the micro:bit to complete the update process"
-                            id="gui.connection.updatePeripheral.microbitMoreTiltToLightUp"
-                        />
+                        <Box className={styles.centeredRow}>
+                            <FormattedMessage
+                                defaultMessage="MicrobitMore update successful!"
+                                description="Message to indicate that the MicrobitMore update was successful"
+                                id="gui.connection.updatePeripheral.microbitMoreUpdateSuccessful"
+                            />
+                        </Box>
+                        <Box className={classNames(styles.centeredRow, styles.importantInstruction)}>
+                            <FormattedMessage
+                                defaultMessage="Tilt your micro:bit to light up all 25 LEDs to complete."
+                                description="Instructions to tilt the micro:bit to complete the update process"
+                                id="gui.connection.updatePeripheral.microbitMoreTiltToLightUp"
+                            />
+                        </Box>
                     </Box>
                 );
             } else {
-                resultsContent = (<FormattedMessage
-                    defaultMessage="Update successful!"
-                    description="Message to indicate that the peripheral update was successful"
-                    id="gui.connection.updatePeripheral.updateSuccessful"
-                />);
+                resultsContent = (
+                    <Box className={styles.centeredRow}>
+                        <FormattedMessage
+                            defaultMessage="Update successful!"
+                            description="Message to indicate that the peripheral update was successful"
+                            id="gui.connection.updatePeripheral.updateSuccessful"
+                        />
+                    </Box>
+                );
             }
         } else if (this.state.err.message === 'No valid interfaces found.') {
             // this is a special case where the micro:bit's communication firmware is too old to support WebUSB
@@ -179,12 +185,13 @@ class UpdatePeripheralStep extends React.Component {
         } else {
             resultsContent = (
                 <Box className={styles.scratchLinkError}>
-                    <FormattedMessage
-                        className={styles.centeredRow}
-                        defaultMessage="Update failed."
-                        description="Message to indicate that the peripheral update failed"
-                        id="gui.connection.updatePeripheral.updateFailed"
-                    />
+                    <Box className={styles.centeredRow}>
+                        <FormattedMessage
+                            defaultMessage="Update failed."
+                            description="Message to indicate that the peripheral update failed"
+                            id="gui.connection.updatePeripheral.updateFailed"
+                        />
+                    </Box>
                     <textarea
                         className={styles.scratchLinkErrorDetails}
                         readOnly

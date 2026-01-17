@@ -292,7 +292,10 @@ class RubyToBlocksConverter {
 
             Object.keys(this._context.comments).forEach(commentId => {
                 const comment = this._context.comments[commentId];
-                target.createComment(comment.id, comment.blockId, comment.text, comment.x, comment.y, comment.width, comment.height, comment.minimized);
+                target.createComment(
+                    comment.id, comment.blockId, comment.text,
+                    comment.x, comment.y, comment.width, comment.height, comment.minimized
+                );
             });
 
             this.vm.emitWorkspaceUpdate();

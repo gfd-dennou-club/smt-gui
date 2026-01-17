@@ -76,11 +76,19 @@ const updateMicroBit = async (device, progress) => {
     if (!hexData) {
         throw new Error(`Could not find hex file for micro:bit ${version}`);
     }
+    log.info(`Hex data size: ${hexData.length} bytes`);
     log.info(`Connecting to micro:bit ${version}`);
     await target.connect();
     log.info(`Sending hex file...`);
     try {
         await target.flash(hexData);
+        log.info('Flash completed successfully');
+    } catch (err) {
+        log.error(`Flash error details: ${err.message}`);
+        if (err.stack) {
+            log.error(err.stack);
+        }
+        throw err;
     } finally {
         log.info('Disconnecting');
         if (target.connected) {

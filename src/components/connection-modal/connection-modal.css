@@ -449,5 +449,5 @@
 
 .important-instruction {
     font-weight: bold;
-    color: $red-primary;
+    color: $ui-red;
 }

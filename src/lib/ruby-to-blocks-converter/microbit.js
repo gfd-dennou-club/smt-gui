@@ -1,6 +1,6 @@
 import Primitive from './primitive';
 
-const MicroBit = 'microbit';
+const MicroBit = 'microbit_v1';
 
 const ButtonsMenu = [
     'A',

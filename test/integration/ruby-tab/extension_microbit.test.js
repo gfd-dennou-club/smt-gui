@@ -34,63 +34,63 @@ describe('Ruby Tab: micro:bit extension blocks', () => {
         await loadUri(urlFor('/'));
 
         const ruby = dedent`
-            microbit.when_button_pressed("A") do
+            microbit_v1.when_button_pressed("A") do
             end
 
-            microbit.when_button_pressed("B") do
+            microbit_v1.when_button_pressed("B") do
             end
 
-            microbit.when_button_pressed("any") do
+            microbit_v1.when_button_pressed("any") do
             end
 
-            microbit.button_pressed?("A")
+            microbit_v1.button_pressed?("A")
 
-            microbit.when("moved") do
+            microbit_v1.when("moved") do
             end
 
-            microbit.when("shaken") do
+            microbit_v1.when("shaken") do
             end
 
-            microbit.when("jumped") do
+            microbit_v1.when("jumped") do
             end
 
-            microbit.display(
+            microbit_v1.display(
               ".1.1.",
               "1.1.1",
               "1...1",
               ".1.1.",
               "..1.."
             )
-            microbit.display(x)
-            microbit.display_text("Hello!")
-            microbit.clear_display
+            microbit_v1.display(x)
+            microbit_v1.display_text("Hello!")
+            microbit_v1.clear_display
 
-            microbit.when_tilted("any") do
+            microbit_v1.when_tilted("any") do
             end
 
-            microbit.when_tilted("front") do
+            microbit_v1.when_tilted("front") do
             end
 
-            microbit.when_tilted("back") do
+            microbit_v1.when_tilted("back") do
             end
 
-            microbit.when_tilted("left") do
+            microbit_v1.when_tilted("left") do
             end
 
-            microbit.when_tilted("right") do
+            microbit_v1.when_tilted("right") do
             end
 
-            microbit.tilted?("any")
+            microbit_v1.tilted?("any")
 
-            microbit.tilt_angle("front")
+            microbit_v1.tilt_angle("front")
 
-            microbit.when_pin_connected(0) do
+            microbit_v1.when_pin_connected(0) do
             end
 
-            microbit.when_pin_connected(1) do
+            microbit_v1.when_pin_connected(1) do
             end
 
-            microbit.when_pin_connected(2) do
+            microbit_v1.when_pin_connected(2) do
             end
         `;
         await expectInterconvertBetweenCodeAndRuby(ruby);
@@ -144,46 +144,46 @@ describe('Ruby Tab: micro:bit extension blocks', () => {
         `;
 
         const newRuby = dedent`
-            microbit.when_button_pressed("A") do
+            microbit_v1.when_button_pressed("A") do
             end
 
-            microbit.when_button_pressed("B") do
+            microbit_v1.when_button_pressed("B") do
             end
 
-            microbit.when_button_pressed("any") do
+            microbit_v1.when_button_pressed("any") do
             end
 
-            microbit.when("moved") do
+            microbit_v1.when("moved") do
             end
 
-            microbit.when("shaken") do
+            microbit_v1.when("shaken") do
             end
 
-            microbit.when("jumped") do
+            microbit_v1.when("jumped") do
             end
 
-            microbit.when_tilted("any") do
+            microbit_v1.when_tilted("any") do
             end
 
-            microbit.when_tilted("front") do
+            microbit_v1.when_tilted("front") do
             end
 
-            microbit.when_tilted("back") do
+            microbit_v1.when_tilted("back") do
             end
 
-            microbit.when_tilted("left") do
+            microbit_v1.when_tilted("left") do
             end
 
-            microbit.when_tilted("right") do
+            microbit_v1.when_tilted("right") do
             end
 
-            microbit.when_pin_connected(0) do
+            microbit_v1.when_pin_connected(0) do
             end
 
-            microbit.when_pin_connected(1) do
+            microbit_v1.when_pin_connected(1) do
             end
 
-            microbit.when_pin_connected(2) do
+            microbit_v1.when_pin_connected(2) do
             end
         `;
 

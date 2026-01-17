@@ -34,6 +34,11 @@
         "description": "[動いた▼] とき",
         "type": "event"
     },
+    "microbit_more.when_tilted": {
+        "snippet": "microbit_more.when_tilted(\"${1:any}\") do\n\t${2}\nend",
+        "description": "[どこか▼] に傾いたとき",
+        "type": "event"
+    },
     "microbit_more.tilted?": {
         "snippet": "microbit_more.tilted?(\"${1:any}\")",
         "description": "[どれかの向き▼] に傾いた",

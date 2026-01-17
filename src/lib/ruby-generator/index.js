@@ -356,7 +356,7 @@ RubyGenerator.scrub_ = function (block, code) {
     let commentCode = '';
     if (!this.isConnectedValue(block)) {
         let comment = this.getCommentText(block);
-        if (comment) {
+        if (comment && !comment.startsWith('@smalruby:')) {
             commentCode += `${this.prefixLines(comment, '# ')}\n`;
         }
         const inputs = this.getInputs(block);
@@ -366,7 +366,12 @@ RubyGenerator.scrub_ = function (block, code) {
             if (childBlock) {
                 comment = this.allNestedComments(childBlock);
                 if (comment) {
-                    commentCode += this.prefixLines(comment, '# ');
+                    const filteredComment = comment.split('\n')
+                        .filter(line => !line.startsWith('@smalruby:'))
+                        .join('\n');
+                    if (filteredComment.trim().length > 0) {
+                        commentCode += this.prefixLines(filteredComment, '# ');
+                    }
                 }
             }
         }

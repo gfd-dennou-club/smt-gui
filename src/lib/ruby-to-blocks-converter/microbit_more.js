@@ -109,22 +109,23 @@ const TouchPinIDMenuLower = Object.keys(TouchPinIDMenu);
 const TouchPinIDMenuValue = Object.values(TouchPinIDMenu);
 
 const TiltDirectionMenu = {
-    any: 'any',
-    front: 'front',
-    back: 'back',
-    left: 'left',
-    right: 'right'
+    front: 'FRONT',
+    back: 'BACK',
+    left: 'LEFT',
+    right: 'RIGHT',
+    any: 'ANY'
 };
 const TiltDirectionMenuLower = Object.keys(TiltDirectionMenu);
 const TiltDirectionMenuValue = Object.values(TiltDirectionMenu);
 
-const TiltAngleDirectionMenu = [
-    'front',
-    'back',
-    'left',
-    'right'
-];
-const TiltAngleDirectionMenuLower = TiltAngleDirectionMenu.map(x => x.toLowerCase());
+const TiltAngleDirectionMenu = {
+    front: 'FRONT',
+    back: 'BACK',
+    left: 'LEFT',
+    right: 'RIGHT'
+};
+const TiltAngleDirectionMenuLower = Object.keys(TiltAngleDirectionMenu);
+const TiltAngleDirectionMenuValue = Object.values(TiltAngleDirectionMenu);
 
 /**
  * MicrobitMore converter
@@ -321,7 +322,7 @@ const MicrobitMoreConverter = {
                 const index = TiltAngleDirectionMenuLower.indexOf(args[0].toString().toLowerCase());
                 if (index < 0) return null;
 
-                args[0] = new Primitive('str', TiltAngleDirectionMenu[index], args[0].node);
+                args[0] = new Primitive('str', TiltAngleDirectionMenuValue[index], args[0].node);
             } else {
                 return null;
             }

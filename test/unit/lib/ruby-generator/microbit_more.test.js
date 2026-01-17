@@ -23,6 +23,19 @@ describe('RubyGenerator/MicrobitMore', () => {
         expect(RubyGenerator.microbitMore_whenPinConnected(block)).toEqual(expected);
     });
 
+    test('microbitMore_whenTilted', () => {
+        const block = {
+            opcode: 'microbitMore_whenTilted',
+            fields: {
+                DIRECTION: {
+                    value: 'ANY'
+                }
+            }
+        };
+        const expected = 'microbit_more.when_tilted("any") do\n';
+        expect(RubyGenerator.microbitMore_whenTilted(block)).toEqual(expected);
+    });
+
     test('microbitMore_isTilted', () => {
         const block = {
             opcode: 'microbitMore_isTilted',

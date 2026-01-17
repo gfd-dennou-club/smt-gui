@@ -254,6 +254,8 @@ export default {
     'mbitMore.gesturesMenu.tiltDown': '下に傾いた',
     'mbitMore.gesturesMenu.tiltLeft': '左に傾いた',
     'mbitMore.gesturesMenu.tiltRight': '右に傾いた',
-    'gui.connection.updatePeripheral.doNotDisconnect': 'アップデート中はmicro:bitを外さないでください。',
-    'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitを最新のファームウェアにアップデートしてください。'
+            'gui.connection.updatePeripheral.doNotDisconnect': 'アップデート中はmicro:bitを外さないでください。',
+            'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitを最新のファームウェアにアップデートしてください。',
+            'gui.connection.updatePeripheral.microbitMoreUpdateSuccessful': 'MicrobitMoreのアップデートに成功しました！',
+    'gui.connection.updatePeripheral.microbitMoreTiltToLightUp': 'micro:bitを傾けて25個のLEDをすべて点灯させると完了です。'
 };

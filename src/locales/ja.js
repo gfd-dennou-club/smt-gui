@@ -20,7 +20,7 @@ export default {
     'gui.menuBar.aiSaved': 'ルビーが保存されました。',
     'gui.koshienTestModal.title': 'スモウルビー甲子園のAIを試す',
     'gui.googleDriveLoader.loadError': 'Google ドライブからプロジェクトの読み込みに失敗しました。',
-    'gui.googleDriveLoader.authError': 'Google ドライブの認証に失敗しました。もう一度お試しください。',
+    'gui.googleDriveLoader.authError': 'Google ドライブ의 認証に失敗しました。もう一度お試しください。',
     'gui.googleDriveLoader.configError': 'Google ドライブが設定されていません。管理者に連絡してください。',
     'gui.googleDriveLoader.pickerTitle': 'Google ドライブから Scratch 3.0 プロジェクト (.sb3) を選択',
     'gui.googleDriveSaver.uploadError': 'Google ドライブへのプロジェクトのアップロードに失敗しました。',
@@ -117,7 +117,7 @@ export default {
     'smalrubotS1.positionsMenu.left': '左',
     'smalrubotS1.positionsMenu.right': '右',
     'smalrubotS1.sensorPositionsMenu.left': '左 (A4)',
-    'smalrubotS1.sensorPositionsMenu.right': '右 (A5)',
+    'smalruby3.sensorPositionsMenu.right': '右 (A5)',
     'smalrubotS1.sensorPositionsMenu.touch': 'タッチ (A2)',
     'smalrubotS1.sensorPositionsMenu.light': '光 (A6)',
     'smalrubotS1.sensorPositionsMenu.sound': '音 (A7)',
@@ -254,8 +254,10 @@ export default {
     'mbitMore.gesturesMenu.tiltDown': '下に傾いた',
     'mbitMore.gesturesMenu.tiltLeft': '左に傾いた',
     'mbitMore.gesturesMenu.tiltRight': '右に傾いた',
-            'gui.connection.updatePeripheral.doNotDisconnect': 'アップデート中はmicro:bitを外さないでください。',
-            'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitを最新のファームウェアにアップデートしてください。',
-            'gui.connection.updatePeripheral.microbitMoreUpdateSuccessful': 'MicrobitMoreのアップデートに成功しました！',
-    'gui.connection.updatePeripheral.microbitMoreTiltToLightUp': 'micro:bitを傾けて25個のLEDをすべて点灯させると完了です。'
+    'gui.connection.updatePeripheral.doNotDisconnect': 'アップデート中はmicro:bitを外さないでください。',
+    'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitを最新のファームウェアにアップデートしてください。',
+    'gui.connection.updatePeripheral.microbitMoreUpdateSuccessful': 'MicrobitMoreのアップデートに成功しました！',
+    'gui.connection.updatePeripheral.microbitMoreTiltToLightUp': 'micro:bitを傾けて25個のLEDをすべて点灯させると完了です。',
+    'gui.connection.scanning.updatePeripheralButton': 'アップデート',
+    'gui.connection.auto-scanning.updatePeripheralButton': 'アップデート'
 };

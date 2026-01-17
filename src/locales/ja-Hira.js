@@ -216,5 +216,7 @@ export default {
     'mbitMore.gesturesMenu.tiltUp': 'うえにかたむいた',
     'mbitMore.gesturesMenu.tiltDown': 'したにかたむいた',
     'mbitMore.gesturesMenu.tiltLeft': 'ひだりにかたむいた',
-    'mbitMore.gesturesMenu.tiltRight': 'みぎにかたむいた'
+    'mbitMore.gesturesMenu.tiltRight': 'みぎにかたむいた',
+    'gui.connection.updatePeripheral.doNotDisconnect': 'アップデートちゅうはmicro:bitをはずさないでください。',
+    'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitをさいしんのファームウェアにアップデートしてください。'
 };

@@ -86,7 +86,7 @@ const getHexMap = async () => {
 
     for (const hexObj of separateUniversalHex(hex)) {
         const version = getHexVersion(hexObj);
-        const binary = new TextEncoder().encode(hex);
+        const binary = new TextEncoder().encode(hexObj.hex);
         hexMap.set(version, binary);
     }
 
@@ -103,6 +103,12 @@ const getHexMap = async () => {
 const updateMicroBit = async (device, progress) => {
     log.info(`Connecting to micro:bit`);
     const transport = new WebUSB(device);
+    try {
+        await transport.open();
+    } catch (err) {
+        log.error(`Transport open error: ${err.message}`);
+        throw err;
+    }
     const target = new DAPLink(transport);
     if (progress) {
         target.on(DAPLink.EVENT_PROGRESS, progress);
@@ -120,6 +126,13 @@ const updateMicroBit = async (device, progress) => {
     log.info(`Sending hex file...`);
     try {
         await target.flash(hexData);
+        log.info('Flash completed successfully');
+    } catch (err) {
+        log.error(`Flash error details: ${err.message}`);
+        if (err.stack) {
+            log.error(err.stack);
+        }
+        throw err;
     } finally {
         log.info('Disconnecting');
         if (target.connected) {

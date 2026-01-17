@@ -1,9 +1,17 @@
+import {
+    isUniversalHex,
+    separateUniversalHex
+} from '@microbit/microbit-universal-hex';
 import {WebUSB, DAPLink} from 'dapjs';
 import keyMirror from 'keymirror';
 
 import log from './log.js';
 
 import hexUrl from '../generated/microbit-more-hex-url.cjs';
+
+/**
+ * @typedef {import('@microbit/microbit-universal-hex').IndividualHex} IndividualHex
+ */
 
 /**
  * The version of a micro:bit.
@@ -40,6 +48,27 @@ const getDeviceVersion = device => {
 };
 
 /**
+ * Checks micro:bit board version targetted by the hex file.
+ * @param {IndividualHex} hex The hex file to check.
+ * @returns {DeviceVersion} The version of the hex file.
+ * @throws {Error} If the hex file does not target a recognized micro:bit version.
+ */
+const getHexVersion = hex => {
+    switch (hex.boardId) {
+    case 0x9900:
+    case 0x9901:
+        return DeviceVersion.V1;
+    case 0x9903:
+    case 0x9904:
+    case 0x9905:
+    case 0x9906:
+        return DeviceVersion.V2;
+    }
+
+    throw new Error('Could not identify hex version');
+};
+
+/**
  * Fetches the hex file and returns a map of micro:bit versions to hex file contents.
  * @returns {Promise<Map<DeviceVersion, Uint8Array>>} A map of micro:bit versions to hex file contents.
  */
@@ -48,8 +77,16 @@ const getHexMap = async () => {
     const hex = await response.text();
 
     const hexMap = new Map();
-    const binary = new TextEncoder().encode(hex);
-    hexMap.set(DeviceVersion.V2, binary);
+    if (isUniversalHex(hex)) {
+        for (const hexObj of separateUniversalHex(hex)) {
+            const version = getHexVersion(hexObj);
+            const binary = new TextEncoder().encode(hexObj.hex);
+            hexMap.set(version, binary);
+        }
+    } else {
+        const binary = new TextEncoder().encode(hex);
+        hexMap.set(DeviceVersion.V2, binary);
+    }
 
     return hexMap;
 };
@@ -62,27 +99,26 @@ const getHexMap = async () => {
  * @throws {Error} If anything goes wrong while fetching the hex file or updating the micro:bit.
  */
 const updateMicroBit = async (device, progress) => {
-    log.info(`Connecting to micro:bit`);
     const transport = new WebUSB(device);
+    try {
+        await transport.open();
+    } catch (err) {
+        log.error(`Transport open error: ${err.message}`);
+        throw err;
+    }
     const target = new DAPLink(transport);
     if (progress) {
         target.on(DAPLink.EVENT_PROGRESS, progress);
     }
-    log.info(`Checking micro:bit version`);
     const version = getDeviceVersion(device);
-    log.info(`Collecting hex file`);
     const hexMap = await getHexMap();
     const hexData = hexMap.get(version);
     if (!hexData) {
         throw new Error(`Could not find hex file for micro:bit ${version}`);
     }
-    log.info(`Hex data size: ${hexData.length} bytes`);
-    log.info(`Connecting to micro:bit ${version}`);
     await target.connect();
-    log.info(`Sending hex file...`);
     try {
         await target.flash(hexData);
-        log.info('Flash completed successfully');
     } catch (err) {
         log.error(`Flash error details: ${err.message}`);
         if (err.stack) {
@@ -90,11 +126,8 @@ const updateMicroBit = async (device, progress) => {
         }
         throw err;
     } finally {
-        log.info('Disconnecting');
         if (target.connected) {
             await target.disconnect();
-        } else {
-            log.info('Already disconnected');
         }
     }
 };
@@ -107,14 +140,11 @@ const updateMicroBit = async (device, progress) => {
  * @throws {Error} If anything goes wrong while fetching the hex file or updating the micro:bit.
  */
 const selectAndUpdateMicroBit = async progress => {
-    log.info('Selecting micro:bit');
-
     const device = await navigator.usb.requestDevice({
         filters: [{vendorId, productId}]
     });
 
     if (!device) {
-        log.info('No device selected');
         return;
     }
 

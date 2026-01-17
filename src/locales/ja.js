@@ -253,5 +253,7 @@ export default {
     'mbitMore.gesturesMenu.tiltUp': '上に傾いた',
     'mbitMore.gesturesMenu.tiltDown': '下に傾いた',
     'mbitMore.gesturesMenu.tiltLeft': '左に傾いた',
-    'mbitMore.gesturesMenu.tiltRight': '右に傾いた'
+    'mbitMore.gesturesMenu.tiltRight': '右に傾いた',
+    'gui.connection.updatePeripheral.doNotDisconnect': 'アップデート中はmicro:bitを外さないでください。',
+    'gui.connection.scanning.updatePeripheralPrompt': 'micro:bitを最新のファームウェアにアップデートしてください。'
 };

@@ -111,6 +111,11 @@ export default function (Generator) {
         return `microbit_more.display_pattern(${matrix})\n`;
     };
 
+    Generator.microbitMore_display = function (block) {
+        const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || Generator.quote_('Hello!');
+        return `microbit_more.display_text(${text})\n`;
+    };
+
     Generator.microbitMore_displayText = function (block) {
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || Generator.quote_('Hello!');
         const delay = Generator.valueToCode(block, 'DELAY', Generator.ORDER_NONE) || 120;

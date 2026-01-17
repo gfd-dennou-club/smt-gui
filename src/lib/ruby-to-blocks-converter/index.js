@@ -888,21 +888,21 @@ class RubyToBlocksConverter {
         return null;
     }
 
-    createComment (text, blockId) {
-        return this._createComment(text, blockId);
+    createComment (text, blockId, x = 0, y = 0, minimized = true) {
+        return this._createComment(text, blockId, x, y, minimized);
     }
 
-    _createComment (text, blockId) {
+    _createComment (text, blockId, x = 0, y = 0, minimized = true) {
         const id = Blockly.utils.genUid();
         this._context.comments[id] = {
             id: id,
             text: text,
             blockId: blockId,
-            x: 0,
-            y: 0,
+            x: x,
+            y: y,
             width: 200,
             height: 200,
-            minimized: false
+            minimized: minimized
         };
         return id;
     }
@@ -1448,6 +1448,7 @@ class RubyToBlocksConverter {
 
         let prevBlock = null;
         const result = [];
+        let currentY = 0;
         blocks.forEach(block => {
             switch (this._getBlockType(block)) {
             case 'statement':
@@ -1456,6 +1457,15 @@ class RubyToBlocksConverter {
                     block.parent = prevBlock.id;
                 } else {
                     result.push(block);
+                    block.x = 0;
+                    block.y = currentY;
+                    if (block.comment) {
+                        const comment = this._context.comments[block.comment];
+                        if (comment) {
+                            comment.y = block.y;
+                        }
+                    }
+                    currentY += 48;
                 }
                 if (block.next) {
                     const b = this._lastBlock(block);

@@ -182,8 +182,12 @@ const expectToEqualBlock = function (context, parent, actualBlock, expectedBlock
     expect(blocks.getOpcode(block)).toEqual(expected.opcode);
     expect(block.parent).toEqual(parent);
     expect(block.shadow).toEqual(expected.shadow === true);
-    expect(block.x).toEqual(void 0);
-    expect(block.y).toEqual(void 0);
+    if (expected.x !== void 0) {
+        expect(block.x).toEqual(expected.x);
+    }
+    if (expected.y !== void 0) {
+        expect(block.y).toEqual(expected.y);
+    }
 
     expectToEqualFields(context, blocks.getFields(block), expected.fields);
 

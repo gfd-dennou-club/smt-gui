@@ -67,6 +67,9 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
             microbit_more.when("shake") do
             end
 
+            microbit_more.when("jumped") do
+            end
+
             microbit_more.when("6G") do
             end
 
@@ -77,6 +80,21 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
             end
 
             microbit_more.when("tilted_front") do
+            end
+
+            microbit_more.when_tilted("any") do
+            end
+
+            microbit_more.when_tilted("front") do
+            end
+
+            microbit_more.when_tilted("back") do
+            end
+
+            microbit_more.when_tilted("left") do
+            end
+
+            microbit_more.when_tilted("right") do
             end
 
             microbit_more.when("tilted_back") do

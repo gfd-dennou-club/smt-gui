@@ -146,7 +146,7 @@ class UpdatePeripheralStep extends React.Component {
                             id="gui.connection.updatePeripheral.microbitMoreUpdateSuccessful"
                         />
                         <FormattedMessage
-                            className={styles.centeredRow}
+                            className={classNames(styles.centeredRow, styles.importantInstruction)}
                             defaultMessage="Tilt your micro:bit to light up all 25 LEDs to complete."
                             description="Instructions to tilt the micro:bit to complete the update process"
                             id="gui.connection.updatePeripheral.microbitMoreTiltToLightUp"

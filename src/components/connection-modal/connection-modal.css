@@ -446,3 +446,8 @@
     height: 60%;
     width: inherit;
 }
+
+.important-instruction {
+    font-weight: bold;
+    color: $red-primary;
+}

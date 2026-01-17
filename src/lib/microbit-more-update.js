@@ -7,7 +7,7 @@ import keyMirror from 'keymirror';
 
 import log from './log.js';
 
-import hexUrl from '../generated/microbit-hex-url.cjs';
+import hexUrl from '../generated/microbit-more-hex-url.cjs';
 
 /**
  * @typedef {import('@microbit/microbit-universal-hex').IndividualHex} IndividualHex
@@ -29,14 +29,14 @@ const productId = 0x0204;
  * Assumes the device is a micro:bit and determines its version.
  * @param {USBDevice} device The USB device to check.
  * @returns {DeviceVersion} The version of the device.
- * @throws {Error} If the device is not a recognized micro:bit.
+ * @throws {Error} If the device is not a recognized micro:bit or is V1.
  */
 const getDeviceVersion = device => {
     const microBitBoardId = device?.serialNumber?.substring(0, 4) ?? '';
     switch (microBitBoardId) {
     case '9900':
     case '9901':
-        return DeviceVersion.V1;
+        throw new Error('MicrobitMore only supports micro:bit V2');
     case '9903':
     case '9904':
     case '9905':
@@ -71,37 +71,34 @@ const getHexVersion = hex => {
 /**
  * Fetches the hex file and returns a map of micro:bit versions to hex file contents.
  * @returns {Promise<Map<DeviceVersion, Uint8Array>>} A map of micro:bit versions to hex file contents.
- * @throws {Error} If the fetch fails or cannot be interpreted as text.
- * @throws {Error} If the hex file is not in universal format.
  */
 const getHexMap = async () => {
     const response = await fetch(hexUrl);
     const hex = await response.text();
 
-    if (!isUniversalHex(hex)) {
-        throw new Error('Hex file must be in universal format');
-    }
-
     const hexMap = new Map();
-
-    for (const hexObj of separateUniversalHex(hex)) {
-        const version = getHexVersion(hexObj);
-        const binary = new TextEncoder().encode(hexObj.hex);
-        hexMap.set(version, binary);
+    if (isUniversalHex(hex)) {
+        for (const hexObj of separateUniversalHex(hex)) {
+            const version = getHexVersion(hexObj);
+            const binary = new TextEncoder().encode(hexObj.hex);
+            hexMap.set(version, binary);
+        }
+    } else {
+        const binary = new TextEncoder().encode(hex);
+        hexMap.set(DeviceVersion.V2, binary);
     }
 
     return hexMap;
 };
 
 /**
- * Copy the Scratch-specific hex file to the specified micro:bit.
+ * Copy the MicrobitMore-specific hex file to the specified micro:bit.
  * @param {USBDevice} device The micro:bit to update.
  * @param {function(number): void} [progress] Optional function to call with progress updates in the range of [0..1].
  * @returns {Promise<void>} A Promise that resolves when the update is completed.
  * @throws {Error} If anything goes wrong while fetching the hex file or updating the micro:bit.
  */
 const updateMicroBit = async (device, progress) => {
-    log.info(`Connecting to micro:bit`);
     const transport = new WebUSB(device);
     try {
         await transport.open();
@@ -113,20 +110,15 @@ const updateMicroBit = async (device, progress) => {
     if (progress) {
         target.on(DAPLink.EVENT_PROGRESS, progress);
     }
-    log.info(`Checking micro:bit version`);
     const version = getDeviceVersion(device);
-    log.info(`Collecting hex file`);
     const hexMap = await getHexMap();
     const hexData = hexMap.get(version);
     if (!hexData) {
         throw new Error(`Could not find hex file for micro:bit ${version}`);
     }
-    log.info(`Connecting to micro:bit ${version}`);
     await target.connect();
-    log.info(`Sending hex file...`);
     try {
         await target.flash(hexData);
-        log.info('Flash completed successfully');
     } catch (err) {
         log.error(`Flash error details: ${err.message}`);
         if (err.stack) {
@@ -134,31 +126,25 @@ const updateMicroBit = async (device, progress) => {
         }
         throw err;
     } finally {
-        log.info('Disconnecting');
         if (target.connected) {
             await target.disconnect();
-        } else {
-            log.info('Already disconnected');
         }
     }
 };
 
 /**
- * Requests a micro:bit from the browser then updates it with the Scratch-specific hex file.
+ * Requests a micro:bit from the browser then updates it with the MicrobitMore-specific hex file.
  * The browser is expected to prompt the user to select a micro:bit.
  * @param {function(number): void} [progress] Optional function to call with progress updates in the range of [0..1].
  * @returns {Promise<void>} A Promise that resolves when the update is completed.
  * @throws {Error} If anything goes wrong while fetching the hex file or updating the micro:bit.
  */
 const selectAndUpdateMicroBit = async progress => {
-    log.info('Selecting micro:bit');
-
     const device = await navigator.usb.requestDevice({
         filters: [{vendorId, productId}]
     });
 
     if (!device) {
-        log.info('No device selected');
         return;
     }
 

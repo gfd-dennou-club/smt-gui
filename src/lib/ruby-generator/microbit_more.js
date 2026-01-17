@@ -46,23 +46,24 @@ export default function (Generator) {
         return `microbit_more.when_pin_connected(${pin}) do\n`;
     };
 
-    const GestureLabel = {
-        TILT_UP: 'tilted_front',
-        TILT_DOWN: 'tilted_back',
-        TILT_LEFT: 'tilted_left',
-        TILT_RIGHT: 'tilted_right',
-        FACE_UP: 'face up',
-        FACE_DOWN: 'face down',
-        FREEFALL: 'freefall',
-        G3: '3G',
-        G6: '6G',
-        G8: '8G',
-        SHAKE: 'shake',
-        MOVED: 'moved',
-        TILTED: 'tilted_any'
-    };
     Generator.microbitMore_whenGesture = function (block) {
         block.isStatement = true;
+        const GestureLabel = {
+            TILT_UP: 'tilted_front',
+            TILT_DOWN: 'tilted_back',
+            TILT_LEFT: 'tilted_left',
+            TILT_RIGHT: 'tilted_right',
+            FACE_UP: 'face up',
+            FACE_DOWN: 'face down',
+            FREEFALL: 'freefall',
+            G3: '3G',
+            G6: '6G',
+            G8: '8G',
+            SHAKE: 'shake',
+            JUMPED: 'jumped',
+            MOVED: 'moved',
+            TILTED: 'tilted_any'
+        };
         const gesture = Generator.getFieldValue(block, 'GESTURE', 'SHAKE');
         const gestureLabel = Generator.quote_(GestureLabel[gesture]);
         return `microbit_more.when(${gestureLabel}) do\n`;
@@ -70,14 +71,21 @@ export default function (Generator) {
 
     const TiltedDirectionLabel = {
         ANY: 'any',
-        TILT_UP: 'front',
-        TILT_DOWN: 'back',
-        TILT_LEFT: 'left',
-        TILT_RIGHT: 'right'
+        FRONT: 'front',
+        BACK: 'back',
+        LEFT: 'left',
+        RIGHT: 'right'
     };
+    Generator.microbitMore_whenTilted = function (block) {
+        block.isStatement = true;
+        const direction = Generator.getFieldValue(block, 'DIRECTION', 'ANY');
+        const directionLabel = Generator.quote_(TiltedDirectionLabel[direction] || direction);
+        return `microbit_more.when_tilted(${directionLabel}) do\n`;
+    };
+
     Generator.microbitMore_isTilted = function (block) {
         const direction = Generator.getFieldValue(block, 'DIRECTION', 'ANY');
-        const directionLabel = Generator.quote_(TiltedDirectionLabel[direction]);
+        const directionLabel = Generator.quote_(TiltedDirectionLabel[direction] || direction);
         return [`microbit_more.tilted?(${directionLabel})`, Generator.ORDER_FUNCTION_CALL];
     };
 

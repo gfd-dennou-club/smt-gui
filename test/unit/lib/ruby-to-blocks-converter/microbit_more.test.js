@@ -84,6 +84,22 @@ describe('RubyToBlocksConverter/MicrobitMore', () => {
         convertAndExpectToEqualBlocks(converter, target, code, expected);
     });
 
+    test('microbit_more.when_tilted', () => {
+        code = 'microbit_more.when_tilted("any") do; end';
+        expected = [
+            {
+                opcode: 'microbitMore_whenTilted',
+                fields: [
+                    {
+                        name: 'DIRECTION',
+                        value: 'ANY'
+                    }
+                ]
+            }
+        ];
+        convertAndExpectToEqualBlocks(converter, target, code, expected);
+    });
+
     test('microbit_more.when(tilted_any)', () => {
         code = 'microbit_more.when("tilted_any") do; end';
         expected = [

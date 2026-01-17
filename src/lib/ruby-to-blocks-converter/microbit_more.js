@@ -41,6 +41,7 @@ const GestureMenu = {
     G6: '6G',
     G8: '8G',
     SHAKE: 'shake',
+    JUMPED: 'jumped',
     MOVED: 'moved',
     TILTED: 'tilted_any'
 };
@@ -108,22 +109,23 @@ const TouchPinIDMenuLower = Object.keys(TouchPinIDMenu);
 const TouchPinIDMenuValue = Object.values(TouchPinIDMenu);
 
 const TiltDirectionMenu = {
-    any: 'ANY',
-    front: 'TILT_UP',
-    back: 'TILT_DOWN',
-    left: 'TILT_LEFT',
-    right: 'TILT_RIGHT'
+    front: 'FRONT',
+    back: 'BACK',
+    left: 'LEFT',
+    right: 'RIGHT',
+    any: 'ANY'
 };
 const TiltDirectionMenuLower = Object.keys(TiltDirectionMenu);
 const TiltDirectionMenuValue = Object.values(TiltDirectionMenu);
 
-const TiltAngleDirectionMenu = [
-    'FRONT',
-    'BACK',
-    'LEFT',
-    'RIGHT'
-];
-const TiltAngleDirectionMenuLower = TiltAngleDirectionMenu.map(x => x.toLowerCase());
+const TiltAngleDirectionMenu = {
+    front: 'FRONT',
+    back: 'BACK',
+    left: 'LEFT',
+    right: 'RIGHT'
+};
+const TiltAngleDirectionMenuLower = Object.keys(TiltAngleDirectionMenu);
+const TiltAngleDirectionMenuValue = Object.values(TiltAngleDirectionMenu);
 
 /**
  * MicrobitMore converter
@@ -259,6 +261,24 @@ const MicrobitMoreConverter = {
             return block;
         });
 
+        converter.registerOnSendWithBlock(MicrobitMore, 'when_tilted', 1, 0, params => {
+            const {receiver, args, rubyBlock} = params;
+
+            if (converter.isString(args[0])) {
+                const index = TiltDirectionMenuLower.indexOf(args[0].toString().toLowerCase());
+                if (index < 0) return null;
+
+                args[0] = new Primitive('str', TiltDirectionMenuValue[index], args[0].node);
+            } else {
+                return null;
+            }
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'microbitMore_whenTilted', 'hat');
+            converter.addField(block, 'DIRECTION', args[0]);
+            converter.setParent(rubyBlock, block);
+            return block;
+        });
+
         converter.registerOnSendWithBlock(MicrobitMore, 'when_pin_connected', 1, 0, params => {
             const {receiver, args, rubyBlock} = params;
 
@@ -302,7 +322,7 @@ const MicrobitMoreConverter = {
                 const index = TiltAngleDirectionMenuLower.indexOf(args[0].toString().toLowerCase());
                 if (index < 0) return null;
 
-                args[0] = new Primitive('str', TiltAngleDirectionMenu[index], args[0].node);
+                args[0] = new Primitive('str', TiltAngleDirectionMenuValue[index], args[0].node);
             } else {
                 return null;
             }

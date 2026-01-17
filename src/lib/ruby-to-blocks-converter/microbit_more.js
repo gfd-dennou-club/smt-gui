@@ -358,6 +358,16 @@ const MicrobitMoreConverter = {
             return block;
         });
 
+        converter.registerOnSend(MicrobitMore, 'display_text', 1, params => {
+            const {receiver, args} = params;
+
+            if (!converter.isStringOrBlock(args[0])) return null;
+
+            const block = converter.changeRubyExpressionBlock(receiver, 'microbitMore_display', 'statement');
+            converter.addTextInput(block, 'TEXT', args[0], 'Hello!');
+            return block;
+        });
+
         converter.registerOnSend(MicrobitMore, 'display_text_delay', 2, params => {
             const {receiver, args} = params;
 

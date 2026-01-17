@@ -1,7 +1,8 @@
 import RubyToBlocksConverter from '../../../../src/lib/ruby-to-blocks-converter';
 import {
     convertAndExpectToEqualBlocks,
-    rubyToExpected
+    rubyToExpected,
+    expectedInfo
 } from '../../../helpers/expect-to-equal-blocks';
 
 describe('RubyToBlocksConverter/MicrobitMore', () => {
@@ -125,6 +126,42 @@ describe('RubyToBlocksConverter/MicrobitMore', () => {
                     {
                         name: 'GESTURE',
                         value: 'TILT_UP'
+                    }
+                ]
+            }
+        ];
+        convertAndExpectToEqualBlocks(converter, target, code, expected);
+    });
+
+    test('microbit_more.display_text', () => {
+        code = 'microbit_more.display_text("Hello!")';
+        expected = [
+            {
+                opcode: 'microbitMore_display',
+                inputs: [
+                    {
+                        name: 'TEXT',
+                        block: expectedInfo.makeText('Hello!')
+                    }
+                ]
+            }
+        ];
+        convertAndExpectToEqualBlocks(converter, target, code, expected);
+    });
+
+    test('microbit_more.display_text_delay', () => {
+        code = 'microbit_more.display_text_delay("Hello!", 120)';
+        expected = [
+            {
+                opcode: 'microbitMore_displayText',
+                inputs: [
+                    {
+                        name: 'TEXT',
+                        block: expectedInfo.makeText('Hello!')
+                    },
+                    {
+                        name: 'DELAY',
+                        block: expectedInfo.makeNumber(120)
                     }
                 ]
             }

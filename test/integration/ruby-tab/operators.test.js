@@ -102,24 +102,16 @@ describe('Ruby Tab: Operators category blocks', () => {
     test('Ruby -> Code -> Ruby (escape characters) ', async () => {
         await loadUri(urlFor('/'));
 
-        const beforeRuby = dedent`
-            "\\\\" + "\\\\"
+        const ruby = String.raw`"\\" + "\\"
 
-            "\\\\n" + "\\\\n"
-        `;
-
-        const afterRuby = dedent`
-            "\\\\" + "\\\\"
-
-            "\\\\n" + "\\\\n"
-        `;
+"\n" + "\n"`;
 
         await clickText('Ruby', '*[@role="tab"]');
-        await fillInRubyProgram(beforeRuby);
+        await fillInRubyProgram(ruby);
         await clickText('Code', '*[@role="tab"]');
         await clickXpath(EDIT_MENU_XPATH);
         await clickText('Generate Ruby from Code');
         await clickText('Ruby', '*[@role="tab"]');
-        expect(await currentRubyProgram()).toEqual(`${afterRuby}\n`);
+        expect(await currentRubyProgram()).toEqual(`${ruby}\n`);
     });
 });

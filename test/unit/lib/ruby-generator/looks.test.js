@@ -27,7 +27,7 @@ describe('RubyGenerator/Looks', () => {
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
         });
 
-        test('with @smalruby:print', () => {
+        test('with @ruby:method:print', () => {
             const block = {
                 id: 'block-id',
                 opcode: 'looks_say',
@@ -35,13 +35,13 @@ describe('RubyGenerator/Looks', () => {
                     MESSAGE: {}
                 }
             };
-            RubyGenerator.cache_.comments['block-id'] = { text: '@smalruby:print' };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:print' };
             RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello!"');
             const expected = 'print("Hello!")\n';
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
         });
 
-        test('with @smalruby:puts', () => {
+        test('with @ruby:method:puts', () => {
             const block = {
                 id: 'block-id',
                 opcode: 'looks_say',
@@ -49,13 +49,13 @@ describe('RubyGenerator/Looks', () => {
                     MESSAGE: {}
                 }
             };
-            RubyGenerator.cache_.comments['block-id'] = { text: '@smalruby:puts' };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:puts' };
             RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello!"');
             const expected = 'puts("Hello!")\n';
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
         });
 
-        test('with @smalruby:p', () => {
+        test('with @ruby:method:p', () => {
             const block = {
                 id: 'block-id',
                 opcode: 'looks_say',
@@ -63,13 +63,13 @@ describe('RubyGenerator/Looks', () => {
                     MESSAGE: {}
                 }
             };
-            RubyGenerator.cache_.comments['block-id'] = { text: '@smalruby:p' };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:p' };
             RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello!"');
             const expected = 'p("Hello!")\n';
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
         });
 
-        test('with unknown @smalruby: tag defaults to say', () => {
+        test('with unknown @ruby: tag defaults to say', () => {
             const block = {
                 id: 'block-id',
                 opcode: 'looks_say',
@@ -77,7 +77,7 @@ describe('RubyGenerator/Looks', () => {
                     MESSAGE: {}
                 }
             };
-            RubyGenerator.cache_.comments['block-id'] = { text: '@smalruby:unknown' };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:unknown' };
             RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello!"');
             const expected = 'say("Hello!")\n';
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
@@ -85,14 +85,14 @@ describe('RubyGenerator/Looks', () => {
     });
 
     describe('scrub_ (meta-comment filtering)', () => {
-        test('should filter out @smalruby: comments', () => {
+        test('should filter out @ruby: comments', () => {
             const block = {
                 id: 'block-id',
                 opcode: 'looks_say',
                 inputs: {},
                 next: null
             };
-            RubyGenerator.cache_.comments['block-id'] = { text: '@smalruby:print' };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:print' };
             RubyGenerator.getInputs = jest.fn().mockReturnValue({});
             RubyGenerator.isConnectedValue = jest.fn().mockReturnValue(false);
             RubyGenerator.getBlock = jest.fn().mockReturnValue(null);
@@ -101,7 +101,7 @@ describe('RubyGenerator/Looks', () => {
             const code = 'print("Hello!")\n';
             const result = RubyGenerator.scrub_(block, code);
             
-            // Should NOT contain the comment since it starts with @smalruby:
+            // Should NOT contain the comment since it starts with @ruby:
             expect(result).toEqual('print("Hello!")\n');
         });
 

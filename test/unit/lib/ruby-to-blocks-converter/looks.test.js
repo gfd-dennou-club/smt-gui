@@ -1210,7 +1210,7 @@ describe('RubyToBlocksConverter/Looks', () => {
 
                 const commentId = block.comment;
                 expect(converter._context.comments[commentId]).toBeDefined();
-                expect(converter._context.comments[commentId].text).toEqual(`@smalruby:${method}`);
+                expect(converter._context.comments[commentId].text).toEqual(`@ruby:method:${method}`);
                 expect(converter._context.comments[commentId].x).toEqual(200);
                 expect(converter._context.comments[commentId].y).toEqual(0);
                 expect(converter._context.comments[commentId].minimized).toBe(true);

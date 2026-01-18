@@ -13,10 +13,12 @@ export default function (Generator) {
     Generator.looks_say = function (block) {
         const message = Generator.valueToCode(block, 'MESSAGE', Generator.ORDER_NONE) || Generator.quote_('');
         const comment = Generator.getCommentText(block);
-        if (comment && comment.startsWith('@smalruby:')) {
-            const methodName = comment.substring(10);
-            if (['print', 'puts', 'p'].includes(methodName)) {
-                return `${methodName}(${message})\n`;
+        if (comment) {
+            if (comment.startsWith('@ruby:method:')) {
+                const methodName = comment.substring(13);
+                if (['print', 'puts', 'p'].includes(methodName)) {
+                    return `${methodName}(${message})\n`;
+                }
             }
         }
         return `say(${message})\n`;

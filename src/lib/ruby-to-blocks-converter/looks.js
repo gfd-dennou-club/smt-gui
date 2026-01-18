@@ -85,7 +85,7 @@ const LooksConverter = {
                 if (!converter._isNumberOrStringOrBlock(args[0])) return null;
 
                 const block = createBlockWithMessage.call(converter, 'looks_say', args[0], 'Hello!');
-                block.comment = converter.createComment(`@smalruby:${methodName}`, block.id, 200, 0);
+                block.comment = converter.createComment(`@ruby:method:${methodName}`, block.id, 200, 0);
                 return block;
             });
         });

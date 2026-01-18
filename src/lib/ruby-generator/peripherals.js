@@ -63,6 +63,39 @@ export default function (Generator) {
    };
 
     //
+    // LCD
+    //
+    Generator.peripherals_lcd_init = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        return `${name} = ${sensor}.new(i2c)\n`;
+    };
+
+    Generator.peripherals_lcd_cursor = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();
+        const line = Generator.valueToCode(block, 'LINE', Generator.ORDER_NONE) || 1;
+        return (
+	    `${name}.cursor(line: ${line})\n` 
+	);
+    };
+    Generator.peripherals_lcd_print = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();	
+        const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
+        return (
+	    `${name}.print(${text})\n`
+	);
+    };
+    Generator.peripherals_lcd_clear = function (block) {
+        const sensor = Generator.getFieldValue(block, 'SENSOR') || null;
+	const name   = sensor.toLowerCase();	
+        return (
+	    `${name}.clear\n`
+	);
+    };
+
+    //
     // RTC    
     //
     Generator.peripherals_rtc_init = function (block) {

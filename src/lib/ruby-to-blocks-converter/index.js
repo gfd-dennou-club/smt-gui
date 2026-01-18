@@ -43,6 +43,7 @@ import SmT_SPI_Converter from './smt_spi';
 import SmT_UART_Converter from './smt_uart';
 import SmT_I2C_SENSORS_Converter from './smt_i2c_sensors';
 import SmT_I2C_RTC_Converter from './smt_i2c_rtc';
+import SmT_I2C_LCD_Converter from './smt_i2c_lcd';
 import SmT_Network_Converter from './smt_network';
 import SmT_SNTP_Converter from './smt_sntp';
 import SmT_Utils_Converter from './smt_utils';
@@ -148,6 +149,7 @@ class RubyToBlocksConverter {
 	    SmT_UART_Converter,
 	    SmT_I2C_SENSORS_Converter,
 	    SmT_I2C_RTC_Converter,
+	    SmT_I2C_LCD_Converter,
 	    SmT_Network_Converter,
 	    SmT_SNTP_Converter,
 	    SmT_Utils_Converter,
@@ -621,6 +623,7 @@ class RubyToBlocksConverter {
 	    SmT_UART_Converter,
 	    SmT_I2C_SENSORS_Converter,
 	    SmT_I2C_RTC_Converter,
+	    SmT_I2C_LCD_Converter,
 	    SmT_Network_Converter,	    
 	    SmT_SNTP_Converter,	    
 	    SmT_Utils_Converter,

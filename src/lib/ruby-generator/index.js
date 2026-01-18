@@ -33,6 +33,7 @@ import SmalrubotS1Blocks from './smalrubot_s1.js';
 import KoshienBlocks from './koshien.js';
 
 import KaniroboBlocks from './kanirobo.js'
+import KaniroboRBlocks from './kaniroboR.js'
 import RBoardBlocks from './rboard.js'
 import MCTBoardBlocks from './mctboard.js'
 import MicroComBlocks from './microcom.js'
@@ -495,6 +496,7 @@ MeshBlocks(RubyGenerator);
 SmalrubotS1Blocks(RubyGenerator);
 KoshienBlocks(RubyGenerator);
 KaniroboBlocks(RubyGenerator);
+KaniroboRBlocks(RubyGenerator);
 RBoardBlocks(RubyGenerator);
 MCTBoardBlocks(RubyGenerator);
 MicroComBlocks(RubyGenerator);

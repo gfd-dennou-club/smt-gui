@@ -17,8 +17,34 @@ const getClassConstant = (block) => {
 const SmT_GPIO_Converter = {
     register: function (converter) {
 
-        // --- GPIO.new の変換 ---
         converter.registerOnSend("::GPIO", "new", 2, (params) => {
+            const { args, node } = params;
+
+	    console.log( args );
+	    console.log( node );
+	    
+            if (!converter.isNumber(args[0])) return null;
+	    
+	    console.log(converter.isBlock(args[1]));
+	    
+	    if (converter.isBlock(args[1])) {
+                const mode = converter.getSource(args[1].node);
+                if (!mode == "GPIO::IN|GPIO::PULL_UP") return null;
+
+                converter.removeBlock(args[1]);
+
+                const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
+                return converter.createRubyExpressionBlock(expression, node);
+            } else {
+                const mode = getClassConstant(args[1]);
+                if (mode != "::GPIO::OUT") return null;
+
+                const expression = `GPIO.new( ${args[0].value}, GPIO::OUT )`;
+                return converter.createRubyExpressionBlock(expression, node);
+            }
+        });
+/*
+	converter.registerOnSend("::GPIO", "new", 2, (params) => {
             const { args, node } = params;
             if (!converter.isNumber(args[0])) return null;
 
@@ -48,7 +74,7 @@ const SmT_GPIO_Converter = {
             }
             return null;
         });
-	
+*/	
         // --- gpioX = GPIO.new(...) の代入を init ブロックへ変換 ---
         converter.registerOnVasgn((scope, variable, rh) => {
             const expression = converter.getRubyExpression(rh);
@@ -72,6 +98,27 @@ const SmT_GPIO_Converter = {
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 
+	console.log("onSend");
+	const gpio = console.log(receiver.node.children[0].children[1]); // -> GPIO
+	const dir  = console.log(node.children[0].children[1]);          // -> IN
+	//console.log(node.children[1]);                      // -> |
+	const opt  = console.log(node.children[2].children[1]);          // -> PULL_UP
+	console.log( args );
+	console.log( node );
+	console.log( args[0] );
+	console.log( args[1] );
+	
+	if (gpio == "GPIO" && dir == "IN"){
+	    if (opt == "PULL_UP") {
+                converter.removeBlock(args[1]);
+		
+                const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
+                return converter.createRubyExpressionBlock(expression, node);
+	    }
+	}
+
+	
+	
         const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 	
@@ -79,6 +126,8 @@ const SmT_GPIO_Converter = {
 	if (!match) return null;
 
         const pin = Number(match[1]);
+
+
 	
 	switch (name) {
 	    

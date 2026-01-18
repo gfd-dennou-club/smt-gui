@@ -216,6 +216,9 @@ export default {
     "gui.kanirobo.name": "かにロボ",
     "gui.kanirobo.description": "かにロボブロック",
 
+    "gui.kaniroboR.name": "かにロボ(RBoard)",
+    "gui.kaniroboR.description": "かにロボブロック(RBoard)",
+    
     "gui.microcom.name": "共通 I/O API",
     "gui.microcom.description": "GPIO, PWM, ADC, I2C, UART",
 
@@ -250,6 +253,19 @@ export default {
     "kanirobo.servo2": "サーボモーターを[AGL]度にする",
     "kanirobo.servo3": "サーボモーターを[AGL]度にする",
 
+    "kaniroboR.name": "かにロボ",
+    "kaniroboR.menuMotorDir.forward": "前",
+    "kaniroboR.menuMotorDir.backward": "後ろ",
+    "kaniroboR.menuMotorID.right": "右",
+    "kaniroboR.menuMotorID.left": "左",
+    "kaniroboR.motor": "モーター[ID]を[DIR]方向にセット. スピード[PWR]%",
+    "kaniroboR.sensor": "ライトセンサー[ID]の値",
+    "kaniroboR.servo": "サーボモーター[ID]を[AGL]度にする",
+    "kaniroboR.puts": "シリアル出力[TEXT]",
+    "kaniroboR.p": "シリアル出力(デバッグ用)[TEXT]",    
+    "kaniroboR.servo2": "サーボモーターを[AGL]度にする",
+    "kaniroboR.servo3": "サーボモーターを[AGL]度にする",
+    
     // MBoard共通
     "mctboard.name": "MCTBoard",
     "mctboard.menuNote_C": "ド",

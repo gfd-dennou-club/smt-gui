@@ -63,7 +63,7 @@ export default function (Generator) {
     Generator.kaniroboR_puts = function (block) {
         const text = Generator.valueToCode(block, 'TEXT',  Generator.ORDER_NONE) || null;
 	return (
-	    `puts((${text}).to_s)\n`
+	    `puts(${text})\n`
 	);
     };
 

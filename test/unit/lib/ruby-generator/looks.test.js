@@ -82,6 +82,30 @@ describe('RubyGenerator/Looks', () => {
             const expected = 'say("Hello!")\n';
             expect(RubyGenerator.looks_say(block)).toEqual(expected);
         });
+
+        test('print with newline character', () => {
+            const block = {
+                id: 'block-id',
+                opcode: 'looks_say',
+                inputs: { MESSAGE: {} }
+            };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:print' };
+            RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello, Ruby.\\n"');
+            const expected = 'print("Hello, Ruby.\\n")\n';
+            expect(RubyGenerator.looks_say(block)).toEqual(expected);
+        });
+
+        test('puts with tab character', () => {
+            const block = {
+                id: 'block-id',
+                opcode: 'looks_say',
+                inputs: { MESSAGE: {} }
+            };
+            RubyGenerator.cache_.comments['block-id'] = { text: '@ruby:method:puts' };
+            RubyGenerator.valueToCode = jest.fn().mockReturnValue('"Hello\\tRuby"');
+            const expected = 'puts("Hello\\tRuby")\n';
+            expect(RubyGenerator.looks_say(block)).toEqual(expected);
+        });
     });
 
     describe('scrub_ (meta-comment filtering)', () => {

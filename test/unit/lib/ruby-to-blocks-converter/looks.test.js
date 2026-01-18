@@ -1182,4 +1182,39 @@ describe('RubyToBlocksConverter/Looks', () => {
             });
         });
     });
+
+    describe('print, puts, p', () => {
+        ['print', 'puts', 'p'].forEach(method => {
+            test(`${method}("Hello") should become looks_say with comment`, () => {
+                code = `${method}("Hello")`;
+                expected = [
+                    {
+                        opcode: 'looks_say',
+                        inputs: [
+                            {
+                                name: 'MESSAGE',
+                                block: expectedInfo.makeText('Hello')
+                            }
+                        ]
+                    }
+                ];
+
+                // First verify blocks structure
+                convertAndExpectToEqualBlocks(converter, target, code, expected);
+
+                // Then verify comment
+                // We need to find the block that is 'looks_say' (it should be the first/only top level block)
+                const blockId = Object.keys(converter.blocks).find(id => converter.blocks[id].opcode === 'looks_say');
+                const block = converter.blocks[blockId];
+                expect(block.comment).toBeDefined();
+
+                const commentId = block.comment;
+                expect(converter._context.comments[commentId]).toBeDefined();
+                expect(converter._context.comments[commentId].text).toEqual(`@ruby:method:${method}`);
+                expect(converter._context.comments[commentId].x).toEqual(200);
+                expect(converter._context.comments[commentId].y).toEqual(0);
+                expect(converter._context.comments[commentId].minimized).toBe(true);
+            });
+        });
+    });
 });

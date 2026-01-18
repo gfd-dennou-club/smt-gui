@@ -171,8 +171,8 @@ export default function (Generator) {
         return (
 	    `aqm0802a.cursor(line: ${line})\n` +
 	    `aqm0802a.print("        ")\n` +
-            `aqm0802a.cursor(${line})\n` +
- 	    `aqm0802a.print(line: ${text}))\n`
+	    `aqm0802a.cursor(line: ${line})\n` +
+ 	    `aqm0802a.print(${text})\n`
 	);
     };
 

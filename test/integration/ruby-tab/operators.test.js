@@ -109,9 +109,9 @@ describe('Ruby Tab: Operators category blocks', () => {
         `;
 
         const afterRuby = dedent`
-            "\\" + "\\"
+            "\\\\" + "\\\\"
 
-            "\n" + "\n"
+            "\\n" + "\\n"
         `;
 
         await clickText('Ruby', '*[@role="tab"]');

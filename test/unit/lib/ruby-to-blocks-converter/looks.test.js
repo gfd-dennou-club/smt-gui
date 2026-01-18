@@ -1207,8 +1207,6 @@ describe('RubyToBlocksConverter/Looks', () => {
                 const blockId = Object.keys(converter.blocks).find(id => converter.blocks[id].opcode === 'looks_say');
                 const block = converter.blocks[blockId];
                 expect(block.comment).toBeDefined();
-                expect(block.x).toEqual(0);
-                expect(block.y).toEqual(0);
 
                 const commentId = block.comment;
                 expect(converter._context.comments[commentId]).toBeDefined();

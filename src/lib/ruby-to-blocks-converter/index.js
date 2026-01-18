@@ -188,24 +188,8 @@ class RubyToBlocksConverter {
             if (!_.isArray(blocks)) {
                 blocks = [blocks];
             }
-            let currentY = 0;
             blocks.forEach(block => {
                 if (this._isBlock(block)) {
-                    if (this._isStatementBlock(block)) {
-                        if (block.x === void 0) {
-                            block.x = 0;
-                        }
-                        if (block.y === void 0) {
-                            block.y = currentY;
-                        }
-                        if (block.comment) {
-                            const comment = this._context.comments[block.comment];
-                            if (comment) {
-                                comment.y = block.y;
-                            }
-                        }
-                        currentY += 48;
-                    }
                     block.topLevel = true;
                 } else if (block instanceof Primitive) {
                     throw new RubyToBlocksConverterError(
@@ -1464,25 +1448,15 @@ class RubyToBlocksConverter {
 
         let prevBlock = null;
         const result = [];
-        let currentY = 0;
         blocks.forEach(block => {
             switch (this._getBlockType(block)) {
             case 'statement':
-                if (block.comment) {
-                    const comment = this._context.comments[block.comment];
-                    if (comment) {
-                        comment.y = currentY;
-                    }
-                }
                 if (prevBlock) {
                     prevBlock.next = block.id;
                     block.parent = prevBlock.id;
                 } else {
                     result.push(block);
-                    block.x = 0;
-                    block.y = currentY;
                 }
-                currentY += 48;
 
                 if (block.next) {
                     const b = this._lastBlock(block);

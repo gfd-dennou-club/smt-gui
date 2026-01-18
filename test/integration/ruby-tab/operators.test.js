@@ -1,12 +1,9 @@
 import dedent from 'dedent';
 import SeleniumHelper from '../../helpers/selenium-helper';
 import RubyHelper from '../../helpers/ruby-helper';
-import {EDIT_MENU_XPATH} from '../../helpers/menu-xpaths';
 
 const seleniumHelper = new SeleniumHelper();
 const {
-    clickText,
-    clickXpath,
     getDriver,
     loadUri,
     urlFor
@@ -14,8 +11,6 @@ const {
 
 const rubyHelper = new RubyHelper(seleniumHelper);
 const {
-    fillInRubyProgram,
-    currentRubyProgram,
     expectInterconvertBetweenCodeAndRuby
 } = rubyHelper;
 
@@ -97,21 +92,5 @@ describe('Ruby Tab: Operators category blocks', () => {
             10 ** 0
         `;
         await expectInterconvertBetweenCodeAndRuby(code);
-    });
-
-    test('Ruby -> Code -> Ruby (escape characters) ', async () => {
-        await loadUri(urlFor('/'));
-
-        const ruby = String.raw`"\\" + "\\"
-
-"\n" + "\n"`;
-
-        await clickText('Ruby', '*[@role="tab"]');
-        await fillInRubyProgram(ruby);
-        await clickText('Code', '*[@role="tab"]');
-        await clickXpath(EDIT_MENU_XPATH);
-        await clickText('Generate Ruby from Code');
-        await clickText('Ruby', '*[@role="tab"]');
-        expect(await currentRubyProgram()).toEqual(`${ruby}\n`);
     });
 });

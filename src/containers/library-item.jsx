@@ -157,7 +157,7 @@ LibraryItem.propTypes = {
             md5ext: PropTypes.string // 3.0 library format
         })
     ),
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     insetIconURL: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
     isPlaying: PropTypes.bool,

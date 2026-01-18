@@ -29,121 +29,184 @@ describe('Ruby Tab: Microbit More v2 extension blocks', () => {
         await loadUri(urlFor('/'));
 
         const code = dedent`
-            microbit_more.when_microbit("connected") do
+            microbit.when_microbit("connected") do
             end
 
-            microbit_more.when_microbit("disconnected") do
+            microbit.when_microbit("disconnected") do
             end
 
-            microbit_more.when_button_is("A", "down") do
+            microbit.when_button_is("A", "down") do
             end
 
-            microbit_more.when_button_is("B", "click") do
+            microbit.when_button_is("B", "click") do
             end
 
-            microbit_more.button_pressed?("A")
+            microbit.button_pressed?("A")
 
-            microbit_more.button_pressed?("B")
+            microbit.button_pressed?("B")
 
-            microbit_more.when_pin_is("LOGO", "touched") do
+            microbit.when_pin_is("LOGO", "touched") do
             end
 
-            microbit_more.when_pin_is("P2", "tapped") do
+            microbit.when_pin_is("P2", "tapped") do
             end
 
-            microbit_more.pin_is_touched?("LOGO")
-
-            microbit_more.pin_is_touched?("P2")
-
-            microbit_more.when("shake") do
+            microbit.when_pin_connected(0) do
             end
 
-            microbit_more.when("6G") do
+            microbit.when_pin_connected(1) do
             end
 
-            microbit_more.display_pattern(
+            microbit.when_pin_connected(2) do
+            end
+
+            microbit.pin_is_touched?("LOGO")
+
+            microbit.pin_is_touched?("P2")
+
+            microbit.when("shake") do
+            end
+
+            microbit.when("jumped") do
+            end
+
+            microbit.when("6G") do
+            end
+
+            microbit.when("moved") do
+            end
+
+            microbit.when("tilted_any") do
+            end
+
+            microbit.when("tilted_front") do
+            end
+
+            microbit.when_tilted("any") do
+            end
+
+            microbit.when_tilted("front") do
+            end
+
+            microbit.when_tilted("back") do
+            end
+
+            microbit.when_tilted("left") do
+            end
+
+            microbit.when_tilted("right") do
+            end
+
+            microbit.when("tilted_back") do
+            end
+
+            microbit.when("tilted_left") do
+            end
+
+            microbit.when("tilted_right") do
+            end
+
+            microbit.tilted?("any")
+
+            microbit.tilted?("front")
+
+            microbit.tilted?("back")
+
+            microbit.tilted?("left")
+
+            microbit.tilted?("right")
+
+            microbit.display_pattern(
               ".1.1.",
               "1.1.1",
               "1...1",
               ".1.1.",
               "..1.."
             )
-            microbit_more.display_pattern(
+            microbit.display_pattern(
               "1...1",
               ".1.1.",
               "..1..",
               ".1.1.",
               "1...1"
             )
-            microbit_more.display_text_delay("Hello!", 120)
-            microbit_more.display_text_delay("Test", 60)
-            microbit_more.clear_display
+            microbit.display_text_delay("Hello!", 120)
+            microbit.display_text_delay("Test", 60)
+            microbit.clear_display
 
-            microbit_more.light_intensity
+            microbit.light_intensity
 
-            microbit_more.temperature
+            microbit.temperature
 
-            microbit_more.angle_with_north
+            microbit.angle_with_north
 
-            microbit_more.pitch
+            microbit.pitch
 
-            microbit_more.roll
+            microbit.roll
 
-            microbit_more.sound_level
+            microbit.tilt_angle("front")
 
-            microbit_more.magnetic_force("absolute")
+            microbit.tilt_angle("back")
 
-            microbit_more.magnetic_force("x")
+            microbit.tilt_angle("left")
 
-            microbit_more.acceleration("x")
+            microbit.tilt_angle("right")
 
-            microbit_more.acceleration("absolute")
+            microbit.sound_level
 
-            microbit_more.analog_value("P0")
+            microbit.magnetic_force("absolute")
 
-            microbit_more.analog_value("P2")
+            microbit.magnetic_force("x")
 
-            microbit_more.set_pin_to_input_pull("P0", "up")
-            microbit_more.set_pin_to_input_pull("P16", "down")
+            microbit.acceleration("x")
 
-            microbit_more.is_pin_high?("P0")
+            microbit.acceleration("absolute")
 
-            microbit_more.is_pin_high?("P16")
+            microbit.analog_value("P0")
 
-            microbit_more.set_digital("P0", "Low")
-            microbit_more.set_digital("P16", "High")
-            microbit_more.set_analog("P0", 0)
-            microbit_more.set_analog("P16", 100)
-            microbit_more.set_servo("P0", 0)
-            microbit_more.set_servo("P16", 100)
-            microbit_more.play_tone(440, 100)
-            microbit_more.play_tone(220, 50)
-            microbit_more.stop_tone
-            microbit_more.listen_event_on("none", "P0")
-            microbit_more.listen_event_on("edge", "P16")
+            microbit.analog_value("P2")
 
-            microbit_more.when_catch_at_pin("low pulse", "P0") do
+            microbit.set_pin_to_input_pull("P0", "up")
+            microbit.set_pin_to_input_pull("P16", "down")
+
+            microbit.is_pin_high?("P0")
+
+            microbit.is_pin_high?("P16")
+
+            microbit.set_digital("P0", "Low")
+            microbit.set_digital("P16", "High")
+            microbit.set_analog("P0", 0)
+            microbit.set_analog("P16", 100)
+            microbit.set_servo("P0", 0)
+            microbit.set_servo("P16", 100)
+            microbit.play_tone(440, 100)
+            microbit.play_tone(220, 50)
+            microbit.stop_tone
+            microbit.listen_event_on("none", "P0")
+            microbit.listen_event_on("edge", "P16")
+
+            microbit.when_catch_at_pin("low pulse", "P0") do
             end
 
-            microbit_more.when_catch_at_pin("rise", "P16") do
+            microbit.when_catch_at_pin("rise", "P16") do
             end
 
-            microbit_more.value_of("low pulse", "P0")
+            microbit.value_of("low pulse", "P0")
 
-            microbit_more.value_of("rise", "P16")
+            microbit.value_of("rise", "P16")
 
-            microbit_more.when_data_received_from_microbit("label-01") do
+            microbit.when_data_received_from_microbit("label-01") do
             end
 
-            microbit_more.when_data_received_from_microbit("label-02") do
+            microbit.when_data_received_from_microbit("label-02") do
             end
 
-            microbit_more.data["label-01"]
+            microbit.data["label-01"]
 
-            microbit_more.data["label-02"]
+            microbit.data["label-02"]
 
-            microbit_more.send_data_to_microbit("data", "label-01")
-            microbit_more.send_data_to_microbit("123456", "label-02")
+            microbit.send_data_to_microbit("data", "label-01")
+            microbit.send_data_to_microbit("123456", "label-02")
         `;
 
         await expectInterconvertBetweenCodeAndRuby(code);

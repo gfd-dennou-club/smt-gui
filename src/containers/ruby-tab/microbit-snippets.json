@@ -1,38 +1,47 @@
 {
-    "microbit.when_button_pressed": {
-        "snippet": "microbit.when_button_pressed(\"${1:A}\") do\n\t${2}\nend",
-        "description": "ボタン (A▼) が押されたとき"
+    "microbit_v1.when_button_pressed": {
+        "snippet": "microbit_v1.when_button_pressed(\"${1:A}\") do\n\t${2}\nend",
+        "description": "ボタン (A▼) が押されたとき",
+        "type": "event"
     },
-    "microbit.button_pressed?": {
-        "snippet": "microbit.button_pressed?(\"${1:A}\")",
-        "description": "ボタン (A▼) が押された"
+    "microbit_v1.button_pressed?": {
+        "snippet": "microbit_v1.button_pressed?(\"${1:A}\")",
+        "description": "ボタン (A▼) が押された",
+        "type": "function"
     },
-    "microbit.when": {
-        "snippet": "microbit.when(\"${1:moved}\") do\n\t${2}\nend",
-        "description": "(動いた▼) とき"
+    "microbit_v1.when": {
+        "snippet": "microbit_v1.when(\"${1:moved}\") do\n\t${2}\nend",
+        "description": "(動いた▼) とき",
+        "type": "event"
     },
-    "microbit.display_text": {
-        "snippet": "microbit.display_text(\"${1:こんにちは!}\")",
-        "description": "(こんにちは!) を表示する"
+    "microbit_v1.display_text": {
+        "snippet": "microbit_v1.display_text(\"${1:こんにちは!}\")",
+        "description": "(こんにちは!) を表示する",
+        "type": "function"
     },
-    "microbit.display": {
-        "snippet": "microbit.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"\n)",
-        "description": "(♡▼) を表示する"
+    "microbit_v1.display": {
+        "snippet": "microbit_v1.display(\n  \"${1:.1.1.}\",\n  \"${2:1.1.1}\",\n  \"${3:1...1}\",\n  \"${4:.1.1.}\",\n  \"${5:..1..}\"\n)",
+        "description": "(♡▼) を表示する",
+        "type": "function"
     },
-    "microbit.when_tilted": {
-        "snippet": "microbit.when_tilted(\"${1:any}\") do\n\t${2}\nend",
-        "description": "(どれかの向き▼) に傾いたとき"
+    "microbit_v1.when_tilted": {
+        "snippet": "microbit_v1.when_tilted(\"${1:any}\") do\n\t${2}\nend",
+        "description": "(どれかの向き▼) に傾いたとき",
+        "type": "event"
     },
-    "microbit.tilted?": {
-        "snippet": "microbit.tilted?(\"${1:any}\")",
-        "description": "(どれかの向き▼) に傾いた"
+    "microbit_v1.tilted?": {
+        "snippet": "microbit_v1.tilted?(\"${1:any}\")",
+        "description": "(どれかの向き▼) に傾いた",
+        "type": "value"
     },
-    "microbit.tilt_angle": {
-        "snippet": "microbit.tilt_angle(\"${1:front}\")",
-        "description": "(前▼) 方向の傾き"
+    "microbit_v1.tilt_angle": {
+        "snippet": "microbit_v1.tilt_angle(\"${1:front}\")",
+        "description": "(前▼) 方向の傾き",
+        "type": "variable"
     },
-    "microbit.when_pin_connected": {
-        "snippet": "microbit.when_pin_connected(${1:0}) do\n\t${2}\nend",
-        "description": "ピン (0▼) がつながったとき"
+    "microbit_v1.when_pin_connected": {
+        "snippet": "microbit_v1.when_pin_connected(${1:0}) do\n\t${2}\nend",
+        "description": "ピン (0▼) がつながったとき",
+        "type": "event"
     }
 }

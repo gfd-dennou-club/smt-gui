@@ -7,18 +7,18 @@ export default function (Generator) {
     Generator.microbit_whenButtonPressed = function (block) {
         block.isStatement = true;
         const btn = Generator.valueToCode(block, 'BTN', Generator.ORDER_NONE) || null;
-        return `microbit.when_button_pressed(${btn}) do\n`;
+        return `microbit_v1.when_button_pressed(${btn}) do\n`;
     };
 
     Generator.microbit_isButtonPressed = function (block) {
         const btn = Generator.valueToCode(block, 'BTN', Generator.ORDER_NONE) || null;
-        return `microbit.button_pressed?(${btn})\n`;
+        return `microbit_v1.button_pressed?(${btn})\n`;
     };
 
     Generator.microbit_whenGesture = function (block) {
         block.isStatement = true;
         const gesture = Generator.valueToCode(block, 'GESTURE', Generator.ORDER_NONE) || null;
-        return `microbit.when(${gesture}) do\n`;
+        return `microbit_v1.when(${gesture}) do\n`;
     };
 
     Generator.microbit_displaySymbol = function (block) {
@@ -26,38 +26,38 @@ export default function (Generator) {
         if (matrix.indexOf('\n') >= 0) {
             matrix = `\n${Generator.prefixLines(matrix, Generator.INDENT)}\n`;
         }
-        return `microbit.display(${matrix})\n`;
+        return `microbit_v1.display(${matrix})\n`;
     };
 
     Generator.microbit_displayText = function (block) {
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
-        return `microbit.display_text(${text})\n`;
+        return `microbit_v1.display_text(${text})\n`;
     };
 
     Generator.microbit_displayClear = function () {
-        return `microbit.clear_display\n`;
+        return `microbit_v1.clear_display\n`;
     };
 
     Generator.microbit_whenTilted = function (block) {
         block.isStatement = true;
         const direction = Generator.valueToCode(block, 'DIRECTION', Generator.ORDER_NONE) || null;
-        return `microbit.when_tilted(${direction}) do\n`;
+        return `microbit_v1.when_tilted(${direction}) do\n`;
     };
 
     Generator.microbit_isTilted = function (block) {
         const direction = Generator.valueToCode(block, 'DIRECTION', Generator.ORDER_NONE) || null;
-        return [`microbit.tilted?(${direction})`, Generator.ORDER_ATOMIC];
+        return [`microbit_v1.tilted?(${direction})`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microbit_getTiltAngle = function (block) {
         const direction = Generator.valueToCode(block, 'DIRECTION', Generator.ORDER_NONE) || null;
-        return [`microbit.tilt_angle(${direction})`, Generator.ORDER_ATOMIC];
+        return [`microbit_v1.tilt_angle(${direction})`, Generator.ORDER_ATOMIC];
     };
 
     Generator.microbit_whenPinConnected = function (block) {
         block.isStatement = true;
         const pin = Generator.valueToCode(block, 'PIN', Generator.ORDER_NONE) || null;
-        return `microbit.when_pin_connected(${pin}) do\n`;
+        return `microbit_v1.when_pin_connected(${pin}) do\n`;
     };
 
     Generator.microbit_menu_buttons = function (block) {

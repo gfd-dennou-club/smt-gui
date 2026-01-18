@@ -79,6 +79,17 @@ const validateBackdrop = function (backdropName, args) {
  */
 const LooksConverter = {
     register: function (converter) {
+        ['print', 'puts', 'p'].forEach(methodName => {
+            converter.registerOnSend('sprite', methodName, 1, params => {
+                const {args} = params;
+                if (!converter._isNumberOrStringOrBlock(args[0])) return null;
+
+                const block = createBlockWithMessage.call(converter, 'looks_say', args[0], 'Hello!');
+                block.comment = converter.createComment(`@ruby:method:${methodName}`, block.id, 200, 0);
+                return block;
+            });
+        });
+
         ['say', 'think'].forEach(methodName => {
             converter.registerOnSend('sprite', methodName, 1, params => {
                 const {args} = params;

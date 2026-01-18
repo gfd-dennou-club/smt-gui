@@ -470,6 +470,29 @@ class Blocks extends React.Component {
                 if (fromRuby) {
                     this.workspace.cleanUp();
 
+                    // Re-calculate the position of the comments.
+                    this.workspace.getTopComments(false).forEach(comment => {
+                        if (comment.blockId) {
+                            const block = this.workspace.getBlockById(comment.blockId);
+                            if (block) {
+                                const blockXY = block.getRelativeToSurfaceXY();
+                                const blockHW = block.getHeightWidth();
+                                const rtl = this.workspace.RTL;
+                                const x = rtl ?
+                                    blockXY.x - blockHW.width - 20 - comment.getWidth() :
+                                    blockXY.x + blockHW.width + 20;
+                                const y = blockXY.y;
+                                comment.moveTo(x, y);
+
+                                const targetComments = this.props.vm.editingTarget.comments;
+                                if (targetComments && targetComments[comment.id]) {
+                                    targetComments[comment.id].x = x;
+                                    targetComments[comment.id].y = y;
+                                }
+                            }
+                        }
+                    });
+
                     this.workspace.getTopBlocks(false).forEach(wsTopBlock => {
                         const topBlock = blocks.getBlock(wsTopBlock.id);
                         if (topBlock) {

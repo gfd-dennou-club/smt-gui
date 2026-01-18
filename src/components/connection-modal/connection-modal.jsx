@@ -39,8 +39,20 @@ const ConnectionModalComponent = props => (
             {props.phase === PHASES.scanning && props.useAutoScan && <AutoScanningStep {...props} />}
             {props.phase === PHASES.connecting && <ConnectingStep {...props} />}
             {props.phase === PHASES.connected && <ConnectedStep {...props} />}
-            {props.phase === PHASES.error && <ErrorStep {...props} />}
-            {props.phase === PHASES.unavailable && <UnavailableStep {...props} />}
+            {props.phase === PHASES.error && (
+                <ErrorStep
+                    {...props}
+                    onScanning={props.onScanning}
+                    onUpdatePeripheral={props.onUpdatePeripheral}
+                />
+            )}
+            {props.phase === PHASES.unavailable && (
+                <UnavailableStep
+                    {...props}
+                    onScanning={props.onScanning}
+                    onUpdatePeripheral={props.onUpdatePeripheral}
+                />
+            )}
             {props.phase === PHASES.updatePeripheral && <UpdatePeripheralStep {...props} />}
         </Box>
     </Modal>
@@ -55,6 +67,8 @@ ConnectionModalComponent.propTypes = {
     name: PropTypes.node,
     onCancel: PropTypes.func.isRequired,
     onHelp: PropTypes.func.isRequired,
+    onScanning: PropTypes.func,
+    onUpdatePeripheral: PropTypes.func,
     phase: PropTypes.oneOf(Object.keys(PHASES)).isRequired,
     title: PropTypes.string.isRequired,
     useAutoScan: PropTypes.bool.isRequired

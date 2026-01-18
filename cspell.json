@@ -2,9 +2,12 @@
   "version": "0.2",
   "language": "en",
   "words": [
+    "FREEFALL",
     "gapi",
     "googleusercontent",
-    "Hira"
+    "Hira",
+    "mbit",
+    "smalrubot"
   ],
   "ignorePaths": [
     "node_modules",

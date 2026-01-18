@@ -1,9 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {defineMessages, injectIntl, intlShape} from 'react-intl';
+import {defineMessages, injectIntl, intlShape, FormattedMessage} from 'react-intl';
 
 import Box from '../box/box.jsx';
+import Button from '../button/button.jsx';
 import Modal from '../../containers/modal.jsx';
+
+import reloadIcon from '../../lib/assets/icon--reload.svg';
+import stopIcon from '../close-button/icon--close.svg';
 
 import styles from './koshien-test-modal.css';
 
@@ -33,16 +37,42 @@ const KoshienTestModal = props => {
         setLoading(false);
     }, []);
 
+    const headerActions = loading ? (
+        <Button
+            className={styles.reloadButton}
+            iconClassName={styles.stopIcon}
+            iconSrc={stopIcon}
+            onClick={handleStop}
+        >
+            <FormattedMessage
+                defaultMessage="Stop"
+                description="Stop button in modal"
+                id="gui.modal.stop"
+            />
+        </Button>
+    ) : (
+        <Button
+            className={styles.reloadButton}
+            iconSrc={reloadIcon}
+            onClick={handleReload}
+        >
+            <FormattedMessage
+                defaultMessage="Reload"
+                description="Reload button in modal"
+                id="gui.modal.reload"
+            />
+        </Button>
+    );
+
     return (
         <Modal
             className={styles.modalContent}
             contentLabel={intl.formatMessage(messages.title)}
             fullScreen
+            headerActions={headerActions}
             headerClassName={styles.header}
             id="koshienTestModal"
             loading={loading}
-            onReload={handleReload}
-            onStop={handleStop}
             onRequestClose={onRequestClose}
         >
             <Box

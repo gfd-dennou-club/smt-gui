@@ -199,6 +199,7 @@ class LibraryComponent extends React.Component {
             <Modal
                 fullScreen
                 contentLabel={this.props.title}
+                headerActions={this.props.headerActions}
                 id={this.props.id}
                 onRequestClose={this.handleClose}
             >
@@ -275,6 +276,7 @@ LibraryComponent.propTypes = {
         /* eslint-enable react/no-unused-prop-types, lines-around-comment */
     ),
     filterable: PropTypes.bool,
+    headerActions: PropTypes.node,
     id: PropTypes.string.isRequired,
     intl: intlShape.isRequired,
     onItemMouseEnter: PropTypes.func,

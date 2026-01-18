@@ -1,18 +1,18 @@
 {
   "de": {
-    "mbitMore.entry.name": "MicroBit More",
+    "mbitMore.entry.name": "micro:bit",
     "mbitMore.entry.description": "Nutze alle Funktionen des micro:bit."
   },
   "en": {
-    "mbitMore.entry.name": "MicroBit More",
-    "mbitMore.entry.description": "Play with all functions of micro:bit."
+    "mbitMore.entry.name": "micro:bit",
+    "mbitMore.entry.description": "Play with all functions of micro:bit with Microbit More."
   },
   "ja": {
-    "mbitMore.entry.name": "MicroBit More",
-    "mbitMore.entry.description": "micro:bitのすべての機能で遊ぶ。"
+    "mbitMore.entry.name": "micro:bit",
+    "mbitMore.entry.description": "micro:bitのすべての機能で遊ぶ。 (Microbit More)"
   },
   "ja-Hira": {
-    "mbitMore.entry.name": "マイクロビット モア",
-    "mbitMore.entry.description": "マイクロビットのすべてのきのうであそぶ。"
+    "mbitMore.entry.name": "micro:bit",
+    "mbitMore.entry.description": "マイクロビットのすべてのきのうであそぶ。 (マイクロビット モア)"
   }
 }

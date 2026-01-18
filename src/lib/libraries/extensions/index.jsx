@@ -22,6 +22,9 @@ import peripheralsInsetIconURL  from './smt/peripherals-small.png';
 import rboard0               from './smt/rboard0.png'
 import rboard0InsetIconURL   from './smt/rboard0-small.png';
 
+import microbitMore from './microbitMore/index.jsx';
+import koshien from './koshien/index.jsx';
+
 const extensions = [
     {
         name: (
@@ -101,7 +104,7 @@ const extensions = [
                 id="gui.rboard.description"
             />
         ),
-        featured: true
+        featured: true,
     },
     {
         name: (
@@ -121,7 +124,7 @@ const extensions = [
                 id="gui.microcom.description"
             />
         ),
-        featured: true
+        featured: true,
     },
     {
         name: (

@@ -4,6 +4,9 @@ import {FormattedMessage} from 'react-intl';
 import kanirobo             from './smt/kanirobo.png';
 import kaniroboInsetIconURL from './smt/kanirobo-small.png';
 
+import kaniroboR             from './smt/kaniroboR.png';
+import kaniroboRInsetIconURL from './smt/kaniroboR-small.png';
+
 import mctboard             from './smt/mctboard.png';
 import mctboardInsetIconURL from './smt/mctboard-small.png';
 
@@ -36,6 +39,26 @@ const extensions = [
                 defaultMessage="Kanirobo Blocks"
                 description="Description for the 'Kanirobo' extension"
                 id="gui.kanirobo.description"
+            />
+        ),
+        featured: true
+    },
+    {
+        name: (
+            <FormattedMessage
+                defaultMessage="KaniroboR"
+                description="Name for the 'KaniroboR' extension"
+                id="gui.kaniroboR.name"
+            />
+        ),
+        extensionId: 'kaniroboR',
+        iconURL: kaniroboR,
+        insetIconURL: kaniroboRInsetIconURL,
+        description: (
+            <FormattedMessage
+                defaultMessage="KaniroboR Blocks"
+                description="Description for the 'KaniroboR' extension"
+                id="gui.kaniroboR.description"
             />
         ),
         featured: true

@@ -21,7 +21,8 @@ export default function (Generator) {
                 }
             }
         }
-        return `say(${message})\n`;
+//        return `say(${message})\n`;
+        return `puts(${message})\n`;
     };
 
     Generator.looks_thinkforsecs = function (block) {

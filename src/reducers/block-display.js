@@ -19,6 +19,9 @@ const getInitialSelectedBlocks = () => {
 
     //必要なブロックのみに限定
     const onlyBlocks = {
+	looks: [
+            'looks_say'
+	],
 	control: [
             'control_wait',
             'control_repeat',

@@ -16,7 +16,7 @@ const getClassConstant = (block) => {
 */
 const SmT_GPIO_Converter = {
     register: function (converter) {
-
+/*
         converter.registerOnSend("::GPIO", "new", 2, (params) => {
             const { args, node } = params;
 
@@ -43,7 +43,10 @@ const SmT_GPIO_Converter = {
                 return converter.createRubyExpressionBlock(expression, node);
             }
         });
-/*
+*/
+	// この registerOnSend で，GPIO::IN|PULL_UP, GPIO::IN|PULL_DOWN が
+	// 判定できなくなった．いちおう PULL_UP, PULL_DOWN は残しておくが，
+	// 実際は onSend: の方でPULL_UP, PULL_DOWN を処理している．
 	converter.registerOnSend("::GPIO", "new", 2, (params) => {
             const { args, node } = params;
             if (!converter.isNumber(args[0])) return null;
@@ -74,7 +77,7 @@ const SmT_GPIO_Converter = {
             }
             return null;
         });
-*/	
+
         // --- gpioX = GPIO.new(...) の代入を init ブロックへ変換 ---
         converter.registerOnVasgn((scope, variable, rh) => {
             const expression = converter.getRubyExpression(rh);
@@ -98,36 +101,52 @@ const SmT_GPIO_Converter = {
 
     onSend: function (receiver, name, args, rubyBlockArgs, rubyBlock, node) {
 
-	console.log("onSend");
-	const gpio = console.log(receiver.node.children[0].children[1]); // -> GPIO
-	const dir  = console.log(node.children[0].children[1]);          // -> IN
-	//console.log(node.children[1]);                      // -> |
-	const opt  = console.log(node.children[2].children[1]);          // -> PULL_UP
-	console.log( args );
-	console.log( node );
-	console.log( args[0] );
-	console.log( args[1] );
-	
-	if (gpio == "GPIO" && dir == "IN"){
-	    if (opt == "PULL_UP") {
-                converter.removeBlock(args[1]);
-		
-                const expression = `GPIO.new( ${args[0].value}, GPIO::IN|GPIO::PULL_UP )`;
-                return converter.createRubyExpressionBlock(expression, node);
+	//デバッグ用．結局のところは 各引数の中身をチェックしないといけない．
+	//console.log("onSend");
+	//console.log( receiver );
+	//console.log( args );
+	//console.log( node );
+	//console.log( name );
+	//console.log( this._isRubyExpression(receiver) );
+	//console.log( this._isRubyArgument(receiver) );
+	//console.log( "---" );
+
+	// RubyExpression は対象でない
+	if (this._isRubyExpression(receiver)) return null;
+
+	// PULL_UP, PULL_DOWN は RubyArgument でもない
+	if (!this._isRubyArgument(receiver)){
+	    const gpio = receiver.node.children[0].children[1]; // -> GPIO
+	    const dir  = node.children[0].children[1];          // -> IN
+	    //console.log(node.children[1]);                      // -> |
+	    const opt  = node.children[2].children[1];          // -> PULL_UP
+	    //console.log( gpio );
+	    //console.log( dir );
+	    //console.log( opt );
+	    
+	    if (gpio == "GPIO" && dir == "IN"){
+		if (opt == "PULL_UP") {
+		    // ピン番号が取れないので適当に入れておく
+                    const expression = `GPIO.new( 99, GPIO::IN|GPIO::PULL_UP )`;
+                return this._createRubyExpressionBlock(expression, node);
+		} else if (opt == "PULL_DOWN") {
+		    // ピン番号が取れないので適当に入れておく
+                    const expression = `GPIO.new( 99, GPIO::IN|GPIO::PULL_DOWN )`;
+                return this._createRubyExpressionBlock(expression, node);
+		}
 	    }
 	}
-
-	
 	
         const receiverName = receiver.fields.VALUE.value;
+	//console.log( receiverName );
         if (!receiverName) return null;
 	
         const match = receiverName.match(/^gpio(\d+)$/);
+	//console.log( match );
 	if (!match) return null;
-
+	
         const pin = Number(match[1]);
-
-
+	//console.log( pin );
 	
 	switch (name) {
 	    

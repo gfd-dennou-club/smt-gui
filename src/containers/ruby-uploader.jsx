@@ -33,23 +33,30 @@ class RubyUploader extends React.Component {
                 [this.props.rubyCode.target.id]: this.props.rubyCode.code
             };
         }
-        // master 部分のみ抽出
+        // master 部分の抽出
         const targets1 = targets.splice(1, 1);
-
         const masterCode = RubyGenerator.targetsToCode(targets1, options);
+	
+	// class 部分の抽出
+        const targets2 = targets.splice(1, 2);
+        const classCode = RubyGenerator.targetsToCode(targets2, options);
+
+	// class 部分とmaster 部分の結合
+	let allCode = classCode + masterCode;
+
+	// 各行の先頭にある「# 」(シャープと半角スペース) または 「#」(シャープのみ) を削除
+	allCode = allCode.replace(/^# ?/gm, '');
+	
+	//エンコード
         const base64MasterCode = btoa(
             String.fromCharCode.apply(
                 null,
-                new TextEncoder().encode(masterCode)
+                new TextEncoder().encode(allCode)
             )
         );
-        // master部分を削除してslaveのコードを生成
-        // targets.splice(1, 1);
-        // const targets2 = targets.splice(1, 2);
-        // const slave_code = RubyGenerator.targetsToCode(targets2, options);
 
         // 確認
-        // console.log(`master: ${base64MasterCode}`);
+        //console.log(`master: ${base64MasterCode}`);
 
         // 送信
         const CompileServerURI = 'https://ceres.epi.it.matsue-ct.ac.jp/compile/code';

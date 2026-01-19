@@ -33,12 +33,12 @@ class RubyUploader extends React.Component {
                 [this.props.rubyCode.target.id]: this.props.rubyCode.code
             };
         }
-        // master 部分の抽出
+	// master 部分の抽出
         const targets1 = targets.splice(1, 1);
         const masterCode = RubyGenerator.targetsToCode(targets1, options);
 	
-	// class 部分の抽出
-        const targets2 = targets.splice(1, 2);
+	// class 部分の抽出(sprite ではなく stage から抽出)
+        const targets2 = targets.splice(0, 1);
         const classCode = RubyGenerator.targetsToCode(targets2, options);
 
 	// class 部分とmaster 部分の結合

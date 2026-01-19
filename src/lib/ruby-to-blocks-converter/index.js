@@ -46,6 +46,8 @@ import SmT_I2C_RTC_Converter from './smt_i2c_rtc';
 import SmT_I2C_LCD_Converter from './smt_i2c_lcd';
 import SmT_Network_Converter from './smt_network';
 import SmT_SNTP_Converter from './smt_sntp';
+import SmT_SDcard_Converter from './smt_sdcard';
+import SmT_SPI_FILE_Converter from './smt_spi_file';
 import SmT_Utils_Converter from './smt_utils';
 import MicrocomConverter from './microcom';
 
@@ -152,6 +154,8 @@ class RubyToBlocksConverter {
 	    SmT_I2C_LCD_Converter,
 	    SmT_Network_Converter,
 	    SmT_SNTP_Converter,
+	    SmT_SDcard_Converter,
+	    SmT_SPI_FILE_Converter,
 	    SmT_Utils_Converter,
             MicrocomConverter
         ].forEach(x => x.register(this));
@@ -635,7 +639,9 @@ class RubyToBlocksConverter {
 	    SmT_I2C_RTC_Converter,
 	    SmT_I2C_LCD_Converter,
 	    SmT_Network_Converter,	    
-	    SmT_SNTP_Converter,	    
+	    SmT_SNTP_Converter,
+	    SmT_SDcard_Converter,
+	    SmT_SPI_FILE_Converter,
 	    SmT_Utils_Converter,
             MicrocomConverter
         ];

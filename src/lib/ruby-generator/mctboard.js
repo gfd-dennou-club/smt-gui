@@ -298,8 +298,7 @@ export default function (Generator) {
     Generator.mctboard_sd_init = function (block) {
         return (
 	    `spi = SPI.new(miso_pin:19, mosi_pin:23, clk_pin:18)\n` +
-  	    `sdspi = SDSPI.new(spi, cs_pin:2, mount_point:'/sdcard')\n` +
-	    `filedir = "/sdcard" \n` 
+  	    `sdspi = SDSPI.new(spi, cs_pin:2, mount_point:'/sdcard')\n` 
 	);
     };
 
@@ -307,16 +306,16 @@ export default function (Generator) {
 	Generator.prepares_.sd = Generator.mctboard_sd_init(null);
         const file = Generator.valueToCode(block, 'FILE', Generator.ORDER_NONE) || null;
         const mode = Generator.getFieldValue(block, 'MODE') || null;
+	const cleanFile = file.replace(/^['"]|['"]$/g, '');
         return (
-    	    `filename = filedir + "/" + ${file}\n` +
-	    `fp = File.open( filename, "${mode}")\n`
+	    `file = File.open( "/sdcard/${cleanFile}", "${mode}")\n`
 	);
     };
 
     Generator.mctboard_sd_close = function (block) {
 	Generator.prepares_.sd = Generator.mctboard_sd_init(null);
         return (
-	    `fp.close\n`
+	    `file.close\n`
 	);
     };
 
@@ -324,14 +323,14 @@ export default function (Generator) {
 	Generator.prepares_.sd = Generator.mctboard_sd_init(null);
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
         return (
-	    `fp.puts(${text})\n`
+	    `file.puts(${text})\n`
 	);
     };
 
     Generator.mctboard_sd_gets = function (block) {
 	Generator.prepares_.sd = Generator.mctboard_sd_init(null);
         const mode = Generator.getFieldValue(block, 'MODE') || null;
-        return [`fp.${mode}`, Generator.ORDER_ATOMIC];
+        return [`file.${mode}`, Generator.ORDER_ATOMIC];
     };
 
     Generator.mctboard_puts = function (block) {

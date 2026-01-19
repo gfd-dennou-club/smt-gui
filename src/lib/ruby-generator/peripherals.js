@@ -196,26 +196,32 @@ export default function (Generator) {
         const file = Generator.valueToCode(block, 'FILE', Generator.ORDER_NONE) || null;
         const mode = Generator.getFieldValue(block, 'MODE') || null;
         return (
-	    `fp = File.open( filename, "${mode}")\n`
-	);
-    };
-
-    Generator.peripherals_sd_close = function () {
-        return (
-	    `fp.close\n`
+	    `file = File.open( ${file}, "${mode}")\n`
 	);
     };
 
     Generator.peripherals_sd_puts = function (block) {
         const text = Generator.valueToCode(block, 'TEXT', Generator.ORDER_NONE) || null;
         return (
-	    `fp.puts(${text})\n`
+	    `file.puts(${text})\n`
 	);
     };
 
     Generator.peripherals_sd_gets = function (block) {
         const mode = Generator.getFieldValue(block, 'MODE') || null;
-        return [`fp.${mode}`, Generator.ORDER_ATOMIC];
+        return [`file.${mode}`, Generator.ORDER_ATOMIC];
+    };
+
+    Generator.peripherals_sd_close = function () {
+        return (
+	    `file.close\n`
+	);
+    };
+
+    Generator.peripherals_sd_umount = function () {
+        return (
+	    `sdspi.umount\n`
+	);
     };
 
     Generator.peripherals_puts = function (block) {

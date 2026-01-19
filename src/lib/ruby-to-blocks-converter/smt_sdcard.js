@@ -2,32 +2,50 @@
  * converter for SD card
  */
 
-const SmT_SDcard_Converter = {
+const SmT_SDSPI_Converter = {
     register: function (converter) {
 
-        // WLAN.new
-        converter.registerOnSend("::WLAN", "new", 0, (params) => {
+        // --- SDSPI.new の変換 ---
+        converter.registerOnSend("::SDSPI", "new", 2, (params) => {
             const { args, node } = params;
 
-            const expression = `WLAN.new( )`;
+	    //console.log(args[0].fields.VALUE.value);
+	    //console.log(args[1].get("sym:cs_pin").value);
+	    //console.log(args[1].get("sym:mount_point").value);
+
+	    const spi = args[0].fields.VALUE.value;
+	    if (!converter.isString(spi)) return null;
+	    
+	    if (!converter.isHash(args[1])) return null;
+
+            const cs  = args[1].get("sym:cs_pin").value;
+	    if (!converter.isNumber(cs)) return null;
+
+            const mnt = args[1].get("sym:mount_point").value;
+	    if (!converter.isStringOrBlock(mnt)) return null;
+	    
+	    const expression = `SDSPI.new( ${spi}, cs_pin:${cs}, mount_point:"${mnt}" )`;
             return converter.createRubyExpressionBlock(expression, node);
         });
 
-        // wlan = WLAN.new
+        // --- sdspi = SDSPI.new の代入を init ブロックへ変換 ---
         converter.registerOnVasgn((scope, variable, rh) => {
-	    const expression = converter.getRubyExpression(rh);
+
+            const expression = converter.getRubyExpression(rh);
             if (!expression) return null;
-
+	    
             const match = expression.match(
-                /^WLAN\.new\(\s*\)/
+                /^SDSPI\.new\s*\(\s*spi\s*,\s*cs_pin:\s*(\d+)\s*,\s*mount_point:\s*\"(\S+)\"\s*\)/
             );
-
+	    
             if (!match) return null;
-            if (variable.name != "wlan") return null;
+            if (variable.name != "sdspi") return null;
 
             const block = converter.changeRubyExpressionBlock(
-                rh, "peripherals_wifi_init", "statement"
+                rh, "peripherals_sd_init", "statement"
             );
+            converter.addNumberInput(block, "PIN", "math_integer", Number(match[1]));
+	    converter.addTextInput(block, "DIR", match[2], "test");
             return block;
         });
     },
@@ -37,32 +55,17 @@ const SmT_SDcard_Converter = {
 	const receiverName = receiver.fields.VALUE.value;
         if (!receiverName) return null;
 
-        const match = receiverName.match(/^wlan$/);
+        const match = receiverName.match(/^sdspi$/);
 	if (!match) return null;
 	
 	switch (name) {
 	    
-            // wlan.connect
-            case "connect": {
-                if (args.length != 2) return null; 
-		if (!this._isStringOrBlock(args[0])) return null;
-		if (!this._isStringOrBlock(args[1])) return null;
-		
-                const block = this._changeBlock(
-		    receiver, "peripherals_wifi_connect", "statement"
-                );
-		this._addTextInput(block, "SSID", args[0], "test");
-		this._addTextInput(block, "PASS", args[1], "test");
-                return block;
-                break;
-            }
-
-            // wlan.connect
-            case "connected?": {
+            // sdspi.umount
+            case "umount": {
                 if (args.length != 0) return null; 
 
 		const block = this._changeBlock(
-		    receiver, "peripherals_wifi_connected", "value_boolean"
+		    receiver, "peripherals_sd_umount", "statement"
                 );
 		return block;
 		break;
@@ -73,4 +76,4 @@ const SmT_SDcard_Converter = {
 
 };
 
-export default SmT_SDcard_Converter;
+export default SmT_SDSPI_Converter;

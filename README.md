@@ -3,5 +3,5 @@
 
 ## 重要なお知らせ
 
-smt-gui, smt-vm は [[smt-editor|https://github.com/gfd-dennou-club/smt-editor/]] に移行しました．今後，smt-gui, smt-vm は更新されません．
+smt-gui, smt-vm は smt-editor (https://github.com/gfd-dennou-club/smt-editor/) に移行しました．今後，smt-gui, smt-vm は更新されません．
 
